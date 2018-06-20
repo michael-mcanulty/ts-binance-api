@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Typescript Binance api",
   "main": "index.js",
- "scripts": {
+  "scripts": {
     "start": "tsc -p tsconfig.json && node dist/index.js -max-old-space-size=1040",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "debug": "tsc -p tsconfig.json && node --debug-brk=5859 --inspect=5859 dist/index.js -max-old-space-size=1040"
@@ -24,4 +24,9 @@
     "request": "^2.86.0",
     "typescript-map": "0.0.5"
   },
+  "devDependencies": {
+    "@types/node": "^8.10.18",
+    "@types/request": "^2.47.0",
+    "ts-node": "^3.3.0"
+  }
 }
