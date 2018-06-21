@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iQueryOrderResult.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/iQueryOrderResult.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {eOrderSide, eOrderStatus} from \"./eOrderEnums\";\r\n\r\nexport interface iQueryOrderResult {\r\n\tclientOrderId: string;\r\n\texecutedQty: string;\r\n\ticebergQty: string;\r\n\tisWorking: boolean;\r\n\torderId: number;\r\n\torigQty: string;\r\n\tprice: string;\r\n\tside: eOrderSide;\r\n\tstatus: eOrderStatus;\r\n\tstopPrice: string;\r\n\tsymbol: string;\r\n\ttime: number;\r\n\ttimeInForce: string;\r\n\ttype: string;\r\n}"
+  ]
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"iAccountBalanceBinance.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iAccountBalanceBinance.ts"],"names":[],"mappings":"","sourcesContent":["export interface iAccountBalanceBinance {\r\n\tasset: string;\r\n\tfree: string;\r\n\tlocked: string;\r\n}"]}

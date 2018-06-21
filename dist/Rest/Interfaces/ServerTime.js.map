@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ServerTime.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Rest/Interfaces/ServerTime.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ServerTime{\r\n\tserverTime: number;\r\n}"
+  ]
+}

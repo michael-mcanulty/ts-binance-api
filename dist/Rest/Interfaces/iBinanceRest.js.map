@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iBinanceRest.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Rest/Interfaces/iBinanceRest.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {iNewOrder} from \"../../Transaction/Interfaces/iNewOrder\";\r\nimport {iExchangeInfo} from \"../../ExchangeInfo/Interfaces/iExchangeInfo\";\r\nimport {Order} from \"../../Transaction/Order\";\r\nimport {Price} from \"../../Transaction/Price\";\r\nimport {iQueryOrderResult} from \"../../Transaction/Interfaces/iQueryOrderResult\";\r\nimport {iCancelOrderResult} from \"../../Transaction/Interfaces/iCandleOrderResult\";\r\nimport {iCandlesOptions} from \"../../ExchangeInfo/Interfaces/iCandleOptions\";\r\nimport {CandleInterval} from \"../../ExchangeInfo/CandleInterval\";\r\n\r\nexport interface iBinanceRest {\r\n    accountInfo(options?: { useServerTime: boolean }): Promise<Account>;\r\n\r\n    cancelOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<iCancelOrderResult>;\r\n\r\n    candles(options: iCandlesOptions): Promise<CandleInterval[]>;\r\n\r\n    exchangeInfo(): Promise<iExchangeInfo>;\r\n\r\n    getOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<iQueryOrderResult>;\r\n\r\n    openOrders(options: { symbol: string, useServerTime?: boolean }): Promise<iQueryOrderResult[]>;\r\n\r\n    order(options: iNewOrder): Promise<Order>;\r\n\r\n    orderTest(options: iNewOrder): Promise<Order>;\r\n\r\n    prices(): Promise<Price[]>;\r\n\r\n    time(): Promise<number>;\r\n}"
+  ]
+}

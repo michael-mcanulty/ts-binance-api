@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iCandleOrderResult.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/iCandleOrderResult.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iCancelOrderResult {\r\n\tclientOrderId: string;\r\n\torderId: number;\r\n\torigClientOrderId: string;\r\n\tsymbol: string;\r\n}"
+  ]
+}

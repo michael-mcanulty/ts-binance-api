@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iBinanceError.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Error/Interfaces/iBinanceError.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface HttpError extends Error {\r\n\tcode: number | string;\r\n\tmessage: string;\r\n}"
+  ]
+}

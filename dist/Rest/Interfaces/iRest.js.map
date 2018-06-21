@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iRest.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Rest/Interfaces/iRest.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iRest {\n\tmakeQueryString(payload:object):string;\n\tcheckParams(name:string, payload:object, requires:any[]):boolean;\n}"
+  ]
+}

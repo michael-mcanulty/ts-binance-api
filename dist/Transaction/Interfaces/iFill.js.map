@@ -1,0 +1,1 @@
+{"version":3,"file":"iFill.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iFill.ts"],"names":[],"mappings":"","sourcesContent":["export interface iFill {\r\n\tcommission: string;\r\n\tcommissionAsset: string;\r\n\tprice: string;\r\n\tqty: string;\r\n}"]}

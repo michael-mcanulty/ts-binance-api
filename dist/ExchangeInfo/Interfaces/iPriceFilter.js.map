@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iPriceFilter.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/ExchangeInfo/Interfaces/iPriceFilter.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iPriceFilter {\r\n\tfilterType: string;\r\n\tmaxPrice: string;\r\n\tminPrice: string;\r\n\ttickSize: string;\r\n}\r\n"
+  ]
+}

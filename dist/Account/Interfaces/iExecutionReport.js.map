@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iExecutionReport.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Account/Interfaces/iExecutionReport.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {iMessage} from \"./iMessage\";\r\nimport {\r\n\teExecutionType,\r\n\teOrderSide,\r\n\teOrderStatus,\r\n\teOrderType,\r\n\teTimeInForce\r\n} from \"../../Transaction/Interfaces/eOrderEnums\";\r\n\r\nexport interface iExecutionReport extends iMessage {\r\n\tcommission: string;\r\n\tcommissionAsset: string;\r\n\texecutionType: eExecutionType;\r\n\ticebergQuantity: string;\r\n\tisBuyerMaker: boolean;\r\n\tisOrderWorking: boolean;\r\n\tlastTradeQuantity: string;\r\n\tnewClientOrderId: string;\r\n\torderId: number;\r\n\torderRejectReason: string;\r\n\torderStatus: eOrderStatus;\r\n\torderTime: number;\r\n\torderType: eOrderType;\r\n\toriginalClientOrderId: string;\r\n\tprice: string;\r\n\tpriceLastTrade: string;\r\n\tquantity: string;\r\n\tside: eOrderSide;\r\n\tstopPrice: string;\r\n\tsymbol: string;\r\n\ttimeInForce: eTimeInForce;\r\n\ttotalTradeQuantity: string;\r\n\ttradeId: number;\r\n}\r\n"
+  ]
+}

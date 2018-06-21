@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iOutboundAccountInfo.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Account/Interfaces/iOutboundAccountInfo.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {iBinanceBalances} from \"../../ExchangeInfo/Interfaces/iBinanceBalances\";\r\nimport {iMessage} from \"./iMessage\";\r\n\r\nexport interface iOutboundAccountInfo extends iMessage {\r\n\tbalances: iBinanceBalances;\r\n\tbuyerCommissionRate: number;\r\n\tcanDeposit: boolean;\r\n\tcanTrade: boolean;\r\n\tcanWithdraw: boolean;\r\n\tlastAccountUpdate: number;\r\n\tmakerCommissionRate: number;\r\n\tsellerCommissionRate: number;\r\n\ttakerCommissionRate: number;\r\n}"
+  ]
+}

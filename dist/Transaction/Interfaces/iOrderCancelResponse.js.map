@@ -1,0 +1,1 @@
+{"version":3,"file":"iOrderCancelResponse.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iOrderCancelResponse.ts"],"names":[],"mappings":"","sourcesContent":["export interface iOrderCancelResponse {\r\n\tclientOrderId: string;\r\n\torderId: number;\r\n\torigClientOrderId: string;\r\n\tsymbol: string;\r\n}"]}

@@ -1,0 +1,1 @@
+{"version":3,"file":"iWebSocket.js","sourceRoot":"","sources":["../../../src/Websocket/Interfaces/iWebSocket.ts"],"names":[],"mappings":"","sourcesContent":["export interface iWebSocket {\n\topenWebSocket(streamUrl:string)\n}"]}

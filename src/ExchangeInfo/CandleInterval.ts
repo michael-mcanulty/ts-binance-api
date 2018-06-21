@@ -1,0 +1,21 @@
+import {Candle} from "./Candle";
+import {Interval} from "./IndicatorInterval";
+import {Binance} from "../Binance/Binance";
+
+export class CandleInterval {
+	_interval: Interval;
+	candles: Candle[];
+	interval: string;
+	lastUpdated: Date;
+	nextUpdate: Date;
+	symbol: string;
+
+	constructor(candles: Candle[]) {
+		this.candles = candles;
+		this.interval = this.candles[0].period;
+		this.symbol = this.candles[0].symbol;
+		this.lastUpdated = candles[candles.length - 1].date;
+		this.nextUpdate = this.lastUpdated.getTime() + Binance.msInterval[this.interval];
+		this._interval = new Interval(this.interval);
+	}
+}

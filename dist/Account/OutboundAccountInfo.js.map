@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "OutboundAccountInfo.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Account/OutboundAccountInfo.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAIA;IAaC,YAAY,kBAA0C;QACrD,IAAI,CAAC,GAAG,kBAAkB,CAAC;QAC3B,IAAI,UAAU,GAAwB;YACrC,SAAS,EAAE,SAAS;YACpB,SAAS,EAAE,CAAC,CAAC,CAAC;YACd,mBAAmB,EAAE,CAAC,CAAC,CAAC;YACxB,mBAAmB,EAAE,CAAC,CAAC,CAAC;YACxB,mBAAmB,EAAE,CAAC,CAAC,CAAC;YACxB,oBAAoB,EAAE,CAAC,CAAC,CAAC;YACzB,QAAQ,EAAE,CAAC,CAAC,CAAC;YACb,WAAW,EAAE,CAAC,CAAC,CAAC;YAChB,UAAU,EAAE,CAAC,CAAC,CAAC;YACf,iBAAiB,EAAE,CAAC,CAAC,CAAC;YACtB,QAAQ,EAAE,CAAC,CAAC,CAAC,CAAC,MAAM,CAAC,CAAC,GAAG,EAAE,GAAG,EAAE,EAAE;gBAClC,GAAG,CAAC,GAAG,CAAC,CAAC,CAAC,GAAG,EAAE,SAAS,EAAE,GAAG,CAAC,CAAC,EAAE,MAAM,EAAE,GAAG,CAAC,CAAC,EAAE,CAAA;gBAChD,MAAM,CAAC,GAAG,CAAA;YACV,CAAC,EAAE,EAAE,CAAC;SACN,CAAC;QACF,MAAM,CAAC,MAAM,CAAC,IAAI,EAAE,UAAU,CAAC,CAAC;IACjC,CAAC;CACD;AAjCD,kDAiCC",
+  "sourcesContent": [
+    "import {iOutboundAccountInfo} from \"./Interfaces/iOutboundAccountInfo\";\r\nimport {iBinanceBalances} from \"../ExchangeInfo/Interfaces/iBinanceBalances\";\r\nimport {iOutboundAccountInfoRaw} from \"./Interfaces/iOutboundAccountInfoRaw\";\r\n\r\nexport class OutboundAccountInfo{\r\n\tbalances: iBinanceBalances;\r\n\tbuyerCommissionRate: number;\r\n\tcanDeposit: boolean;\r\n\tcanTrade: boolean;\r\n\tcanWithdraw: boolean;\r\n\teventTime: number;\r\n\teventType: string;\r\n\tlastAccountUpdate: number;\r\n\tmakerCommissionRate: number;\r\n\tsellerCommissionRate: number;\r\n\ttakerCommissionRate: number;\r\n\r\n\tconstructor(iOutAccountInfoRaw:iOutboundAccountInfoRaw){\r\n\t\tlet m = iOutAccountInfoRaw;\r\n\t\tlet conversion:iOutboundAccountInfo = {\r\n\t\t\teventType: 'account',\r\n\t\t\teventTime: m.E,\r\n\t\t\tmakerCommissionRate: m.m,\r\n\t\t\ttakerCommissionRate: m.t,\r\n\t\t\tbuyerCommissionRate: m.b,\r\n\t\t\tsellerCommissionRate: m.s,\r\n\t\t\tcanTrade: m.T,\r\n\t\t\tcanWithdraw: m.W,\r\n\t\t\tcanDeposit: m.D,\r\n\t\t\tlastAccountUpdate: m.u,\r\n\t\t\tbalances: m.B.reduce((out, cur) => {\r\n\t\t\tout[cur.a] = { available: cur.f, locked: cur.l }\r\n\t\t\treturn out\r\n\t\t\t}, {}),\r\n\t\t};\r\n\t\tObject.assign(this, conversion);\r\n\t}\r\n}"
+  ]
+}

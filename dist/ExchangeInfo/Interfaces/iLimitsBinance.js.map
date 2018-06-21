@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iLimitsBinance.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/ExchangeInfo/Interfaces/iLimitsBinance.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iLimitsBinance {\r\n\tfilterType: string;\r\n\tmaxPrice: string;\r\n\tmaxQty: string;\r\n\tminNotional: string;\r\n\tminPrice: string;\r\n\tminQty: string;\r\n\tstepSize: string;\r\n\ttickSize: string;\r\n}"
+  ]
+}

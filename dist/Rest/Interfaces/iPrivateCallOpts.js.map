@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iPrivateCallOpts.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Rest/Interfaces/iPrivateCallOpts.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {eMethod} from \"../eMethod\";\n\nexport interface iCallOpts{\n method: eMethod;\n headers: Headers;\n noData?: boolean;\n noExtra?: boolean;\n}"
+  ]
+}

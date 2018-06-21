@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iBinanceOptions.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Binance/Interfaces/iBinanceOptions.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {Auth} from \"../../Account/Auth\";\r\n\r\nexport interface iBinanceOptions {\r\n\tauth: Auth;\r\n\ttest: boolean;\r\n\tuseServerTime: boolean;\r\n}"
+  ]
+}

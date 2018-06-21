@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "Api.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Account/Api.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;IACC,IAAI,GAAG;QACN,MAAM,CAAC,IAAI,CAAC,IAAI,CAAC;IAClB,CAAC;IAED,IAAI,GAAG,CAAC,KAAa;QACpB,IAAI,CAAC,IAAI,GAAG,KAAK,CAAC;IACnB,CAAC;IAED,IAAI,MAAM;QACT,MAAM,CAAC,IAAI,CAAC,OAAO,CAAC;IACrB,CAAC;IAED,IAAI,MAAM,CAAC,KAAa;QACvB,IAAI,CAAC,OAAO,GAAG,KAAK,CAAC;IACtB,CAAC;CAID;AAnBD,kBAmBC",
+  "sourcesContent": [
+    "export class Api{\n\tget key(): string {\n\t\treturn this._key;\n\t}\n\n\tset key(value: string) {\n\t\tthis._key = value;\n\t}\n\n\tget secret(): string {\n\t\treturn this._secret;\n\t}\n\n\tset secret(value: string) {\n\t\tthis._secret = value;\n\t}\n\n\tprivate _key:string;\n\tprivate _secret:string;\n}"
+  ]
+}

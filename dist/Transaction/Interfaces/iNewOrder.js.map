@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iNewOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/iNewOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {eOrderSide, eOrderType, eTimeInForce} from \"./eOrderEnums\";\r\n\r\nexport interface iNewOrder {\r\n\ticebergQty?: string;\r\n\tnewClientOrderId?: string;\r\n\tprice?: string;\r\n\tquantity: string;\r\n\trecvWindow?: number;\r\n\tside: eOrderSide;\r\n\tstopPrice?: string;\r\n\tsymbol: string;\r\n\ttimeInForce?: eTimeInForce;\r\n\ttype: eOrderType;\r\n\tuseServerTime?: boolean;\r\n}"
+  ]
+}

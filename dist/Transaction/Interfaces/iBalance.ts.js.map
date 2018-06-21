@@ -1,0 +1,1 @@
+{"version":3,"file":"iBalance.ts.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iBalance.ts.ts"],"names":[],"mappings":"","sourcesContent":["export interface iBalance {\r\n\tasset: string;\r\n\tavailable: number;\r\n\tonOrder: number;\r\n}\r\n"]}

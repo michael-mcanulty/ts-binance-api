@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iLotSize.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/ExchangeInfo/Interfaces/iLotSize.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iLotSize {\r\n\tfilterType: string;\r\n\tmaxQty: string;\r\n\tminQty: string;\r\n\tstepSize: string;\r\n}"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iMinNotional.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/ExchangeInfo/Interfaces/iMinNotional.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iMinNotional {\r\n\tfilterType: string;\r\n\tminNotional: string;\r\n}"
+  ]
+}

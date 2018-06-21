@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iCandleOptions.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/ExchangeInfo/Interfaces/iCandleOptions.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iCandlesOptions {\r\n\tendTime?: number;\r\n\tinterval: string;\r\n\tlimit?: number;\r\n\tstartTime?: number;\r\n\tsymbol: string;\r\n}"
+  ]
+}
