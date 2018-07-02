@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "App.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Email/App.ts"
+  ],
+  "names": [],
+  "mappings": ";;AACA,qDAAgD;AAChD,yCAAyC;AAIzC;IAsBC,YAAY,cAA8B;QACzC,UAAU,CAAC,aAAa,GAAG,IAAI,+BAAc,CAAC,cAAc,CAAC,CAAC;IAC/D,CAAC;IAnBM,SAAS,CAAC,OAAuB,EAAE,cAA8B;QACvE,MAAM,CAAC,IAAI,OAAO,CAAC,CAAC,OAAO,EAAE,MAAM,EAAE,EAAE;YACtC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;YACvB,EAAE,CAAA,CAAC,CAAC,cAAc,IAAI,CAAE,UAAU,CAAC,aAAa,CAAC,CAAA,CAAC;gBACjD,MAAM,CAAC,kCAAkC,CAAC,CAAC;YAC5C,CAAC;YAAA,IAAI,CAAA,CAAC;gBACL,UAAU,CAAC,GAAG,CAAC,eAAe,CAAC,cAAc,IAAE,UAAU,CAAC,aAAa,CAAC,CAAC,QAAQ,CAAC,IAAI,CAAC,OAAO,EAAE,CAAC,KAAK,EAAE,IAAuB,EAAE,EAAE;oBAClI,EAAE,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC;wBACX,MAAM,CAAC,KAAK,CAAC,CAAC;oBACf,CAAC;oBAAC,IAAI,CAAC,CAAC;wBACP,OAAO,CAAC,cAAc,IAAI,CAAC,QAAQ,EAAE,CAAC,CAAC;oBACxC,CAAC;gBACF,CAAC,CAAC,CAAC;YACJ,CAAC;QACF,CAAC,CAAC,CAAC;IACJ,CAAC;;AAnBa,cAAG,GAAsB,UAAU,CAAC;AADnD,gCAyBC",
+  "sourcesContent": [
+    "import {IServiceOptions} from \"./Interfaces/IServiceOprtions\";\nimport {ServiceOptions} from \"./ServiceOptions\";\nimport * as nodeMailer from \"nodemailer\";\nimport {IMessageOptions} from \"./Interfaces/IMessageOptions\";\nimport {NodeMailerService} from \"./Types/Types\";\n\nexport class NodeMailer{\n\tpublic static App: NodeMailerService = nodeMailer;\n\tpublic static ServiceConfig:ServiceOptions;\n\tprivate msgOpts:IMessageOptions;\n\n\tpublic sendEmail(msgOpts:IMessageOptions, serviceOptions?:ServiceOptions):Promise<any> {\n\t\treturn new Promise((resolve, reject) => {\n\t\t\tthis.msgOpts = msgOpts;\n\t\t\tif(!serviceOptions || ! NodeMailer.ServiceConfig){\n\t\t\t\treject(\"Service Options must be provided\");\n\t\t\t}else{\n\t\t\t\tNodeMailer.App.createTransport(serviceOptions||NodeMailer.ServiceConfig).sendMail(this.msgOpts, (error, info: {response:string}) => {\n\t\t\t\t\tif (error) {\n\t\t\t\t\t\treject(error);\n\t\t\t\t\t} else {\n\t\t\t\t\t\tresolve(`Email Sen: ${info.response}`);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t});\n\t}\n\n\tconstructor(serviceOptions:IServiceOptions){\n\t\tNodeMailer.ServiceConfig = new ServiceOptions(serviceOptions);\n\t}\n}\n"
+  ]
+}

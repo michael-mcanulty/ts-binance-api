@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ErrorHandler.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Error/ErrorHandler.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAEA,2CAAsC;AAGtC;IAMC,IAAI,MAAM;QACT,MAAM,CAAC,IAAI,CAAC,OAAO,CAAC;IACrB,CAAC;IAED,IAAI,MAAM,CAAC,KAAsB;QAChC,IAAI,CAAC,OAAO,GAAG,KAAK,CAAC;IACtB,CAAC;IAID,IAAI,KAAK;QACR,MAAM,CAAC,IAAI,CAAC,MAAM,CAAC;IACpB,CAAC;IAED,IAAI,KAAK,CAAC,KAAgB;QACzB,IAAI,CAAC,MAAM,GAAG,KAAK,CAAC;IACrB,CAAC;IAEM,OAAO;IAGd,CAAC;IAED,YAAY,IAAY;QACvB,IAAI,CAAC,KAAK,GAAG,qBAAS,CAAC,cAAc,CAAC,IAAI,CAAC,CAAC;IAE7C,CAAC;CACD;AAjCD,oCAiCC",
+  "sourcesContent": [
+    "import {NodeMailer} from \"./Email/App\";\nimport {ErrorResolution} from \"./ErrorResolution\";\nimport {ErrorCode} from \"./ErrorCode\";\nimport {IMessageOptions} from \"./Email/Interfaces/IMessageOptions\";\n\nexport class ErrorHandler {\n\tprivate messageOptions: IMessageOptions;\n\tpublic static nodeMailer: NodeMailer;\n\n\tprivate _action: ErrorResolution;\n\n\tget action(): ErrorResolution {\n\t\treturn this._action;\n\t}\n\n\tset action(value: ErrorResolution) {\n\t\tthis._action = value;\n\t}\n\n\tprivate _error: ErrorCode;\n\n\tget error(): ErrorCode {\n\t\treturn this._error;\n\t}\n\n\tset error(value: ErrorCode) {\n\t\tthis._error = value;\n\t}\n\n\tpublic execute() {\n\t\t//send email\n\t\t//set timeout\n\t}\n\n\tconstructor(code: number) {\n\t\tthis.error = ErrorCode.GetErrorByCode(code);\n\t\t//TODO: this.action;\n\t}\n}"
+  ]
+}

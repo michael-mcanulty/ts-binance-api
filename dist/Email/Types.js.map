@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "Types.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Email/Types.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {IMessageOptions} from \"./Interfaces/IMessageOptions\";\nimport {ServiceOptions} from \"./ServiceOptions\";\n\ntype Transport = (serviceOpts:ServiceOptions) => NodeMailerService;\ntype SendMail = (msgOpts:IMessageOptions, Function)=>void;\ntype NodeMailerService = {createTransport: Transport, sendMail: SendMail};"
+  ]
+}

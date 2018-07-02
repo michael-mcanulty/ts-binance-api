@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iBotError.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Error/Interfaces/iBotError.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface iBinanceError {\n\tcode: number;\n\tmessage: string;\n}"
+  ]
+}

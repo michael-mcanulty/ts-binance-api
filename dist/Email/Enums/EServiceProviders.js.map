@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "EServiceProviders.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Email/Enums/EServiceProviders.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAAA,IAAY,gBAuCX;AAvCD,WAAY,gBAAgB;IAC3B,qDAAK,CAAA;IACL,iEAAW,CAAA;IACX,qEAAa,CAAA;IACb,+DAAU,CAAA;IACV,iEAAW,CAAA;IACX,yDAAO,CAAA;IACP,6DAAS,CAAA;IACT,qEAAa,CAAA;IACb,yEAAe,CAAA;IACf,2DAAQ,CAAA;IACR,8DAAS,CAAA;IACT,4DAAQ,CAAA;IACR,8DAAS,CAAA;IACT,8DAAS,CAAA;IACT,8DAAS,CAAA;IACT,8DAAS,CAAA;IACT,8DAAS,CAAA;IACT,kEAAW,CAAA;IACX,gEAAU,CAAA;IACV,0DAAO,CAAA;IACP,sEAAa,CAAA;IACb,oEAAY,CAAA;IACZ,gEAAU,CAAA;IACV,oDAAI,CAAA;IACJ,wDAAM,CAAA;IACN,kEAAW,CAAA;IACX,gEAAU,CAAA;IACV,oEAAY,CAAA;IACZ,kEAAW,CAAA;IACX,sDAAK,CAAA;IACL,0EAAe,CAAA;IACf,0EAAe,CAAA;IACf,0EAAe,CAAA;IACf,kEAAW,CAAA;IACX,0DAAO,CAAA;IACP,4DAAQ,CAAA;IACR,wDAAM,CAAA;IACN,sEAAa,CAAA;AACd,CAAC,EAvCW,gBAAgB,GAAhB,wBAAgB,KAAhB,wBAAgB,QAuC3B",
+  "sourcesContent": [
+    "export enum ServiceProviders{\n\t\"AOL\",\n\t\"DebugMail\",\n\t\"DynectEmail\",\n\t\"FastMail\",\n\t\"GandiMail\",\n\t\"Gmail\",\n\t\"Godaddy\",\n\t\"GodaddyAsia\",\n\t\"GodaddyEurope\",\n\t\"hot.ee\",\n\t\"Hotmail\",\n\t\"iCloud\",\n\t\"mail.ee\",\n\t\"Mail.ru\",\n\t\"Maildev\",\n\t\"Mailgun\",\n\t\"Mailjet\",\n\t\"Mailosaur\",\n\t\"Mandrill\",\n\t\"Naver\",\n\t\"OpenMailBox\",\n\t\"Outlook365\",\n\t\"Postmark\",\n\t\"QQ\",\n\t\"QQex\",\n\t\"SendCloud\",\n\t\"SendGrid\",\n\t\"SendinBlue\",\n\t\"SendPulse\",\n\t\"SES\",\n\t\"SES-US-EAST-1\",\n\t\"SES-US-WEST-2\",\n\t\"SES-EU-WEST-1\",\n\t\"Sparkpost\",\n\t\"Yahoo\",\n\t\"Yandex\",\n\t\"Zoho\",\n\t\"qiye.aliyun\",\n}"
+  ]
+}

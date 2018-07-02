@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "iMailOprtions.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Email/Interfaces/iMailOprtions.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {ServiceProviders} from \"../Enums/EServiceProviders\";\n\nexport interface IAuth {\n\tuser: string;\n\tpass: string;\n}\n\nexport interface IServiceOptions {\n\tservice: ServiceProviders;\n\tauth: IAuth;\n}\n"
+  ]
+}

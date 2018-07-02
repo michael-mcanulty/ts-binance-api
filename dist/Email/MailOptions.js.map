@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "MailOptions.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Email/MailOptions.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAAA,iEAA2D;AAG3D;IACC,IAAI,IAAI;QACP,MAAM,CAAC,IAAI,CAAC,KAAK,CAAC;IACnB,CAAC;IAED,IAAI,IAAI,CAAC,KAAa;QACrB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;IACpB,CAAC;IAED,IAAI,IAAI;QACP,MAAM,CAAC,IAAI,CAAC,KAAK,CAAC;IACnB,CAAC;IAED,IAAI,IAAI,CAAC,KAAa;QACrB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;IACpB,CAAC;IAKD,YAAY,IAAU;QACrB,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC,IAAI,CAAC;QACtB,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC,IAAI,CAAC;IACvB,CAAC;CACD;AAxBD,oBAwBC;AAED;IACC,IAAI,OAAO,CAAC,KAAa;QACxB,IAAI,CAAC,QAAQ,GAAG,KAAK,CAAC;IACvB,CAAC;IAED,IAAI,IAAI;QACP,MAAM,CAAC,IAAI,CAAC,KAAK,CAAC;IACnB,CAAC;IAED,IAAI,IAAI,CAAC,KAAW;QACnB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;IACpB,CAAC;IAKD,YAAY,IAAoB;QAC/B,IAAI,CAAC,IAAI,GAAG,IAAI,IAAI,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC;QAChC,IAAI,CAAC,OAAO,GAAG,oCAAgB,CAAC,IAAI,CAAC,OAAO,CAAC,CAAC;IAC/C,CAAC;CACD;AApBD,kCAoBC",
+  "sourcesContent": [
+    "import {ServiceProviders} from \"./Enums/EServiceProviders\";\nimport {IAuth, IServiceOptions} from \"./Interfaces/iMailOprtions\";\n\nexport class Auth {\n\tget user(): string {\n\t\treturn this._user;\n\t}\n\n\tset user(value: string) {\n\t\tthis._user = value;\n\t}\n\n\tget pass(): string {\n\t\treturn this._pass;\n\t}\n\n\tset pass(value: string) {\n\t\tthis._pass = value;\n\t}\n\n\tprivate _user: string;\n\tprivate _pass: string;\n\n\tconstructor(auth:IAuth){\n\t\tthis.user = auth.user;\n\t\tthis.pass = auth.pass;\n\t}\n}\n\nexport class MailOptions{\n\tset service(value: string) {\n\t\tthis._service = value;\n\t}\n\n\tget auth(): Auth {\n\t\treturn this._auth;\n\t}\n\n\tset auth(value: Auth) {\n\t\tthis._auth = value;\n\t}\n\n\tprivate _service: string;\n\tprivate _auth: Auth;\n\n\tconstructor(opts:IServiceOptions){\n\t\tthis.auth = new Auth(opts.auth);\n\t\tthis.service = ServiceProviders[opts.service];\n\t}\n}"
+  ]
+}

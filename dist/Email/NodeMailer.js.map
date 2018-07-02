@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "NodeMailer.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Email/NodeMailer.ts"
+  ],
+  "names": [],
+  "mappings": ";;AACA,qDAAgD;AAChD,yCAAyC;AAIzC;IAkBC,YAAY,cAA8B;QAf1C,QAAG,GAAsB,UAAU,CAAC;QAgBnC,IAAI,CAAC,WAAW,GAAG,IAAI,+BAAc,CAAC,cAAc,CAAC,CAAC;IACvD,CAAC;IAfM,SAAS,CAAC,OAAuB;QACvC,MAAM,CAAC,IAAI,OAAO,CAAC,CAAC,OAAO,EAAE,MAAM,EAAE,EAAE;YACtC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;YACvB,IAAI,CAAC,GAAG,CAAC,eAAe,CAAC,IAAI,CAAC,WAAW,CAAC,CAAC,QAAQ,CAAC,IAAI,CAAC,OAAO,EAAE,CAAC,KAAK,EAAE,IAAI,EAAE,EAAE;gBACjF,EAAE,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC;oBACX,MAAM,CAAC,KAAK,CAAC,CAAC;gBACf,CAAC;gBAAC,IAAI,CAAC,CAAC;oBACP,OAAO,CAAC,cAAc,GAAG,IAAI,CAAC,QAAQ,CAAC,CAAC;gBACzC,CAAC;YACF,CAAC,CAAC,CAAC;QACJ,CAAC,CAAC,CAAC;IACJ,CAAC;CAKD;AArBD,gCAqBC",
+  "sourcesContent": [
+    "import {IServiceOptions} from \"./Interfaces/IServiceOprtions\";\nimport {ServiceOptions} from \"./ServiceOptions\";\nimport * as nodeMailer from \"nodemailer\";\nimport {IMessageOptions} from \"./Interfaces/IMessageOptions\";\nimport {NodeMailerService} from \"./Types/Types\";\n\nexport class NodeMailer{\n\tserviceOpts:ServiceOptions;\n\tmsgOpts:IMessageOptions;\n\tapi: NodeMailerService = nodeMailer;\n\n\tpublic sendEmail(msgOpts:IMessageOptions):Promise<any> {\n\t\treturn new Promise((resolve, reject) => {\n\t\t\tthis.msgOpts = msgOpts;\n\t\t\tthis.api.createTransport(this.serviceOpts).sendMail(this.msgOpts, (error, info) => {\n\t\t\t\tif (error) {\n\t\t\t\t\treject(error);\n\t\t\t\t} else {\n\t\t\t\t\tresolve('Email sent: ' + info.response);\n\t\t\t\t}\n\t\t\t});\n\t\t});\n\t}\n\n\tconstructor(serviceOptions:IServiceOptions){\n\t\tthis.serviceOpts = new ServiceOptions(serviceOptions);\n\t}\n}\n"
+  ]
+}

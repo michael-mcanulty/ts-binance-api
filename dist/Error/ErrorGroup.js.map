@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ErrorGroup.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Error/ErrorGroup.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;;AACe,cAAG,GAAiB,EAAE,CAAC;AADtC,gCAIC",
+  "sourcesContent": [
+    "export class ErrorGroup {\r\n\tpublic static all: ErrorGroup[] = [];\r\n\tcodes: number[];\r\n\tgroup: string;\r\n}"
+  ]
+}
