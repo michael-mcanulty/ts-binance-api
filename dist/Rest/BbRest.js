@@ -180,7 +180,6 @@ class BbRest {
 		}));
 	}
 }
-
 BbRest.BASE = 'https://app.binance.com';
 exports.BbRest = BbRest;
 //# sourceMappingURL=BbRest.js.map
