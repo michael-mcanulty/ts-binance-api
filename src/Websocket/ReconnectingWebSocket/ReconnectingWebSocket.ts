@@ -389,8 +389,8 @@ export default class ReconnectingWebSocket {
 	 * Closes the BaseWebSocket connection or connection attempt, if any. If the connection is already
 	 * CLOSED, this method does nothing
 	 */
-	public close(code?: number, reason?: string, options?: {keepClosed: boolean, options}) {
-		this._shouldReconnect = !options.keepClosed || false;
+	public close(code?: number, reason?: string) {
+		this._shouldReconnect = false;
 		if (!this._ws || this._ws.readyState === this.CLOSED) {
 			return;
 		}

@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", {value: true});
 const BbRest_1 = require("./BbRest");
 const eMethod_1 = require("./eMethod");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
-
 class BinanceRest extends BbRest_1.BbRest {
 	constructor(options) {
 		super(options);
@@ -101,6 +100,5 @@ class BinanceRest extends BbRest_1.BbRest {
 		}));
 	}
 }
-
 exports.BinanceRest = BinanceRest;
 //# sourceMappingURL=BinanceRest.js.map

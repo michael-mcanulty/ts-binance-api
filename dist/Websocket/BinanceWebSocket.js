@@ -4,7 +4,7 @@ const Html5WebSocket = require("html5-websocket");
 const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWebSocket");
 class BinanceWebSocket {
     constructor() {
-        this.base = 'https://api.binance.com';
+			this.base = 'https://app.binance.com';
         this._options = {};
         this._options = {};
         this._options.connectionTimeout = 4E3;

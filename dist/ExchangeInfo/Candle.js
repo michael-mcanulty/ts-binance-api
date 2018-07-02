@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class Candle {
 	constructor(date, open, high, low, close, volume, symbol, period, advanceDecline) {
 		this.date = new Date(new Date(date).setSeconds(0, 0));
@@ -24,6 +23,5 @@ class Candle {
 		return candles;
 	}
 }
-
 exports.Candle = Candle;
 //# sourceMappingURL=Candle.js.map

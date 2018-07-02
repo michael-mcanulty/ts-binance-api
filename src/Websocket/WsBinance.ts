@@ -5,6 +5,8 @@ import {Price} from "../Transaction/Price";
 import {Ticker} from "../ExchangeInfo/ticker";
 import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
 import {BinanceRest} from "../Rest/BinanceRest";
+import {HttpError} from "../Error/HttpError";
+import ErrnoException = NodeJS.ErrnoException;
 
 export class WsBinance extends BinanceRest{
 	private _cache: any;
@@ -39,7 +41,7 @@ export class WsBinance extends BinanceRest{
 	public getPrices(cb: Function) {
 		let ticksToPrices = (tickers: Ticker[]) => {
 			let prices: Price[] = tickers.map(t => {
-				return t.toPrice()
+				return t.toPrice();
 			});
 			cb(prices);
 		};
@@ -58,7 +60,7 @@ export class WsBinance extends BinanceRest{
 			cb(tickers);
 		};
 
-		return (options) => this._cache.forEach(w => w.close(1000, 'Close handle was called', {keepClosed: true, ...options}));
+		return (options) => this._cache.forEach(w => w.close(1000, 'Close handle was called'));
 	}
 
 	public getUser():Promise<any> {
@@ -66,22 +68,23 @@ export class WsBinance extends BinanceRest{
 			const keepStreamAlive = (method, listenKey) => () => method({listenKey});
 			this.user = async cb => {
 				this.listenKey = await this.getDataStream();
-				const w = this.openWebSocket(`${this.base}/${this.listenKey}`)
+				const w = this.openWebSocket(`${this.base}/${this.listenKey}`);
 				w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
 
 				const int = setInterval(keepStreamAlive(this.keepDataStream, this.listenKey), 50e3);
 				keepStreamAlive(this.keepDataStream, this.listenKey)();
 
-				let result = async (options) => {
+				let result = async () => {
 					clearInterval(int);
 					await this.closeDataStream();
-					w.close(1000, 'Close handle was called', {keepClosed: true, ...options});
+					w.close(1000, 'Close handle was called');
 				};
 				resolve(result);
 			}
 		});
 	}
 
+	//Check for disconnected state
 	private heartbeat():void{
 		setInterval(async ()=>{
 			try{
@@ -90,6 +93,13 @@ export class WsBinance extends BinanceRest{
 					console.log("Lost Connectivity. Restart the server using process.exit(0)");
 				}
 			}catch(err){
+				let errnoErr: ErrnoException;
+				if (err && typeof err.code === "string") {
+					//check error codes equivs.
+
+				}
+				let error = new HttpError('DISCONNECTED', -1001);
+				this._ws.close(error.code, error.message);
 				//TODO: pass in a callback or kill process.
 				//TODO: IMPORTANT. Create Error with proper code i.e code: 1001.
 				//process.exit(0);

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 const Price_1 = require("../Transaction/Price");
-
 class Ticker {
 	constructor(rawStreamTicker) {
 		let m = rawStreamTicker;
@@ -37,6 +36,5 @@ class Ticker {
 		return new Price_1.Price(this.symbol, this.curDayClose);
 	}
 }
-
 exports.Ticker = Ticker;
 //# sourceMappingURL=ticker.js.map

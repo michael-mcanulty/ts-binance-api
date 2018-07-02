@@ -8,7 +8,7 @@ import {iCallOpts} from "./Interfaces/iCallOpts";
 import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
 
 export class BbRest{
-	public static BASE:string = 'https://api.binance.com';
+	public static BASE: string = 'https://app.binance.com';
 	public auth: Auth;
 	public options:iBinanceOptions;
 
@@ -24,6 +24,7 @@ export class BbRest{
 				callOptions = <iCallOpts>{};
 				callOptions.noData = false;
 			}
+
 			let fetchPath:string = this.buildUrl(path, data, callOptions.noData);
 			callOptions.headers = headers;
 			callOptions.method = eMethod.GET;
@@ -55,7 +56,7 @@ export class BbRest{
 	}
 
 	private buildUrl(path:string, data:object, noData:boolean):string{
-		return `${BbRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '': this.makeQueryString(data)}`;
+		return `${BbRest.BASE}${path.includes('/wapi') ? '' : '/app'}${path}${noData ? '' : this.makeQueryString(data)}`;
 	}
 
 	call(path:string, data?: any, callOptions?: iCallOpts):Promise<any>{
@@ -105,14 +106,13 @@ export class BbRest{
 				let res:Response = await fetch(params, reqOpts);
 				json = await res.json();
 				if (!res.ok) {
-					msg = json.msg || `${res.status} ${res.statusText}`;
-					err = new HttpError(msg, json.code);
+					err = new HttpError(res.statusText, json.code);
 					reject(err);
 				}else{
 					resolve(json);
 				}
 			}catch(err){
-				reject(`Error in fetch(). Message: ${err}`)
+				reject(err);
 			}
 		})
 	}
@@ -137,11 +137,9 @@ export class BbRest{
 				let ping:boolean = (Object.keys(res).length === 0);
 				if(ping){
 					resolve(ping);
-				}else{
-					reject(`Error pinging the server`);
 				}
 			}catch(err){
-				reject(`Error pinging the server. Message: ${err}`);
+				reject(err);
 			}
 		});
 	}

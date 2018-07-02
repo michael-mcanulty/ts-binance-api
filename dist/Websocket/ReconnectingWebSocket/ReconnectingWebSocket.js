@@ -53,31 +53,27 @@ class ReconnectingWebSocket {
     static get CLOSED() {
         return 3;
     }
-
-    static get CLOSING() {
-        return 2;
-    }
-
-    static get CONNECTING() {
-        return 0;
-    }
-
-    static get OPEN() {
-        return 1;
-    }
-
     get CLOSED() {
         return ReconnectingWebSocket.CLOSED;
     }
 
+	static get CLOSING() {
+		return 2;
+	}
     get CLOSING() {
         return ReconnectingWebSocket.CLOSING;
     }
 
+	static get CONNECTING() {
+		return 0;
+	}
     get CONNECTING() {
         return ReconnectingWebSocket.CONNECTING;
     }
 
+	static get OPEN() {
+		return 1;
+	}
     get OPEN() {
         return ReconnectingWebSocket.OPEN;
     }
@@ -252,8 +248,9 @@ class ReconnectingWebSocket {
             this._listeners[type].push(listener);
         }
     }
-    close(code, reason, options) {
-        this._shouldReconnect = !options.keepClosed || false;
+
+	close(code, reason) {
+		this._shouldReconnect = false;
         if (!this._ws || this._ws.readyState === this.CLOSED) {
             return;
         }

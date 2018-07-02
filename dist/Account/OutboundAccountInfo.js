@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class OutboundAccountInfo {
 	constructor(iOutAccountInfoRaw) {
 		let m = iOutAccountInfoRaw;
@@ -23,6 +22,5 @@ class OutboundAccountInfo {
 		Object.assign(this, conversion);
 	}
 }
-
 exports.OutboundAccountInfo = OutboundAccountInfo;
 //# sourceMappingURL=OutboundAccountInfo.js.map

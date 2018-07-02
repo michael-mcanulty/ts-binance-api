@@ -34,7 +34,7 @@ const eMethod_1 = require("./eMethod");
 
 class WsRest {
 	constructor(spiAuth) {
-		this.base = 'https://api.binance.com';
+		this.base = 'https://app.binance.com';
 		this.apiAuth = spiAuth;
 	}
 
@@ -63,7 +63,7 @@ class WsRest {
 	}
 
 	buildUrl(path, data, noData = false) {
-		return `${this.base}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : this.makeQueryString(data)}`;
+		return `${this.base}${path.includes('/wapi') ? '' : '/app'}${path}${noData ? '' : this.makeQueryString(data)}`;
 	}
 
 	fetch(path, payload, callOptions) {

@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface HttpError extends Error {\r\n\tcode: number | string;\r\n\tmessage: string;\r\n}"
+    "export interface iBinanceError {\r\n\tcode: number;\r\n\tmessage: string;\r\n}"
   ]
 }

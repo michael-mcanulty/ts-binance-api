@@ -31,7 +31,6 @@ const fetch = require("isomorphic-fetch");
 const crypto = require("crypto");
 const HttpError_1 = require("../Error/HttpError");
 const eMethod_1 = require("./eMethod");
-
 class BbRest {
 	constructor(options) {
 		this.options = options;
@@ -75,7 +74,7 @@ class BbRest {
 	}
 
 	buildUrl(path, data, noData) {
-		return `${BbRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : this.makeQueryString(data)}`;
+		return `${BbRest.BASE}${path.includes('/wapi') ? '' : '/app'}${path}${noData ? '' : this.makeQueryString(data)}`;
 	}
 
 	call(path, data, callOptions) {
@@ -123,8 +122,7 @@ class BbRest {
 				let res = yield fetch(params, reqOpts);
 				json = yield res.json();
 				if (!res.ok) {
-					msg = json.msg || `${res.status} ${res.statusText}`;
-					err = new HttpError_1.HttpError(msg, json.code);
+					err = new HttpError_1.HttpError(res.statusText, json.code);
 					reject(err);
 				}
 				else {
@@ -132,7 +130,7 @@ class BbRest {
 				}
 			}
 			catch (err) {
-				reject(`Error in fetch(). Message: ${err}`);
+				reject(err);
 			}
 		}));
 	}
@@ -159,12 +157,9 @@ class BbRest {
 				if (ping) {
 					resolve(ping);
 				}
-				else {
-					reject(`Error pinging the server`);
-				}
 			}
 			catch (err) {
-				reject(`Error pinging the server. Message: ${err}`);
+				reject(err);
 			}
 		}));
 	}
@@ -186,6 +181,6 @@ class BbRest {
 	}
 }
 
-BbRest.BASE = 'https://api.binance.com';
+BbRest.BASE = 'https://app.binance.com';
 exports.BbRest = BbRest;
 //# sourceMappingURL=BbRest.js.map

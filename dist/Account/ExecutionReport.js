@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 const eOrderEnums_1 = require("../Transaction/Interfaces/eOrderEnums");
-
 class ExecutionReport {
 	constructor(iExecReportRaw) {
 		let m = iExecReportRaw;
@@ -35,6 +34,5 @@ class ExecutionReport {
 		Object.assign(this, iExecReport);
 	}
 }
-
 exports.ExecutionReport = ExecutionReport;
 //# sourceMappingURL=ExecutionReport.js.map

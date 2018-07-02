@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class StockData {
 	constructor(open, high, low, close, reversedInput) {
 		this.open = open;
@@ -10,14 +9,10 @@ class StockData {
 		this.reversedInput = reversedInput;
 	}
 }
-
 exports.StockData = StockData;
-
 class CandleData {
 }
-
 exports.CandleData = CandleData;
-
 class CandleList {
 	constructor() {
 		this.close = [];
@@ -40,6 +35,5 @@ class CandleList {
 		return cList;
 	}
 }
-
 exports.CandleList = CandleList;
 //# sourceMappingURL=StockData.js.map

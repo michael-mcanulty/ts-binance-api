@@ -1,4 +1,4 @@
-export interface HttpError extends Error {
-	code: number | string;
+export interface iBinanceError {
+	code: number;
 	message: string;
 }

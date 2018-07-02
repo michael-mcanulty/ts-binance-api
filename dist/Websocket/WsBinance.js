@@ -12,6 +12,7 @@ const Html5WebSocket = require("html5-websocket");
 const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWebSocket");
 const ticker_1 = require("../ExchangeInfo/ticker");
 const BinanceRest_1 = require("../Rest/BinanceRest");
+const HttpError_1 = require("../Error/HttpError");
 class WsBinance extends BinanceRest_1.BinanceRest {
     constructor(options) {
         super(options);
@@ -65,7 +66,7 @@ class WsBinance extends BinanceRest_1.BinanceRest {
             });
             cb(tickers);
         };
-        return (options) => this._cache.forEach(w => w.close(1000, 'Close handle was called', Object.assign({ keepClosed: true }, options)));
+			return (options) => this._cache.forEach(w => w.close(1000, 'Close handle was called'));
     }
     getUser() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -76,10 +77,10 @@ class WsBinance extends BinanceRest_1.BinanceRest {
                 w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
                 const int = setInterval(keepStreamAlive(this.keepDataStream, this.listenKey), 50e3);
                 keepStreamAlive(this.keepDataStream, this.listenKey)();
-                let result = (options) => __awaiter(this, void 0, void 0, function* () {
+							let result = () => __awaiter(this, void 0, void 0, function* () {
                     clearInterval(int);
                     yield this.closeDataStream();
-                    w.close(1000, 'Close handle was called', Object.assign({ keepClosed: true }, options));
+								w.close(1000, 'Close handle was called');
                 });
                 resolve(result);
             });
@@ -94,6 +95,11 @@ class WsBinance extends BinanceRest_1.BinanceRest {
                 }
             }
             catch (err) {
+							let errnoErr;
+							if (err && typeof err.code === "string") {
+							}
+							let error = new HttpError_1.HttpError('DISCONNECTED', -1001);
+							this._ws.close(error.code, error.message);
             }
         }), 3000);
     }
