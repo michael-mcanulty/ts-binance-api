@@ -6,7 +6,6 @@ const ErrorHandler_1 = require("./ErrorHandler");
 class HttpError extends Error {
 	constructor(err) {
 		super();
-		console.log(err);
 		this.code = parseInt(err.code.toString());
 		let type = HttpError.GetErrorType(err);
 		this.message = (type === EErrorType_1.EErrorType.Binance) ? err['msg'] : err['message'];

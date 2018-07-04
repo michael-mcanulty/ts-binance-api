@@ -40,4 +40,4 @@ var EExecutionType;
 	EExecutionType[EExecutionType["TRADE"] = 4] = "TRADE";
 	EExecutionType[EExecutionType["EXPIRED"] = 5] = "EXPIRED";
 })(EExecutionType = exports.EExecutionType || (exports.EExecutionType = {}));
-//# sourceMappingURL=eOrderEnums.js.map
+//# sourceMappingURL=EOrderEnums.js.map

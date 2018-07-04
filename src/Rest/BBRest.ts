@@ -27,7 +27,6 @@ export class BBRest {
 			}
 
 			let fetchPath:string = this.buildUrl(path, data, callOptions.noData);
-			console.log(fetchPath)
 			callOptions.headers = headers;
 			callOptions.method = EMethod.GET;
 			callOptions.json = true;

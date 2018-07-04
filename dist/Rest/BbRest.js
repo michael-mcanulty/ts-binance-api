@@ -31,7 +31,6 @@ const Fetch = require("isomorphic-fetch");
 const crypto = require("crypto");
 const HttpError_1 = require("../Error/HttpError");
 const EMethod_1 = require("./EMethod");
-
 class BBRest {
 	constructor(options) {
 		this.options = options;
@@ -61,7 +60,6 @@ class BBRest {
 				callOptions.noData = false;
 			}
 			let fetchPath = this.buildUrl(path, data, callOptions.noData);
-			console.log(fetchPath);
 			callOptions.headers = headers;
 			callOptions.method = EMethod_1.EMethod.GET;
 			callOptions.json = true;
@@ -84,6 +82,10 @@ class BBRest {
 				reject(err);
 			}
 		}));
+	}
+
+	buildUrl(path, data, noData) {
+		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
 	}
 
 	call(path, data, callOptions) {
@@ -113,10 +115,6 @@ class BBRest {
 			}
 		});
 		return true;
-	}
-
-	buildUrl(path, data, noData) {
-		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
 	}
 
 	fetch(path, payload, callOptions) {
@@ -206,8 +204,7 @@ class BBRest {
 		}));
 	}
 }
-
 BBRest.BASE = 'https://api.binance.com';
 BBRest.fetch = Fetch;
 exports.BBRest = BBRest;
-//# sourceMappingURL=BbRest.js.map
+//# sourceMappingURL=BBRest.js.map

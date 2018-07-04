@@ -28,7 +28,6 @@ export class HttpError extends Error {
 
 	constructor(err: BinanceError | HttpError | any) {
 		super();
-		console.log(err);
 		this.code = parseInt(err.code.toString());
 		let type: EErrorType = HttpError.GetErrorType(err);
 		this.message = (type === EErrorType.Binance) ? err['msg'] : err['message'];

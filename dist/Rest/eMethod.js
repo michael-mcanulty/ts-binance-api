@@ -7,4 +7,4 @@ var EMethod;
 	EMethod[EMethod["PUT"] = 2] = "PUT";
 	EMethod[EMethod["DELETE"] = 3] = "DELETE";
 })(EMethod = exports.EMethod || (exports.EMethod = {}));
-//# sourceMappingURL=eMethod.js.map
+//# sourceMappingURL=EMethod.js.map

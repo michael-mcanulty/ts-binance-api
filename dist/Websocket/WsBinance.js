@@ -13,7 +13,6 @@ const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWeb
 const ticker_1 = require("../ExchangeInfo/ticker");
 const BinanceRest_1 = require("../Rest/BinanceRest");
 const HttpError_1 = require("../Error/HttpError");
-
 class WSBinance extends BinanceRest_1.BinanceRest {
     constructor(options) {
         super(options);
@@ -106,6 +105,5 @@ class WSBinance extends BinanceRest_1.BinanceRest {
         }
     }
 }
-
 exports.WSBinance = WSBinance;
-//# sourceMappingURL=WsBinance.js.map
+//# sourceMappingURL=WSBinance.js.map

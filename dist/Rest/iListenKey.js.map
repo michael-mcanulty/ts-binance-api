@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "iListenKey.js",
+  "file": "IListenKey.js",
   "sourceRoot": "",
   "sources": [
-    "../../src/Rest/iListenKey.ts"
+    "../../src/Rest/IListenKey.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IListenKey {\n\tlistenKey: string;\n}"
+    "export interface IListenKey {\r\n\tlistenKey: string;\r\n}"
   ]
 }

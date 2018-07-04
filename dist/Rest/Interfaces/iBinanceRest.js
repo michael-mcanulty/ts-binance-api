@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-//# sourceMappingURL=iBinanceRest.js.map
+//# sourceMappingURL=IBinanceRest.js.map

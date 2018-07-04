@@ -25,7 +25,7 @@
     "nodemailer": "^4.6.7",
     "request": "^2.86.0",
     "typescript-map": "0.0.5",
-    "ws": "^5.1.1"
+    "ws": "^5.2.1"
   },
   "devDependencies": {
     "@types/lodash.zipobject": "^4.1.3",

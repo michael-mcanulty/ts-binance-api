@@ -1,9 +1,9 @@
 {
   "version": 3,
-  "file": "iCallOpts.js",
+  "file": "ICallOpts.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/Rest/Interfaces/iCallOpts.ts"
+    "../../../src/Rest/Interfaces/ICallOpts.ts"
   ],
   "names": [],
   "mappings": "",
