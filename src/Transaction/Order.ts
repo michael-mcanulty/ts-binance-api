@@ -1,28 +1,28 @@
-import {iFill} from "./Interfaces/iFill";
-import {iOrder} from "./Interfaces/iOrder";
-import {eOrderSide, eOrderStatus, eOrderType, eTimeInForce} from "./Interfaces/eOrderEnums";
+import {IFill} from "./Interfaces/IFill";
+import {IOrder} from "./Interfaces/IOrder";
+import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 
 export class Order {
 	clientOrderId: string;
 	executedQty: number;
-	fills?: iFill[];
+	fills?: IFill[];
 	orderId: number;
 	origQty: number;
 	price: number;
-	side: eOrderSide;
-	status: eOrderStatus;
+	side: EOrderSide;
+	status: EOrderStatus;
 	symbol: string;
-	timeInForce: eTimeInForce;
+	timeInForce: ETimeInForce;
 	transactTime: number;
-	type: eOrderType;
+	type: EOrderType;
 
-	public static fromDBFormat(orderInput: iOrder): Order {
-		let result: Order = new Order(orderInput.symbol, orderInput.orderId, orderInput.clientOrderId, orderInput.transactTime, parseFloat(orderInput.price), parseFloat(orderInput.origQty), parseFloat(orderInput.executedQty), eOrderStatus[orderInput.status], eTimeInForce[orderInput.timeInForce], eOrderType[orderInput.type], eOrderSide[orderInput.side], orderInput.fills);
+	public static fromDBFormat(orderInput: IOrder): Order {
+		let result: Order = new Order(orderInput.symbol, orderInput.orderId, orderInput.clientOrderId, orderInput.transactTime, parseFloat(orderInput.price), parseFloat(orderInput.origQty), parseFloat(orderInput.executedQty), EOrderStatus[orderInput.status], ETimeInForce[orderInput.timeInForce], EOrderType[orderInput.type], EOrderSide[orderInput.side], orderInput.fills);
 		return result;
 	}
 
-	public static toDBFormat(order: Order): iOrder {
-		let result: iOrder = <iOrder>{};
+	public static toDBFormat(order: Order): IOrder {
+		let result: IOrder = <IOrder>{};
 		result.symbol = order.symbol;
 		result.orderId = order.orderId;
 		result.clientOrderId = order.clientOrderId;
@@ -36,9 +36,9 @@ export class Order {
 		if (order.price !== null) {
 			result.price = order.price.toString();
 		}
-		result.timeInForce = eTimeInForce[order.timeInForce];
-		result.type = eOrderType[order.type];
-		result.side = eOrderSide[order.side];
+		result.timeInForce = ETimeInForce[order.timeInForce];
+		result.type = EOrderType[order.type];
+		result.side = EOrderSide[order.side];
 		if (order.fills) {
 			result.fills = order.fills;
 		}
@@ -46,8 +46,8 @@ export class Order {
 	}
 
 	constructor(symbol: string, orderId: number, clientOrderId: string, transactTime: number,
-							price: number, origQty: number, executedQty: number, status: eOrderStatus,
-							timeInForce: eTimeInForce, type: eOrderType, side: eOrderSide, fills?: iFill[]) {
+							price: number, origQty: number, executedQty: number, status: EOrderStatus,
+							timeInForce: ETimeInForce, type: EOrderType, side: EOrderSide, fills?: IFill[]) {
 		this.symbol = symbol;
 		this.orderId = orderId;
 		this.clientOrderId = clientOrderId;

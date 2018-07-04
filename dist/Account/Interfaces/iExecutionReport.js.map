@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "iExecutionReport.js",
+  "file": "IExecutionReport.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/Account/Interfaces/iExecutionReport.ts"
+    "../../../src/Account/Interfaces/IExecutionReport.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {iMessage} from \"./iMessage\";\r\nimport {\r\n\teExecutionType,\r\n\teOrderSide,\r\n\teOrderStatus,\r\n\teOrderType,\r\n\teTimeInForce\r\n} from \"../../Transaction/Interfaces/eOrderEnums\";\r\n\r\nexport interface iExecutionReport extends iMessage {\r\n\tcommission: string;\r\n\tcommissionAsset: string;\r\n\texecutionType: eExecutionType;\r\n\ticebergQuantity: string;\r\n\tisBuyerMaker: boolean;\r\n\tisOrderWorking: boolean;\r\n\tlastTradeQuantity: string;\r\n\tnewClientOrderId: string;\r\n\torderId: number;\r\n\torderRejectReason: string;\r\n\torderStatus: eOrderStatus;\r\n\torderTime: number;\r\n\torderType: eOrderType;\r\n\toriginalClientOrderId: string;\r\n\tprice: string;\r\n\tpriceLastTrade: string;\r\n\tquantity: string;\r\n\tside: eOrderSide;\r\n\tstopPrice: string;\r\n\tsymbol: string;\r\n\ttimeInForce: eTimeInForce;\r\n\ttotalTradeQuantity: string;\r\n\ttradeId: number;\r\n}\r\n"
+    "import {IMessage} from \"./IMessage\";\r\nimport {\r\n\tEExecutionType,\r\n\tEOrderSide,\r\n\tEOrderStatus,\r\n\tEOrderType,\r\n\tETimeInForce\r\n} from \"../../Transaction/Interfaces/EOrderEnums\";\r\n\r\nexport interface IExecutionReport extends IMessage {\r\n\tcommission: string;\r\n\tcommissionAsset: string;\r\n\texecutionType: EExecutionType;\r\n\ticebergQuantity: string;\r\n\tisBuyerMaker: boolean;\r\n\tisOrderWorking: boolean;\r\n\tlastTradeQuantity: string;\r\n\tnewClientOrderId: string;\r\n\torderId: number;\r\n\torderRejectReason: string;\r\n\torderStatus: EOrderStatus;\r\n\torderTime: number;\r\n\torderType: EOrderType;\r\n\toriginalClientOrderId: string;\r\n\tprice: string;\r\n\tpriceLastTrade: string;\r\n\tquantity: string;\r\n\tside: EOrderSide;\r\n\tstopPrice: string;\r\n\tsymbol: string;\r\n\ttimeInForce: ETimeInForce;\r\n\ttotalTradeQuantity: string;\r\n\ttradeId: number;\r\n}\r\n"
   ]
 }

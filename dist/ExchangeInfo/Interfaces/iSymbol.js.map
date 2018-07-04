@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "iSymbol.js",
+  "file": "ISymbol.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/ExchangeInfo/Interfaces/iSymbol.ts"
+    "../../../src/ExchangeInfo/Interfaces/ISymbol.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {iPriceFilter} from \"./iPriceFilter\";\r\nimport {iLotSize} from \"./iLotSize\";\r\nimport {iMinNotional} from \"./iMinNotional\";\r\n\r\nexport interface iSymbol {\r\n\tbaseAsset: string;\r\n\tbaseAssetPrecision: number;\r\n\tfilters: (iPriceFilter | iLotSize | iMinNotional)[]; //(iPriceFilter|iLotSize|iMinNotional)\r\n\ticebergAllowed: boolean;\r\n\torderTypes?: (string)[] | null;\r\n\tquoteAsset: string;\r\n\tquotePrecision: number;\r\n\tstatus: string;\r\n\tsymbol: string;\r\n}"
+    "import {IPriceFilter} from \"./IPriceFilter\";\r\nimport {ILotSize} from \"./ILotSize\";\r\nimport {IMinNotional} from \"./IMinNotional\";\r\n\r\nexport interface ISymbol {\r\n\tbaseAsset: string;\r\n\tbaseAssetPrecision: number;\r\n\tfilters: (IPriceFilter | ILotSize | IMinNotional)[]; //(IPriceFilter|ILotSize|IMinNotional)\r\n\ticebergAllowed: boolean;\r\n\torderTypes?: (string)[] | null;\r\n\tquoteAsset: string;\r\n\tquotePrecision: number;\r\n\tstatus: string;\r\n\tsymbol: string;\r\n}"
   ]
 }

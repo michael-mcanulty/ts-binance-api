@@ -6,8 +6,8 @@
     "../../../src/Error/Interfaces/iBinanceError.ts"
   ],
   "names": [],
-  "mappings": "",
+  "mappings": ";;AAAA;CAGC;AAHD,oCAGC",
   "sourcesContent": [
-    "export interface iBinanceError {\r\n\tcode: number;\r\n\tmessage: string;\r\n}"
+    "export class BinanceError {\n\tcode: number;\n\tmsg: string;\n}"
   ]
 }

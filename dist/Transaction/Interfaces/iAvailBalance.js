@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=iAvailBalance.js.map
+//# sourceMappingURL=IAvailBalance.js.map

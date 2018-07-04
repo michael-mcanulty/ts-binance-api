@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-//# sourceMappingURL=iCandleOptions.js.map
+//# sourceMappingURL=ICandleOptions.js.map

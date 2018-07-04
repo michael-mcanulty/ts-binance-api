@@ -8,13 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const WsBinance_1 = require("./Websocket/WsBinance");
+const WSBinance_1 = require("./Websocket/WSBinance");
 const Auth_1 = require("./Account/Auth");
 const BinanceRest_1 = require("./Rest/BinanceRest");
 class Binance {
     constructor(options) {
         this.api = new BinanceRest_1.BinanceRest(options);
-        this.ws = new WsBinance_1.WsBinance(options);
+			this.ws = new WSBinance_1.WSBinance(options);
     }
 }
 exports.Binance = Binance;

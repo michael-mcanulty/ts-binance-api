@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface iCancelOrderResult {\r\n\tclientOrderId: string;\r\n\torderId: number;\r\n\torigClientOrderId: string;\r\n\tsymbol: string;\r\n}"
+    "export interface ICancelOrderResult {\r\n\tclientOrderId: string;\r\n\torderId: number;\r\n\torigClientOrderId: string;\r\n\tsymbol: string;\r\n}"
   ]
 }

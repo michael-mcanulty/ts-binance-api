@@ -1,1 +1,13 @@
-{"version":3,"file":"iBal.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iBal.ts"],"names":[],"mappings":"","sourcesContent":["export interface iBal {\r\n\tavailable: string;\r\n\tonOrder: string;\r\n}"]}
+{
+  "version": 3,
+  "file": "IBal.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IBal.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface IBal {\r\n\tavailable: string;\r\n\tonOrder: string;\r\n}"
+  ]
+}

@@ -1,1 +1,13 @@
-{"version":3,"file":"iAvailBalance.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iAvailBalance.ts"],"names":[],"mappings":"","sourcesContent":["export interface iAvailBalance {\r\n\tavailable: number;\r\n\tquoteAsset: string;\r\n\tsymbol: string;\r\n}\r\n"]}
+{
+  "version": 3,
+  "file": "IAvailBalance.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IAvailBalance.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface IAvailBalance {\r\n\tavailable: number;\r\n\tquoteAsset: string;\r\n\tsymbol: string;\r\n}\r\n"
+  ]
+}

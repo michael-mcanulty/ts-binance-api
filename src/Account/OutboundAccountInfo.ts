@@ -1,9 +1,9 @@
-import {iOutboundAccountInfo} from "./Interfaces/iOutboundAccountInfo";
-import {iBinanceBalances} from "../ExchangeInfo/Interfaces/iBinanceBalances";
-import {iOutboundAccountInfoRaw} from "./Interfaces/iOutboundAccountInfoRaw";
+import {IOutboundAccountInfo} from "./Interfaces/IOutboundAccountInfo";
+import {IBinanceBalances} from "../ExchangeInfo/Interfaces/IBinanceBalances";
+import {IOutboundAccountInfoRaw} from "./Interfaces/IOutboundAccountInfoRaw";
 
 export class OutboundAccountInfo{
-	balances: iBinanceBalances;
+	balances: IBinanceBalances;
 	buyerCommissionRate: number;
 	canDeposit: boolean;
 	canTrade: boolean;
@@ -15,9 +15,9 @@ export class OutboundAccountInfo{
 	sellerCommissionRate: number;
 	takerCommissionRate: number;
 
-	constructor(iOutAccountInfoRaw:iOutboundAccountInfoRaw){
+	constructor(iOutAccountInfoRaw: IOutboundAccountInfoRaw) {
 		let m = iOutAccountInfoRaw;
-		let conversion:iOutboundAccountInfo = {
+		let conversion: IOutboundAccountInfo = {
 			eventType: 'account',
 			eventTime: m.E,
 			makerCommissionRate: m.m,

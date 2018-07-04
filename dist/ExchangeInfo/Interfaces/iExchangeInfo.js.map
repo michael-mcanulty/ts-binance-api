@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "iExchangeInfo.js",
+  "file": "IExchangeInfo.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/ExchangeInfo/Interfaces/iExchangeInfo.ts"
+    "../../../src/ExchangeInfo/Interfaces/IExchangeInfo.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {iSymbol} from \"./iSymbol\";\r\n\r\nexport interface iExchangeInfo {\r\n\texchangeFilters?: (null)[] | null;\r\n\tserverTime: number;\r\n\tsymbols: iSymbol[]\r\n\ttimezone: string;\r\n}\r\n"
+    "import {ISymbol} from \"./ISymbol\";\r\n\r\nexport interface IExchangeInfo {\r\n\texchangeFilters?: (null)[] | null;\r\n\tserverTime: number;\r\n\tsymbols: ISymbol[]\r\n\ttimezone: string;\r\n}\r\n"
   ]
 }

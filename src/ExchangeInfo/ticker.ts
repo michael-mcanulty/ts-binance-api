@@ -1,5 +1,5 @@
 import {Price} from "../Transaction/Price";
-import {iStreamTicker, iStreamTickerRaw} from "./Interfaces/iStreamTickerRaw";
+import {iStreamTicker, IStreamTickerRaw} from "./Interfaces/IStreamTickerRaw";
 
 export class Ticker implements iStreamTicker{
 	bestAsk: string;
@@ -30,7 +30,7 @@ export class Ticker implements iStreamTicker{
 		return new Price(this.symbol, this.curDayClose);
 	}
 
-	constructor(rawStreamTicker: iStreamTickerRaw){
+	constructor(rawStreamTicker: IStreamTickerRaw) {
 		let m = rawStreamTicker;
 		let ticker: iStreamTicker = {
 			eventType: m.e,

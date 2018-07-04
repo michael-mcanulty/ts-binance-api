@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-//# sourceMappingURL=iMinNotional.js.map
+//# sourceMappingURL=IMinNotional.js.map

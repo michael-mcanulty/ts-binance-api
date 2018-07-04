@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface ServerTime{\r\n\tserverTime: number;\r\n}"
+    "export interface ServerTime{\n\tserverTime: number;\n}"
   ]
 }

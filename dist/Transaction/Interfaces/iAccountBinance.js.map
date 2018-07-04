@@ -1,1 +1,13 @@
-{"version":3,"file":"iAccountBinance.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iAccountBinance.ts"],"names":[],"mappings":"","sourcesContent":["import {iAccountBalanceBinance} from \"./iAccountBalanceBinance\";\r\n\r\nexport interface iAccountBinance {\r\n\tbalances: iAccountBalanceBinance[];\r\n\tbuyerCommission: number;\r\n\tcanDeposit: boolean;\r\n\tcanTrade: boolean;\r\n\tcanWithdraw: boolean;\r\n\tmakerCommission: number;\r\n\tsellerCommission: number;\r\n\ttakerCommission: number;\r\n\tupdateTime: number;\r\n}"]}
+{
+  "version": 3,
+  "file": "IAccountBinance.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IAccountBinance.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {IAccountBalanceBinance} from \"./IAccountBalanceBinance\";\r\n\r\nexport interface IAccountBinance {\r\n\tbalances: IAccountBalanceBinance[];\r\n\tbuyerCommission: number;\r\n\tcanDeposit: boolean;\r\n\tcanTrade: boolean;\r\n\tcanWithdraw: boolean;\r\n\tmakerCommission: number;\r\n\tsellerCommission: number;\r\n\ttakerCommission: number;\r\n\tupdateTime: number;\r\n}"
+  ]
+}

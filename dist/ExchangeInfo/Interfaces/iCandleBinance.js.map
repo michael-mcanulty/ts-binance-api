@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "iCandleBinance.js",
+  "file": "ICandleBinance.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/ExchangeInfo/Interfaces/iCandleBinance.ts"
+    "../../../src/ExchangeInfo/Interfaces/ICandleBinance.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface iCandleBinance {\r\n\tbuyVolume: string;\r\n\tclose: string;\r\n\tcloseTime: number;\r\n\teventTime: number;\r\n\teventType: string;\r\n\tfirstTradeId: number;\r\n\thigh: string;\r\n\tinterval: string;\r\n\tisFinal: boolean;\r\n\tlastTradeId: number;\r\n\tlow: string;\r\n\topen: string;\r\n\tquoteBuyVolume: string;\r\n\tquoteVolume: string;\r\n\tstartTime: number;\r\n\tsymbol: string;\r\n\ttrades: number;\r\n\tvolume: string;\r\n}\r\n"
+    "export interface ICandleBinance {\r\n\tbuyVolume: string;\r\n\tclose: string;\r\n\tcloseTime: number;\r\n\teventTime: number;\r\n\teventType: string;\r\n\tfirstTradeId: number;\r\n\thigh: string;\r\n\tinterval: string;\r\n\tisFinal: boolean;\r\n\tlastTradeId: number;\r\n\tlow: string;\r\n\topen: string;\r\n\tquoteBuyVolume: string;\r\n\tquoteVolume: string;\r\n\tstartTime: number;\r\n\tsymbol: string;\r\n\ttrades: number;\r\n\tvolume: string;\r\n}\r\n"
   ]
 }

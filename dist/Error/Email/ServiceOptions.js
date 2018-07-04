@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 const EServiceProviders_1 = require("./Enums/EServiceProviders");
-
 class Auth {
 	constructor(auth) {
 		this.user = auth.user;
@@ -24,9 +23,7 @@ class Auth {
 		this._user = value;
 	}
 }
-
 exports.Auth = Auth;
-
 class ServiceOptions {
 	constructor(opts) {
 		this.auth = new Auth(opts.auth);
@@ -45,6 +42,5 @@ class ServiceOptions {
 		this._service = value;
 	}
 }
-
 exports.ServiceOptions = ServiceOptions;
 //# sourceMappingURL=ServiceOptions.js.map

@@ -27,13 +27,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 	});
 };
 Object.defineProperty(exports, "__esModule", {value: true});
-const fetch = require("isomorphic-fetch");
+const Fetch = require("isomorphic-fetch");
 const crypto = require("crypto");
 const HttpError_1 = require("../Error/HttpError");
-const eMethod_1 = require("./eMethod");
-class BbRest {
+const EMethod_1 = require("./EMethod");
+
+class BBRest {
 	constructor(options) {
 		this.options = options;
+	}
+
+	static makeQueryString(params) {
+		let result;
+		if (!params) {
+			result = "";
+		}
+		else {
+			result = `?${Object.keys(params).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`).join('&')}`;
+		}
+		return result;
 	}
 
 	_call(path, data, callOptions) {
@@ -49,8 +61,9 @@ class BbRest {
 				callOptions.noData = false;
 			}
 			let fetchPath = this.buildUrl(path, data, callOptions.noData);
+			console.log(fetchPath);
 			callOptions.headers = headers;
-			callOptions.method = eMethod_1.eMethod.GET;
+			callOptions.method = EMethod_1.EMethod.GET;
 			callOptions.json = true;
 			if (!this.auth.key || !this.auth.secret) {
 				throw new Error('You need to pass an API key and secret to make authenticated calls.');
@@ -62,7 +75,7 @@ class BbRest {
 				else {
 					timestamp.serverTime = Date.now();
 				}
-				signature = crypto.createHmac('sha256', this.auth.secret).update(this.makeQueryString(Object.assign({}, data, {timestamp})).substr(1)).digest('hex');
+				signature = crypto.createHmac('sha256', this.auth.secret).update(BBRest.makeQueryString(Object.assign({}, data, {timestamp})).substr(1)).digest('hex');
 				newData = callOptions.noExtra ? data : Object.assign({}, data, {timestamp, signature});
 				result = yield this.fetch(fetchPath, newData, callOptions);
 				resolve(result);
@@ -71,10 +84,6 @@ class BbRest {
 				reject(err);
 			}
 		}));
-	}
-
-	buildUrl(path, data, noData) {
-		return `${BbRest.BASE}${path.includes('/wapi') ? '' : '/app'}${path}${noData ? '' : this.makeQueryString(data)}`;
 	}
 
 	call(path, data, callOptions) {
@@ -106,45 +115,65 @@ class BbRest {
 		return true;
 	}
 
+	buildUrl(path, data, noData) {
+		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
+	}
+
 	fetch(path, payload, callOptions) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			let json;
-			let msg;
 			let err;
 			if (typeof callOptions.noData !== "boolean") {
 				callOptions.noData = false;
 			}
 			let params = this.buildUrl(path, payload, callOptions.noData);
 			let reqOpts = {};
-			reqOpts.method = eMethod_1.eMethod[eMethod_1.eMethod.GET];
+			reqOpts.method = EMethod_1.EMethod[EMethod_1.EMethod.GET];
 			reqOpts.headers = new Headers();
 			try {
-				let res = yield fetch(params, reqOpts);
+				let res = yield BBRest.fetch(params, reqOpts);
 				json = yield res.json();
-				if (!res.ok) {
-					err = new HttpError_1.HttpError(res.statusText, json.code);
-					reject(err);
+				if (res.ok === false) {
+					err = new HttpError_1.HttpError(json);
+					if (typeof err.handler === "function") {
+						err['handler'].executeApi(err).then(success => {
+							reject(err);
+						});
+					}
+					else {
+						reject(new HttpError_1.HttpError(json));
+					}
 				}
 				else {
 					resolve(json);
 				}
 			}
 			catch (err) {
-				reject(err);
+				if (typeof err.json === "function") {
+					json = yield err.json();
+					let _error = new HttpError_1.HttpError(json);
+					if (_error && typeof _error.handler === "function") {
+						_error['handler'].executeApi(err).then(success => {
+							reject(err);
+						});
+					}
+					else {
+						reject(new HttpError_1.HttpError(_error));
+					}
+				}
+				else {
+					let _error = new HttpError_1.HttpError(err);
+					if (_error && typeof _error.handler === "function") {
+						_error['handler'].executeApi(err).then(success => {
+							reject(err);
+						});
+					}
+					else {
+						reject(new HttpError_1.HttpError(_error));
+					}
+				}
 			}
 		}));
-	}
-
-	makeQueryString(params) {
-		let result;
-		if (!params) {
-			result = "";
-		}
-		else {
-			const esc = encodeURIComponent;
-			result = Object.keys(params).map(k => `?${esc(k)}=${esc(params[k])}`).join('&');
-		}
-		return result;
 	}
 
 	ping() {
@@ -153,10 +182,7 @@ class BbRest {
 				let opts = {};
 				opts.noData = true;
 				let res = yield this.call('/v1/ping', null, opts);
-				let ping = (Object.keys(res).length === 0);
-				if (ping) {
-					resolve(ping);
-				}
+				resolve(true);
 			}
 			catch (err) {
 				reject(err);
@@ -180,6 +206,8 @@ class BbRest {
 		}));
 	}
 }
-BbRest.BASE = 'https://app.binance.com';
-exports.BbRest = BbRest;
+
+BBRest.BASE = 'https://api.binance.com';
+BBRest.fetch = Fetch;
+exports.BBRest = BBRest;
 //# sourceMappingURL=BbRest.js.map

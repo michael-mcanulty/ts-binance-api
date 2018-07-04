@@ -1,1 +1,13 @@
-{"version":3,"file":"iTotalBalance.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iTotalBalance.ts"],"names":[],"mappings":"","sourcesContent":["export interface iTotalBalance {\r\n\tavailableBNBQty: number;\r\n\tavailableUSDTQty: number;\r\n\tinUseQAQty: number;\r\n\tinUseUSDTQty: number;\r\n}"]}
+{
+  "version": 3,
+  "file": "ITotalBalance.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/ITotalBalance.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ITotalBalance {\r\n\tavailableBNBQty: number;\r\n\tavailableUSDTQty: number;\r\n\tinUseQAQty: number;\r\n\tinUseUSDTQty: number;\r\n}"
+  ]
+}

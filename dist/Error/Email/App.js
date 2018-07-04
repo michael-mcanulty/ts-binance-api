@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const ServiceOptions_1 = require("./ServiceOptions");
 const nodeMailer = require("nodemailer");
-
 class NodeMailer {
 	constructor(serviceOptions) {
 		NodeMailer.ServiceConfig = new ServiceOptions_1.ServiceOptions(serviceOptions);
@@ -27,7 +26,6 @@ class NodeMailer {
 		});
 	}
 }
-
 NodeMailer.App = nodeMailer;
 exports.NodeMailer = NodeMailer;
 //# sourceMappingURL=App.js.map

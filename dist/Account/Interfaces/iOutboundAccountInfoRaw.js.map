@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "iOutboundAccountInfoRaw.js",
+  "file": "IOutboundAccountInfoRaw.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/Account/Interfaces/iOutboundAccountInfoRaw.ts"
+    "../../../src/Account/Interfaces/IOutboundAccountInfoRaw.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface iMessageRaw {\r\n\ta: string;\r\n\tf: string;\r\n\tl: string;\r\n}\r\n\r\nexport interface iOutboundAccountInfoRaw {\r\n\tB: iMessageRaw[];\r\n\tD: boolean;\r\n\tE: number;\r\n\tT: boolean;\r\n\tW: boolean;\r\n\tb: number;\r\n\te: string;\r\n\tm: number;\r\n\ts: number;\r\n\tt: number;\r\n\tu: number;\r\n}"
+    "export interface iMessageRaw {\r\n\ta: string;\r\n\tf: string;\r\n\tl: string;\r\n}\r\n\r\nexport interface IOutboundAccountInfoRaw {\r\n\tB: iMessageRaw[];\r\n\tD: boolean;\r\n\tE: number;\r\n\tT: boolean;\r\n\tW: boolean;\r\n\tb: number;\r\n\te: string;\r\n\tm: number;\r\n\ts: number;\r\n\tt: number;\r\n\tu: number;\r\n}"
   ]
 }

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var eMethod;
-(function (eMethod) {
-    eMethod[eMethod["GET"] = 0] = "GET";
-    eMethod[eMethod["POST"] = 1] = "POST";
-    eMethod[eMethod["PUT"] = 2] = "PUT";
-    eMethod[eMethod["DELETE"] = 3] = "DELETE";
-})(eMethod = exports.eMethod || (exports.eMethod = {}));
+var EMethod;
+(function (EMethod) {
+	EMethod[EMethod["GET"] = 0] = "GET";
+	EMethod[EMethod["POST"] = 1] = "POST";
+	EMethod[EMethod["PUT"] = 2] = "PUT";
+	EMethod[EMethod["DELETE"] = 3] = "DELETE";
+})(EMethod = exports.EMethod || (exports.EMethod = {}));
 //# sourceMappingURL=eMethod.js.map

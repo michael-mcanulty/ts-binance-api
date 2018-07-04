@@ -1,14 +1,14 @@
-import {WsBinance} from "./Websocket/WsBinance";
+import {WSBinance} from "./Websocket/WSBinance";
 import {Auth} from "./Account/Auth";
 import {BinanceRest} from "./Rest/BinanceRest";
 import {iBinanceOptions} from "./Binance/Interfaces/iBinanceOptions";
 
 export class Binance{
 	public api:BinanceRest;
-	public ws:WsBinance;
+	public ws: WSBinance;
 	constructor(options:iBinanceOptions){
 		this.api = new BinanceRest(options);
-		this.ws = new WsBinance(options);
+		this.ws = new WSBinance(options);
 	}
 }
 

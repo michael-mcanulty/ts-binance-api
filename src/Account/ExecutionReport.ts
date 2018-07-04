@@ -1,17 +1,17 @@
-import {iExecutionReport} from "./Interfaces/iExecutionReport";
+import {IExecutionReport} from "./Interfaces/IExecutionReport";
 import {
-	eExecutionType,
-	eOrderSide,
-	eOrderStatus,
-	eOrderType,
-	eTimeInForce
-} from "../Transaction/Interfaces/eOrderEnums";
-import {iExecutionReportRaw} from "./Interfaces/iExecutionReportRaw";
+	EExecutionType,
+	EOrderSide,
+	EOrderStatus,
+	EOrderType,
+	ETimeInForce
+} from "../Transaction/Interfaces/EOrderEnums";
+import {IExecutionReportRaw} from "./Interfaces/IExecutionReportRaw";
 
-export class ExecutionReport implements iExecutionReport{
+export class ExecutionReport implements IExecutionReport {
 	commission: string;
 	commissionAsset: string;
-	executionType: eExecutionType;
+	executionType: EExecutionType;
 	icebergQuantity: string;
 	isBuyerMaker: boolean;
 	isOrderWorking: boolean;
@@ -19,39 +19,39 @@ export class ExecutionReport implements iExecutionReport{
 	newClientOrderId: string;
 	orderId: number;
 	orderRejectReason: string;
-	orderStatus: eOrderStatus;
+	orderStatus: EOrderStatus;
 	orderTime: number;
-	orderType: eOrderType;
+	orderType: EOrderType;
 	originalClientOrderId: string;
 	price: string;
 	priceLastTrade: string;
 	quantity: string;
-	side: eOrderSide;
+	side: EOrderSide;
 	stopPrice: string;
 	symbol: string;
-	timeInForce: eTimeInForce;
+	timeInForce: ETimeInForce;
 	totalTradeQuantity: string;
 	tradeId: number;
 	eventTime: number;
 	eventType: string;
 
-	constructor(iExecReportRaw: iExecutionReportRaw ){
+	constructor(iExecReportRaw: IExecutionReportRaw) {
 		let m = iExecReportRaw;
-		let iExecReport: iExecutionReport = {
+		let iExecReport: IExecutionReport = {
 			eventType: 'executionReport',
 			eventTime: m.E,
 			symbol: m.s,
 			newClientOrderId: m.c,
 			originalClientOrderId: m.C,
-			side: eOrderSide[m.S],
-			orderType: eOrderType[m.o],
-			timeInForce: eTimeInForce[m.f],
+			side: EOrderSide[m.S],
+			orderType: EOrderType[m.o],
+			timeInForce: ETimeInForce[m.f],
 			quantity: m.q,
 			price: m.p,
-			executionType: eExecutionType[m.x],
+			executionType: EExecutionType[m.x],
 			stopPrice: m.P,
 			icebergQuantity: m.F,
-			orderStatus: eOrderStatus[m.X],
+			orderStatus: EOrderStatus[m.X],
 			orderRejectReason: m.r,
 			orderId: m.i,
 			orderTime: m.T,

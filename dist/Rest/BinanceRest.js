@@ -36,10 +36,11 @@ var __rest = (this && this.__rest) || function (s, e) {
 	return t;
 };
 Object.defineProperty(exports, "__esModule", {value: true});
-const BbRest_1 = require("./BbRest");
-const eMethod_1 = require("./eMethod");
+const BBRest_1 = require("./BBRest");
+const EMethod_1 = require("./EMethod");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
-class BinanceRest extends BbRest_1.BbRest {
+
+class BinanceRest extends BBRest_1.BBRest {
 	constructor(options) {
 		super(options);
 		this.userEventHandler = cb => msg => {
@@ -56,7 +57,7 @@ class BinanceRest extends BbRest_1.BbRest {
 			let result;
 			try {
 				let callOpts = {};
-				callOpts.method = eMethod_1.eMethod.DELETE;
+				callOpts.method = EMethod_1.EMethod.DELETE;
 				callOpts.noData = false;
 				callOpts.noExtra = true;
 				result = yield this._call('/v1/userDataStream', this.listenKey, callOpts);
@@ -72,7 +73,7 @@ class BinanceRest extends BbRest_1.BbRest {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
 				let callOpts = {};
-				callOpts.method = eMethod_1.eMethod.POST;
+				callOpts.method = EMethod_1.EMethod.POST;
 				callOpts.noData = true;
 				this.listenKey = (yield this._call('/v1/userDataStream', null, callOpts));
 				resolve(this.listenKey);
@@ -88,7 +89,7 @@ class BinanceRest extends BbRest_1.BbRest {
 			let result;
 			try {
 				let callOpts = {};
-				callOpts.method = eMethod_1.eMethod.PUT;
+				callOpts.method = EMethod_1.EMethod.PUT;
 				callOpts.noData = false;
 				callOpts.noExtra = true;
 				result = yield this._call('/v1/userDataStream', this.listenKey, callOpts);

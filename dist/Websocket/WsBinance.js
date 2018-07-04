@@ -13,7 +13,8 @@ const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWeb
 const ticker_1 = require("../ExchangeInfo/ticker");
 const BinanceRest_1 = require("../Rest/BinanceRest");
 const HttpError_1 = require("../Error/HttpError");
-class WsBinance extends BinanceRest_1.BinanceRest {
+
+class WSBinance extends BinanceRest_1.BinanceRest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
@@ -22,7 +23,7 @@ class WsBinance extends BinanceRest_1.BinanceRest {
         this.options = options;
         this._reconOptions = {};
         this._reconOptions.connectionTimeout = 4E3;
-        this._reconOptions.constructor = typeof window !== 'undefined' ? WsBinance : Html5WebSocket;
+			this._reconOptions.constructor = typeof window !== 'undefined' ? WSBinance : Html5WebSocket;
         this._reconOptions.debug = false;
         this._reconOptions.maxReconnectionDelay = 10E3;
         this._reconOptions.maxRetries = Infinity;
@@ -90,15 +91,9 @@ class WsBinance extends BinanceRest_1.BinanceRest {
         setInterval(() => __awaiter(this, void 0, void 0, function* () {
             try {
                 this.isAlive = yield this.ping();
-                if (!this.isAlive) {
-                    console.log("Lost Connectivity. Restart the server using process.exit(0)");
-                }
             }
             catch (err) {
-							let errnoErr;
-							if (err && typeof err.code === "string") {
-							}
-							let error = new HttpError_1.HttpError('DISCONNECTED', -1001);
+							let error = new HttpError_1.HttpError({msg: 'DISCONNECTED', code: -1001});
 							this._ws.close(error.code, error.message);
             }
         }), 3000);
@@ -111,5 +106,6 @@ class WsBinance extends BinanceRest_1.BinanceRest {
         }
     }
 }
-exports.WsBinance = WsBinance;
+
+exports.WSBinance = WSBinance;
 //# sourceMappingURL=WsBinance.js.map

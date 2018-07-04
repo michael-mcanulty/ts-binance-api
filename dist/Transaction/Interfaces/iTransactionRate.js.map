@@ -1,1 +1,13 @@
-{"version":3,"file":"iTransactionRate.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/iTransactionRate.ts"],"names":[],"mappings":"","sourcesContent":["export interface iTransactionRate {\r\n\tbuy: number,\r\n\tsell: number\r\n}"]}
+{
+  "version": 3,
+  "file": "ITransactionRate.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/ITransactionRate.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ITransactionRate {\r\n\tbuy: number,\r\n\tsell: number\r\n}"
+  ]
+}

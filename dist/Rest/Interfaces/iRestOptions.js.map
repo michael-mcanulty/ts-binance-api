@@ -1,9 +1,9 @@
 {
   "version": 3,
-  "file": "iRestOptions.js",
+  "file": "IRestOptions.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/Rest/Interfaces/iRestOptions.ts"
+    "../../../src/Rest/Interfaces/IRestOptions.ts"
   ],
   "names": [],
   "mappings": "",

@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface iBinanceErrorCode {\r\n\tcode: number;\r\n\tmsg: string;\r\n}"
+    "export interface iBinanceErrorCode {\n\tcode: number;\n\tmsg: string;\n}"
   ]
 }

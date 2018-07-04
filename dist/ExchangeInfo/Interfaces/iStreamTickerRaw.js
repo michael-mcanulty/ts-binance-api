@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-//# sourceMappingURL=iStreamTickerRaw.js.map
+//# sourceMappingURL=IStreamTickerRaw.js.map

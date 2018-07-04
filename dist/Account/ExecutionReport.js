@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-const eOrderEnums_1 = require("../Transaction/Interfaces/eOrderEnums");
+const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
 class ExecutionReport {
 	constructor(iExecReportRaw) {
 		let m = iExecReportRaw;
@@ -10,15 +10,15 @@ class ExecutionReport {
 			symbol: m.s,
 			newClientOrderId: m.c,
 			originalClientOrderId: m.C,
-			side: eOrderEnums_1.eOrderSide[m.S],
-			orderType: eOrderEnums_1.eOrderType[m.o],
-			timeInForce: eOrderEnums_1.eTimeInForce[m.f],
+			side: EOrderEnums_1.EOrderSide[m.S],
+			orderType: EOrderEnums_1.EOrderType[m.o],
+			timeInForce: EOrderEnums_1.ETimeInForce[m.f],
 			quantity: m.q,
 			price: m.p,
-			executionType: eOrderEnums_1.eExecutionType[m.x],
+			executionType: EOrderEnums_1.EExecutionType[m.x],
 			stopPrice: m.P,
 			icebergQuantity: m.F,
-			orderStatus: eOrderEnums_1.eOrderStatus[m.X],
+			orderStatus: EOrderEnums_1.EOrderStatus[m.X],
 			orderRejectReason: m.r,
 			orderId: m.i,
 			orderTime: m.T,

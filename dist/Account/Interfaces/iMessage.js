@@ -5,4 +5,4 @@ var eEventType;
 	eEventType[eEventType["executionReport"] = 0] = "executionReport";
 	eEventType[eEventType["account"] = 1] = "account";
 })(eEventType = exports.eEventType || (exports.eEventType = {}));
-//# sourceMappingURL=iMessage.js.map
+//# sourceMappingURL=IMessage.js.map

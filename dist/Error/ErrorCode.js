@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class ErrorCode {
 	static GetErrorByCode(code) {
-		let filtered = ErrorCode.all.filter(handler => handler.code === code);
+		let filtered = ErrorCode.allItems.filter(handler => handler.code === code);
 		let result;
 		if (filtered && filtered.length > 0) {
 			result = filtered[0];
@@ -27,7 +26,7 @@ class ErrorCode {
 	}
 }
 
-ErrorCode.all = [
+ErrorCode.allItems = [
 	{"msg": "UNKNOWN", "code": -1000},
 	{
 		"msg": "DISCONNECTED",
