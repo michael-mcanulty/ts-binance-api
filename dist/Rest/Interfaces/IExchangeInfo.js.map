@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IExchangeInfo.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Rest/Interfaces/IExchangeInfo.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ISymbol {\r\n\tbaseAsset: string;\r\n\tbaseAssetPrecision: number;\r\n\tfilters: (IPriceFilter | ILotSize | IMinNotional)[]; //(IPriceFilter|ILotSize|IMinNotional)\r\n\ticebergAllowed: boolean;\r\n\torderTypes?: (string)[] | null;\r\n\tquoteAsset: string;\r\n\tquotePrecision: number;\r\n\tstatus: string;\r\n\tsymbol: string;\r\n}\r\n\r\nexport interface ILimitsBinance {\r\n\tfilterType: string;\r\n\tmaxPrice: string;\r\n\tmaxQty: string;\r\n\tminNotional: string;\r\n\tminPrice: string;\r\n\tminQty: string;\r\n\tstepSize: string;\r\n\ttickSize: string;\r\n}\r\n\r\nexport interface ILimits {\r\n\tmaxPrice: number;\r\n\tmaxQty: number;\r\n\tminNotional: number;\r\n\tminPrice: number;\r\n\tminQty: number;\r\n\tstepSize: number;\r\n}\r\n\r\nexport interface IPriceFilter {\r\n\tfilterType: string;\r\n\tmaxPrice: string;\r\n\tminPrice: string;\r\n\ttickSize: string;\r\n}\r\n\r\nexport interface ILotSize {\r\n\tfilterType: string;\r\n\tmaxQty: string;\r\n\tminQty: string;\r\n\tstepSize: string;\r\n}\r\n\r\nexport interface IMinNotional {\r\n\tfilterType: string;\r\n\tminNotional: string;\r\n}\r\n\r\nexport interface IExchangeInfo {\r\n\texchangeFilters?: (null)[] | null;\r\n\tserverTime: number;\r\n\tsymbols: ISymbol[]\r\n\ttimezone: string;\r\n}"
+  ]
+}
