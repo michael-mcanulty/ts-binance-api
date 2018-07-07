@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "IBinanceRest.js",
+  "file": "iBinanceRest.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/Rest/Interfaces/IBinanceRest.ts"
+    "../../../src/Rest/Interfaces/iBinanceRest.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {INewOrder} from \"../../Transaction/Interfaces/INewOrder\";\r\nimport {IExchangeInfo} from \"../../ExchangeInfo/Interfaces/IExchangeInfo\";\r\nimport {Order} from \"../../Transaction/Order\";\r\nimport {Price} from \"../../Transaction/Price\";\r\nimport {IQueryOrderResult} from \"../../Transaction/Interfaces/IQueryOrderResult\";\r\nimport {ICancelOrderResult} from \"../../Transaction/Interfaces/iCandleOrderResult\";\r\nimport {iCandlesOptions} from \"../../ExchangeInfo/Interfaces/ICandleOptions\";\r\nimport {CandleInterval} from \"../../ExchangeInfo/CandleInterval\";\r\n\r\nexport interface IBinanceRest {\r\n    accountInfo(options?: { useServerTime: boolean }): Promise<Account>;\r\n\r\n\tcancelOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<ICancelOrderResult>;\r\n\r\n    candles(options: iCandlesOptions): Promise<CandleInterval[]>;\r\n\r\n\texchangeInfo(): Promise<IExchangeInfo>;\r\n\r\n\tgetOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<IQueryOrderResult>;\r\n\r\n\topenOrders(options: { symbol: string, useServerTime?: boolean }): Promise<IQueryOrderResult[]>;\r\n\r\n\torder(options: INewOrder): Promise<Order>;\r\n\r\n\torderTest(options: INewOrder): Promise<Order>;\r\n\r\n    prices(): Promise<Price[]>;\r\n\r\n    time(): Promise<number>;\r\n}"
+    "import {INewOrder} from \"../../Transaction/Interfaces/INewOrder\";\r\nimport {IExchangeInfo} from \"../../ExchangeInfo/Interfaces/IExchangeInfo\";\r\nimport {Order} from \"../../Transaction/Order\";\r\nimport {Price} from \"../../Transaction/Price\";\r\nimport {IQueryOrderResult} from \"../../Transaction/Interfaces/IQueryOrderResult\";\r\nimport {ICancelOrderResult} from \"../../Transaction/Interfaces/iCandleOrderResult\";\r\nimport {iCandlesOptions} from \"../../ExchangeInfo/Interfaces/ICandleOptions\";\r\nimport {CandleInterval} from \"../../ExchangeInfo/CandleInterval\";\r\n\r\nexport interface IBinanceRest {\r\n\taccountInfo(options?: { useServerTime: boolean }): Promise<Account>;\r\n\r\n\tcancelOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<ICancelOrderResult>;\r\n\r\n\tgetCandles(options: iCandlesOptions): Promise<CandleInterval[]>;\r\n\r\n\texchangeInfo(): Promise<IExchangeInfo>;\r\n\r\n\tgetOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<IQueryOrderResult>;\r\n\r\n\topenOrders(options: { symbol: string, useServerTime?: boolean }): Promise<IQueryOrderResult[]>;\r\n\r\n\torder(options: INewOrder): Promise<Order>;\r\n\r\n\torderTest(options: INewOrder): Promise<Order>;\r\n\r\n\tgetPrices(): Promise<Price[]>;\r\n\r\n\tgetTime(): Promise<number>;\r\n}"
   ]
 }

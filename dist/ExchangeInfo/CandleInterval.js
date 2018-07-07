@@ -5,10 +5,10 @@ const Binance_1 = require("../Binance/Binance");
 class CandleInterval {
 	constructor(candles) {
 		this.candles = candles;
-		this.interval = this.candles[0].period;
+		this.interval = this.candles[0].interval;
 		this.symbol = this.candles[0].symbol;
 		this.lastUpdated = candles[candles.length - 1].date;
-		this.nextUpdate = this.lastUpdated.getTime() + Binance_1.Binance.msInterval[this.interval];
+		this.nextUpdate = this.lastUpdated.getTime() + Binance_1.Binance.intervalToMilliseconds[this.interval];
 		this._interval = new IndicatorInterval_1.Interval(this.interval);
 	}
 }

@@ -8,12 +8,16 @@ import {ICallOpts} from "./Interfaces/ICallOpts";
 import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
 
 export class BBRest {
-	public static BASE: string = 'https://api.binance.com';
+	public static BASE: string = 'https://http.binance.com';
 	public static fetch: Function = Fetch;
 	public auth: Auth;
 	public options:iBinanceOptions;
 
-	public _call(path: string, data: any, callOptions: ICallOpts): Promise<any> {
+	public buildUrl(path:string, data:object, noData:boolean):string{
+		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
+	}
+
+	public privateCall(path: string, data: any, callOptions: ICallOpts): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature:string;
@@ -56,10 +60,6 @@ export class BBRest {
 		});
 	}
 
-	private buildUrl(path:string, data:object, noData:boolean):string{
-		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
-	}
-
 	call(path: string, data?: any, callOptions?: ICallOpts): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result:any;
@@ -74,20 +74,6 @@ export class BBRest {
 		  	reject(err);
 			}
 		});
-	}
-
-	private checkParams(name: string, payload: object, requires: any[]): boolean {
-		if (!payload) {
-			throw new Error('You need to pass a payload object.')
-		}
-
-		requires.forEach(r => {
-			if (!payload[r] && isNaN(payload[r])) {
-				throw new Error(`Method ${name} requires ${r} parameter.`)
-			}
-		});
-
-		return true
 	}
 
 	public fetch(path: string, payload: any, callOptions: ICallOpts): Promise<Response> {

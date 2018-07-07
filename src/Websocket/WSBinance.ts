@@ -6,13 +6,15 @@ import {Ticker} from "../ExchangeInfo/ticker";
 import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
 import {BinanceRest} from "../Rest/BinanceRest";
 import {HttpError} from "../Error/HttpError";
+import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
+import {Candle} from "../ExchangeInfo/Candle";
 
 export class WSBinance extends BinanceRest {
-	private _cache: any;
+	private static _INSTANCE: WSBinance;
 	private readonly _reconOptions: iReconWSOptions = <iReconWSOptions>{};
-	private _ws: ReconnectingWebSocket;
+	private static _ws: ReconnectingWebSocket;
 	public base: string = 'wss://stream.binance.com:9443/ws';
-	private isAlive: boolean = false;
+	private static isAlive: boolean = false;
 	public options: iBinanceOptions;
 	private _url: string;
 	get url(): string {
@@ -31,22 +33,11 @@ export class WSBinance extends BinanceRest {
 		}
 	}
 
-	public cache(payload: any | any[]): any[] {
-		return Array.isArray(payload) ? payload : [payload];
+	public static get Instance() {
+		return this._INSTANCE;
 	}
 
-	public getPrices(cb: Function) {
-		let ticksToPrices = (tickers: Ticker[]) => {
-			let prices: Price[] = tickers.map(t => {
-				return t.toPrice();
-			});
-			cb(prices);
-		};
-
-		this.getTickers(ticksToPrices);
-	}
-
-	public getTickers(cb: Function): any {
+	private _getTickers(cb: Function): any {
 		let tickers: Ticker[];
 		let w: ReconnectingWebSocket = this.openWebSocket(this._getTickerUrl(null));
 		w.onmessage = msg => {
@@ -58,19 +49,39 @@ export class WSBinance extends BinanceRest {
 			cb(tickers);
 		};
 
-		return (options) => this._cache.forEach(w => w.close(1000, 'Close handle was called'));
+		return (options) => w.close(1000, 'Close handle was called');
 	}
+
+	public candles(symbols:string[], intervals:string[], cb:Function):any{
+		const symbolCache = symbols.map(symbol=>{
+	  	return intervals.map(interval=>{
+				let w: ReconnectingWebSocket = this.openWebSocket(`${this.base}/${symbol.toLowerCase()}@kline_${interval}`);
+				w.onmessage = msg => {
+					let klineRes: IStreamRawKlineResponse;
+					klineRes = JSON.parse(msg.data);
+					let candle:Candle;
+					if(klineRes.k.x){
+						candle = Candle.fromStream(klineRes);
+						cb(candle);
+					}
+				};
+				return w;
+			});
+		});
+
+		return (options) => symbolCache.forEach(cache => cache.forEach(w=>w.close(1000, 'Close handle was called')));
+	};
 
 	public getUser(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			const keepStreamAlive = (method, listenKey) => () => method({listenKey});
 			this.user = async cb => {
-				this.listenKey = await this.getDataStream();
-				const w = this.openWebSocket(`${this.base}/${this.listenKey}`);
+				BinanceRest.listenKey = await this.getDataStream();
+				const w = this.openWebSocket(`${this.base}/${BinanceRest.listenKey}`);
 				w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
 
-				const int = setInterval(keepStreamAlive(this.keepDataStream, this.listenKey), 50e3);
-				keepStreamAlive(this.keepDataStream, this.listenKey)();
+				const int = setInterval(keepStreamAlive(this.keepDataStream, BinanceRest.listenKey), 50e3);
+				keepStreamAlive(this.keepDataStream, BinanceRest.listenKey)();
 
 				let result = async () => {
 					clearInterval(int);
@@ -83,13 +94,13 @@ export class WSBinance extends BinanceRest {
 	}
 
 	//Check for disconnected state
-	private heartbeat(): void {
+	private static heartbeat(): void {
 		setInterval(async () => {
 			try {
-				this.isAlive = await this.ping();
+				this.isAlive = await WSBinance.Instance.ping();
 			} catch (err) {
 				let error: HttpError = new HttpError({msg: 'DISCONNECTED', code: -1001});
-				this._ws.close(error.code, error.message);
+				WSBinance._ws.close(error.code, error.message);
 			}
 		}, 3000);
 	}
@@ -97,12 +108,23 @@ export class WSBinance extends BinanceRest {
 	public openWebSocket(url): ReconnectingWebSocket {
 		if (url) {
 			this.url = url;
-			this._ws = new ReconnectingWebSocket(this.url, undefined, this._reconOptions);
-			return this._ws;
+			WSBinance._ws = new ReconnectingWebSocket(this.url, undefined, this._reconOptions);
+			return WSBinance._ws;
 		}
 	}
 
-	constructor(options: iBinanceOptions) {
+	public prices(cb: Function) {
+		let ticksToPrices = (tickers: Ticker[]) => {
+			let prices: Price[] = tickers.map(t => {
+				return t.toPrice();
+			});
+			cb(prices);
+		};
+
+		this._getTickers(ticksToPrices);
+	}
+
+	constructor(options?: iBinanceOptions) {
 		super(options);
 		this.options = options;
 		this._reconOptions = <iReconWSOptions>{};
@@ -112,6 +134,5 @@ export class WSBinance extends BinanceRest {
 		this._reconOptions.maxReconnectionDelay = 10E3;
 		this._reconOptions.maxRetries = Infinity;
 		this._reconOptions.minReconnectionDelay = 4E3;
-		this.heartbeat();
 	}
 }

@@ -13,12 +13,12 @@ const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWeb
 const ticker_1 = require("../ExchangeInfo/ticker");
 const BinanceRest_1 = require("../Rest/BinanceRest");
 const HttpError_1 = require("../Error/HttpError");
+const Candle_1 = require("../ExchangeInfo/Candle");
 class WSBinance extends BinanceRest_1.BinanceRest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
         this.base = 'wss://stream.binance.com:9443/ws';
-        this.isAlive = false;
         this.options = options;
         this._reconOptions = {};
         this._reconOptions.connectionTimeout = 4E3;
@@ -27,7 +27,6 @@ class WSBinance extends BinanceRest_1.BinanceRest {
         this._reconOptions.maxReconnectionDelay = 10E3;
         this._reconOptions.maxRetries = Infinity;
         this._reconOptions.minReconnectionDelay = 4E3;
-        this.heartbeat();
     }
     get url() {
         return this._url;
@@ -43,19 +42,24 @@ class WSBinance extends BinanceRest_1.BinanceRest {
             return `${this.base}/!ticker@arr`;
         }
     }
-    cache(payload) {
-        return Array.isArray(payload) ? payload : [payload];
-    }
-    getPrices(cb) {
-        let ticksToPrices = (tickers) => {
-            let prices = tickers.map(t => {
-                return t.toPrice();
-            });
-            cb(prices);
-        };
-        this.getTickers(ticksToPrices);
-    }
-    getTickers(cb) {
+
+	static get Instance() {
+		return this._INSTANCE;
+	}
+
+	static heartbeat() {
+		setInterval(() => __awaiter(this, void 0, void 0, function* () {
+			try {
+				this.isAlive = yield WSBinance.Instance.ping();
+			}
+			catch (err) {
+				let error = new HttpError_1.HttpError({msg: 'DISCONNECTED', code: -1001});
+				WSBinance._ws.close(error.code, error.message);
+			}
+		}), 3000);
+	}
+
+	_getTickers(cb) {
         let tickers;
         let w = this.openWebSocket(this._getTickerUrl(null));
         w.onmessage = msg => {
@@ -66,17 +70,38 @@ class WSBinance extends BinanceRest_1.BinanceRest {
             });
             cb(tickers);
         };
-			return (options) => this._cache.forEach(w => w.close(1000, 'Close handle was called'));
-    }
+		return (options) => w.close(1000, 'Close handle was called');
+	}
+
+	candles(symbols, intervals, cb) {
+		const symbolCache = symbols.map(symbol => {
+			return intervals.map(interval => {
+				let w = this.openWebSocket(`${this.base}/${symbol.toLowerCase()}@kline_${interval}`);
+				w.onmessage = msg => {
+					let klineRes;
+					klineRes = JSON.parse(msg.data);
+					let candle;
+					if (klineRes.k.x) {
+						candle = Candle_1.Candle.fromStream(klineRes);
+						cb(candle);
+					}
+				};
+				return w;
+			});
+		});
+		return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
+	}
+	;
+
     getUser() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             const keepStreamAlive = (method, listenKey) => () => method({ listenKey });
             this.user = (cb) => __awaiter(this, void 0, void 0, function* () {
-                this.listenKey = yield this.getDataStream();
-                const w = this.openWebSocket(`${this.base}/${this.listenKey}`);
+							BinanceRest_1.BinanceRest.listenKey = yield this.getDataStream();
+							const w = this.openWebSocket(`${this.base}/${BinanceRest_1.BinanceRest.listenKey}`);
                 w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
-                const int = setInterval(keepStreamAlive(this.keepDataStream, this.listenKey), 50e3);
-                keepStreamAlive(this.keepDataStream, this.listenKey)();
+							const int = setInterval(keepStreamAlive(this.keepDataStream, BinanceRest_1.BinanceRest.listenKey), 50e3);
+							keepStreamAlive(this.keepDataStream, BinanceRest_1.BinanceRest.listenKey)();
 							let result = () => __awaiter(this, void 0, void 0, function* () {
                     clearInterval(int);
                     yield this.closeDataStream();
@@ -86,24 +111,26 @@ class WSBinance extends BinanceRest_1.BinanceRest {
             });
         }));
     }
-    heartbeat() {
-        setInterval(() => __awaiter(this, void 0, void 0, function* () {
-            try {
-                this.isAlive = yield this.ping();
-            }
-            catch (err) {
-							let error = new HttpError_1.HttpError({msg: 'DISCONNECTED', code: -1001});
-							this._ws.close(error.code, error.message);
-            }
-        }), 3000);
-    }
+
     openWebSocket(url) {
         if (url) {
             this.url = url;
-            this._ws = new ReconnectingWebSocket_1.default(this.url, undefined, this._reconOptions);
-            return this._ws;
+					WSBinance._ws = new ReconnectingWebSocket_1.default(this.url, undefined, this._reconOptions);
+					return WSBinance._ws;
         }
     }
+
+	prices(cb) {
+		let ticksToPrices = (tickers) => {
+			let prices = tickers.map(t => {
+				return t.toPrice();
+			});
+			cb(prices);
+		};
+		this._getTickers(ticksToPrices);
+	}
 }
+
+WSBinance.isAlive = false;
 exports.WSBinance = WSBinance;
-//# sourceMappingURL=WSBinance.js.map
+//# sourceMappingURL=WsBinance.js.map

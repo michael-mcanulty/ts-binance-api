@@ -6,8 +6,8 @@
     "../../src/ExchangeInfo/IndicatorInterval.ts"
   ],
   "names": [],
-  "mappings": ";;AAAA,gDAA2C;AAE3C;IAKC,YAAY,QAAgB;QAC3B,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAC;QACzB,IAAI,CAAC,UAAU,GAAG,iBAAO,CAAC,UAAU,CAAC,QAAQ,CAAC,CAAC;QAC/C,IAAI,CAAC,KAAK,GAAG,iBAAO,CAAC,SAAS,CAAC,OAAO,CAAC,IAAI,CAAC,QAAQ,CAAC,CAAC;IACvD,CAAC;CACD;AAVD,4BAUC",
+  "mappings": ";;AAAA,gDAA2C;AAE3C;IAKC,YAAY,QAAgB;QAC3B,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAC;QACzB,IAAI,CAAC,UAAU,GAAG,iBAAO,CAAC,sBAAsB,CAAC,QAAQ,CAAC,CAAC;QAC3D,IAAI,CAAC,KAAK,GAAG,iBAAO,CAAC,SAAS,CAAC,OAAO,CAAC,IAAI,CAAC,QAAQ,CAAC,CAAC;IACvD,CAAC;CACD;AAVD,4BAUC",
   "sourcesContent": [
-    "import {Binance} from \"../Binance/Binance\";\r\n\r\nexport class Interval {\r\n\tindex: number;\r\n\tinterval: string;\r\n\tmsInterval: number;\r\n\r\n\tconstructor(interval: string) {\r\n\t\tthis.interval = interval;\r\n\t\tthis.msInterval = Binance.msInterval[interval];\r\n\t\tthis.index = Binance.INTERVALS.indexOf(this.interval);\r\n\t}\r\n}"
+    "import {Binance} from \"../Binance/Binance\";\r\n\r\nexport class Interval {\r\n\tindex: number;\r\n\tinterval: string;\r\n\tmsInterval: number;\r\n\r\n\tconstructor(interval: string) {\r\n\t\tthis.interval = interval;\r\n\t\tthis.msInterval = Binance.intervalToMilliseconds[interval];\r\n\t\tthis.index = Binance.INTERVALS.indexOf(this.interval);\r\n\t}\r\n}"
   ]
 }

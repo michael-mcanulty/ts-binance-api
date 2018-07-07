@@ -47,7 +47,11 @@ class BBRest {
 		return result;
 	}
 
-	_call(path, data, callOptions) {
+	buildUrl(path, data, noData) {
+		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
+	}
+
+	privateCall(path, data, callOptions) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			let result;
 			let signature;
@@ -84,10 +88,6 @@ class BBRest {
 		}));
 	}
 
-	buildUrl(path, data, noData) {
-		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
-	}
-
 	call(path, data, callOptions) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			let result;
@@ -103,18 +103,6 @@ class BBRest {
 				reject(err);
 			}
 		}));
-	}
-
-	checkParams(name, payload, requires) {
-		if (!payload) {
-			throw new Error('You need to pass a payload object.');
-		}
-		requires.forEach(r => {
-			if (!payload[r] && isNaN(payload[r])) {
-				throw new Error(`Method ${name} requires ${r} parameter.`);
-			}
-		});
-		return true;
 	}
 
 	fetch(path, payload, callOptions) {
@@ -204,7 +192,8 @@ class BBRest {
 		}));
 	}
 }
-BBRest.BASE = 'https://api.binance.com';
+
+BBRest.BASE = 'https://http.binance.com';
 BBRest.fetch = Fetch;
 exports.BBRest = BBRest;
-//# sourceMappingURL=BBRest.js.map
+//# sourceMappingURL=BbRest.js.map

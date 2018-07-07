@@ -1,20 +1,26 @@
-export interface ICandleBinance {
-	buyVolume: string;
-	close: string;
-	closeTime: number;
-	eventTime: number;
-	eventType: string;
-	firstTradeId: number;
-	high: string;
-	interval: string;
-	isFinal: boolean;
-	lastTradeId: number;
-	low: string;
-	open: string;
-	quoteBuyVolume: string;
-	quoteVolume: string;
-	startTime: number;
-	symbol: string;
-	trades: number;
-	volume: string;
+export interface IStreamRawKline {
+	B: string;
+	L: number;
+	Q: string;
+	T: number;
+	V: string;
+	c: string;
+	f: number;
+	h: string;
+	i: string;
+	l: string;
+	n: number;
+	o: string;
+	q: string;
+	s: string;
+	t: number;
+	v: string;
+	x: boolean;
+}
+
+export interface IStreamRawKlineResponse {
+	E: number;
+	e: string;
+	k: IStreamRawKline;
+	s: string;
 }

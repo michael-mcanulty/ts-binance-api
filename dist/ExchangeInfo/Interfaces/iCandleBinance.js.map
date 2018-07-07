@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "file": "ICandleBinance.js",
+  "file": "iCandleBinance.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/ExchangeInfo/Interfaces/ICandleBinance.ts"
+    "../../../src/ExchangeInfo/Interfaces/iCandleBinance.ts"
   ],
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface ICandleBinance {\r\n\tbuyVolume: string;\r\n\tclose: string;\r\n\tcloseTime: number;\r\n\teventTime: number;\r\n\teventType: string;\r\n\tfirstTradeId: number;\r\n\thigh: string;\r\n\tinterval: string;\r\n\tisFinal: boolean;\r\n\tlastTradeId: number;\r\n\tlow: string;\r\n\topen: string;\r\n\tquoteBuyVolume: string;\r\n\tquoteVolume: string;\r\n\tstartTime: number;\r\n\tsymbol: string;\r\n\ttrades: number;\r\n\tvolume: string;\r\n}\r\n"
+    "export interface IStreamRawKline {\r\n\tB: string;\r\n\tL: number;\r\n\tQ: string;\r\n\tT: number;\r\n\tV: string;\r\n\tc: string;\r\n\tf: number;\r\n\th: string;\r\n\ti: string;\r\n\tl: string;\r\n\tn: number;\r\n\to: string;\r\n\tq: string;\r\n\ts: string;\r\n\tt: number;\r\n\tv: string;\r\n\tx: boolean;\r\n}\r\n\r\nexport interface IStreamRawKlineResponse {\r\n\tE: number;\r\n\te: string;\r\n\tk: IStreamRawKline;\r\n\ts: string;\r\n}\r\n"
   ]
 }

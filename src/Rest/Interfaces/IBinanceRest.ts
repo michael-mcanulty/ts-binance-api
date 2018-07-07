@@ -8,11 +8,11 @@ import {iCandlesOptions} from "../../ExchangeInfo/Interfaces/ICandleOptions";
 import {CandleInterval} from "../../ExchangeInfo/CandleInterval";
 
 export interface IBinanceRest {
-    accountInfo(options?: { useServerTime: boolean }): Promise<Account>;
+	accountInfo(options?: { useServerTime: boolean }): Promise<Account>;
 
 	cancelOrder(options: { symbol: string; orderId: number, useServerTime?: boolean }): Promise<ICancelOrderResult>;
 
-    candles(options: iCandlesOptions): Promise<CandleInterval[]>;
+	getCandles(options: iCandlesOptions): Promise<CandleInterval[]>;
 
 	exchangeInfo(): Promise<IExchangeInfo>;
 
@@ -24,7 +24,7 @@ export interface IBinanceRest {
 
 	orderTest(options: INewOrder): Promise<Order>;
 
-    prices(): Promise<Price[]>;
+	getPrices(): Promise<Price[]>;
 
-    time(): Promise<number>;
+	getTime(): Promise<number>;
 }

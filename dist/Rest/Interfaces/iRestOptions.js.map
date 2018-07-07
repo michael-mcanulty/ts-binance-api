@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "file": "IRestOptions.js",
-  "sourceRoot": "",
-  "sources": [
-    "../../../src/Rest/Interfaces/IRestOptions.ts"
-  ],
-  "names": [],
-  "mappings": "",
-  "sourcesContent": [
-    "export interface iBinanceRestOpts{\r\n\torderId: number;\r\n\tsymbol: string;\r\n\tuseServerTime?: boolean;\r\n}"
-  ]
-}
+{"version":3,"file":"iRestOptions.js","sourceRoot":"","sources":["../../../src/Rest/Interfaces/iRestOptions.ts"],"names":[],"mappings":"","sourcesContent":["export interface IBinanceRestOpts {\n\torderId: number;\n\tsymbol: string;\n\tuseServerTime?: boolean;\n}"]}

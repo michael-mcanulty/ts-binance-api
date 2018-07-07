@@ -7,7 +7,7 @@ export class Interval {
 
 	constructor(interval: string) {
 		this.interval = interval;
-		this.msInterval = Binance.msInterval[interval];
+		this.msInterval = Binance.intervalToMilliseconds[interval];
 		this.index = Binance.INTERVALS.indexOf(this.interval);
 	}
 }

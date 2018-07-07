@@ -12,10 +12,10 @@ export class CandleInterval {
 
 	constructor(candles: Candle[]) {
 		this.candles = candles;
-		this.interval = this.candles[0].period;
+		this.interval = this.candles[0].interval;
 		this.symbol = this.candles[0].symbol;
 		this.lastUpdated = candles[candles.length - 1].date;
-		this.nextUpdate = this.lastUpdated.getTime() + Binance.msInterval[this.interval];
+		this.nextUpdate = this.lastUpdated.getTime() + Binance.intervalToMilliseconds[this.interval];
 		this._interval = new Interval(this.interval);
 	}
 }

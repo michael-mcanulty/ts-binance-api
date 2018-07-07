@@ -2,13 +2,14 @@ import {WSBinance} from "./Websocket/WSBinance";
 import {Auth} from "./Account/Auth";
 import {BinanceRest} from "./Rest/BinanceRest";
 import {iBinanceOptions} from "./Binance/Interfaces/iBinanceOptions";
+import {IExchangeInfo} from "./Rest/Interfaces/IExchangeInfo";
 
-export class Binance{
-	public api:BinanceRest;
-	public ws: WSBinance;
+export class BinanceApi{
+	public static http:BinanceRest;
+	public static websocket: WSBinance;
 	constructor(options:iBinanceOptions){
-		this.api = new BinanceRest(options);
-		this.ws = new WSBinance(options);
+		BinanceApi.http = new BinanceRest(options);
+		BinanceApi.websocket = new WSBinance(options);
 	}
 }
 
@@ -20,9 +21,8 @@ opts.auth = auth;
 opts.test = true;
 opts.useServerTime;
 
-const client = new Binance(opts);
-(async function(){
-	client.ws.getPrices(res=>{
-     console.log(res);
-	});
+const client = new BinanceApi(opts);
+(async ()=>{
+	let info: IExchangeInfo = await BinanceApi.http.getExchangeInfo();
+	console.log(info);
 })();

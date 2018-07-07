@@ -1,3 +1,3 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", {value: true});
-//# sourceMappingURL=IRestOptions.js.map
+Object.defineProperty(exports, "__esModule", { value: true });
+//# sourceMappingURL=iRestOptions.js.map
