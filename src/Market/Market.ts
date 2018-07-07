@@ -1,5 +1,6 @@
 import {ILimits} from "../Rest/Interfaces/IExchangeInfo";
 import {IMarket} from "./interfaces/IMarket";
+import {Logger} from "../Logger/Logger";
 
 export class Market {
 	_id?: string;
