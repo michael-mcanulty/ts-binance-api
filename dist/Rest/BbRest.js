@@ -192,8 +192,7 @@ class BBRest {
 		}));
 	}
 }
-
 BBRest.BASE = 'https://http.binance.com';
 BBRest.fetch = Fetch;
 exports.BBRest = BBRest;
-//# sourceMappingURL=BbRest.js.map
+//# sourceMappingURL=BBRest.js.map

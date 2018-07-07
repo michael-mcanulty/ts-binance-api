@@ -51,6 +51,9 @@ class BinanceRest extends BBRest_1.BBRest {
 			let accountInfo = new OutboundAccountInfo_1.OutboundAccountInfo(infoRaw);
 			cb(accountInfo[type] ? accountInfo[type](rest) : Object.assign({type}, rest));
 		};
+		(() => __awaiter(this, void 0, void 0, function* () {
+			BinanceRest.quoteAssetList = yield this.getQuoteAssetList();
+		}))();
 	}
 
 	_getCandlesInterval(symbol, interval, limit) {

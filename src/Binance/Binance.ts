@@ -1,38 +1,9 @@
-//TODO: extend and add methods below:
-// //public static binBotCandleAPILimits = {
-// 		'1m': 500,
-// 		'3m': 500,
-// 		'5m': 500,
-// 		'15m': 500,
-// 		'30m': 500,
-// 		'1h': 500,
-// 		'2h': 300,
-// 		'4h': 300,
-// 		'6h': 250,
-// 		'8h': 100,
-// 		'12h': 100,
-// 		'1d': 50,
-// 		'3d': 10,
-// 		'1w': 5,
-// 	};
+import {Rest} from "../Rest/Rest";
+import {BWebsocket} from "../Websocket/BWebsocket";
+import {iBinanceOptions} from "./Interfaces/iBinanceOptions";
+import {Market} from "../Market/Market";
 
-// public static DocMaintenanceCycles: any = {
-// 	'1m': 1000,
-// 	'3m': 500,
-// 	'5m': 500,
-// 	'15m': 400,
-// 	'30m': 300,
-// 	'1h': 200,
-// 	'2h': 200,
-// 	'4h': 200,
-// 	'6h': 200,
-// 	'8h': 200,
-// 	'12h': 200,
-// 	'1d': 200,
-// 	'3d': 200,
-// 	'1w': 200
-// };
-export class Binance{
+export class Binance {
 	public static INTERVALS: string[] = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
 	public static candleAPILimits = {
 		'1m': 1000,
@@ -114,4 +85,12 @@ export class Binance{
 		4320: '3d',
 		10080: '1w'
 	};
+	public static markets: Market[];
+	public rest: Rest;
+	public websocket: BWebsocket;
+
+	constructor(options: iBinanceOptions) {
+		this.rest = new Rest(options);
+		this.websocket = new BWebsocket(options);
+	}
 }

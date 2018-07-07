@@ -60,7 +60,7 @@ export class BBRest {
 		});
 	}
 
-	call(path: string, data?: any, callOptions?: ICallOpts): Promise<any> {
+	public call(path: string, data?: any, callOptions?: ICallOpts): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result:any;
 			if(!callOptions){
@@ -139,7 +139,7 @@ export class BBRest {
 		return result;
 	}
 
-	ping():Promise<boolean>{
+	public ping(): Promise<boolean> {
 		return new Promise(async (resolve, reject) => {
 			try{
 				let opts: ICallOpts = <ICallOpts>{};
@@ -152,7 +152,7 @@ export class BBRest {
 		});
 	}
 
-	time():Promise<number>{
+	public time(): Promise<number> {
 		return new Promise(async (resolve, reject) => {
 			try{
 				let opts: ICallOpts = <ICallOpts>{};

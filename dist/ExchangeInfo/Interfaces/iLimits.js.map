@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface ILimits {\r\n\tmaxPrice: number;\r\n\tmaxQty: number;\r\n\tminNotional: number;\r\n\tminPrice: number;\r\n\tminQty: number;\r\n\tstepSize: number;\r\n}\r\n"
+    "export interface ILimits {\n\tmaxPrice: number;\n\tmaxQty: number;\n\tminNotional: number;\n\tminPrice: number;\n\tminQty: number;\n\tstepSize: number;\n}\n"
   ]
 }

@@ -4,19 +4,20 @@ import {IStreamTickerRaw} from "../ExchangeInfo/Interfaces/IStreamTickerRaw";
 import {Price} from "../Transaction/Price";
 import {Ticker} from "../ExchangeInfo/ticker";
 import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
-import {BinanceRest} from "../Rest/BinanceRest";
+import {Rest} from "../Rest/Rest";
 import {HttpError} from "../Error/HttpError";
 import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
 import {Candle} from "../ExchangeInfo/Candle";
 
-export class WSBinance extends BinanceRest {
-	private static _INSTANCE: WSBinance;
+export class BWebsocket extends Rest {
+	private static _INSTANCE: BWebsocket;
 	private readonly _reconOptions: iReconWSOptions = <iReconWSOptions>{};
 	private static _ws: ReconnectingWebSocket;
 	public base: string = 'wss://stream.binance.com:9443/ws';
 	private static isAlive: boolean = false;
 	public options: iBinanceOptions;
 	private _url: string;
+
 	get url(): string {
 		return this._url;
 	}
@@ -76,12 +77,12 @@ export class WSBinance extends BinanceRest {
 		return new Promise(async (resolve, reject) => {
 			const keepStreamAlive = (method, listenKey) => () => method({listenKey});
 			this.user = async cb => {
-				BinanceRest.listenKey = await this.getDataStream();
-				const w = this.openWebSocket(`${this.base}/${BinanceRest.listenKey}`);
+				Rest.listenKey = await this.getDataStream();
+				const w = this.openWebSocket(`${this.base}/${Rest.listenKey}`);
 				w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
 
-				const int = setInterval(keepStreamAlive(this.keepDataStream, BinanceRest.listenKey), 50e3);
-				keepStreamAlive(this.keepDataStream, BinanceRest.listenKey)();
+				const int = setInterval(keepStreamAlive(this.keepDataStream, Rest.listenKey), 50e3);
+				keepStreamAlive(this.keepDataStream, Rest.listenKey)();
 
 				let result = async () => {
 					clearInterval(int);
@@ -97,10 +98,10 @@ export class WSBinance extends BinanceRest {
 	private static heartbeat(): void {
 		setInterval(async () => {
 			try {
-				this.isAlive = await WSBinance.Instance.ping();
+				this.isAlive = await BWebsocket.Instance.ping();
 			} catch (err) {
 				let error: HttpError = new HttpError({msg: 'DISCONNECTED', code: -1001});
-				WSBinance._ws.close(error.code, error.message);
+				BWebsocket._ws.close(error.code, error.message);
 			}
 		}, 3000);
 	}
@@ -108,8 +109,8 @@ export class WSBinance extends BinanceRest {
 	public openWebSocket(url): ReconnectingWebSocket {
 		if (url) {
 			this.url = url;
-			WSBinance._ws = new ReconnectingWebSocket(this.url, undefined, this._reconOptions);
-			return WSBinance._ws;
+			BWebsocket._ws = new ReconnectingWebSocket(this.url, undefined, this._reconOptions);
+			return BWebsocket._ws;
 		}
 	}
 
@@ -129,7 +130,7 @@ export class WSBinance extends BinanceRest {
 		this.options = options;
 		this._reconOptions = <iReconWSOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
-		this._reconOptions.constructor = typeof window !== 'undefined' ? WSBinance : Html5WebSocket;
+		this._reconOptions.constructor = typeof window !== 'undefined' ? BWebsocket : Html5WebSocket;
 		this._reconOptions.debug = false;
 		this._reconOptions.maxReconnectionDelay = 10E3;
 		this._reconOptions.maxRetries = Infinity;

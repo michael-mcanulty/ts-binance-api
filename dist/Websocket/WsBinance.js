@@ -11,10 +11,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Html5WebSocket = require("html5-websocket");
 const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWebSocket");
 const ticker_1 = require("../ExchangeInfo/ticker");
-const BinanceRest_1 = require("../Rest/BinanceRest");
+const Rest_1 = require("../Rest/Rest");
 const HttpError_1 = require("../Error/HttpError");
 const Candle_1 = require("../ExchangeInfo/Candle");
-class WSBinance extends BinanceRest_1.BinanceRest {
+
+class WSBinance extends Rest_1.Rest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
@@ -97,11 +98,11 @@ class WSBinance extends BinanceRest_1.BinanceRest {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             const keepStreamAlive = (method, listenKey) => () => method({ listenKey });
             this.user = (cb) => __awaiter(this, void 0, void 0, function* () {
-							BinanceRest_1.BinanceRest.listenKey = yield this.getDataStream();
-							const w = this.openWebSocket(`${this.base}/${BinanceRest_1.BinanceRest.listenKey}`);
+							Rest_1.Rest.listenKey = yield this.getDataStream();
+							const w = this.openWebSocket(`${this.base}/${Rest_1.Rest.listenKey}`);
                 w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
-							const int = setInterval(keepStreamAlive(this.keepDataStream, BinanceRest_1.BinanceRest.listenKey), 50e3);
-							keepStreamAlive(this.keepDataStream, BinanceRest_1.BinanceRest.listenKey)();
+							const int = setInterval(keepStreamAlive(this.keepDataStream, Rest_1.Rest.listenKey), 50e3);
+							keepStreamAlive(this.keepDataStream, Rest_1.Rest.listenKey)();
 							let result = () => __awaiter(this, void 0, void 0, function* () {
                     clearInterval(int);
                     yield this.closeDataStream();
@@ -130,7 +131,6 @@ class WSBinance extends BinanceRest_1.BinanceRest {
 		this._getTickers(ticksToPrices);
 	}
 }
-
 WSBinance.isAlive = false;
 exports.WSBinance = WSBinance;
-//# sourceMappingURL=WsBinance.js.map
+//# sourceMappingURL=WSBinance.js.map

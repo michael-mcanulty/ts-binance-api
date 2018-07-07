@@ -1,15 +1,13 @@
-import {WSBinance} from "./Websocket/WSBinance";
 import {Auth} from "./Account/Auth";
-import {BinanceRest} from "./Rest/BinanceRest";
 import {iBinanceOptions} from "./Binance/Interfaces/iBinanceOptions";
 import {IExchangeInfo} from "./Rest/Interfaces/IExchangeInfo";
+import {Binance} from "./Binance/Binance";
 
-export class BinanceApi{
-	public static http:BinanceRest;
-	public static websocket: WSBinance;
+export class Bot {
+	public static binance: Binance;
+
 	constructor(options:iBinanceOptions){
-		BinanceApi.http = new BinanceRest(options);
-		BinanceApi.websocket = new WSBinance(options);
+		Bot.binance = new Binance(options);
 	}
 }
 
@@ -21,8 +19,8 @@ opts.auth = auth;
 opts.test = true;
 opts.useServerTime;
 
-const client = new BinanceApi(opts);
+const client = new Bot(opts);
 (async ()=>{
-	let info: IExchangeInfo = await BinanceApi.http.getExchangeInfo();
+	let info: IExchangeInfo = await Bot.binance.rest.getExchangeInfo();
 	console.log(info);
 })();

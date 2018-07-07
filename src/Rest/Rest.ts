@@ -10,7 +10,7 @@ import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
 import {IExchangeInfo} from "./Interfaces/IExchangeInfo";
 
-export class BinanceRest extends BBRest {
+export class Rest extends BBRest {
 	public static listenKey: IListenKey;
 	public user:any;
 	public userEventHandler:Function;
@@ -30,7 +30,6 @@ export class BinanceRest extends BBRest {
 			}
 		});
 	};
-//rawData:any[][], symbol:string, interval:string, quoteAssetName:string
 
 	public closeDataStream():Promise<object>{
 		return new Promise(async (resolve, reject) => {
@@ -40,7 +39,7 @@ export class BinanceRest extends BBRest {
 				callOpts.method = EMethod.DELETE;
 				callOpts.noData = false;
 				callOpts.noExtra = true;
-				result = await this.privateCall('/v1/userDataStream', BinanceRest.listenKey, callOpts);
+				result = await this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
 				resolve(result);
 			}catch(err){
 				reject(err);
@@ -72,8 +71,8 @@ export class BinanceRest extends BBRest {
 					let callOpts: ICallOpts = <ICallOpts>{};
 					callOpts.method = EMethod.POST;
 					callOpts.noData = true;
-					BinanceRest.listenKey = <IListenKey> await this.privateCall('/v1/userDataStream', null, callOpts);
-					resolve(BinanceRest.listenKey);
+					Rest.listenKey = <IListenKey> await this.privateCall('/v1/userDataStream', null, callOpts);
+					resolve(Rest.listenKey);
 				}catch(err){
 					reject(err);
 				}
@@ -93,19 +92,6 @@ export class BinanceRest extends BBRest {
 		});
 	};
 
-	public getQuoteAssetList(): Promise<string[]>{
-		return new Promise(async (resolve, reject)=>{
-			try{
-				let info: IExchangeInfo = await this.getExchangeInfo();
-				let quoteAssets:string[] = info.symbols.map(s=>s.quoteAsset);
-				let uniqueQA = [...new Set(quoteAssets)];
-				resolve(uniqueQA);
-			}catch(err){
-				reject(err);
-			}
-		});
-	};
-
 	public keepDataStream():Promise<object>{
 		return new Promise(async (resolve, reject) => {
 			let result: object;
@@ -114,7 +100,7 @@ export class BinanceRest extends BBRest {
 				callOpts.method = EMethod.PUT;
 				callOpts.noData = false;
 				callOpts.noExtra = true;
-				result = await this.privateCall('/v1/userDataStream', BinanceRest.listenKey, callOpts);
+				result = await this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
 				resolve(result);
 			}catch(err){
 				reject(err);
@@ -131,6 +117,5 @@ export class BinanceRest extends BBRest {
 			let accountInfo:OutboundAccountInfo = new OutboundAccountInfo(infoRaw);
 			cb(accountInfo[type] ? accountInfo[type](rest) : { type, ...rest })
 		};
-
 	}
 }

@@ -26,99 +26,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 		step((generator = generator.apply(thisArg, _arguments || [])).next());
 	});
 };
+var __rest = (this && this.__rest) || function (s, e) {
+	var t = {};
+	for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+		t[p] = s[p];
+	if (s != null && typeof Object.getOwnPropertySymbols === "function")
+		for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+			t[p[i]] = s[p[i]];
+	return t;
+};
 Object.defineProperty(exports, "__esModule", {value: true});
-const fetch = require("isomorphic-fetch");
-const crypto = require("crypto");
-const HttpError_1 = require("../Error/HttpError");
-const eMethod_1 = require("./eMethod");
+const BBRest_1 = require("./BBRest");
+const EMethod_1 = require("./EMethod");
+const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
+const CandleInterval_1 = require("../ExchangeInfo/CandleInterval");
+const Candle_1 = require("../ExchangeInfo/Candle");
 
-class Rest {
-	constructor(spiAuth) {
-		this.base = 'https://app.binance.com';
-		this.apiAuth = spiAuth;
+class Rest extends BBRest_1.BBRest {
+	constructor(options) {
+		super(options);
+		this.userEventHandler = cb => msg => {
+			let json = JSON.parse(msg.data);
+			let infoRaw = json;
+			const {e: type} = json, rest = __rest(json, ["e"]);
+			let accountInfo = new OutboundAccountInfo_1.OutboundAccountInfo(infoRaw);
+			cb(accountInfo[type] ? accountInfo[type](rest) : Object.assign({type}, rest));
+		};
 	}
 
-	checkParams(name, payload, requires) {
-		if (!payload) {
-			throw new Error('You need to pass a payload object.');
-		}
-		requires.forEach(r => {
-			if (!payload[r] && isNaN(payload[r])) {
-				throw new Error(`Method ${name} requires ${r} parameter.`);
-			}
-		});
-		return true;
-	}
-
-	makeQueryString(params) {
-		let result;
-		if (!params) {
-			result = "";
-		}
-		else {
-			const esc = encodeURIComponent;
-			result = Object.keys(params).map(k => `?${esc(k)}=${esc(params[k])}`).join('&');
-		}
-		return result;
-	}
-
-	buildUrl(path, data, noData = false) {
-		return `${this.base}${path.includes('/wapi') ? '' : '/app'}${path}${noData ? '' : this.makeQueryString(data)}`;
-	}
-
-	fetch(path, payload, callOptions) {
+	_getCandlesInterval(symbol, interval, limit) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			let json;
-			let msg;
-			let err;
-			let params = this.buildUrl(path, payload, callOptions.noData);
-			let reqOpts = {};
-			reqOpts.method = eMethod_1.eMethod[eMethod_1.eMethod.GET];
-			reqOpts.headers = {};
-			let res = yield fetch(params, reqOpts);
-			json = yield res.json();
-			if (!res.ok) {
-				msg = json.msg || `${res.status} ${res.statusText}`;
-				err = new HttpError_1.HttpError(msg, json.code);
+			try {
+				let candleOpts = {};
+				candleOpts.symbol = symbol;
+				candleOpts.interval = interval;
+				candleOpts.limit = limit;
+				let raw = yield this.call('/v1/klines', candleOpts);
+				let candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
+				resolve(candles);
+			}
+			catch (err) {
 				reject(err);
 			}
-			else {
-				resolve(json);
-			}
 		}));
 	}
+	;
 
-	time() {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let pingRes = yield this.publicCall('/v1/ping');
-				resolve(pingRes);
-			}
-			catch (err) {
-				reject(`Error in server time sync. Message: ${err}`);
-			}
-		}));
-	}
-
-	ping() {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let time;
-				let server = yield this.publicCall('/v1/time');
-				time = server.serverTime;
-				resolve(time);
-			}
-			catch (err) {
-				reject(`Error in server time sync. Message: ${err}`);
-			}
-		}));
-	}
-
-	publicCall(path, data, callOptions) {
+	closeDataStream() {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			let result;
 			try {
-				result = yield this.fetch(path, data, callOptions);
+				let callOpts = {};
+				callOpts.method = EMethod_1.EMethod.DELETE;
+				callOpts.noData = false;
+				callOpts.noExtra = true;
+				result = yield this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
 				resolve(result);
 			}
 			catch (err) {
@@ -127,31 +89,65 @@ class Rest {
 		}));
 	}
 
-	privateCall(path, data, callOptions) {
+	getCandles(symbols, intervals, limit) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let candleIntervals = [];
+				for (let symbol of symbols) {
+					for (let interval of intervals) {
+						let candles = yield this._getCandlesInterval(symbol, interval, limit);
+						let ci = new CandleInterval_1.CandleInterval(candles);
+						candleIntervals.push(ci);
+					}
+				}
+				resolve(candleIntervals);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+	;
+
+	getDataStream() {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let callOpts = {};
+				callOpts.method = EMethod_1.EMethod.POST;
+				callOpts.noData = true;
+				Rest.listenKey = (yield this.privateCall('/v1/userDataStream', null, callOpts));
+				resolve(Rest.listenKey);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+
+	getExchangeInfo() {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let opts = {};
+				opts.noData = true;
+				let info = yield this.call('/v1/exchangeInfo', null, opts);
+				resolve(info);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+	;
+
+	keepDataStream() {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			let result;
-			let signature;
-			let timestamp;
-			let newData;
-			let headersInit = {'X-MBX-APIKEY': this.apiAuth.key};
-			let headers = new Headers(headersInit);
-			let fetchPath = this.buildUrl(path, data);
-			callOptions.headers = headers;
-			callOptions.method = eMethod_1.eMethod.GET;
-			callOptions.json = true;
-			if (!this.apiAuth.key || !this.apiAuth.secret) {
-				throw new Error('You need to pass an API key and secret to make authenticated calls.');
-			}
 			try {
-				if (data && this.options.useServerTime) {
-					timestamp = yield this.publicCall('/v1/time');
-				}
-				else {
-					timestamp.serverTime = Date.now();
-				}
-				signature = crypto.createHmac('sha256', this.apiAuth.secret).update(this.makeQueryString(Object.assign({}, data, {timestamp})).substr(1)).digest('hex');
-				newData = callOptions.noExtra ? data : Object.assign({}, data, {timestamp, signature});
-				result = yield this.fetch(fetchPath, newData, callOptions);
+				let callOpts = {};
+				callOpts.method = EMethod_1.EMethod.PUT;
+				callOpts.noData = false;
+				callOpts.noExtra = true;
+				result = yield this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
 				resolve(result);
 			}
 			catch (err) {
@@ -160,6 +156,5 @@ class Rest {
 		}));
 	}
 }
-
 exports.Rest = Rest;
 //# sourceMappingURL=Rest.js.map

@@ -1,9 +1,9 @@
 {
   "version": 3,
-  "file": "iBinanceRest.js",
+  "file": "IBinanceRest.js",
   "sourceRoot": "",
   "sources": [
-    "../../../src/Rest/Interfaces/iBinanceRest.ts"
+    "../../../src/Rest/Interfaces/IBinanceRest.ts"
   ],
   "names": [],
   "mappings": "",

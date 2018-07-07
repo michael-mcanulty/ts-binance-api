@@ -8,16 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const WSBinance_1 = require("./Websocket/WSBinance");
 const Auth_1 = require("./Account/Auth");
-const BinanceRest_1 = require("./Rest/BinanceRest");
-class BinanceApi {
+const Binance_1 = require("./Binance/Binance");
+
+class Bot {
     constructor(options) {
-        BinanceApi.http = new BinanceRest_1.BinanceRest(options);
-        BinanceApi.websocket = new WSBinance_1.WSBinance(options);
+			Bot.binance = new Binance_1.Binance(options);
     }
 }
-exports.BinanceApi = BinanceApi;
+
+exports.Bot = Bot;
 let opts = {};
 let auth = new Auth_1.Auth();
 auth.key = "L0FS9RPqvB8prFcE1hQCTiowHYpWdq16X1eyFZURGOOjdnz1LfE5fbquf7qUQQgK";
@@ -25,9 +25,9 @@ auth.secret = "ANyASMoj6iMAYjvpgcVNLWvEToDBj6bco8NTqKJqzvml2vp4zHSKwajpqU2hSBiy"
 opts.auth = auth;
 opts.test = true;
 opts.useServerTime;
-const client = new BinanceApi(opts);
+const client = new Bot(opts);
 (() => __awaiter(this, void 0, void 0, function* () {
-    let info = yield BinanceApi.http.getExchangeInfo();
+	let info = yield Bot.binance.rest.getExchangeInfo();
     console.log(info);
 }))();
 //# sourceMappingURL=Index.js.map
