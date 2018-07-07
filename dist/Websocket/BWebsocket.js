@@ -156,4 +156,4 @@ class BWebsocket extends Rest_1.Rest {
 
 BWebsocket.isAlive = false;
 exports.BWebsocket = BWebsocket;
-//# sourceMappingURL=BWebsocket.js.map
+//# sourceMappingURL=BotWebsocket.js.map

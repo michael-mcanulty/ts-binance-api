@@ -3,19 +3,19 @@ import {default as ReconnectingWebSocket, iReconWSOptions} from "./ReconnectingW
 import {IStreamTickerRaw} from "../ExchangeInfo/Interfaces/IStreamTickerRaw";
 import {Price} from "../Transaction/Price";
 import {Ticker} from "../ExchangeInfo/ticker";
-import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
+import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {Rest} from "../Rest/Rest";
 import {HttpError} from "../Error/HttpError";
 import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
 import {Candle} from "../ExchangeInfo/Candle";
 
-export class BWebsocket extends Rest {
-	private static _INSTANCE: BWebsocket;
+export class BotWebsocket extends Rest {
+	private static _INSTANCE: BotWebsocket;
 	private readonly _reconOptions: iReconWSOptions = <iReconWSOptions>{};
 	private static _ws: ReconnectingWebSocket;
 	public base: string = 'wss://stream.binance.com:9443/ws';
 	private static isAlive: boolean = false;
-	public options: iBinanceOptions;
+	public options: IBinanceOptions;
 	private _url: string;
 
 	get url(): string {
@@ -61,8 +61,9 @@ export class BWebsocket extends Rest {
 					let klineRes: IStreamRawKlineResponse;
 					klineRes = JSON.parse(msg.data);
 					let candle:Candle;
+					let qa: string = this.getQuoteAssetName(symbol);
 					if(klineRes.k.x){
-						candle = Candle.fromStream(klineRes);
+						candle = Candle.fromStream(klineRes, qa);
 						cb(candle);
 					}
 				};
@@ -94,14 +95,13 @@ export class BWebsocket extends Rest {
 		});
 	}
 
-	//Check for disconnected state
 	private static heartbeat(): void {
 		setInterval(async () => {
 			try {
-				this.isAlive = await BWebsocket.Instance.ping();
+				this.isAlive = await BotWebsocket.Instance.ping();
 			} catch (err) {
 				let error: HttpError = new HttpError({msg: 'DISCONNECTED', code: -1001});
-				BWebsocket._ws.close(error.code, error.message);
+				BotWebsocket._ws.close(error.code, error.message);
 			}
 		}, 3000);
 	}
@@ -109,8 +109,8 @@ export class BWebsocket extends Rest {
 	public openWebSocket(url): ReconnectingWebSocket {
 		if (url) {
 			this.url = url;
-			BWebsocket._ws = new ReconnectingWebSocket(this.url, undefined, this._reconOptions);
-			return BWebsocket._ws;
+			BotWebsocket._ws = new ReconnectingWebSocket(this.url, undefined, this._reconOptions);
+			return BotWebsocket._ws;
 		}
 	}
 
@@ -125,12 +125,12 @@ export class BWebsocket extends Rest {
 		this._getTickers(ticksToPrices);
 	}
 
-	constructor(options?: iBinanceOptions) {
+	constructor(options?: IBinanceOptions) {
 		super(options);
 		this.options = options;
 		this._reconOptions = <iReconWSOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
-		this._reconOptions.constructor = typeof window !== 'undefined' ? BWebsocket : Html5WebSocket;
+		this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;
 		this._reconOptions.debug = false;
 		this._reconOptions.maxReconnectionDelay = 10E3;
 		this._reconOptions.maxRetries = Infinity;

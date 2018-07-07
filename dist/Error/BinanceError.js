@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const EErrorType_1 = require("./Email/Enums/EErrorType");
 const ErrorHandler_1 = require("./ErrorHandler");
-
 class BinanceError {
 	constructor(err) {
 		this.code = parseInt(err.code.toString());
@@ -40,7 +39,6 @@ class BinanceError {
 		return result;
 	}
 }
-
 BinanceError.TOO_MANY_REQUESTS_CODE = -1003;
 exports.BinanceError = BinanceError;
 //# sourceMappingURL=BinanceError.js.map

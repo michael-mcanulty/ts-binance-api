@@ -1,11 +1,45 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+	return new (P || (P = Promise))(function (resolve, reject) {
+		function fulfilled(value) {
+			try {
+				step(generator.next(value));
+			} catch (e) {
+				reject(e);
+			}
+		}
+
+		function rejected(value) {
+			try {
+				step(generator["throw"](value));
+			} catch (e) {
+				reject(e);
+			}
+		}
+
+		function step(result) {
+			result.done ? resolve(result.value) : new P(function (resolve) {
+				resolve(result.value);
+			}).then(fulfilled, rejected);
+		}
+
+		step((generator = generator.apply(thisArg, _arguments || [])).next());
+	});
+};
 Object.defineProperty(exports, "__esModule", {value: true});
 const Rest_1 = require("../Rest/Rest");
-const BWebsocket_1 = require("../Websocket/BWebsocket");
+const BotWebsocket_1 = require("../Websocket/BotWebsocket");
 class Binance {
-	constructor(options) {
-		this.rest = new Rest_1.Rest(options);
-		this.websocket = new BWebsocket_1.BWebsocket(options);
+	constructor() {
+	}
+
+	initialize(options) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			this.rest = new Rest_1.Rest(options);
+			this.websocket = new BotWebsocket_1.BotWebsocket(options);
+			Binance.markets = yield this.rest.getMarkets();
+			resolve();
+		}));
 	}
 }
 Binance.INTERVALS = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];

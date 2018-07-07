@@ -1,16 +1,20 @@
-import {BBRest} from "./BBRest";
+import {BotHttp} from "./BotHttp";
 import {ICallOpts} from "./Interfaces/ICallOpts";
 import {EMethod} from "./EMethod";
 import {IListenKey} from "./IListenKey";
-import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
+import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {IOutboundAccountInfoRaw} from "../Account/Interfaces/IOutboundAccountInfoRaw";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import {iCandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
 import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
 import {IExchangeInfo} from "./Interfaces/IExchangeInfo";
+import {Market} from "../Market/Market";
+import {ISymbol} from "ExchangeInfo/Interfaces/ISymbol";
+import {Binance} from "../Binance/Binance";
+import {Bot} from "../Index";
 
-export class Rest extends BBRest {
+export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
 	public user:any;
 	public userEventHandler:Function;
@@ -24,6 +28,9 @@ export class Rest extends BBRest {
 				candleOpts.limit = limit;
 				let raw: any[][] = await this.call('/v1/klines', candleOpts);
 				let candles:Candle[] = Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
+				candles.forEach((candle) => {
+					candle.quoteAsset = Bot.binance.rest.getQuoteAssetName(symbol);
+				});
 				resolve(candles);
 			}catch(err){
 				reject(err);
@@ -64,6 +71,28 @@ export class Rest extends BBRest {
 			}
 		});
 	};
+
+	public getMarkets(quoteAsset?: string): Promise<Market[]> {
+		return new Promise(async (resolve, reject) => {
+			let info: IExchangeInfo = await this.getExchangeInfo();
+			let symbols: ISymbol[] = info.symbols;
+			let markets: Market[] = symbols.map(symbol => {
+				return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
+			});
+			resolve(markets);
+		});
+	}
+
+	public getQuoteAssetName(symbol: string): string {
+		let qa: string;
+		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
+		let market: Market;
+		if (marketFilter && marketFilter.length > 0) {
+			market = marketFilter[0];
+			qa = market.quoteAsset;
+		}
+		return qa;
+	}
 
 	public getDataStream(): Promise<IListenKey> {
 			return new Promise(async (resolve, reject) => {
@@ -108,7 +137,7 @@ export class Rest extends BBRest {
 		});
 	}
 
-	constructor(options:iBinanceOptions){
+	constructor(options: IBinanceOptions) {
 		super(options);
 		this.userEventHandler = cb => msg => {
 			let json = JSON.parse(msg.data);

@@ -36,13 +36,16 @@ var __rest = (this && this.__rest) || function (s, e) {
 	return t;
 };
 Object.defineProperty(exports, "__esModule", {value: true});
-const BBRest_1 = require("./BBRest");
+const BotHttp_1 = require("./BotHttp");
 const EMethod_1 = require("./EMethod");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
 const CandleInterval_1 = require("../ExchangeInfo/CandleInterval");
 const Candle_1 = require("../ExchangeInfo/Candle");
+const Market_1 = require("../Market/Market");
+const Binance_1 = require("../Binance/Binance");
+const Index_1 = require("../Index");
 
-class Rest extends BBRest_1.BBRest {
+class Rest extends BotHttp_1.BotHttp {
 	constructor(options) {
 		super(options);
 		this.userEventHandler = cb => msg => {
@@ -63,6 +66,9 @@ class Rest extends BBRest_1.BBRest {
 				candleOpts.limit = limit;
 				let raw = yield this.call('/v1/klines', candleOpts);
 				let candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
+				candles.forEach((candle) => {
+					candle.quoteAsset = Index_1.Bot.binance.rest.getQuoteAssetName(symbol);
+				});
 				resolve(candles);
 			}
 			catch (err) {
@@ -108,6 +114,28 @@ class Rest extends BBRest_1.BBRest {
 		}));
 	}
 	;
+
+	getMarkets(quoteAsset) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			let info = yield this.getExchangeInfo();
+			let symbols = info.symbols;
+			let markets = symbols.map(symbol => {
+				return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
+			});
+			resolve(markets);
+		}));
+	}
+
+	getQuoteAssetName(symbol) {
+		let qa;
+		let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
+		let market;
+		if (marketFilter && marketFilter.length > 0) {
+			market = marketFilter[0];
+			qa = market.quoteAsset;
+		}
+		return qa;
+	}
 
 	getDataStream() {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {

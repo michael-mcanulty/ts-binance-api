@@ -5,73 +5,30 @@ import {Auth} from "../Account/Auth";
 import {IServerTime} from "./Interfaces/IServerTime";
 import {EMethod} from "./EMethod";
 import {ICallOpts} from "./Interfaces/ICallOpts";
-import {iBinanceOptions} from "../Binance/Interfaces/iBinanceOptions";
+import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 
-export class BBRest {
+export class BotHttp {
 	public static BASE: string = 'https://http.binance.com';
 	public static fetch: Function = Fetch;
 	public auth: Auth;
-	public options:iBinanceOptions;
+	public options: IBinanceOptions;
 
 	public buildUrl(path:string, data:object, noData:boolean):string{
-		return `${BBRest.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BBRest.makeQueryString(data)}`;
-	}
-
-	public privateCall(path: string, data: any, callOptions: ICallOpts): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			let result: any;
-			let signature:string;
-			let timestamp: IServerTime;
-			let newData: any;
-			let headersInit:HeadersInit = [['X-MBX-APIKEY', this.auth.key]];
-			let headers:Headers = new Headers(headersInit);
-			if(!callOptions){
-				callOptions = <ICallOpts>{};
-				callOptions.noData = false;
-			}
-
-			let fetchPath:string = this.buildUrl(path, data, callOptions.noData);
-			callOptions.headers = headers;
-			callOptions.method = EMethod.GET;
-			callOptions.json = true;
-
-			if (!this.auth.key || !this.auth.secret) {
-				throw new Error('You need to pass an API key and secret to make authenticated calls.');
-			}
-
-			try {
-				if (data && this.options.useServerTime) {
-					timestamp = await this.call('/v1/time');
-				} else {
-					timestamp.serverTime = Date.now();
-				}
-
-				signature = crypto.createHmac('sha256', this.auth.secret).update(BBRest.makeQueryString({
-					...data,
-					timestamp
-				}).substr(1)).digest('hex');
-				newData = callOptions.noExtra ? data : {...data, timestamp, signature};
-
-				result = await this.fetch(fetchPath, newData, callOptions);
-				resolve(result);
-			}catch(err){
-				reject(err);
-			}
-		});
+		return `${BotHttp.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BotHttp.makeQueryString(data)}`;
 	}
 
 	public call(path: string, data?: any, callOptions?: ICallOpts): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			let result:any;
-			if(!callOptions){
+			let result: any;
+			if (!callOptions) {
 				callOptions = <ICallOpts>{};
 				callOptions.noData = false;
 			}
-		  try{
+			try {
 				result = await this.fetch(path, data, callOptions);
 				resolve(result);
-			}catch(err){
-		  	reject(err);
+			} catch (err) {
+				reject(err);
 			}
 		});
 	}
@@ -89,7 +46,7 @@ export class BBRest {
 			reqOpts.headers = new Headers();
 
 			try{
-				let res: Response = await BBRest.fetch(params, reqOpts);
+				let res: Response = await BotHttp.fetch(params, reqOpts);
 				json = await res.json();
 
 				if (res.ok === false) {
@@ -127,6 +84,49 @@ export class BBRest {
 				}
 			}
 		})
+	}
+
+	public privateCall(path: string, data: any, callOptions: ICallOpts): Promise<any> {
+		return new Promise(async (resolve, reject) => {
+			let result: any;
+			let signature: string;
+			let timestamp: IServerTime;
+			let newData: any;
+			let headersInit: HeadersInit = [['X-MBX-APIKEY', this.auth.key]];
+			let headers: Headers = new Headers(headersInit);
+			if (!callOptions) {
+				callOptions = <ICallOpts>{};
+				callOptions.noData = false;
+			}
+
+			let fetchPath: string = this.buildUrl(path, data, callOptions.noData);
+			callOptions.headers = headers;
+			callOptions.method = EMethod.GET;
+			callOptions.json = true;
+
+			if (!this.auth.key || !this.auth.secret) {
+				throw new Error('You need to pass an API key and secret to make authenticated calls.');
+			}
+
+			try {
+				if (data && this.options.useServerTime) {
+					timestamp = await this.call('/v1/time');
+				} else {
+					timestamp.serverTime = Date.now();
+				}
+
+				signature = crypto.createHmac('sha256', this.auth.secret).update(BotHttp.makeQueryString({
+					...data,
+					timestamp
+				}).substr(1)).digest('hex');
+				newData = callOptions.noExtra ? data : {...data, timestamp, signature};
+
+				result = await this.fetch(fetchPath, newData, callOptions);
+				resolve(result);
+			} catch (err) {
+				reject(err);
+			}
+		});
 	}
 
 	public static makeQueryString(params: any): string {
@@ -167,7 +167,7 @@ export class BBRest {
 		});
 	}
 
-	constructor(options:iBinanceOptions){
+	constructor(options: IBinanceOptions) {
 		this.options = options;
 	}
 }

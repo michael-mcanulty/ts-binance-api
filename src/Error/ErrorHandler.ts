@@ -1,5 +1,5 @@
 import {EMethod} from "../Rest/EMethod";
-import {BBRest} from "../Rest/BBRest";
+import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./Email/NodeMailer";
 import {IServiceOptions} from "./Email/Interfaces/IServiceOprtions";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
@@ -49,10 +49,10 @@ export class ErrorHandler {
 				msgOptions.subject = `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
 				msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
 				return ErrorHandler.emailService.sendEmail(msgOptions).then(async success => {
-					await BBRest.fetch(this.url, reqOpts);
+					await BotHttp.fetch(this.url, reqOpts);
 				});
 			} else {
-				return BBRest.fetch(this.url, reqOpts);
+				return BotHttp.fetch(this.url, reqOpts);
 			}
 		}
 	}
@@ -68,7 +68,7 @@ export class ErrorHandler {
 		this.timeout = timeout || 0;
 		let url: string = `${this.endpoint}:${this.port}`;
 		let props: any = {"timeout": this.timeout, "restart": this.restart, "shutdown": this.shutdown};
-		url += BBRest.makeQueryString(props);
+		url += BotHttp.makeQueryString(props);
 		this.url = url;
 	}
 }

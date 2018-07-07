@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const fs = require("fs");
 const path = require("path");
-
 class Logger {
 	constructor() {
 	}
@@ -60,7 +59,6 @@ class Logger {
 		});
 	}
 }
-
 Logger._base = path.dirname(process.cwd());
 Logger._dirBase = `${Logger._base}/${Logger._getAppName()}/logs/`;
 Logger._errorStreamPath = `${Logger._dirBase}/error.txt`;

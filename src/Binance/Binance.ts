@@ -1,6 +1,6 @@
 import {Rest} from "../Rest/Rest";
-import {BWebsocket} from "../Websocket/BWebsocket";
-import {iBinanceOptions} from "./Interfaces/iBinanceOptions";
+import {BotWebsocket} from "../Websocket/BotWebsocket";
+import {IBinanceOptions} from "./Interfaces/IBinanceOptions";
 import {Market} from "../Market/Market";
 
 export class Binance {
@@ -87,10 +87,18 @@ export class Binance {
 	};
 	public static markets: Market[];
 	public rest: Rest;
-	public websocket: BWebsocket;
+	public options: IBinanceOptions;
+	public websocket: BotWebsocket;
 
-	constructor(options: iBinanceOptions) {
-		this.rest = new Rest(options);
-		this.websocket = new BWebsocket(options);
+	public initialize(options: IBinanceOptions) {
+		return new Promise(async (resolve, reject) => {
+			this.rest = new Rest(options);
+			this.websocket = new BotWebsocket(options);
+			Binance.markets = await this.rest.getMarkets();
+			resolve();
+		});
+	}
+
+	constructor() {
 	}
 }

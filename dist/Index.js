@@ -10,13 +10,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Auth_1 = require("./Account/Auth");
 const Binance_1 = require("./Binance/Binance");
-
 class Bot {
-    constructor(options) {
-			Bot.binance = new Binance_1.Binance(options);
-    }
+	constructor() {
+	}
+
+	static init(options) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				yield Bot.binance.initialize(options);
+				resolve();
+			}
+			catch (err) {
+				reject();
+			}
+		}));
+	}
 }
 
+Bot.binance = new Binance_1.Binance();
 exports.Bot = Bot;
 let opts = {};
 let auth = new Auth_1.Auth();
@@ -25,9 +36,9 @@ auth.secret = "ANyASMoj6iMAYjvpgcVNLWvEToDBj6bco8NTqKJqzvml2vp4zHSKwajpqU2hSBiy"
 opts.auth = auth;
 opts.test = true;
 opts.useServerTime;
-const client = new Bot(opts);
-(() => __awaiter(this, void 0, void 0, function* () {
-	let info = yield Bot.binance.rest.getExchangeInfo();
-    console.log(info);
-}))();
+Bot.init(opts).then((success) => __awaiter(this, void 0, void 0, function* () {
+	Bot.binance.websocket.candles(["BTCUSDT"], ["1m"], (candle) => {
+		console.log(candle);
+	});
+}));
 //# sourceMappingURL=Index.js.map

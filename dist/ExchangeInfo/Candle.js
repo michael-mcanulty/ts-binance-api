@@ -14,9 +14,10 @@ class Candle {
             return new Candle(candle[0], candle[1], candle[2], candle[3], candle[4], candle[5], symbol, interval, quoteAssetName);
         });
     }
-    static fromStream(rawKlineResponse) {
+
+	static fromStream(rawKlineResponse, quoteAssetName) {
         let rawKline = rawKlineResponse.k;
-        return new Candle(rawKline.T, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i);
+		return new Candle(rawKline.T, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i, quoteAssetName);
     }
     constructor(date, open, high, low, close, volume, symbol, interval, quoteAssetName) {
         this.date = new Date(new Date(date).setSeconds(0, 0));

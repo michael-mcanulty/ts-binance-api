@@ -162,4 +162,4 @@ class WsRest {
 }
 
 exports.WsRest = WsRest;
-//# sourceMappingURL=BBRest.js.map
+//# sourceMappingURL=BotHttp.js.map

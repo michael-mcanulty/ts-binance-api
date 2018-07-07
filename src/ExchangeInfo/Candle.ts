@@ -27,9 +27,9 @@ export class Candle {
 		});
 	}
 
-	static fromStream(rawKlineResponse: IStreamRawKlineResponse): Candle {
+	static fromStream(rawKlineResponse: IStreamRawKlineResponse, quoteAssetName?: string): Candle {
 		let rawKline: IStreamRawKline = rawKlineResponse.k;
-		return new Candle(rawKline.T, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i);
+		return new Candle(rawKline.T, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i, quoteAssetName);
 	}
 
 	constructor(date: number, open: string, high: string, low: string, close: string, volume: string, symbol?: string, interval?: string, quoteAssetName?: string) {

@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {ILimits} from \"../../ExchangeInfo/Interfaces/ILimits\";\n\nexport interface IMarket {\n\t_id: string\n\tbaseAsset: string;\n\tdate: Date;\n\tlimits: ILimits;\n\tquoteAsset: string;\n\tsymbol: string;\n}"
+    "import {ILimits} from \"../../ExchangeInfo/Interfaces/ILimits\";\r\n\r\nexport interface IMarket {\r\n\t_id: string\r\n\tbaseAsset: string;\r\n\tdate: Date;\r\n\tlimits: ILimits;\r\n\tquoteAsset: string;\r\n\tsymbol: string;\r\n}"
   ]
 }

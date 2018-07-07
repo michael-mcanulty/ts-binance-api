@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", {value: true});
 const EMethod_1 = require("../Rest/EMethod");
-const BBRest_1 = require("../Rest/BBRest");
+const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
 const EErrorType_1 = require("./Email/Enums/EErrorType");
 class ErrorHandler {
@@ -43,7 +43,7 @@ class ErrorHandler {
 		this.timeout = timeout || 0;
 		let url = `${this.endpoint}:${this.port}`;
 		let props = {"timeout": this.timeout, "restart": this.restart, "shutdown": this.shutdown};
-		url += BBRest_1.BBRest.makeQueryString(props);
+		url += BotHttp_1.BotHttp.makeQueryString(props);
 		this.url = url;
 	}
 
@@ -72,11 +72,11 @@ class ErrorHandler {
 				msgOptions.subject = `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
 				msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
 				return ErrorHandler.emailService.sendEmail(msgOptions).then((success) => __awaiter(this, void 0, void 0, function* () {
-					yield BBRest_1.BBRest.fetch(this.url, reqOpts);
+					yield BotHttp_1.BotHttp.fetch(this.url, reqOpts);
 				}));
 			}
 			else {
-				return BBRest_1.BBRest.fetch(this.url, reqOpts);
+				return BotHttp_1.BotHttp.fetch(this.url, reqOpts);
 			}
 		}
 	}
