@@ -26,7 +26,6 @@ class Bot {
 		}));
 	}
 }
-
 Bot.binance = new Binance_1.Binance();
 exports.Bot = Bot;
 let opts = {};
@@ -35,10 +34,10 @@ auth.key = "L0FS9RPqvB8prFcE1hQCTiowHYpWdq16X1eyFZURGOOjdnz1LfE5fbquf7qUQQgK";
 auth.secret = "ANyASMoj6iMAYjvpgcVNLWvEToDBj6bco8NTqKJqzvml2vp4zHSKwajpqU2hSBiy";
 opts.auth = auth;
 opts.test = true;
-opts.useServerTime;
+opts.useServerTime = true;
 Bot.init(opts).then((success) => __awaiter(this, void 0, void 0, function* () {
-	Bot.binance.websocket.candles(["BTCUSDT"], ["1m"], (candle) => {
-		console.log(candle);
+	Bot.binance.websocket.balances(bals => {
+		console.log(bals);
 	});
 }));
 //# sourceMappingURL=Index.js.map

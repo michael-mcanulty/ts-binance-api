@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IBinanceBalances {\r\n\t[key: string]: {\r\n\t\tavailable: string;\r\n\t\tlocked: string;\r\n\t};\r\n}"
+    "export interface IBinanceBalances {\n\t[key: string]: {\n\t\tavailable: string;\n\t\tlocked: string;\n\t};\n}"
   ]
 }

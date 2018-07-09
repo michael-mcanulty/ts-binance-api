@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IAccountBalanceBinance {\r\n\tasset: string;\r\n\tfree: string;\r\n\tlocked: string;\r\n}"
+    "export interface IAccountBalanceBinance {\n\tasset: string;\n\tfree: string;\n\tlocked: string;\n}"
   ]
 }

@@ -8,15 +8,21 @@ import {Rest} from "../Rest/Rest";
 import {HttpError} from "../Error/HttpError";
 import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
 import {Candle} from "../ExchangeInfo/Candle";
+import {IOutboundAccountInfoRaw} from "../Account/Interfaces/IOutboundAccountInfoRaw";
+import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest {
 	private static _INSTANCE: BotWebsocket;
 	private readonly _reconOptions: iReconWSOptions = <iReconWSOptions>{};
 	private static _ws: ReconnectingWebSocket;
-	public base: string = 'wss://stream.binance.com:9443/ws';
+	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private static isAlive: boolean = false;
 	public options: IBinanceOptions;
 	private _url: string;
+
+	public static get Instance() {
+		return this._INSTANCE;
+	}
 
 	get url(): string {
 		return this._url;
@@ -26,19 +32,15 @@ export class BotWebsocket extends Rest {
 		this._url = value;
 	}
 
-	private _getTickerUrl(symbol?: string | null): string {
+	_getTickerUrl(symbol?: string | null): string {
 		if (symbol && symbol !== null) {
-			return `${this.base}/${symbol.toLowerCase()}@ticker`;
+			return `${BotWebsocket.BASE}/${symbol.toLowerCase()}@ticker`;
 		} else {
-			return `${this.base}/!ticker@arr`;
+			return `${BotWebsocket.BASE}/!ticker@arr`;
 		}
 	}
 
-	public static get Instance() {
-		return this._INSTANCE;
-	}
-
-	private _getTickers(cb: Function): any {
+	_getTickers(callback: Function): any {
 		let tickers: Ticker[];
 		let w: ReconnectingWebSocket = this.openWebSocket(this._getTickerUrl(null));
 		w.onmessage = msg => {
@@ -47,52 +49,53 @@ export class BotWebsocket extends Rest {
 			tickers = res.map((raw: IStreamTickerRaw) => {
 				return new Ticker(raw);
 			});
-			cb(tickers);
+			callback(tickers);
 		};
 
 		return (options) => w.close(1000, 'Close handle was called');
 	}
 
-	public candles(symbols:string[], intervals:string[], cb:Function):any{
-		const symbolCache = symbols.map(symbol=>{
-	  	return intervals.map(interval=>{
-				let w: ReconnectingWebSocket = this.openWebSocket(`${this.base}/${symbol.toLowerCase()}@kline_${interval}`);
+	public balances(callback: Function): void {
+		const keepStreamAlive = (method, listenKey) => () => method({listenKey});
+		this.getDataStream().then(listenKey => {
+			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+			w.onmessage = (msg) => {
+				let json = JSON.parse(msg.data);
+				let infoRaw: IOutboundAccountInfoRaw = json;
+				let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
+				callback(accountInfo);
+			};
+
+			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.keepDataStream, listenKey)();
+
+			let result = async () => {
+				clearInterval(int);
+				await this.closeDataStream();
+				w.close(1000, 'Close handle was called');
+			};
+		});
+	}
+
+	public candles(symbols: string[], intervals: string[], callback: Function): any {
+		const symbolCache = symbols.map(symbol => {
+			return intervals.map(interval => {
+				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
 				w.onmessage = msg => {
 					let klineRes: IStreamRawKlineResponse;
 					klineRes = JSON.parse(msg.data);
-					let candle:Candle;
+					let candle: Candle;
 					let qa: string = this.getQuoteAssetName(symbol);
-					if(klineRes.k.x){
+					if (klineRes.k.x) {
 						candle = Candle.fromStream(klineRes, qa);
-						cb(candle);
+						callback(candle);
 					}
 				};
 				return w;
 			});
 		});
 
-		return (options) => symbolCache.forEach(cache => cache.forEach(w=>w.close(1000, 'Close handle was called')));
-	};
-
-	public getUser(): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			const keepStreamAlive = (method, listenKey) => () => method({listenKey});
-			this.user = async cb => {
-				Rest.listenKey = await this.getDataStream();
-				const w = this.openWebSocket(`${this.base}/${Rest.listenKey}`);
-				w.onmessage = (msg) => (this.userEventHandler(cb)(msg));
-
-				const int = setInterval(keepStreamAlive(this.keepDataStream, Rest.listenKey), 50e3);
-				keepStreamAlive(this.keepDataStream, Rest.listenKey)();
-
-				let result = async () => {
-					clearInterval(int);
-					await this.closeDataStream();
-					w.close(1000, 'Close handle was called');
-				};
-				resolve(result);
-			}
-		});
+		return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
 	}
 
 	private static heartbeat(): void {
@@ -114,12 +117,12 @@ export class BotWebsocket extends Rest {
 		}
 	}
 
-	public prices(cb: Function) {
+	public prices(callback: Function) {
 		let ticksToPrices = (tickers: Ticker[]) => {
 			let prices: Price[] = tickers.map(t => {
 				return t.toPrice();
 			});
-			cb(prices);
+			callback(prices);
 		};
 
 		this._getTickers(ticksToPrices);

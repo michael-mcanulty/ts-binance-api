@@ -1,9 +1,8 @@
-import {IOutboundAccountInfo} from "./Interfaces/IOutboundAccountInfo";
-import {IBinanceBalances} from "../ExchangeInfo/Interfaces/IBinanceBalances";
-import {IOutboundAccountInfoRaw} from "./Interfaces/IOutboundAccountInfoRaw";
+import {IBalanceRaw, IOutboundAccountInfoRaw} from "./Interfaces/IOutboundAccountInfoRaw";
+import {Balance} from "../Balances/Balance";
 
 export class OutboundAccountInfo{
-	balances: IBinanceBalances;
+	balances: Balance[];
 	buyerCommissionRate: number;
 	canDeposit: boolean;
 	canTrade: boolean;
@@ -15,24 +14,27 @@ export class OutboundAccountInfo{
 	sellerCommissionRate: number;
 	takerCommissionRate: number;
 
-	constructor(iOutAccountInfoRaw: IOutboundAccountInfoRaw) {
-		let m = iOutAccountInfoRaw;
-		let conversion: IOutboundAccountInfo = {
-			eventType: 'account',
-			eventTime: m.E,
-			makerCommissionRate: m.m,
-			takerCommissionRate: m.t,
-			buyerCommissionRate: m.b,
-			sellerCommissionRate: m.s,
-			canTrade: m.T,
-			canWithdraw: m.W,
-			canDeposit: m.D,
-			lastAccountUpdate: m.u,
-			balances: m.B.reduce((out, cur) => {
-			out[cur.a] = { available: cur.f, locked: cur.l }
-			return out
-			}, {}),
-		};
-		Object.assign(this, conversion);
+	public static fromBinanceApi(iOutInfoRaw: IOutboundAccountInfoRaw): OutboundAccountInfo {
+		let outbound: OutboundAccountInfo = new OutboundAccountInfo(iOutInfoRaw.B, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W,
+			iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
+		return outbound;
+	}
+
+	constructor(balances: IBalanceRaw[], buyerCommissionRate: number, canDeposit: boolean, canTrade: boolean,
+							canWithdraw: boolean, eventTime: number, lastAccountUpdate: number,
+							makerCommissionRate: number, sellerCommissionRate: number, takerCommissionRate: number) {
+		this.balances = balances.map((bal: IBalanceRaw) => {
+			return new Balance(bal.a, bal.f, bal.l);
+		});
+		this.buyerCommissionRate = buyerCommissionRate;
+		this.canDeposit = canDeposit;
+		this.canTrade = canTrade;
+		this.canWithdraw = canWithdraw;
+		this.eventType = "account";
+		this.eventTime = eventTime;
+		this.lastAccountUpdate = lastAccountUpdate;
+		this.makerCommissionRate = makerCommissionRate;
+		this.sellerCommissionRate = sellerCommissionRate;
+		this.takerCommissionRate = takerCommissionRate;
 	}
 }

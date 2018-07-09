@@ -8,7 +8,7 @@ import {ICallOpts} from "./Interfaces/ICallOpts";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 
 export class BotHttp {
-	public static BASE: string = 'https://http.binance.com';
+	public static BASE: string = 'https://api.binance.com';
 	public static fetch: Function = Fetch;
 	public auth: Auth;
 	public options: IBinanceOptions;
@@ -90,9 +90,9 @@ export class BotHttp {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature: string;
-			let timestamp: IServerTime;
+			let timestamp: IServerTime = <IServerTime>{};
 			let newData: any;
-			let headersInit: HeadersInit = [['X-MBX-APIKEY', this.auth.key]];
+			let headersInit: HeadersInit = [['X-MBX-APIKEY', this.options.auth.key]];
 			let headers: Headers = new Headers(headersInit);
 			if (!callOptions) {
 				callOptions = <ICallOpts>{};
@@ -104,18 +104,19 @@ export class BotHttp {
 			callOptions.method = EMethod.GET;
 			callOptions.json = true;
 
-			if (!this.auth.key || !this.auth.secret) {
+			if (!this.options.auth.key || !this.options.auth.secret) {
 				throw new Error('You need to pass an API key and secret to make authenticated calls.');
 			}
 
 			try {
 				if (data && this.options.useServerTime) {
-					timestamp = await this.call('/v1/time');
+					timestamp = await this.time();
 				} else {
 					timestamp.serverTime = Date.now();
 				}
 
-				signature = crypto.createHmac('sha256', this.auth.secret).update(BotHttp.makeQueryString({
+				signature = crypto.createHmac('sha256', this.options.auth.secret)
+					.update(BotHttp.makeQueryString({
 					...data,
 					timestamp
 				}).substr(1)).digest('hex');
@@ -152,15 +153,14 @@ export class BotHttp {
 		});
 	}
 
-	public time(): Promise<number> {
+	public time(): Promise<IServerTime> {
 		return new Promise(async (resolve, reject) => {
 			try{
 				let opts: ICallOpts = <ICallOpts>{};
 				let time:number;
 				opts.noData = true;
 				let server: IServerTime = await this.call('/v1/time', null, opts);
-				time = server.serverTime;
-				resolve(time);
+				resolve(server);
 			}catch(err){
 				reject(`Error in server time sync. Message: ${err}`);
 			}

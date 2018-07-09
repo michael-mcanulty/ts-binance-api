@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {IAccountBalanceBinance} from \"./IAccountBalanceBinance\";\r\n\r\nexport interface IAccountBinance {\r\n\tbalances: IAccountBalanceBinance[];\r\n\tbuyerCommission: number;\r\n\tcanDeposit: boolean;\r\n\tcanTrade: boolean;\r\n\tcanWithdraw: boolean;\r\n\tmakerCommission: number;\r\n\tsellerCommission: number;\r\n\ttakerCommission: number;\r\n\tupdateTime: number;\r\n}"
+    "import {IAccountBalanceBinance} from \"./IAccountBalanceBinance\";\n\nexport interface IAccountBinance {\n\tbalances: IAccountBalanceBinance[];\n\tbuyerCommission: number;\n\tcanDeposit: boolean;\n\tcanTrade: boolean;\n\tcanWithdraw: boolean;\n\tmakerCommission: number;\n\tsellerCommission: number;\n\ttakerCommission: number;\n\tupdateTime: number;\n}"
   ]
 }

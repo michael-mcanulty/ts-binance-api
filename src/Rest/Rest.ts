@@ -3,8 +3,6 @@ import {ICallOpts} from "./Interfaces/ICallOpts";
 import {EMethod} from "./EMethod";
 import {IListenKey} from "./IListenKey";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
-import {IOutboundAccountInfoRaw} from "../Account/Interfaces/IOutboundAccountInfoRaw";
-import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import {iCandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
 import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
@@ -17,7 +15,6 @@ import {Bot} from "../Index";
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
 	public user:any;
-	public userEventHandler:Function;
 
 	private _getCandlesInterval(symbol: string, interval:string, limit?: number): Promise<Candle[]>{
 		return new Promise(async (resolve, reject)=>{
@@ -74,12 +71,16 @@ export class Rest extends BotHttp {
 
 	public getMarkets(quoteAsset?: string): Promise<Market[]> {
 		return new Promise(async (resolve, reject) => {
-			let info: IExchangeInfo = await this.getExchangeInfo();
-			let symbols: ISymbol[] = info.symbols;
-			let markets: Market[] = symbols.map(symbol => {
-				return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
-			});
-			resolve(markets);
+			try {
+				let info: IExchangeInfo = await this.getExchangeInfo();
+				let symbols: ISymbol[] = info.symbols;
+				let markets: Market[] = symbols.map(symbol => {
+					return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
+				});
+				resolve(markets);
+			} catch (err) {
+				reject(err);
+			}
 		});
 	}
 
@@ -139,12 +140,5 @@ export class Rest extends BotHttp {
 
 	constructor(options: IBinanceOptions) {
 		super(options);
-		this.userEventHandler = cb => msg => {
-			let json = JSON.parse(msg.data);
-			let infoRaw: IOutboundAccountInfoRaw = json;
-			const { e: type, ...rest } = json;
-			let accountInfo:OutboundAccountInfo = new OutboundAccountInfo(infoRaw);
-			cb(accountInfo[type] ? accountInfo[type](rest) : { type, ...rest })
-		};
 	}
 }

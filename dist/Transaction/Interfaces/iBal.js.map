@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IBal {\r\n\tavailable: string;\r\n\tonOrder: string;\r\n}"
+    "export interface IBal {\n\tavailable: string;\n\tonOrder: string;\n}"
   ]
 }

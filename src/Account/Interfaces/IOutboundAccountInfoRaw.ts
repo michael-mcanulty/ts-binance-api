@@ -1,11 +1,11 @@
-export interface iMessageRaw {
+export interface IBalanceRaw {
 	a: string;
 	f: string;
 	l: string;
 }
 
 export interface IOutboundAccountInfoRaw {
-	B: iMessageRaw[];
+	B: IBalanceRaw[];
 	D: boolean;
 	E: number;
 	T: boolean;

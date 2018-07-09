@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IAvailBalance {\r\n\tavailable: number;\r\n\tquoteAsset: string;\r\n\tsymbol: string;\r\n}\r\n"
+    "export interface IAvailBalance {\n\tavailable: number;\n\tquoteAsset: string;\n\tsymbol: string;\n}\n"
   ]
 }

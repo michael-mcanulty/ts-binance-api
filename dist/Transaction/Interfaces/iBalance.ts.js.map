@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IBalance {\r\n\tasset: string;\r\n\tavailable: number;\r\n\tonOrder: number;\r\n}\r\n"
+    "export interface IBalance {\n\tasset: string;\n\tavailable: number;\n\tonOrder: number;\n}\n"
   ]
 }
