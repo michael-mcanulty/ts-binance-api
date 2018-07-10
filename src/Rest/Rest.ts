@@ -70,7 +70,7 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	public createOrder(order: NewOrder, options: ICallOpts): Promise<Order> {
+	public newOrder(order: NewOrder, options: ICallOpts): Promise<Order> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";

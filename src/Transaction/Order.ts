@@ -1,67 +1,51 @@
-import {IFill} from "./Interfaces/IFill";
-import {IOrder} from "./Interfaces/IOrder";
-import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {INewOrder} from "./Interfaces/INewOrder";
 
-export class Order {
-	clientOrderId: string;
-	executedQty: number;
-	fills?: IFill[];
-	orderId: number;
-	origQty: number;
-	price: number;
-	side: EOrderSide;
-	status: EOrderStatus;
-	symbol: string;
-	timeInForce: ETimeInForce;
-	transactTime: number;
-	type: EOrderType;
+export class Order implements INewOrder {
 
-	public static fromDBFormat(orderInput: IOrder): Order {
-		let result: Order = new Order(orderInput.symbol, orderInput.orderId, orderInput.clientOrderId, orderInput.transactTime, parseFloat(orderInput.price), parseFloat(orderInput.origQty), parseFloat(orderInput.executedQty), EOrderStatus[orderInput.status], ETimeInForce[orderInput.timeInForce], EOrderType[orderInput.type], EOrderSide[orderInput.side], orderInput.fills);
-		return result;
+	public icebergQty?: number;
+	public newClientOrderId?: string;
+	public newOrderRespType?: ENewOrderRespType;
+	public price?: number;
+	public side: EOrderSide;
+	public quantity: number;
+	public recvWindow?: number;
+	public symbol: string;
+	public stopPrice?: number;
+	public type: EOrderType;
+	public timeInForce?: ETimeInForce;
+
+	public static marketBuy(symbol: string, quantity: number): Order {
+		let type: EOrderType = EOrderType.MARKET;
+		let side: EOrderSide = EOrderSide.BUY;
+		let newOrder: Order = new Order(quantity, side, symbol, type);
+		return newOrder;
 	}
 
-	public static toDBFormat(order: Order): IOrder {
-		let result: IOrder = <IOrder>{};
-		result.symbol = order.symbol;
-		result.orderId = order.orderId;
-		result.clientOrderId = order.clientOrderId;
-		result.transactTime = order.transactTime;
-		if (order.origQty !== null) {
-			result.origQty = order.origQty.toString();
-		}
-		if (order.executedQty !== null) {
-			result.executedQty = order.executedQty.toString();
-		}
-		if (order.price !== null) {
-			result.price = order.price.toString();
-		}
-		result.timeInForce = ETimeInForce[order.timeInForce];
-		result.type = EOrderType[order.type];
-		result.side = EOrderSide[order.side];
-		if (order.fills) {
-			result.fills = order.fills;
-		}
-		return result;
+	public static marketSell(symbol: string, quantity: number): Order {
+		let type: EOrderType = EOrderType.MARKET;
+		let side: EOrderSide = EOrderSide.SELL;
+		let newOrder: Order = new Order(quantity, side, symbol, type);
+		return newOrder;
 	}
 
-	constructor(symbol: string, orderId: number, clientOrderId: string, transactTime: number,
-							price: number, origQty: number, executedQty: number, status: EOrderStatus,
-							timeInForce: ETimeInForce, type: EOrderType, side: EOrderSide, fills?: IFill[]) {
-		this.symbol = symbol;
-		this.orderId = orderId;
-		this.clientOrderId = clientOrderId;
-		this.transactTime = transactTime;
-		this.price = price;
-		this.origQty = origQty;
-		this.executedQty = executedQty;
-		this.status = status;
-		this.timeInForce = timeInForce;
-		this.type = type;
+	constructor(quantity: number, side: EOrderSide, symbol: string, type: EOrderType,
+							icebergQty?: number, newClientOrderId?: string, price?: number, stopPrice?: number,
+							newOrderRespType?: ENewOrderRespType, recvWindow?: number, timeInForce?: ETimeInForce) {
+		this.quantity = quantity;
 		this.side = side;
-		if (fills && fills.length > 0) {
-			this.fills = fills;
+		this.symbol = symbol;
+		this.type = type || EOrderType.LIMIT;
+		this.icebergQty = icebergQty;
+		this.newOrderRespType = newOrderRespType || ENewOrderRespType.RESULT;
+		this.newClientOrderId = newClientOrderId;
+		this.price = price;
+		this.stopPrice = stopPrice;
+		this.recvWindow = recvWindow;
+		let goodTilCancelList: EOrderType[] = [EOrderType.LIMIT, EOrderType.STOP_LOSS_LIMIT, EOrderType.TAKE_PROFIT_LIMIT];
+		let isGoodTilCancelled: boolean = goodTilCancelList.includes(this.type);
+		if (isGoodTilCancelled || !this.type) {
+			this.timeInForce = ETimeInForce.GTC;
 		}
 	}
-
 }

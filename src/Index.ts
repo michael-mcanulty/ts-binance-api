@@ -1,6 +1,7 @@
 import {Auth} from "./Account/Auth";
 import {IBinanceOptions} from "./Binance/Interfaces/IBinanceOptions";
 import {Binance} from "./Binance/Binance";
+import {Order} from "./Transaction/Order";
 
 export class Bot {
 	public static binance: Binance = new Binance();
@@ -21,6 +22,6 @@ opts.useServerTime = true;
 
 const bot = new Bot(opts);
 Bot.binance.init().then(async markets => {
-	//await Bot.binance.rest.createOrder(new Order())
+	await Bot.binance.rest.newOrder(Order.marketBuy);
 });
 

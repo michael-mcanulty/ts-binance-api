@@ -2,50 +2,36 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class Order {
-	constructor(symbol, orderId, clientOrderId, transactTime, price, origQty, executedQty, status, timeInForce, type, side, fills) {
-		this.symbol = symbol;
-		this.orderId = orderId;
-		this.clientOrderId = clientOrderId;
-		this.transactTime = transactTime;
-		this.price = price;
-		this.origQty = origQty;
-		this.executedQty = executedQty;
-		this.status = status;
-		this.timeInForce = timeInForce;
-		this.type = type;
+	constructor(quantity, side, symbol, type, icebergQty, newClientOrderId, price, stopPrice, newOrderRespType, recvWindow, timeInForce) {
+		this.quantity = quantity;
 		this.side = side;
-		if (fills && fills.length > 0) {
-			this.fills = fills;
+		this.symbol = symbol;
+		this.type = type || EOrderEnums_1.EOrderType.LIMIT;
+		this.icebergQty = icebergQty;
+		this.newOrderRespType = newOrderRespType || EOrderEnums_1.ENewOrderRespType.RESULT;
+		this.newClientOrderId = newClientOrderId;
+		this.price = price;
+		this.stopPrice = stopPrice;
+		this.recvWindow = recvWindow;
+		let goodTilCancelList = [EOrderEnums_1.EOrderType.LIMIT, EOrderEnums_1.EOrderType.STOP_LOSS_LIMIT, EOrderEnums_1.EOrderType.TAKE_PROFIT_LIMIT];
+		let isGoodTilCancelled = goodTilCancelList.includes(this.type);
+		if (isGoodTilCancelled || !this.type) {
+			this.timeInForce = EOrderEnums_1.ETimeInForce.GTC;
 		}
 	}
 
-    static fromDBFormat(orderInput) {
-			let result = new Order(orderInput.symbol, orderInput.orderId, orderInput.clientOrderId, orderInput.transactTime, parseFloat(orderInput.price), parseFloat(orderInput.origQty), parseFloat(orderInput.executedQty), EOrderEnums_1.EOrderStatus[orderInput.status], EOrderEnums_1.ETimeInForce[orderInput.timeInForce], EOrderEnums_1.EOrderType[orderInput.type], EOrderEnums_1.EOrderSide[orderInput.side], orderInput.fills);
-        return result;
+	static marketBuy(symbol, quantity) {
+		let type = EOrderEnums_1.EOrderType.MARKET;
+		let side = EOrderEnums_1.EOrderSide.BUY;
+		let newOrder = new Order(quantity, side, symbol, type);
+		return newOrder;
     }
 
-    static toDBFormat(order) {
-        let result = {};
-        result.symbol = order.symbol;
-        result.orderId = order.orderId;
-        result.clientOrderId = order.clientOrderId;
-        result.transactTime = order.transactTime;
-        if (order.origQty !== null) {
-            result.origQty = order.origQty.toString();
-        }
-        if (order.executedQty !== null) {
-            result.executedQty = order.executedQty.toString();
-        }
-        if (order.price !== null) {
-            result.price = order.price.toString();
-        }
-			result.timeInForce = EOrderEnums_1.ETimeInForce[order.timeInForce];
-			result.type = EOrderEnums_1.EOrderType[order.type];
-			result.side = EOrderEnums_1.EOrderSide[order.side];
-        if (order.fills) {
-            result.fills = order.fills;
-        }
-        return result;
+	static marketSell(symbol, quantity) {
+		let type = EOrderEnums_1.EOrderType.MARKET;
+		let side = EOrderEnums_1.EOrderSide.SELL;
+		let newOrder = new Order(quantity, side, symbol, type);
+		return newOrder;
     }
 }
 exports.Order = Order;

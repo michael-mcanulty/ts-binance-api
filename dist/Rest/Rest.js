@@ -97,7 +97,7 @@ class Rest extends BotHttp_1.BotHttp {
 	}
 	;
 
-	createOrder(order, options) {
+	newOrder(order, options) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
 				let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";

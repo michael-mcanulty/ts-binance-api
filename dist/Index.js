@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Auth_1 = require("./Account/Auth");
 const Binance_1 = require("./Binance/Binance");
+const Order_1 = require("./Transaction/Order");
 class Bot {
 	constructor(opts) {
 		this.options = {};
@@ -27,5 +28,6 @@ opts.test = true;
 opts.useServerTime = true;
 const bot = new Bot(opts);
 Bot.binance.init().then((markets) => __awaiter(this, void 0, void 0, function* () {
+	yield Bot.binance.rest.newOrder(Order_1.Order.marketBuy);
 }));
 //# sourceMappingURL=Index.js.map
