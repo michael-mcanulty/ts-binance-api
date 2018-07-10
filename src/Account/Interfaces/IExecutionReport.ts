@@ -1,34 +1,27 @@
 import {IMessage} from "./IMessage";
-import {
-	EExecutionType,
-	EOrderSide,
-	EOrderStatus,
-	EOrderType,
-	ETimeInForce
-} from "../../Transaction/Interfaces/EOrderEnums";
 
 export interface IExecutionReport extends IMessage {
-	commission: string;
+	commission: number;
 	commissionAsset: string;
-	executionType: EExecutionType;
-	icebergQuantity: string;
+	executionType: string;
+	icebergQuantity: number;
 	isBuyerMaker: boolean;
 	isOrderWorking: boolean;
-	lastTradeQuantity: string;
+	lastTradeQuantity: number;
 	newClientOrderId: string;
 	orderId: number;
 	orderRejectReason: string;
-	orderStatus: EOrderStatus;
+	orderStatus: string;
 	orderTime: number;
-	orderType: EOrderType;
+	orderType: string;
 	originalClientOrderId: string;
-	price: string;
-	priceLastTrade: string;
-	quantity: string;
-	side: EOrderSide;
-	stopPrice: string;
+	price: number;
+	priceLastTrade: number;
+	quantity: number;
+	side: string;
+	stopPrice: number;
 	symbol: string;
-	timeInForce: ETimeInForce;
-	totalTradeQuantity: string;
+	timeInForce: string;
+	totalTradeQuantity: number;
 	tradeId: number;
 }

@@ -33,10 +33,12 @@ class HttpError extends Error {
 	}
 
 	static GetHttpErrorByCode(code) {
-		let filtered = HttpError.all.filter(handler => handler.code === code);
 		let result;
-		if (filtered && filtered.length > 0) {
-			result = filtered[0];
+		if (HttpError.all && HttpError.all.length > 0) {
+			let filtered = HttpError.all.filter(handler => handler.code === code);
+			if (filtered && filtered.length > 0) {
+				result = filtered[0];
+			}
 		}
 		return result;
 	}

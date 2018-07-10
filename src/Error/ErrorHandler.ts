@@ -24,12 +24,14 @@ export class ErrorHandler {
 	protected url: string;
 
 	public static GetErrorHandler(code: number, type: EErrorType): ErrorHandler {
-		let filtered: ErrorHandler[] = ErrorHandler.allItems.filter(handler => {
-			return handler.code === code && handler.type === type
-		});
 		let result: ErrorHandler;
-		if (filtered && filtered.length > 0) {
-			result = filtered[0];
+		if (ErrorHandler.allItems && ErrorHandler.allItems.length > 0) {
+			let filtered: ErrorHandler[] = ErrorHandler.allItems.filter(handler => {
+				return handler.code === code && handler.type === type
+			});
+			if (filtered && filtered.length > 0) {
+				result = filtered[0];
+			}
 		}
 		return result;
 	}

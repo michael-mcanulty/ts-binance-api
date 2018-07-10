@@ -14,7 +14,6 @@ import {Bot} from "../Index";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
-	public user:any;
 
 	private _getCandlesInterval(symbol: string, interval:string, limit?: number): Promise<Candle[]>{
 		return new Promise(async (resolve, reject)=>{
@@ -35,7 +34,7 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	public closeDataStream():Promise<object>{
+	public closeDataStream(): Promise<{}> {
 		return new Promise(async (resolve, reject) => {
 			let result: object;
 			try{
@@ -101,6 +100,7 @@ export class Rest extends BotHttp {
 					let callOpts: ICallOpts = <ICallOpts>{};
 					callOpts.method = EMethod.POST;
 					callOpts.noData = true;
+					callOpts.noExtra = false;
 					Rest.listenKey = <IListenKey> await this.privateCall('/v1/userDataStream', null, callOpts);
 					resolve(Rest.listenKey);
 				}catch(err){
@@ -114,6 +114,9 @@ export class Rest extends BotHttp {
 			try{
 				let opts: ICallOpts = <ICallOpts>{};
 				opts.noData = true;
+				opts.headers = new Headers();
+				opts.method = EMethod.GET;
+				opts.json = true;
 				let info: IExchangeInfo = await this.call('/v1/exchangeInfo', null, opts);
 				resolve(info);
 			}catch(err){
@@ -122,7 +125,7 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	public keepDataStream():Promise<object>{
+	public keepDataStream(): Promise<{}> {
 		return new Promise(async (resolve, reject) => {
 			let result: object;
 			try{

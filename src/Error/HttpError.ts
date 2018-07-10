@@ -18,10 +18,12 @@ export class HttpError extends Error {
 	}
 
 	public static GetHttpErrorByCode(code: number): HttpError | null {
-		let filtered: HttpError[] = HttpError.all.filter(handler => handler.code === code);
 		let result: HttpError;
-		if (filtered && filtered.length > 0) {
-			result = filtered[0];
+		if (HttpError.all && HttpError.all.length > 0) {
+			let filtered: HttpError[] = HttpError.all.filter(handler => handler.code === code);
+			if (filtered && filtered.length > 0) {
+				result = filtered[0];
+			}
 		}
 		return result;
 	}

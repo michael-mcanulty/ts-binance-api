@@ -48,12 +48,14 @@ class ErrorHandler {
 	}
 
 	static GetErrorHandler(code, type) {
-		let filtered = ErrorHandler.allItems.filter(handler => {
-			return handler.code === code && handler.type === type;
-		});
 		let result;
-		if (filtered && filtered.length > 0) {
-			result = filtered[0];
+		if (ErrorHandler.allItems && ErrorHandler.allItems.length > 0) {
+			let filtered = ErrorHandler.allItems.filter(handler => {
+				return handler.code === code && handler.type === type;
+			});
+			if (filtered && filtered.length > 0) {
+				result = filtered[0];
+			}
 		}
 		return result;
 	}

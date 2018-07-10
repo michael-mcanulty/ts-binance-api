@@ -30,14 +30,14 @@ Bot.binance = new Binance_1.Binance();
 exports.Bot = Bot;
 let opts = {};
 let auth = new Auth_1.Auth();
-auth.key = "L0FS9RPqvB8prFcE1hQCTiowHYpWdq16X1eyFZURGOOjdnz1LfE5fbquf7qUQQgK";
-auth.secret = "ANyASMoj6iMAYjvpgcVNLWvEToDBj6bco8NTqKJqzvml2vp4zHSKwajpqU2hSBiy";
+auth.key = "S05wQBtvZ8LmuAkqiDMXWKvJI1SBeR9H6kE9poWQVeA6MLGp508h7gLX0Wce92u6";
+auth.secret = "iDCk1PtTyucLSlj5wRYIeSrphteLX2ESRONkcsxjhbg2PubidzGps34bKw98tm2D";
 opts.auth = auth;
 opts.test = true;
 opts.useServerTime = true;
 Bot.init(opts).then((success) => __awaiter(this, void 0, void 0, function* () {
-	Bot.binance.websocket.balances(bals => {
-		console.log(bals);
+	yield Bot.binance.websocket.balances(res => {
+		console.log(res);
 	});
 }));
 //# sourceMappingURL=Index.js.map

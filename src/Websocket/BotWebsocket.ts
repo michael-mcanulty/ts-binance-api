@@ -10,6 +10,8 @@ import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance
 import {Candle} from "../ExchangeInfo/Candle";
 import {IOutboundAccountInfoRaw} from "../Account/Interfaces/IOutboundAccountInfoRaw";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
+import {IExecutionReportRaw} from "../Account/Interfaces/IExecutionReportRaw";
+import {ExecutionReport} from "../Account/ExecutionReport";
 
 export class BotWebsocket extends Rest {
 	private static _INSTANCE: BotWebsocket;
@@ -56,20 +58,82 @@ export class BotWebsocket extends Rest {
 	}
 
 	public balances(callback: Function): void {
-		const keepStreamAlive = (method, listenKey) => () => method({listenKey});
-		this.getDataStream().then(listenKey => {
+		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
+		this.getDataStream().then(async lk => {
+			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
 				let json = JSON.parse(msg.data);
-				let infoRaw: IOutboundAccountInfoRaw = json;
-				let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
-				callback(accountInfo);
+				if (json.e === "outboundAccountInfo") {
+					let infoRaw: IOutboundAccountInfoRaw;
+					infoRaw = json;
+					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
+					callback(accountInfo);
+				}
 			};
 
 			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
 			keepStreamAlive(this.keepDataStream, listenKey)();
 
-			let result = async () => {
+			return async () => {
+				clearInterval(int);
+				await this.closeDataStream();
+				w.close(1000, 'Close handle was called');
+			};
+		});
+	}
+
+	public orders(callback: Function): void {
+		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
+		this.getDataStream().then(async lk => {
+			const listenKey = lk.listenKey;
+			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+			w.onmessage = (msg) => {
+				let json = JSON.parse(msg.data);
+				if (json.e === "executionReport") {
+					let reportRaw: IExecutionReportRaw;
+					reportRaw = json;
+					let executionReport: ExecutionReport = ExecutionReport.fromBinanceApi(reportRaw);
+					callback(executionReport);
+				}
+			};
+
+			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.keepDataStream, listenKey)();
+
+			return async () => {
+				clearInterval(int);
+				await this.closeDataStream();
+				w.close(1000, 'Close handle was called');
+			};
+		});
+	}
+
+	public user(callback: Function): void {
+		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
+		this.getDataStream().then(async lk => {
+			const listenKey = lk.listenKey;
+			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+			w.onmessage = (msg) => {
+				let json = JSON.parse(msg.data);
+				if (json.e === "executionReport") {
+					let reportRaw: IExecutionReportRaw;
+					reportRaw = json;
+					let executionReport: ExecutionReport = ExecutionReport.fromBinanceApi(reportRaw);
+					callback(executionReport);
+				} else if (json.e === "outboundAccountInfo") {
+					let infoRaw: IOutboundAccountInfoRaw;
+					infoRaw = json;
+					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
+					callback(accountInfo);
+				}
+
+			};
+
+			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.keepDataStream, listenKey)();
+
+			return async () => {
 				clearInterval(int);
 				await this.closeDataStream();
 				w.close(1000, 'Close handle was called');

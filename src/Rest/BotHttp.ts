@@ -6,6 +6,7 @@ import {IServerTime} from "./Interfaces/IServerTime";
 import {EMethod} from "./EMethod";
 import {ICallOpts} from "./Interfaces/ICallOpts";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
+import {ITimestamp} from "./Interfaces/ITimestamp";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -42,94 +43,103 @@ export class BotHttp {
 			}
 			let params:string = this.buildUrl(path, payload, callOptions.noData);
 			let reqOpts: RequestInit = <RequestInit>{};
-			reqOpts.method = EMethod[EMethod.GET];
-			reqOpts.headers = new Headers();
+			reqOpts.method = EMethod[callOptions.method];
+			reqOpts.headers = callOptions.headers || new Headers();
 
 			try{
 				let res: Response = await BotHttp.fetch(params, reqOpts);
-				json = await res.json();
-
 				if (res.ok === false) {
-					err = new HttpError(json);
+					err = new HttpError({"message": res.statusText, "code": res.status});
 					if (typeof err.handler === "function") {
 						err['handler'].executeApi(err).then(success => {
 							reject(err);
 						});
 					} else {
-						reject(new HttpError(json));
+						reject(new HttpError({"message": res.statusText, "code": res.status}));
 					}
 				}else{
+					json = await res.json();
 					resolve(json);
 				}
 			}catch(err){
-				if (typeof err.json === "function") {
-					json = await err.json();
-					let _error: HttpError = new HttpError(json);
-					if (_error && typeof _error.handler === "function") {
-						_error['handler'].executeApi(err).then(success => {
-							reject(err);
-						});
-					} else {
-						reject(new HttpError(_error));
-					}
-				} else {
-					let _error: HttpError = new HttpError(err);
-					if (_error && typeof _error.handler === "function") {
-						_error['handler'].executeApi(err).then(success => {
-							reject(err);
-						});
-					} else {
-						reject(new HttpError(_error));
-					}
-				}
+				reject(err);
 			}
 		})
 	}
 
-	public privateCall(path: string, data: any, callOptions: ICallOpts): Promise<any> {
+	private getTimestamp(): Promise<ITimestamp> {
+		const context = this;
 		return new Promise(async (resolve, reject) => {
-			let result: any;
-			let signature: string;
-			let timestamp: IServerTime = <IServerTime>{};
-			let newData: any;
-			let headersInit: HeadersInit = [['X-MBX-APIKEY', this.options.auth.key]];
-			let headers: Headers = new Headers(headersInit);
-			if (!callOptions) {
-				callOptions = <ICallOpts>{};
-				callOptions.noData = false;
-			}
-
-			let fetchPath: string = this.buildUrl(path, data, callOptions.noData);
-			callOptions.headers = headers;
-			callOptions.method = EMethod.GET;
-			callOptions.json = true;
-
-			if (!this.options.auth.key || !this.options.auth.secret) {
-				throw new Error('You need to pass an API key and secret to make authenticated calls.');
-			}
-
-			try {
-				if (data && this.options.useServerTime) {
-					timestamp = await this.time();
-				} else {
-					timestamp.serverTime = Date.now();
+			let time: ITimestamp = <ITimestamp>{};
+			if (context.options.useServerTime) {
+				try {
+					time.timestamp = await context.timestamp();
+				} catch (err) {
+					reject(err);
 				}
+			} else {
+				time.timestamp = Date.now();
+			}
+			resolve(time);
+		});
+	}
 
-				signature = crypto.createHmac('sha256', this.options.auth.secret)
-					.update(BotHttp.makeQueryString({
-					...data,
-					timestamp
-				}).substr(1)).digest('hex');
-				newData = callOptions.noExtra ? data : {...data, timestamp, signature};
-
-				result = await this.fetch(fetchPath, newData, callOptions);
-				resolve(result);
+	private mergePrivatePayload(dataPayload: any): Promise<object> {
+		const context = this;
+		return new Promise(async (resolve, reject) => {
+			let merged: any;
+			let data: any;
+			try {
+				let timestamp: ITimestamp = await context.getTimestamp();
+				if (data && data !== null) {
+					data = Object.assign({}, dataPayload);
+					merged = Object.assign(data, timestamp);
+					resolve(merged);
+				} else {
+					merged = Object.assign({}, timestamp);
+					resolve(merged);
+				}
 			} catch (err) {
 				reject(err);
 			}
 		});
 	}
 
+	public privateCall(path: string, payload: any, callOptions: ICallOpts): Promise<any> {
+		return new Promise(async (resolve, reject) => {
+			let result: any;
+			let signature: string;
+			let payloadData: any;
+			let newData: any;
+
+			if (!callOptions) {
+				callOptions = <ICallOpts>{};
+				callOptions.noData = false;
+				callOptions.headers = {'X-MBX-APIKEY': this.options.auth.key};
+				callOptions.method = EMethod.GET;
+				callOptions.json = true;
+			} else {
+				callOptions.headers = {'X-MBX-APIKEY': this.options.auth.key};
+			}
+
+			payloadData = await this.mergePrivatePayload(payload);
+			if (!this.options.auth.key || !this.options.auth.secret) {
+				throw new Error('You need to pass an API key and secret to make authenticated calls.');
+			}
+
+			try {
+				signature = crypto.createHmac('sha256', this.options.auth.secret)
+					.update(BotHttp.makeQueryString(payloadData)
+						.substr(1)).digest('hex');
+				newData = callOptions.noExtra ? payload : Object.assign(payloadData, {"signature": signature});
+
+				result = await this.fetch(path, newData, callOptions);
+				resolve(result);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 	public static makeQueryString(params: any): string {
 		let result:string;
 		if(!params){
@@ -153,12 +163,14 @@ export class BotHttp {
 		});
 	}
 
-	public time(): Promise<IServerTime> {
+	private time(): Promise<IServerTime> {
 		return new Promise(async (resolve, reject) => {
 			try{
 				let opts: ICallOpts = <ICallOpts>{};
-				let time:number;
 				opts.noData = true;
+				opts.json = true;
+				opts.method = EMethod.GET;
+				opts.noExtra = false;
 				let server: IServerTime = await this.call('/v1/time', null, opts);
 				resolve(server);
 			}catch(err){
@@ -167,6 +179,16 @@ export class BotHttp {
 		});
 	}
 
+	public timestamp(): Promise<number> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let time: IServerTime = await this.time();
+				resolve(time.serverTime);
+			} catch (err) {
+				reject(`Error in server time sync. Message: ${err}`);
+			}
+		});
+	}
 	constructor(options: IBinanceOptions) {
 		this.options = options;
 	}

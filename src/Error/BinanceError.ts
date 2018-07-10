@@ -9,10 +9,12 @@ export class BinanceError {
 	msg: string;
 
 	public static GetBinanceErrorByCode(code: number): BinanceError | null {
-		let filtered: BinanceError[] = BinanceError.all.filter(handler => handler.code === code);
 		let result: BinanceError;
-		if (filtered && filtered.length > 0) {
-			result = filtered[0];
+		if (BinanceError.all && BinanceError.all.length > 0) {
+			let filtered: BinanceError[] = BinanceError.all.filter(handler => handler.code === code);
+			if (filtered && filtered.length > 0) {
+				result = filtered[0];
+			}
 		}
 		return result;
 	}

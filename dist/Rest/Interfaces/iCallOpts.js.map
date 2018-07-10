@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {EMethod} from \"../EMethod\";\r\n\r\nexport interface ICallOpts {\r\n headers: Headers;\r\n json:boolean;\r\n\tmethod: EMethod;\r\n noData?: boolean;\r\n noExtra?: boolean;\r\n}"
+    "import {EMethod} from \"../EMethod\";\n\nexport interface ICallOpts {\n\theaders: Headers | any;\n json:boolean;\n\tmethod: EMethod;\n noData?: boolean;\n noExtra?: boolean;\n}"
   ]
 }

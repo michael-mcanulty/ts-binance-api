@@ -130,6 +130,7 @@ class Rest extends BotHttp_1.BotHttp {
 				let callOpts = {};
 				callOpts.method = EMethod_1.EMethod.POST;
 				callOpts.noData = true;
+				callOpts.noExtra = false;
 				Rest.listenKey = (yield this.privateCall('/v1/userDataStream', null, callOpts));
 				resolve(Rest.listenKey);
 			}
@@ -144,6 +145,9 @@ class Rest extends BotHttp_1.BotHttp {
 			try {
 				let opts = {};
 				opts.noData = true;
+				opts.headers = new Headers();
+				opts.method = EMethod_1.EMethod.GET;
+				opts.json = true;
 				let info = yield this.call('/v1/exchangeInfo', null, opts);
 				resolve(info);
 			}
