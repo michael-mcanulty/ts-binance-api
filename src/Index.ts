@@ -3,21 +3,11 @@ import {IBinanceOptions} from "./Binance/Interfaces/IBinanceOptions";
 import {Binance} from "./Binance/Binance";
 
 export class Bot {
-
 	public static binance: Binance = new Binance();
+	public options: IBinanceOptions = <IBinanceOptions>{};
 
-	public static init(options: IBinanceOptions): Promise<void> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				await Bot.binance.initialize(options);
-				resolve();
-			} catch (err) {
-				reject()
-			}
-		});
-	}
-
-	constructor() {
+	constructor(opts: IBinanceOptions) {
+		this.options = opts;
 	}
 }
 
@@ -29,9 +19,8 @@ opts.auth = auth;
 opts.test = true;
 opts.useServerTime = true;
 
-Bot.init(opts).then(async success => {
-	await Bot.binance.websocket.balances(res => {
-		console.log(res);
-	});
+const bot = new Bot(opts);
+Bot.binance.init().then(async markets => {
+	//await Bot.binance.rest.createOrder(new Order())
 });
 

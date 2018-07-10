@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {EOrderSide, EOrderStatus} from \"./EOrderEnums\";\r\n\r\nexport interface IQueryOrderResult {\r\n\tclientOrderId: string;\r\n\texecutedQty: string;\r\n\ticebergQty: string;\r\n\tisWorking: boolean;\r\n\torderId: number;\r\n\torigQty: string;\r\n\tprice: string;\r\n\tside: EOrderSide;\r\n\tstatus: EOrderStatus;\r\n\tstopPrice: string;\r\n\tsymbol: string;\r\n\ttime: number;\r\n\ttimeInForce: string;\r\n\ttype: string;\r\n}"
+    "import {EOrderSide, EOrderStatus} from \"./EOrderEnums\";\n\nexport interface IQueryOrderResult {\n\tclientOrderId: string;\n\texecutedQty: string;\n\ticebergQty: string;\n\tisWorking: boolean;\n\torderId: number;\n\torigQty: string;\n\tprice: string;\n\tside: EOrderSide;\n\tstatus: EOrderStatus;\n\tstopPrice: string;\n\tsymbol: string;\n\ttime: number;\n\ttimeInForce: string;\n\ttype: string;\n}"
   ]
 }

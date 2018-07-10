@@ -1,15 +1,15 @@
-import {EOrderSide, EOrderType, ETimeInForce} from "./EOrderEnums";
+import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "./EOrderEnums";
 
 export interface INewOrder {
-	icebergQty?: string;
+	icebergQty?: number;
 	newClientOrderId?: string;
-	price?: string;
-	quantity: string;
-	recvWindow?: number;
+	newOrderRespType?: ENewOrderRespType;
+	price?: number;
 	side: EOrderSide;
-	stopPrice?: string;
+	quantity: number;
+	recvWindow?: number;
 	symbol: string;
-	timeInForce?: ETimeInForce;
+	stopPrice?: number;
 	type: EOrderType;
-	useServerTime?: boolean;
+	timeInForce?: ETimeInForce;
 }

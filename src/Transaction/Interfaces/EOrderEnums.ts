@@ -37,3 +37,9 @@ export enum EExecutionType {
 	TRADE,
 	EXPIRED
 }
+
+export enum ENewOrderRespType {
+	ACK,
+	RESULT,
+	FULL
+}

@@ -40,4 +40,10 @@ var EExecutionType;
 	EExecutionType[EExecutionType["TRADE"] = 4] = "TRADE";
 	EExecutionType[EExecutionType["EXPIRED"] = 5] = "EXPIRED";
 })(EExecutionType = exports.EExecutionType || (exports.EExecutionType = {}));
+var ENewOrderRespType;
+(function (ENewOrderRespType) {
+	ENewOrderRespType[ENewOrderRespType["ACK"] = 0] = "ACK";
+	ENewOrderRespType[ENewOrderRespType["RESULT"] = 1] = "RESULT";
+	ENewOrderRespType[ENewOrderRespType["FULL"] = 2] = "FULL";
+})(ENewOrderRespType = exports.ENewOrderRespType || (exports.ENewOrderRespType = {}));
 //# sourceMappingURL=EOrderEnums.js.map

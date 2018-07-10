@@ -11,6 +11,8 @@ import {Market} from "../Market/Market";
 import {ISymbol} from "ExchangeInfo/Interfaces/ISymbol";
 import {Binance} from "../Binance/Binance";
 import {Bot} from "../Index";
+import {Order} from "../Transaction/Order";
+import {NewOrder} from "../Transaction/NewOrder";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -68,15 +70,11 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	public getMarkets(quoteAsset?: string): Promise<Market[]> {
+	public createOrder(order: NewOrder, options: ICallOpts): Promise<Order> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let info: IExchangeInfo = await this.getExchangeInfo();
-				let symbols: ISymbol[] = info.symbols;
-				let markets: Market[] = symbols.map(symbol => {
-					return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
-				});
-				resolve(markets);
+				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
+				await this.privateCall(url, order, options);
 			} catch (err) {
 				reject(err);
 			}
@@ -107,6 +105,22 @@ export class Rest extends BotHttp {
 					reject(err);
 				}
 			});
+	}
+
+	public getMarkets(quoteAsset?: string): Promise<Market[]> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let info: IExchangeInfo = await this.getExchangeInfo();
+				let symbols: ISymbol[] = info.symbols;
+				let markets: Market[] = symbols.map(symbol => {
+					return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
+				});
+				Binance.markets = markets;
+				resolve(markets);
+			} catch (err) {
+				reject(err);
+			}
+		});
 	}
 
 	public getExchangeInfo(): Promise<IExchangeInfo>{

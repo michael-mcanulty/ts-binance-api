@@ -27,17 +27,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 	});
 };
 Object.defineProperty(exports, "__esModule", {value: true});
-const Rest_1 = require("../Rest/Rest");
-const BotWebsocket_1 = require("../Websocket/BotWebsocket");
 class Binance {
 	constructor() {
 	}
 
-	initialize(options) {
+	init() {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			this.rest = new Rest_1.Rest(options);
-			this.websocket = new BotWebsocket_1.BotWebsocket(options);
-			Binance.markets = yield this.rest.getMarkets();
+			try {
+				let markets = yield this.rest.getMarkets();
+				resolve(markets);
+			}
+			catch (err) {
+				reject(err);
+			}
 			resolve();
 		}));
 	}

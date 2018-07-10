@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {EOrderSide, EOrderType, ETimeInForce} from \"./EOrderEnums\";\r\n\r\nexport interface INewOrder {\r\n\ticebergQty?: string;\r\n\tnewClientOrderId?: string;\r\n\tprice?: string;\r\n\tquantity: string;\r\n\trecvWindow?: number;\r\n\tside: EOrderSide;\r\n\tstopPrice?: string;\r\n\tsymbol: string;\r\n\ttimeInForce?: ETimeInForce;\r\n\ttype: EOrderType;\r\n\tuseServerTime?: boolean;\r\n}"
+    "import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from \"./EOrderEnums\";\n\nexport interface INewOrder {\n\ticebergQty?: number;\n\tnewClientOrderId?: string;\n\tnewOrderRespType?: ENewOrderRespType;\n\tprice?: number;\n\tside: EOrderSide;\n\tquantity: number;\n\trecvWindow?: number;\n\tsymbol: string;\n\tstopPrice?: number;\n\ttype: EOrderType;\n\ttimeInForce?: ETimeInForce;\n}"
   ]
 }

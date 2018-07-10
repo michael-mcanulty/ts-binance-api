@@ -127,7 +127,6 @@ export class BotWebsocket extends Rest {
 					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
 					callback(accountInfo);
 				}
-
 			};
 
 			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);

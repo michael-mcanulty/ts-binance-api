@@ -97,15 +97,11 @@ class Rest extends BotHttp_1.BotHttp {
 	}
 	;
 
-	getMarkets(quoteAsset) {
+	createOrder(order, options) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
-				let info = yield this.getExchangeInfo();
-				let symbols = info.symbols;
-				let markets = symbols.map(symbol => {
-					return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
-				});
-				resolve(markets);
+				let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
+				yield this.privateCall(url, order, options);
 			}
 			catch (err) {
 				reject(err);
@@ -133,6 +129,23 @@ class Rest extends BotHttp_1.BotHttp {
 				callOpts.noExtra = false;
 				Rest.listenKey = (yield this.privateCall('/v1/userDataStream', null, callOpts));
 				resolve(Rest.listenKey);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+
+	getMarkets(quoteAsset) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let info = yield this.getExchangeInfo();
+				let symbols = info.symbols;
+				let markets = symbols.map(symbol => {
+					return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
+				});
+				Binance_1.Binance.markets = markets;
+				resolve(markets);
 			}
 			catch (err) {
 				reject(err);
