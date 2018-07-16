@@ -11,13 +11,13 @@ class HttpError extends Error {
 		this.message = (type === EErrorType_1.EErrorType.Binance) ? err['msg'] : err['message'];
 		if (type === EErrorType_1.EErrorType.Binance) {
 			let matched = BinanceError_1.BinanceError.GetBinanceErrorByCode(this.code);
-			if (matched !== null) {
+			if (matched && matched !== null) {
 				this.handler = ErrorHandler_1.ErrorHandler.GetErrorHandler(this.code, EErrorType_1.EErrorType.Binance);
 			}
 		}
 		else {
 			let matched = HttpError.GetHttpErrorByCode(this.code);
-			if (matched !== null) {
+			if (matched && matched !== null) {
 				this.handler = ErrorHandler_1.ErrorHandler.GetErrorHandler(this.code, EErrorType_1.EErrorType.Node);
 			}
 		}
@@ -29,11 +29,14 @@ class HttpError extends Error {
 		if (typeof err['msg'] === "string" && code < 0) {
 			isBinance = true;
 		}
+		else if (typeof err['message'] === "string") {
+			isBinance = false;
+		}
 		return (isBinance) ? EErrorType_1.EErrorType.Binance : EErrorType_1.EErrorType.Node;
 	}
 
 	static GetHttpErrorByCode(code) {
-		let result;
+		let result = null;
 		if (HttpError.all && HttpError.all.length > 0) {
 			let filtered = HttpError.all.filter(handler => handler.code === code);
 			if (filtered && filtered.length > 0) {

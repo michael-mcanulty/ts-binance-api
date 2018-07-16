@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {ISymbol} from \"../../ExchangeInfo/Interfaces/ISymbol\";\n\nexport interface IExchangeInfo {\n\texchangeFilters?: (null)[] | null;\n\tserverTime: number;\n\tsymbols: ISymbol[]\n\ttimezone: string;\n}"
+    "import {ISymbol} from \"../../ExchangeInfo/Interfaces/ISymbol\";\r\n\r\nexport interface IExchangeInfo {\r\n\texchangeFilters?: (null)[] | null;\r\n\tserverTime: number;\r\n\tsymbols: ISymbol[]\r\n\ttimezone: string;\r\n}"
   ]
 }

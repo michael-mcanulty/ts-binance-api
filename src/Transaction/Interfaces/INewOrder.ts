@@ -1,15 +1,13 @@
-import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "./EOrderEnums";
-
 export interface INewOrder {
 	icebergQty?: number;
 	newClientOrderId?: string;
-	newOrderRespType?: ENewOrderRespType;
+	newOrderRespType?: string;
 	price?: number;
-	side: EOrderSide;
+	side: string;
 	quantity: number;
 	recvWindow?: number;
 	symbol: string;
 	stopPrice?: number;
-	type: EOrderType;
-	timeInForce?: ETimeInForce;
+	timeInForce?: string;
+	type: string;
 }

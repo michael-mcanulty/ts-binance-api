@@ -1,4 +1,4 @@
-export interface iCandlesOptions {
+export interface ICandlesOptions {
 	endTime?: number;
 	interval: string;
 	limit?: number;

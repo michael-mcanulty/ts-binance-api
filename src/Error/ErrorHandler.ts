@@ -37,26 +37,34 @@ export class ErrorHandler {
 	}
 
 	executeApi(error: BinanceError | HttpError): Promise<any> {
-		if (this.port !== null && this.method !== null) {
-			let reqOpts: RequestInit = <RequestInit>{};
-			reqOpts.method = EMethod[this.method];
-			reqOpts.headers = new Headers();
+		return new Promise(async (resolve, reject) => {
+			if (this.port !== null && this.method !== null) {
+				let reqOpts: RequestInit = <RequestInit>{};
+				reqOpts.method = EMethod[this.method];
+				reqOpts.headers = new Headers();
 
-			if (this.sendEmail && this.emailOptions) {
-				ErrorHandler.emailService = new NodeMailer(this.emailOptions);
-				let msgOptions: IMessageOptions = <IMessageOptions>{};
-				msgOptions.from = this.emailAddress;
-				msgOptions.to = this.emailAddress;
-				let message: string = (this.type === EErrorType.Binance) ? error['msg'] : error['message'];
-				msgOptions.subject = `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
-				msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
-				return ErrorHandler.emailService.sendEmail(msgOptions).then(async success => {
-					await BotHttp.fetch(this.url, reqOpts);
-				});
-			} else {
-				return BotHttp.fetch(this.url, reqOpts);
+				if (this.sendEmail && this.emailOptions) {
+					ErrorHandler.emailService = new NodeMailer(this.emailOptions);
+					let msgOptions: IMessageOptions = <IMessageOptions>{};
+					msgOptions.from = this.emailAddress;
+					msgOptions.to = this.emailAddress;
+					let message: string = (this.type === EErrorType.Binance) ? error['msg'] : error['message'];
+					msgOptions.subject = `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
+					msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
+					try {
+						await ErrorHandler.emailService.sendEmail(msgOptions);
+					} catch (err) {
+						reject(err);
+					}
+				}
+				try {
+					let fetch = await BotHttp.fetch(this.url, reqOpts);
+					resolve(fetch);
+				} catch (err) {
+					reject(err);
+				}
 			}
-		}
+		});
 	}
 
 	constructor(code: number, port: number, type: EErrorType, method: EMethod, sendEmail: boolean, timeout?: number, emailAddress?: string, emailOptions?: IServiceOptions, endpoint = "http://localhost") {

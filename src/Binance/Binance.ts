@@ -86,22 +86,23 @@ export class Binance {
 		10080: '1w'
 	};
 	public static markets: Market[];
-	public rest: Rest;
 	public static options: IBinanceOptions;
+	public rest: Rest;
 	public websocket: BotWebsocket;
 
 	public init() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let markets: Market[] = await this.rest.getMarkets();
-				resolve(markets);
+				Binance.markets = await this.rest.getMarkets();
+				resolve(Binance.markets);
 			} catch (err) {
 				reject(err);
 			}
-			resolve();
 		});
 	}
 
-	constructor() {
+	constructor(options: IBinanceOptions) {
+		this.rest = new Rest(options);
+		this.websocket = new BotWebsocket(options);
 	}
 }

@@ -1,4 +1,4 @@
-import {IBinanceBalances} from "../../Balances/IBinanceBalances";
+import {IBinanceBalances} from "../../Balances/Interfaces/IBinanceBalances";
 import {IMessage} from "./IMessage";
 
 export interface IOutboundAccountInfo extends IMessage {

@@ -13,12 +13,14 @@ export class HttpError extends Error {
 		let isBinance: boolean = false;
 		if (typeof err['msg'] === "string" && code < 0) {
 			isBinance = true;
+		} else if (typeof err['message'] === "string") {
+			isBinance = false;
 		}
 		return (isBinance) ? EErrorType.Binance : EErrorType.Node;
 	}
 
 	public static GetHttpErrorByCode(code: number): HttpError | null {
-		let result: HttpError;
+		let result: HttpError = null;
 		if (HttpError.all && HttpError.all.length > 0) {
 			let filtered: HttpError[] = HttpError.all.filter(handler => handler.code === code);
 			if (filtered && filtered.length > 0) {
@@ -28,19 +30,19 @@ export class HttpError extends Error {
 		return result;
 	}
 
-	constructor(err: BinanceError | HttpError | any) {
+	constructor(err: BinanceError | HttpError) {
 		super();
 		this.code = parseInt(err.code.toString());
 		let type: EErrorType = HttpError.GetErrorType(err);
 		this.message = (type === EErrorType.Binance) ? err['msg'] : err['message'];
 		if (type === EErrorType.Binance) {
 			let matched: BinanceError | null = BinanceError.GetBinanceErrorByCode(this.code);
-			if (matched !== null) {
+			if (matched && matched !== null) {
 				this.handler = ErrorHandler.GetErrorHandler(this.code, EErrorType.Binance);
 			}
 		} else {
 			let matched: HttpError | null = HttpError.GetHttpErrorByCode(this.code);
-			if (matched !== null) {
+			if (matched && matched !== null) {
 				this.handler = ErrorHandler.GetErrorHandler(this.code, EErrorType.Node);
 			}
 		}

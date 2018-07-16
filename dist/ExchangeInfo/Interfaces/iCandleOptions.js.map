@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface iCandlesOptions {\r\n\tendTime?: number;\r\n\tinterval: string;\r\n\tlimit?: number;\r\n\tstartTime?: number;\r\n\tsymbol: string;\r\n}"
+    "export interface ICandlesOptions {\r\n\tendTime?: number;\r\n\tinterval: string;\r\n\tlimit?: number;\r\n\tstartTime?: number;\r\n\tsymbol: string;\r\n}"
   ]
 }

@@ -1,9 +1,7 @@
-import {EMethod} from "../EMethod";
-
 export interface ICallOpts {
 	headers: any;
 	json: boolean;
-	method: EMethod;
+	method: string;
 	noData?: boolean;
 	noExtra?: boolean;
 }

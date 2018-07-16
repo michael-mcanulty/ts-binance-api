@@ -34,6 +34,13 @@ const Candle_1 = require("../ExchangeInfo/Candle");
 const Market_1 = require("../Market/Market");
 const Binance_1 = require("../Binance/Binance");
 const Index_1 = require("../Index");
+const NewOrder_1 = require("../Transaction/NewOrder");
+const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
+const Order_1 = require("../Transaction/Order");
+const HttpError_1 = require("../Error/HttpError");
+const Signed_1 = require("./Signed");
+const DataStream_1 = require("./DataStream");
+const CallOptions_1 = require("./CallOptions");
 class Rest extends BotHttp_1.BotHttp {
 	constructor(options) {
 		super(options);
@@ -46,7 +53,8 @@ class Rest extends BotHttp_1.BotHttp {
 				candleOpts.symbol = symbol;
 				candleOpts.interval = interval;
 				candleOpts.limit = limit;
-				let raw = yield this.call('/v1/klines', candleOpts);
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET);
+				let raw = yield this.call('/v1/klines', callOpts, candleOpts);
 				let candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
 				candles.forEach((candle) => {
 					candle.quoteAsset = Index_1.Bot.binance.rest.getQuoteAssetName(symbol);
@@ -60,15 +68,40 @@ class Rest extends BotHttp_1.BotHttp {
 	}
 	;
 
+	cancelOrder(cancelOrder) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let orderRes;
+				let privateOrder;
+				let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.DELETE, true, false, false);
+				privateOrder = yield this.privateCall(url, callOpts, cancelOrder);
+				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
+					resolve(privateOrder);
+				}
+				else {
+					if (privateOrder instanceof HttpError_1.HttpError) {
+						reject(privateOrder);
+					}
+					else {
+						orderRes = privateOrder;
+						resolve(orderRes);
+					}
+				}
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+
 	closeDataStream() {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			let result;
 			try {
-				let callOpts = {};
-				callOpts.method = EMethod_1.EMethod.DELETE;
-				callOpts.noData = false;
-				callOpts.noExtra = true;
-				result = yield this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.DELETE, true, false, true);
+				let dStream = new DataStream_1.DataStream(Rest.listenKey);
+				result = yield this.privateCall('/v1/userDataStream', callOpts, dStream);
 				resolve(result);
 			}
 			catch (err) {
@@ -97,11 +130,42 @@ class Rest extends BotHttp_1.BotHttp {
 	}
 	;
 
-	newOrder(order, options) {
+	getDataStream() {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
-				let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
-				yield this.privateCall(url, order, options);
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.POST, true, true, false);
+				let signed = new Signed_1.Signed();
+				Rest.listenKey = (yield this.privateCall('/v1/userDataStream', callOpts, signed));
+				resolve(Rest.listenKey);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+
+	getExchangeInfo() {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
+				let info = yield this.call('/v1/exchangeInfo', callOpts);
+				resolve(info);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+	;
+
+	keepDataStream() {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			let result;
+			try {
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.PUT, true, false, true);
+				let dStream = new DataStream_1.DataStream(Rest.listenKey);
+				result = yield this.privateCall('/v1/userDataStream', callOpts, dStream);
+				resolve(result);
 			}
 			catch (err) {
 				reject(err);
@@ -120,15 +184,14 @@ class Rest extends BotHttp_1.BotHttp {
 		return qa;
 	}
 
-	getDataStream() {
+	marketBuy(symbol, quantity) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
-				let callOpts = {};
-				callOpts.method = EMethod_1.EMethod.POST;
-				callOpts.noData = true;
-				callOpts.noExtra = false;
-				Rest.listenKey = (yield this.privateCall('/v1/userDataStream', null, callOpts));
-				resolve(Rest.listenKey);
+				let type = EOrderEnums_1.EOrderType.MARKET;
+				let side = EOrderEnums_1.EOrderSide.BUY;
+				let order = new NewOrder_1.NewOrder(quantity, side, symbol, type);
+				let orderRes = yield this.newOrder(order);
+				resolve(orderRes);
 			}
 			catch (err) {
 				reject(err);
@@ -153,34 +216,40 @@ class Rest extends BotHttp_1.BotHttp {
 		}));
 	}
 
-	getExchangeInfo() {
+	marketSell(symbol, quantity) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
-				let opts = {};
-				opts.noData = true;
-				opts.headers = new Headers();
-				opts.method = EMethod_1.EMethod.GET;
-				opts.json = true;
-				let info = yield this.call('/v1/exchangeInfo', null, opts);
-				resolve(info);
+				let type = EOrderEnums_1.EOrderType.MARKET;
+				let side = EOrderEnums_1.EOrderSide.SELL;
+				let newOrder = new NewOrder_1.NewOrder(quantity, side, symbol, type);
+				resolve(newOrder);
 			}
 			catch (err) {
 				reject(err);
 			}
 		}));
 	}
-	;
 
-	keepDataStream() {
+	newOrder(order) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			let result;
 			try {
-				let callOpts = {};
-				callOpts.method = EMethod_1.EMethod.PUT;
-				callOpts.noData = false;
-				callOpts.noExtra = true;
-				result = yield this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
-				resolve(result);
+				let orderRes;
+				let privateOrder;
+				let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.POST, true, false, false);
+				privateOrder = yield this.privateCall(url, callOpts, order);
+				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
+					resolve(privateOrder);
+				}
+				else {
+					if (privateOrder instanceof HttpError_1.HttpError) {
+						reject(privateOrder);
+					}
+					else {
+						orderRes = new Order_1.Order(privateOrder);
+						resolve(orderRes);
+					}
+				}
 			}
 			catch (err) {
 				reject(err);

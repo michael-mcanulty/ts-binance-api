@@ -10,24 +10,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Auth_1 = require("./Account/Auth");
 const Binance_1 = require("./Binance/Binance");
-const Order_1 = require("./Transaction/Order");
 class Bot {
 	constructor(opts) {
-		this.options = {};
-		this.options = opts;
+		Binance_1.Binance.options = opts;
+		Bot.binance = new Binance_1.Binance(opts);
 	}
 }
-Bot.binance = new Binance_1.Binance();
 exports.Bot = Bot;
 let opts = {};
 let auth = new Auth_1.Auth();
 auth.key = "S05wQBtvZ8LmuAkqiDMXWKvJI1SBeR9H6kE9poWQVeA6MLGp508h7gLX0Wce92u6";
 auth.secret = "iDCk1PtTyucLSlj5wRYIeSrphteLX2ESRONkcsxjhbg2PubidzGps34bKw98tm2D";
 opts.auth = auth;
-opts.test = true;
+opts.test = false;
 opts.useServerTime = true;
 const bot = new Bot(opts);
 Bot.binance.init().then((markets) => __awaiter(this, void 0, void 0, function* () {
-	yield Bot.binance.rest.newOrder(Order_1.Order.marketBuy);
+	try {
+		let purch = yield Bot.binance.rest.marketBuy("BNBUSDT", 1);
+	}
+	catch (err) {
+		console.log(err);
+	}
 }));
 //# sourceMappingURL=Index.js.map

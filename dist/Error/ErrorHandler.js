@@ -61,26 +61,35 @@ class ErrorHandler {
 	}
 
 	executeApi(error) {
-		if (this.port !== null && this.method !== null) {
-			let reqOpts = {};
-			reqOpts.method = EMethod_1.EMethod[this.method];
-			reqOpts.headers = new Headers();
-			if (this.sendEmail && this.emailOptions) {
-				ErrorHandler.emailService = new NodeMailer_1.NodeMailer(this.emailOptions);
-				let msgOptions = {};
-				msgOptions.from = this.emailAddress;
-				msgOptions.to = this.emailAddress;
-				let message = (this.type === EErrorType_1.EErrorType.Binance) ? error['msg'] : error['message'];
-				msgOptions.subject = `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
-				msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
-				return ErrorHandler.emailService.sendEmail(msgOptions).then((success) => __awaiter(this, void 0, void 0, function* () {
-					yield BotHttp_1.BotHttp.fetch(this.url, reqOpts);
-				}));
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			if (this.port !== null && this.method !== null) {
+				let reqOpts = {};
+				reqOpts.method = EMethod_1.EMethod[this.method];
+				reqOpts.headers = new Headers();
+				if (this.sendEmail && this.emailOptions) {
+					ErrorHandler.emailService = new NodeMailer_1.NodeMailer(this.emailOptions);
+					let msgOptions = {};
+					msgOptions.from = this.emailAddress;
+					msgOptions.to = this.emailAddress;
+					let message = (this.type === EErrorType_1.EErrorType.Binance) ? error['msg'] : error['message'];
+					msgOptions.subject = `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
+					msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
+					try {
+						yield ErrorHandler.emailService.sendEmail(msgOptions);
+					}
+					catch (err) {
+						reject(err);
+					}
+				}
+				try {
+					let fetch = yield BotHttp_1.BotHttp.fetch(this.url, reqOpts);
+					resolve(fetch);
+				}
+				catch (err) {
+					reject(err);
+				}
 			}
-			else {
-				return BotHttp_1.BotHttp.fetch(this.url, reqOpts);
-			}
-		}
+		}));
 	}
 }
 exports.ErrorHandler = ErrorHandler;

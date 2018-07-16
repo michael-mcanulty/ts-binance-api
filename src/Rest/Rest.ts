@@ -1,9 +1,8 @@
 import {BotHttp} from "./BotHttp";
-import {ICallOpts} from "./Interfaces/ICallOpts";
 import {EMethod} from "./EMethod";
 import {IListenKey} from "./IListenKey";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
-import {iCandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
+import {ICandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
 import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
 import {IExchangeInfo} from "./Interfaces/IExchangeInfo";
@@ -11,8 +10,17 @@ import {Market} from "../Market/Market";
 import {ISymbol} from "ExchangeInfo/Interfaces/ISymbol";
 import {Binance} from "../Binance/Binance";
 import {Bot} from "../Index";
-import {Order} from "../Transaction/Order";
 import {NewOrder} from "../Transaction/NewOrder";
+import {EOrderSide, EOrderType} from "../Transaction/Interfaces/EOrderEnums";
+import {IOrder} from "../Transaction/Interfaces/IOrder";
+import {Order} from "../Transaction/Order";
+import {HttpError} from "../Error/HttpError";
+import {CancelOrder} from "../Transaction/CancelOrder";
+import {Signed} from "./Signed";
+import {DataStream} from "./DataStream";
+import {CallOptions} from "./CallOptions";
+import {ICancelOrderResponse} from "../Transaction/Interfaces/ICancelOrderResponse";
+import {ICancelOrder} from "../Transaction/Interfaces/ICancelOrder";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -20,11 +28,13 @@ export class Rest extends BotHttp {
 	private _getCandlesInterval(symbol: string, interval:string, limit?: number): Promise<Candle[]>{
 		return new Promise(async (resolve, reject)=>{
 			try{
-				let candleOpts:iCandlesOptions = <iCandlesOptions>{};
+				let candleOpts: ICandlesOptions = <ICandlesOptions>{};
 				candleOpts.symbol = symbol;
 				candleOpts.interval = interval;
 				candleOpts.limit = limit;
-				let raw: any[][] = await this.call('/v1/klines', candleOpts);
+
+				let callOpts: CallOptions = new CallOptions(EMethod.GET);
+				let raw: any[][] = await this.call('/v1/klines', callOpts, candleOpts);
 				let candles:Candle[] = Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
 				candles.forEach((candle) => {
 					candle.quoteAsset = Bot.binance.rest.getQuoteAssetName(symbol);
@@ -36,15 +46,37 @@ export class Rest extends BotHttp {
 		});
 	};
 
+	public cancelOrder(cancelOrder: CancelOrder) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let orderRes: ICancelOrderResponse;
+				let privateOrder: ICancelOrder | {} | HttpError;
+				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
+				let callOpts: CallOptions = new CallOptions(EMethod.DELETE, true, false, false);
+				privateOrder = await this.privateCall(url, callOpts, cancelOrder);
+				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
+					resolve(<{}>privateOrder);
+				} else {
+					if (privateOrder instanceof HttpError) {
+						reject(privateOrder);
+					} else {
+						orderRes = <ICancelOrderResponse>privateOrder;
+						resolve(orderRes);
+					}
+				}
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 	public closeDataStream(): Promise<{}> {
 		return new Promise(async (resolve, reject) => {
 			let result: object;
 			try{
-				let callOpts: ICallOpts = <ICallOpts>{};
-				callOpts.method = EMethod.DELETE;
-				callOpts.noData = false;
-				callOpts.noExtra = true;
-				result = await this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
+				let callOpts: CallOptions = new CallOptions(EMethod.DELETE, true, false, true);
+				let dStream: DataStream = new DataStream(Rest.listenKey);
+				result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
 				resolve(result);
 			}catch(err){
 				reject(err);
@@ -70,11 +102,39 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	public newOrder(order: NewOrder, options: ICallOpts): Promise<Order> {
+	public getDataStream(): Promise<IListenKey> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
-				await this.privateCall(url, order, options);
+				let callOpts: CallOptions = new CallOptions(EMethod.POST, true, true, false);
+				let signed = new Signed();
+				Rest.listenKey = <IListenKey> await this.privateCall('/v1/userDataStream', callOpts, signed);
+				resolve(Rest.listenKey);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getExchangeInfo(): Promise<IExchangeInfo> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+				let info: IExchangeInfo = await this.call('/v1/exchangeInfo', callOpts);
+				resolve(info);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	};
+
+	public keepDataStream(): Promise<{}> {
+		return new Promise(async (resolve, reject) => {
+			let result: object;
+			try {
+				let callOpts: CallOptions = new CallOptions(EMethod.PUT, true, false, true)
+				let dStream: DataStream = new DataStream(Rest.listenKey);
+				result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
@@ -92,19 +152,18 @@ export class Rest extends BotHttp {
 		return qa;
 	}
 
-	public getDataStream(): Promise<IListenKey> {
-			return new Promise(async (resolve, reject) => {
-				try{
-					let callOpts: ICallOpts = <ICallOpts>{};
-					callOpts.method = EMethod.POST;
-					callOpts.noData = true;
-					callOpts.noExtra = false;
-					Rest.listenKey = <IListenKey> await this.privateCall('/v1/userDataStream', null, callOpts);
-					resolve(Rest.listenKey);
-				}catch(err){
-					reject(err);
-				}
-			});
+	public marketBuy(symbol: string, quantity: number): Promise<Order | {}> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let type: EOrderType = EOrderType.MARKET;
+				let side: EOrderSide = EOrderSide.BUY;
+				let order: NewOrder = new NewOrder(quantity, side, symbol, type);
+				let orderRes: Order | {} = await this.newOrder(order);
+				resolve(orderRes)
+			} catch (err) {
+				reject(err);
+			}
+		});
 	}
 
 	public getMarkets(quoteAsset?: string): Promise<Market[]> {
@@ -123,33 +182,38 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public getExchangeInfo(): Promise<IExchangeInfo>{
-		return new Promise(async (resolve, reject)=>{
+	public marketSell(symbol: string, quantity: number): Promise<NewOrder | {}> {
+		return new Promise(async (resolve, reject) => {
 			try{
-				let opts: ICallOpts = <ICallOpts>{};
-				opts.noData = true;
-				opts.headers = new Headers();
-				opts.method = EMethod.GET;
-				opts.json = true;
-				let info: IExchangeInfo = await this.call('/v1/exchangeInfo', null, opts);
-				resolve(info);
+				let type: EOrderType = EOrderType.MARKET;
+				let side: EOrderSide = EOrderSide.SELL;
+				let newOrder: NewOrder | {} = new NewOrder(quantity, side, symbol, type);
+				resolve(newOrder);
 			}catch(err){
-				reject(err);
+				reject(err)
 			}
 		});
-	};
+	}
 
-	public keepDataStream(): Promise<{}> {
+	public newOrder(order: NewOrder): Promise<Order | HttpError | {}> {
 		return new Promise(async (resolve, reject) => {
-			let result: object;
-			try{
-				let callOpts: ICallOpts = <ICallOpts>{};
-				callOpts.method = EMethod.PUT;
-				callOpts.noData = false;
-				callOpts.noExtra = true;
-				result = await this.privateCall('/v1/userDataStream', Rest.listenKey, callOpts);
-				resolve(result);
-			}catch(err){
+			try {
+				let orderRes: Order;
+				let privateOrder: IOrder | {} | HttpError;
+				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
+				let callOpts: CallOptions = new CallOptions(EMethod.POST, true, false, false);
+				privateOrder = await this.privateCall(url, callOpts, order);
+				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
+					resolve(<{}>privateOrder);
+				} else {
+					if (privateOrder instanceof HttpError) {
+						reject(privateOrder);
+					} else {
+						orderRes = new Order(<IOrder>privateOrder);
+						resolve(orderRes);
+					}
+				}
+			} catch (err) {
 				reject(err);
 			}
 		});
