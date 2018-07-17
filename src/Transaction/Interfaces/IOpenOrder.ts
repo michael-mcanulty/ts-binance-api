@@ -1,17 +1,16 @@
-import {IFill} from "./IFill";
-
-export interface IOrder {
+export interface IOpenOrder {
 	clientOrderId: string;
 	executedQty: string;
-	fills?: IFill[];
-	isWorking?: boolean;
+	icebergQty: string;
+	isWorking: boolean;
 	orderId: number;
 	origQty: string;
 	price: string;
 	side: string;
 	status: string;
+	stopPrice: string;
 	symbol: string;
+	time: number;
 	timeInForce: string;
-	transactTime: number;
 	type: string;
 }
