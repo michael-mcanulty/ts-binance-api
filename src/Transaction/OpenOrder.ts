@@ -65,9 +65,9 @@ export class OpenOrder extends BaseOrder {
 	}
 
 	constructor(clientOrderId: string, executedQty: string, orderId: number, origQty: string,
-							price: string, side: string, status: string, symbol: string, timeInForce: string, type: string,
-							icebergQty: string, isWorking: boolean, stopPrice: string, time: number) {
-		super(price, side, symbol, timeInForce, type);
+							price: string, side: string, status: string, symbol: string, type: string,
+							timeInForce: string, icebergQty: string, isWorking: boolean, stopPrice: string, time: number) {
+		super(price, side, symbol, type, timeInForce);
 		this.icebergQty = parseFloat(icebergQty);
 		this.isWorking = isWorking;
 		this.stopPrice = parseFloat(stopPrice);

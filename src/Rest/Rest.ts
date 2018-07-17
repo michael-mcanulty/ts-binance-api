@@ -11,7 +11,7 @@ import {ISymbol} from "ExchangeInfo/Interfaces/ISymbol";
 import {Binance} from "../Binance/Binance";
 import {Bot} from "../Index";
 import {NewOrder} from "../Transaction/NewOrder";
-import {EOrderSide, EOrderType} from "../Transaction/Interfaces/EOrderEnums";
+import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "../Transaction/Interfaces/EOrderEnums";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {Order} from "../Transaction/Order";
 import {HttpError} from "../Error/HttpError";
@@ -24,6 +24,7 @@ import {IQueryCancelOrder} from "../Transaction/Interfaces/IQueryCancelOrder";
 import {OpenOrder} from "../Transaction/OpenOrder";
 import {QueryOrder} from "../Transaction/QueryOrder";
 import {IOpenOrder} from "../Transaction/Interfaces/IOpenOrder";
+import {IQueryOrderResult} from "../Transaction/Interfaces/IQueryOrderResult";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -87,7 +88,10 @@ export class Rest extends BotHttp {
 					if (privateOrder instanceof HttpError) {
 						reject(privateOrder);
 					} else {
-						orderRes = new Order(<IOrder>privateOrder);
+						let order: IOrder = <IOrder>privateOrder;
+						orderRes = new Order(order.symbol, order.price, order.side, order.executedQty,
+							order.orderId, order.origQty, order.status, order.timeInForce, order.type,
+							order.clientOrderId, order.transactTime);
 						resolve(orderRes);
 					}
 				}
@@ -234,7 +238,13 @@ export class Rest extends BotHttp {
 			try {
 				let query: QueryOrder = new QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
 				let url: string = '/v3/order';
-				let privateCall: IOrder
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let privateCall: IQueryOrderResult = await this.privateCall(url, callOpts, query);
+				let result: Order;
+				if (privateCall && privateCall.hasOwnProperty("symbol")) {
+					result = new Order(privateCall.symbol, privateCall.price, privateCall.side, privateCall.executedQty, privateCall.orderId, privateCall.origQty, privateCall.status, privateCall.timeInForce, privateCall.type, privateCall.clientOrderId, privateCall.time);
+				}
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
@@ -255,12 +265,12 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public limitBuy(symbol: string, price: number, quantity: number) {
+	public limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
 				let side: EOrderSide = EOrderSide.BUY;
-				let order: NewOrder = new NewOrder(quantity, side, symbol, type, price);
+				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], price.toString(), iceburgQty.toString(), ETimeInForce[timeInForce], stopPrice.toString(), recvWindow, newClientOrderId, ENewOrderRespType[newOrderRespType]);
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes)
 			} catch (err) {
@@ -269,25 +279,26 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public limitSell(symbol: string, price: number, quantity?: number) {
+	public limitSell(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
 				let side: EOrderSide = EOrderSide.SELL;
-				let newOrder: NewOrder | {} = new NewOrder(quantity, side, symbol, type, price);
-				resolve(newOrder);
+				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], price.toString(), iceburgQty.toString(), ETimeInForce[timeInForce], stopPrice.toString(), recvWindow, newClientOrderId, ENewOrderRespType[newOrderRespType]);
+				let orderRes: Order | {} = await this._newOrder(order);
+				resolve(orderRes);
 			} catch (err) {
 				reject(err)
 			}
 		});
 	}
 
-	public marketBuy(symbol: string, quantity: number): Promise<Order | {}> {
+	public marketBuy(symbol: string, quantity: number, recvWindow?: number): Promise<Order | {}> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.MARKET;
 				let side: EOrderSide = EOrderSide.BUY;
-				let order: NewOrder = new NewOrder(quantity, side, symbol, type);
+				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], null, null, null, null, recvWindow, null, null);
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes)
 			} catch (err) {
@@ -296,12 +307,12 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public marketSell(symbol: string, quantity: number): Promise<NewOrder | {}> {
+	public marketSell(symbol: string, quantity: number, recvWindow?: number): Promise<NewOrder | {}> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.MARKET;
 				let side: EOrderSide = EOrderSide.SELL;
-				let order: NewOrder = new NewOrder(quantity, side, symbol, type);
+				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], null, null, null, null, recvWindow, null, null);
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes);
 			} catch (err) {

@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {IOpenOrder} from \"./IOpenOrder\";\n\nexport interface IQueryOrderResult extends IOpenOrder {\n\tisWorking: boolean;\n}"
+    "import {IOpenOrder} from \"./IOpenOrder\";\r\n\r\nexport interface IQueryOrderResult extends IOpenOrder {\r\n\tisWorking: boolean;\r\n}"
   ]
 }

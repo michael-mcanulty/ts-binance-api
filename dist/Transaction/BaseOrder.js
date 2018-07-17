@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const Signed_1 = require("../Rest/Signed");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
-
 class BaseOrder extends Signed_1.Signed {
-	constructor(price, side, symbol, timeInForce, type) {
+	constructor(price, side, symbol, type, timeInForce) {
 		super();
 		this.price = parseFloat(price);
 		this.side = EOrderEnums_1.EOrderSide[side];
@@ -22,6 +21,5 @@ class BaseOrder extends Signed_1.Signed {
 		}
 	}
 }
-
 exports.BaseOrder = BaseOrder;
 //# sourceMappingURL=BaseOrder.js.map

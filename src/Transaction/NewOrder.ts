@@ -23,10 +23,9 @@ export class NewOrder extends BaseOrder {
 		return binance;
 	}
 
-	constructor(clientOrderId: string, executedQty: string, orderId: number, origQty: string,
-							price: string, side: string, status: string, symbol: string, timeInForce: string, type: string, quantity: number,
-							icebergQty?: string, stopPrice?: string, recvWindow?: number, newClientOrderId?: string, newOrderRespType?: string) {
-		super(price, side, symbol, timeInForce, type);
+	constructor(symbol: string, quantity: number, side: string, type: string, price?: string,
+							icebergQty?: string, timeInForce?: string, stopPrice?: string, recvWindow?: number, newClientOrderId?: string, newOrderRespType?: string) {
+		super(price, side, symbol, type);
 		this.quantity = quantity;
 		this.icebergQty = parseFloat(icebergQty);
 		this.newOrderRespType = ENewOrderRespType[newOrderRespType] || ENewOrderRespType[ENewOrderRespType.RESULT];

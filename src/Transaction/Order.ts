@@ -26,11 +26,9 @@ export class Order extends BaseOrder {
 		return binance;
 	}
 
-	constructor(clientOrderId: string, executedQty: string, orderId: number,
-							origQty: string, price: string, side: string, status: string,
-							symbol: string, timeInForce: string, type: string,
-							transactTime: number) {
-		super(price, side, symbol, timeInForce, type);
+	constructor(symbol: string, price: string, side: string, executedQty: string, orderId: number,
+							origQty: string, status: string, timeInForce: string, type: string, clientOrderId: string, transactTime: number) {
+		super(price, side, symbol, type, timeInForce);
 		this.transactTime = transactTime;
 	}
 }

@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IQueryOrder {\n\torderId?: number;\n\torigClientOrderId?: string;\n\trecvWindow?: number;\n\tsymbol: string;\n}"
+    "export interface IQueryOrder {\r\n\torderId?: number;\r\n\torigClientOrderId?: string;\r\n\trecvWindow?: number;\r\n\tsymbol: string;\r\n}"
   ]
 }

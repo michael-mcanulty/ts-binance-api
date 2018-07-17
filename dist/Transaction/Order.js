@@ -18,8 +18,9 @@ class Order extends BaseOrder_1.BaseOrder {
         binance.type = EOrderEnums_1.EOrderType[iOrder.type];
         return binance;
     }
-    constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, timeInForce, type, transactTime) {
-        super(price, side, symbol, timeInForce, type);
+
+	constructor(symbol, price, side, executedQty, orderId, origQty, status, timeInForce, type, clientOrderId, transactTime) {
+		super(price, side, symbol, type, timeInForce);
         this.transactTime = transactTime;
     }
 }

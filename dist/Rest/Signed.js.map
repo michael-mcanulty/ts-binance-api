@@ -8,6 +8,6 @@
   "names": [],
   "mappings": ";;AAAA;CAGC;AAHD,wBAGC",
   "sourcesContent": [
-    "export class Signed {\r\n\tsignature: string;\r\n\ttimestamp: number;\r\n}"
+    "export class Signed {\n\tsignature: string;\n\ttimestamp: number;\n}"
   ]
 }

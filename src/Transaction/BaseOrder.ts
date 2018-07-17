@@ -9,7 +9,7 @@ export class BaseOrder extends Signed {
 	timeInForce: ETimeInForce;
 	type: EOrderType;
 
-	constructor(price: string, side: string, symbol: string, timeInForce: string, type: string) {
+	constructor(price: string, side: string, symbol: string, type: string, timeInForce?: string) {
 		super();
 		this.price = parseFloat(price);
 		this.side = EOrderSide[side];

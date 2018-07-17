@@ -14,8 +14,9 @@ class NewOrder extends BaseOrder_1.BaseOrder {
         binance.type = EOrderEnums_1.EOrderType[newOrder.type];
         return binance;
     }
-    constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, timeInForce, type, quantity, icebergQty, stopPrice, recvWindow, newClientOrderId, newOrderRespType) {
-        super(price, side, symbol, timeInForce, type);
+
+	constructor(symbol, quantity, side, type, price, icebergQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType) {
+		super(price, side, symbol, type);
         this.quantity = quantity;
         this.icebergQty = parseFloat(icebergQty);
         this.newOrderRespType = EOrderEnums_1.ENewOrderRespType[newOrderRespType] || EOrderEnums_1.ENewOrderRespType[EOrderEnums_1.ENewOrderRespType.RESULT];

@@ -1,1 +1,13 @@
-{"version":3,"file":"IOpenOrder.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/IOpenOrder.ts"],"names":[],"mappings":"","sourcesContent":["import {IBaseOrder} from \"./IBaseOrder\";\n\nexport interface IOpenOrder extends IBaseOrder {\n\tclientOrderId: string;\n\texecutedQty: string;\n\ticebergQty: string;\n\tisWorking: boolean;\n\torderId: number;\n\torigQty: string;\n\tstatus: string;\n\tstopPrice: string;\n\ttime: number;\n}"]}
+{
+  "version": 3,
+  "file": "IOpenOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IOpenOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {IBaseOrder} from \"./IBaseOrder\";\r\n\r\nexport interface IOpenOrder extends IBaseOrder {\r\n\tclientOrderId: string;\r\n\texecutedQty: string;\r\n\ticebergQty: string;\r\n\tisWorking: boolean;\r\n\torderId: number;\r\n\torigQty: string;\r\n\tstatus: string;\r\n\tstopPrice: string;\r\n\ttime: number;\r\n}"
+  ]
+}

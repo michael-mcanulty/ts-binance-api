@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BaseOrder_1 = require("./BaseOrder");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class OpenOrder extends BaseOrder_1.BaseOrder {
-    constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, timeInForce, type, icebergQty, isWorking, stopPrice, time) {
-        super(price, side, symbol, timeInForce, type);
+	constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, type, timeInForce, icebergQty, isWorking, stopPrice, time) {
+		super(price, side, symbol, type, timeInForce);
         this.icebergQty = parseFloat(icebergQty);
         this.isWorking = isWorking;
         this.stopPrice = parseFloat(stopPrice);
