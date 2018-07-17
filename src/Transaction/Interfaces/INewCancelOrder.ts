@@ -4,5 +4,4 @@ export interface INewCancelOrder {
 	origClientOrderId?: string;
 	recvWindow?: number;
 	symbol: string;
-	timestamp: number;
 }

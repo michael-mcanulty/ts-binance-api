@@ -7,7 +7,6 @@ export class NewCancelOrder extends Signed implements INewCancelOrder {
 	origClientOrderId?: string;
 	recvWindow?: number;
 	symbol: string;
-	timestamp: number;
 
 	constructor(symbol: string, orderId?: number, newClientOrderId?: string, origClientOrderId?: string, recvWindow?: number) {
 		super();

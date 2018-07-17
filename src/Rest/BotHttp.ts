@@ -117,7 +117,7 @@ export class BotHttp {
 		});
 	}
 
-	public privateCall(path: string, callOptions: CallOptions, payload?: NewOrder | Signed | NewCancelOrder | OpenOrder | DataStream | NewOpenOrder): Promise<any> {
+	public privateCall(path: string, callOptions: CallOptions, payload?: NewOpenOrder | NewOrder | Signed | NewCancelOrder | OpenOrder | DataStream): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature: string;
