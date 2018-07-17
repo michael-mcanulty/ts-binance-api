@@ -1,6 +1,5 @@
-export interface IQueryOrder {
-	orderId?: number;
+import {IBaseQueryOrder} from "./IBaseQueryOrder";
+
+export interface IQueryOrder extends IBaseQueryOrder {
 	origClientOrderId?: string;
-	recvWindow?: number;
-	symbol: string;
 }

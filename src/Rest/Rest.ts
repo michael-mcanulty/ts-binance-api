@@ -25,6 +25,7 @@ import {OpenOrder} from "../Transaction/OpenOrder";
 import {QueryOrder} from "../Transaction/QueryOrder";
 import {IOpenOrder} from "../Transaction/Interfaces/IOpenOrder";
 import {IQueryOrderResult} from "../Transaction/Interfaces/IQueryOrderResult";
+import {QueryAllOrders} from "../Transaction/QueryAllOrders";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -245,6 +246,26 @@ export class Rest extends BotHttp {
 					result = new Order(privateCall.symbol, privateCall.price, privateCall.side, privateCall.executedQty, privateCall.orderId, privateCall.origQty, privateCall.status, privateCall.timeInForce, privateCall.type, privateCall.clientOrderId, privateCall.time);
 				}
 				resolve(result);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getAllOrders(symbol: string, limit: number = 500, orderId?: number, recvWindow?: number): Promise<Order[]> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let query: QueryAllOrders = new QueryAllOrders(symbol, orderId, limit, recvWindow);
+				let url: string = '/v3/allOrders';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let privateCall: IQueryOrderResult[] = await this.privateCall(url, callOpts, query);
+				let results: Order[];
+				if (privateCall && privateCall.hasOwnProperty("symbol")) {
+					results = privateCall.map(pCall => {
+						return new Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
+					})
+				}
+				resolve(results);
 			} catch (err) {
 				reject(err);
 			}

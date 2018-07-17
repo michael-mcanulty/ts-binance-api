@@ -8,6 +8,6 @@
   "names": [],
   "mappings": ";;AAAA;IAGC,YAAY,MAAc,EAAE,KAAsB;QACjD,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,EAAE,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC;YACX,IAAI,CAAC,KAAK,GAAG,UAAU,CAAC,KAAK,CAAC,QAAQ,EAAE,CAAC,CAAC;QAC3C,CAAC;IACF,CAAC;CACD;AATD,sBASC",
   "sourcesContent": [
-    "export class Price {\n\tsymbol: string;\n\tvalue: number;\n\tconstructor(symbol: string, value: string | number) {\n\t\tthis.symbol = symbol;\n\t\tif (value) {\n\t\t\tthis.value = parseFloat(value.toString());\n\t\t}\n\t}\n}\n"
+    "export class Price {\r\n\tsymbol: string;\r\n\tvalue: number;\r\n\tconstructor(symbol: string, value: string | number) {\r\n\t\tthis.symbol = symbol;\r\n\t\tif (value) {\r\n\t\t\tthis.value = parseFloat(value.toString());\r\n\t\t}\r\n\t}\r\n}\r\n"
   ]
 }

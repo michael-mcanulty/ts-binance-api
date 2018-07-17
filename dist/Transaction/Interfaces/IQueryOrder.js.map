@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IQueryOrder {\r\n\torderId?: number;\r\n\torigClientOrderId?: string;\r\n\trecvWindow?: number;\r\n\tsymbol: string;\r\n}"
+    "import {IBaseQueryOrder} from \"./IBaseQueryOrder\";\n\nexport interface IQueryOrder extends IBaseQueryOrder {\n\torigClientOrderId?: string;\n}"
   ]
 }

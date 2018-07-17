@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface IBaseOrder {\r\n\tprice: string;\r\n\tside: string;\r\n\tsymbol: string;\r\n\ttimeInForce: string;\r\n\ttype: string;\r\n}"
+    "export interface IBaseOrder {\n\tprice: string;\n\tside: string;\n\tsymbol: string;\n\ttimeInForce: string;\n\ttype: string;\n}"
   ]
 }

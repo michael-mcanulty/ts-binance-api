@@ -1,16 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-const Signed_1 = require("../Rest/Signed");
+const BaseQueryOrder_1 = require("./BaseQueryOrder");
 
-class QueryOrder extends Signed_1.Signed {
+class QueryOrder extends BaseQueryOrder_1.BaseQueryOrder {
 	constructor(symbol, orderId, recvWindow, origClientOrderId) {
-		super();
-		this.symbol = symbol;
-		this.orderId = orderId;
-		this.recvWindow = recvWindow;
+		super(symbol, orderId, recvWindow);
 		this.origClientOrderId = origClientOrderId;
 	}
 }
-
 exports.QueryOrder = QueryOrder;
 //# sourceMappingURL=QueryOrder.js.map

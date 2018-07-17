@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "import {IQueryOrder} from \"./IQueryOrder\";\r\n\r\nexport interface IQueryCancelOrder extends IQueryOrder {\r\n\tnewClientOrderId?: string;\r\n}"
+    "import {IQueryOrder} from \"./IQueryOrder\";\n\nexport interface IQueryCancelOrder extends IQueryOrder {\n\tnewClientOrderId?: string;\n}"
   ]
 }

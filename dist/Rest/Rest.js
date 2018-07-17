@@ -25,6 +25,7 @@ const DataStream_1 = require("./DataStream");
 const CallOptions_1 = require("./CallOptions");
 const OpenOrder_1 = require("../Transaction/OpenOrder");
 const QueryOrder_1 = require("../Transaction/QueryOrder");
+const QueryAllOrders_1 = require("../Transaction/QueryAllOrders");
 class Rest extends BotHttp_1.BotHttp {
     _cancelOrder(cancelOrder) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -246,11 +247,32 @@ class Rest extends BotHttp_1.BotHttp {
 							}
 							resolve(result);
             }
-            catch (err) {
-                reject(err);
-            }
-        }));
-    }
+						catch (err) {
+							reject(err);
+						}
+				}));
+		}
+
+	getAllOrders(symbol, limit = 500, orderId, recvWindow) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let query = new QueryAllOrders_1.QueryAllOrders(symbol, orderId, limit, recvWindow);
+				let url = '/v3/allOrders';
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+				let privateCall = yield this.privateCall(url, callOpts, query);
+				let results;
+				if (privateCall && privateCall.hasOwnProperty("symbol")) {
+					results = privateCall.map(pCall => {
+						return new Order_1.Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
+					});
+				}
+				resolve(results);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
     keepDataStream() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             let result;
