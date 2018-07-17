@@ -1,5 +1,5 @@
-import {Signed} from "../../dist/Rest/Signed";
 import {INewOpenOrder} from "./Interfaces/INewOpenOrder";
+import {Signed} from "../Rest/Signed";
 
 export class NewOpenOrder extends Signed implements INewOpenOrder {
 	orderId: number;

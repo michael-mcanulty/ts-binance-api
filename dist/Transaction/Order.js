@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const Signed_1 = require("../Rest/Signed");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
-
 class Order extends Signed_1.Signed {
 	constructor(orderRaw) {
 		super();
@@ -19,6 +18,5 @@ class Order extends Signed_1.Signed {
 		this.type = EOrderEnums_1.EOrderType[orderRaw.type];
 	}
 }
-
 exports.Order = Order;
 //# sourceMappingURL=Order.js.map

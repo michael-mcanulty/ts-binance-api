@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 const Signed_1 = require("../Rest/Signed");
-
 class OpenOrder extends Signed_1.Signed {
 	constructor(iOpenOrderRes) {
 		super();
@@ -53,7 +52,6 @@ class OpenOrder extends Signed_1.Signed {
 		return res;
 	}
 }
-
 OpenOrder.allOpenOrders = [];
 exports.OpenOrder = OpenOrder;
 //# sourceMappingURL=OpenOrder.js.map

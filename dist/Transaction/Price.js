@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class Price {
 	constructor(symbol, value) {
 		this.symbol = symbol;
@@ -9,6 +8,5 @@ class Price {
 		}
 	}
 }
-
 exports.Price = Price;
 //# sourceMappingURL=Price.js.map
