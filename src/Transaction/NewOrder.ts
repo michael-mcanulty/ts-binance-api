@@ -1,39 +1,37 @@
 import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {BaseOrder} from "./BaseOrder";
 import {INewOrder} from "./Interfaces/INewOrder";
-import {Signed} from "../Rest/Signed";
 
-export class NewOrder extends Signed implements INewOrder {
+export class NewOrder extends BaseOrder {
 
-	public icebergQty?: number;
-	public newClientOrderId?: string;
-	public newOrderRespType?: string;
-	public price?: number;
-	public side: string;
-	public quantity: number;
-	public recvWindow?: number;
-	public symbol: string;
-	public stopPrice?: number;
-	public timeInForce?: string;
-	public type: string;
+	icebergQty?: number;
+	newClientOrderId?: string;
+	newOrderRespType?: string;
+	quantity: number;
+	recvWindow?: number;
+	stopPrice?: number;
 
-	constructor(quantity: number, side: EOrderSide, symbol: string, type: EOrderType, price?: number,
-							icebergQty?: number, newClientOrderId?: string, stopPrice?: number,
-							newOrderRespType?: ENewOrderRespType, recvWindow?: number, timeInForce?: ETimeInForce) {
-		super();
+	static binanceFormat(newOrder: INewOrder): INewOrder {
+		let binance: INewOrder = <INewOrder>{};
+		binance.icebergQty = newOrder.icebergQty;
+		binance.price = newOrder.price;
+		binance.side = EOrderSide[newOrder.side];
+		binance.stopPrice = newOrder.stopPrice;
+		binance.symbol = newOrder.symbol;
+		binance.timeInForce = ETimeInForce[newOrder.timeInForce];
+		binance.type = EOrderType[newOrder.type];
+		return binance;
+	}
+
+	constructor(clientOrderId: string, executedQty: string, orderId: number, origQty: string,
+							price: string, side: string, status: string, symbol: string, timeInForce: string, type: string, quantity: number,
+							icebergQty?: string, stopPrice?: string, recvWindow?: number, newClientOrderId?: string, newOrderRespType?: string) {
+		super(price, side, symbol, timeInForce, type);
 		this.quantity = quantity;
-		this.side = EOrderSide[side];
-		this.symbol = symbol;
-		this.type = EOrderType[type] || EOrderType[EOrderType.LIMIT];
-		this.price = price;
-		this.icebergQty = icebergQty;
+		this.icebergQty = parseFloat(icebergQty);
 		this.newOrderRespType = ENewOrderRespType[newOrderRespType] || ENewOrderRespType[ENewOrderRespType.RESULT];
 		this.newClientOrderId = newClientOrderId;
-		this.stopPrice = stopPrice;
+		this.stopPrice = parseFloat(stopPrice);
 		this.recvWindow = recvWindow || 5000;
-		let goodTilCancelList: string[] = [EOrderType[EOrderType.LIMIT], EOrderType[EOrderType.STOP_LOSS_LIMIT], EOrderType[EOrderType.TAKE_PROFIT_LIMIT]];
-		let isGoodTilCancelled: boolean = goodTilCancelList.includes(this.type);
-		if (isGoodTilCancelled || !this.type) {
-			this.timeInForce = ETimeInForce[ETimeInForce.GTC];
-		}
 	}
 }

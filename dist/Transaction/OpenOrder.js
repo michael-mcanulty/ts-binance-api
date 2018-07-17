@@ -1,56 +1,63 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", {value: true});
+Object.defineProperty(exports, "__esModule", { value: true });
+const BaseOrder_1 = require("./BaseOrder");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
-const Signed_1 = require("../Rest/Signed");
-class OpenOrder extends Signed_1.Signed {
-	constructor(iOpenOrderRes) {
-		super();
-		this.clientOrderId = iOpenOrderRes.clientOrderId;
-		this.executedQty = parseFloat(iOpenOrderRes.executedQty);
-		this.icebergQty = parseFloat(iOpenOrderRes.icebergQty);
-		this.isWorking = iOpenOrderRes.isWorking;
-		this.orderId = iOpenOrderRes.orderId;
-		this.origQty = parseFloat(iOpenOrderRes.origQty);
-		this.price = parseFloat(iOpenOrderRes.price);
-		this.side = EOrderEnums_1.EOrderSide[iOpenOrderRes.side];
-		this.status = EOrderEnums_1.EOrderStatus[iOpenOrderRes.status];
-		this.stopPrice = parseFloat(iOpenOrderRes.stopPrice);
-		this.symbol = iOpenOrderRes.symbol;
-		this.time = iOpenOrderRes.time;
-		this.timeInForce = EOrderEnums_1.ETimeInForce[iOpenOrderRes.timeInForce];
-		this.type = EOrderEnums_1.EOrderType[iOpenOrderRes.type];
-	}
-
-	static cancelOrderById(orderId) {
-		let boolRes = false;
-		let allOrderIds;
-		let removeIdx;
-		if (OpenOrder.allOpenOrders.length > 0) {
-			allOrderIds = OpenOrder.allOpenOrders.map(order => order.orderId);
-			removeIdx = allOrderIds.indexOf(orderId);
-			if (removeIdx >= 0) {
-				OpenOrder.allOpenOrders.splice(removeIdx, 1);
-				boolRes = true;
-			}
-		}
-		return boolRes;
-	}
-
-	static cancelOrdersBySymbol(symbol) {
-		let boolResArr = [];
-		let res = false;
-		let cancelIds;
-		if (OpenOrder.allOpenOrders.length > 0) {
-			cancelIds = OpenOrder.allOpenOrders.filter(o => o.symbol === symbol).map(o => o.orderId);
-			if (cancelIds.length > 0) {
-				cancelIds.forEach(id => {
-					boolResArr.push(OpenOrder.cancelOrderById(id));
-				});
-				res = boolResArr.every(b => b === true);
-			}
-		}
-		return res;
-	}
+class OpenOrder extends BaseOrder_1.BaseOrder {
+    constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, timeInForce, type, icebergQty, isWorking, stopPrice, time) {
+        super(price, side, symbol, timeInForce, type);
+        this.icebergQty = parseFloat(icebergQty);
+        this.isWorking = isWorking;
+        this.stopPrice = parseFloat(stopPrice);
+        this.symbol = symbol;
+        this.time = time;
+    }
+    static cancelOrderById(orderId) {
+        let boolRes = false;
+        let allOrderIds;
+        let removeIdx;
+        if (OpenOrder.allOpenOrders.length > 0) {
+            allOrderIds = OpenOrder.allOpenOrders.map(order => order.orderId);
+            removeIdx = allOrderIds.indexOf(orderId);
+            if (removeIdx >= 0) {
+                OpenOrder.allOpenOrders.splice(removeIdx, 1);
+                boolRes = true;
+            }
+        }
+        return boolRes;
+    }
+    static binanceFormat(openOrder) {
+        let binance = {};
+        binance.clientOrderId = openOrder.clientOrderId;
+        binance.executedQty = openOrder.executedQty.toString();
+        binance.icebergQty = openOrder.icebergQty.toString();
+        binance.isWorking = openOrder.isWorking;
+        binance.orderId = openOrder.orderId;
+        binance.origQty = openOrder.origQty.toString();
+        binance.price = openOrder.price.toString();
+        binance.side = EOrderEnums_1.EOrderSide[openOrder.side];
+        binance.status = EOrderEnums_1.EOrderStatus[openOrder.status];
+        binance.stopPrice = openOrder.stopPrice.toString();
+        binance.symbol = openOrder.symbol;
+        binance.timeInForce = EOrderEnums_1.ETimeInForce[openOrder.timeInForce];
+        binance.time = openOrder.time;
+        binance.type = EOrderEnums_1.EOrderType[openOrder.type];
+        return binance;
+    }
+    static cancelOrdersBySymbol(symbol) {
+        let boolResArr = [];
+        let res = false;
+        let cancelIds;
+        if (OpenOrder.allOpenOrders.length > 0) {
+            cancelIds = OpenOrder.allOpenOrders.filter(o => o.symbol === symbol).map(o => o.orderId);
+            if (cancelIds.length > 0) {
+                cancelIds.forEach(id => {
+                    boolResArr.push(OpenOrder.cancelOrderById(id));
+                });
+                res = boolResArr.every(b => b === true);
+            }
+        }
+        return res;
+    }
 }
 OpenOrder.allOpenOrders = [];
 exports.OpenOrder = OpenOrder;

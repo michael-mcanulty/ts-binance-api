@@ -1,22 +1,27 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", {value: true});
-const Signed_1 = require("../Rest/Signed");
+Object.defineProperty(exports, "__esModule", { value: true });
+const BaseOrder_1 = require("./BaseOrder");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
-class Order extends Signed_1.Signed {
-	constructor(orderRaw) {
-		super();
-		this.clientOrderId = orderRaw.clientOrderId;
-		this.executedQty = parseFloat(orderRaw.executedQty);
-		this.orderId = orderRaw.orderId;
-		this.origQty = parseFloat(orderRaw.origQty);
-		this.price = parseFloat(orderRaw.price);
-		this.side = EOrderEnums_1.EOrderSide[orderRaw.side];
-		this.status = EOrderEnums_1.EOrderStatus[orderRaw.status];
-		this.symbol = orderRaw.symbol;
-		this.timeInForce = EOrderEnums_1.ETimeInForce[orderRaw.timeInForce];
-		this.transactTime = orderRaw.transactTime;
-		this.type = EOrderEnums_1.EOrderType[orderRaw.type];
-	}
+class Order extends BaseOrder_1.BaseOrder {
+    static binanceFormat(iOrder) {
+        let binance = {};
+        binance.clientOrderId = iOrder.clientOrderId;
+        binance.executedQty = iOrder.executedQty.toString();
+        binance.isWorking = iOrder.isWorking;
+        binance.orderId = iOrder.orderId;
+        binance.origQty = iOrder.origQty.toString();
+        binance.price = iOrder.price.toString();
+        binance.side = EOrderEnums_1.EOrderSide[iOrder.side];
+        binance.status = EOrderEnums_1.EOrderStatus[iOrder.status];
+        binance.symbol = iOrder.symbol;
+        binance.timeInForce = EOrderEnums_1.ETimeInForce[iOrder.timeInForce];
+        binance.type = EOrderEnums_1.EOrderType[iOrder.type];
+        return binance;
+    }
+    constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, timeInForce, type, transactTime) {
+        super(price, side, symbol, timeInForce, type);
+        this.transactTime = transactTime;
+    }
 }
 exports.Order = Order;
 //# sourceMappingURL=Order.js.map

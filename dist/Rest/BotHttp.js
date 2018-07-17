@@ -34,7 +34,6 @@ const EMethod_1 = require("./EMethod");
 const Signed_1 = require("./Signed");
 const ApiHeader_1 = require("./ApiHeader");
 const CallOptions_1 = require("./CallOptions");
-
 class BotHttp {
 	constructor(options) {
 		this.options = options;
@@ -188,7 +187,6 @@ class BotHttp {
 		}));
 	}
 }
-
 BotHttp.BASE = 'https://api.binance.com';
 BotHttp.fetch = Fetch;
 exports.BotHttp = BotHttp;

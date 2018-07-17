@@ -1,5 +1,4 @@
-export interface INewCancelOrder {
-	newClientOrderId?: string;
+export interface IQueryOrder {
 	orderId?: number;
 	origClientOrderId?: string;
 	recvWindow?: number;

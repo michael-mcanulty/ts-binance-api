@@ -1,23 +1,18 @@
-import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {BaseOrder} from "./BaseOrder";
 import {IOpenOrder} from "./Interfaces/IOpenOrder";
-import {Signed} from "../Rest/Signed";
+import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 
-export class OpenOrder extends Signed {
+export class OpenOrder extends BaseOrder {
 	static allOpenOrders: OpenOrder[] = [];
 	clientOrderId: string;
 	executedQty: number;
 	icebergQty: number;
 	isWorking: boolean;
+	status: EOrderStatus;
 	orderId: number;
 	origQty: number;
-	price: number;
-	side: EOrderSide;
-	status: EOrderStatus;
 	stopPrice: number;
-	symbol: string;
 	time: number;
-	timeInForce: ETimeInForce;
-	type: EOrderType;
 
 	static cancelOrderById(orderId: number): boolean {
 		let boolRes: boolean = false;
@@ -32,6 +27,25 @@ export class OpenOrder extends Signed {
 			}
 		}
 		return boolRes;
+	}
+
+	static binanceFormat(openOrder: OpenOrder): IOpenOrder {
+		let binance: IOpenOrder = <IOpenOrder>{};
+		binance.clientOrderId = openOrder.clientOrderId;
+		binance.executedQty = openOrder.executedQty.toString();
+		binance.icebergQty = openOrder.icebergQty.toString();
+		binance.isWorking = openOrder.isWorking;
+		binance.orderId = openOrder.orderId;
+		binance.origQty = openOrder.origQty.toString();
+		binance.price = openOrder.price.toString();
+		binance.side = EOrderSide[openOrder.side];
+		binance.status = EOrderStatus[openOrder.status];
+		binance.stopPrice = openOrder.stopPrice.toString();
+		binance.symbol = openOrder.symbol;
+		binance.timeInForce = ETimeInForce[openOrder.timeInForce];
+		binance.time = openOrder.time;
+		binance.type = EOrderType[openOrder.type];
+		return binance;
 	}
 
 	static cancelOrdersBySymbol(symbol: string): boolean {
@@ -50,21 +64,14 @@ export class OpenOrder extends Signed {
 		return res;
 	}
 
-	constructor(iOpenOrderRes: IOpenOrder) {
-		super();
-		this.clientOrderId = iOpenOrderRes.clientOrderId;
-		this.executedQty = parseFloat(iOpenOrderRes.executedQty);
-		this.icebergQty = parseFloat(iOpenOrderRes.icebergQty);
-		this.isWorking = iOpenOrderRes.isWorking;
-		this.orderId = iOpenOrderRes.orderId;
-		this.origQty = parseFloat(iOpenOrderRes.origQty);
-		this.price = parseFloat(iOpenOrderRes.price);
-		this.side = EOrderSide[iOpenOrderRes.side];
-		this.status = EOrderStatus[iOpenOrderRes.status];
-		this.stopPrice = parseFloat(iOpenOrderRes.stopPrice);
-		this.symbol = iOpenOrderRes.symbol;
-		this.time = iOpenOrderRes.time;
-		this.timeInForce = ETimeInForce[iOpenOrderRes.timeInForce];
-		this.type = EOrderType[iOpenOrderRes.type];
+	constructor(clientOrderId: string, executedQty: string, orderId: number, origQty: string,
+							price: string, side: string, status: string, symbol: string, timeInForce: string, type: string,
+							icebergQty: string, isWorking: boolean, stopPrice: string, time: number) {
+		super(price, side, symbol, timeInForce, type);
+		this.icebergQty = parseFloat(icebergQty);
+		this.isWorking = isWorking;
+		this.stopPrice = parseFloat(stopPrice);
+		this.symbol = symbol;
+		this.time = time;
 	}
 }

@@ -9,12 +9,12 @@ import {ITimestamp} from "./Interfaces/ITimestamp";
 import {BinanceError} from "../Error/BinanceError";
 import {Signed} from "./Signed";
 import {NewOrder} from "../Transaction/NewOrder";
-import {NewCancelOrder} from "../Transaction/NewCancelOrder";
+import {QueryCancelOrder} from "../Transaction/QueryCancelOrder";
 import {OpenOrder} from "../Transaction/OpenOrder";
 import {DataStream} from "./DataStream";
 import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
-import {NewOpenOrder} from "../Transaction/NewOpenOrder";
+import {QueryOrder} from "../Transaction/QueryOrder";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -117,7 +117,7 @@ export class BotHttp {
 		});
 	}
 
-	public privateCall(path: string, callOptions: CallOptions, payload?: NewOpenOrder | NewOrder | Signed | NewCancelOrder | OpenOrder | DataStream): Promise<any> {
+	public privateCall(path: string, callOptions: CallOptions, payload?: QueryOrder | NewOrder | Signed | QueryCancelOrder | OpenOrder | DataStream): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature: string;

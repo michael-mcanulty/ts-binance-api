@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 const Signed_1 = require("../Rest/Signed");
-
 class NewCancelOrder extends Signed_1.Signed {
 	constructor(symbol, orderId, newClientOrderId, origClientOrderId, recvWindow) {
 		super();
@@ -13,6 +12,5 @@ class NewCancelOrder extends Signed_1.Signed {
 		this.recvWindow = recvWindow;
 	}
 }
-
 exports.NewCancelOrder = NewCancelOrder;
 //# sourceMappingURL=NewCancelOrder.js.map

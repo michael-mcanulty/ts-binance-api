@@ -8,6 +8,6 @@
   "names": [],
   "mappings": ";;AACA,2CAAsC;AAEtC,kBAA0B,SAAQ,eAAM;IAMvC,YAAY,MAAc,EAAE,OAAe,EAAE,UAAmB,EAAE,iBAA0B;QAC3F,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;QACvB,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;QAC7B,IAAI,CAAC,iBAAiB,GAAG,iBAAiB,CAAC;IAC5C,CAAC;CACD;AAbD,oCAaC",
   "sourcesContent": [
-    "import {INewOpenOrder} from \"./Interfaces/INewOpenOrder\";\nimport {Signed} from \"../Rest/Signed\";\n\nexport class NewOpenOrder extends Signed implements INewOpenOrder {\n\torderId: number;\n\torigClientOrderId: string;\n\trecvWindow: number;\n\tsymbol: string;\n\n\tconstructor(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string) {\n\t\tsuper();\n\t\tthis.symbol = symbol;\n\t\tthis.orderId = orderId;\n\t\tthis.recvWindow = recvWindow;\n\t\tthis.origClientOrderId = origClientOrderId;\n\t}\n}"
+    "import {IQueryOpenOrder} from \"./Interfaces/IQueryOpenOrder\";\nimport {Signed} from \"../Rest/Signed\";\n\nexport class NewOpenOrder extends Signed implements IQueryOpenOrder {\n\torderId: number;\n\torigClientOrderId: string;\n\trecvWindow: number;\n\tsymbol: string;\n\n\tconstructor(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string) {\n\t\tsuper();\n\t\tthis.symbol = symbol;\n\t\tthis.orderId = orderId;\n\t\tthis.recvWindow = recvWindow;\n\t\tthis.origClientOrderId = origClientOrderId;\n\t}\n}"
   ]
 }

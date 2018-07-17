@@ -1,7 +1,7 @@
-import {INewOpenOrder} from "./Interfaces/INewOpenOrder";
+import {IQueryOrder} from "./Interfaces/IQueryOrder";
 import {Signed} from "../Rest/Signed";
 
-export class NewOpenOrder extends Signed implements INewOpenOrder {
+export class QueryOrder extends Signed implements IQueryOrder {
 	orderId: number;
 	origClientOrderId: string;
 	recvWindow: number;
