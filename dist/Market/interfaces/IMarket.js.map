@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IMarket.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Market/interfaces/IMarket.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {ILimits} from \"../../ExchangeInfo/Interfaces/ILimits\";\r\n\r\nexport interface IMarket {\r\n\t_id: string\r\n\tbaseAsset: string;\r\n\tdate: Date;\r\n\tlimits: ILimits;\r\n\tquoteAsset: string;\r\n\tsymbol: string;\r\n}"
+  ]
+}

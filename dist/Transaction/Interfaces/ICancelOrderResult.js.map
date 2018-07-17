@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ICancelOrderResult.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/ICancelOrderResult.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ICancelOrderResult {\r\n\tclientOrderId: string;\r\n\torderId: number;\r\n\torigClientOrderId: string;\r\n\tsymbol: string;\r\n}"
+  ]
+}

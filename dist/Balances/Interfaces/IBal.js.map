@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IBal.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Balances/Interfaces/IBal.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface IBal {\r\n\tavailable: string;\r\n\tonOrder: string;\r\n}"
+  ]
+}

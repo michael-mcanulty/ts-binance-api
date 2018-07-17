@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "NewOpenOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Transaction/NewOpenOrder.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAAA,mDAA8C;AAG9C,kBAA0B,SAAQ,eAAM;IAMvC,YAAY,MAAc,EAAE,OAAe,EAAE,UAAmB,EAAE,iBAA0B;QAC3F,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;QACvB,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;QAC7B,IAAI,CAAC,iBAAiB,GAAG,iBAAiB,CAAC;IAC5C,CAAC;CACD;AAbD,oCAaC",
+  "sourcesContent": [
+    "import {Signed} from \"../../dist/Rest/Signed\";\r\nimport {INewOpenOrder} from \"./Interfaces/INewOpenOrder\";\r\n\r\nexport class NewOpenOrder extends Signed implements INewOpenOrder {\r\n\torderId: number;\r\n\torigClientOrderId: string;\r\n\trecvWindow: number;\r\n\tsymbol: string;\r\n\r\n\tconstructor(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string) {\r\n\t\tsuper();\r\n\t\tthis.symbol = symbol;\r\n\t\tthis.orderId = orderId;\r\n\t\tthis.recvWindow = recvWindow;\r\n\t\tthis.origClientOrderId = origClientOrderId;\r\n\t}\r\n}"
+  ]
+}

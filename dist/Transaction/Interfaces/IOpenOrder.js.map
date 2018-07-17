@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IOpenOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IOpenOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface IOpenOrder {\r\n\tclientOrderId: string;\r\n\texecutedQty: string;\r\n\ticebergQty: string;\r\n\tisWorking: boolean;\r\n\torderId: number;\r\n\torigQty: string;\r\n\tprice: string;\r\n\tside: string;\r\n\tstatus: string;\r\n\tstopPrice: string;\r\n\tsymbol: string;\r\n\ttime: number;\r\n\ttimeInForce: string;\r\n\ttype: string;\r\n}"
+  ]
+}

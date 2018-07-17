@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ITransactionRate.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/ITransactionRate.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ITransactionRate {\r\n\tbuy: number,\r\n\tsell: number\r\n}"
+  ]
+}

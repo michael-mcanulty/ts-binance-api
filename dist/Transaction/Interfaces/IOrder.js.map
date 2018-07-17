@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "import {IFill} from \"./IFill\";\r\n\r\nexport interface IOrder {\r\n\tclientOrderId: string;\r\n\texecutedQty: string;\r\n\tfills?: IFill[];\r\n\tisWorking?: boolean;\r\n\torderId: number;\r\n\torigQty: string;\r\n\tprice: string;\r\n\tside: string;\r\n\tstatus: string;\r\n\tsymbol: string;\r\n\ttimeInForce: string;\r\n\ttransactTime: number;\r\n\ttype: string;\r\n}\r\n"
+  ]
+}

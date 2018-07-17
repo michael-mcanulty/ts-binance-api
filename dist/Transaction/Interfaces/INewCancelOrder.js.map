@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "INewCancelOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/INewCancelOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface INewCancelOrder {\r\n\tnewClientOrderId?: string;\r\n\torderId?: number;\r\n\torigClientOrderId?: string;\r\n\trecvWindow?: number;\r\n\tsymbol: string;\r\n}"
+  ]
+}

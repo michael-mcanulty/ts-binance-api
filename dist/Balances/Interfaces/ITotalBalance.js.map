@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ITotalBalance.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Balances/Interfaces/ITotalBalance.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface ITotalBalance {\r\n\tavailableBNBQty: number;\r\n\tavailableUSDTQty: number;\r\n\tinUseQAQty: number;\r\n\tinUseUSDTQty: number;\r\n}"
+  ]
+}
