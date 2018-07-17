@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IQueryOpenOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IQueryOpenOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface IQueryOpenOrder {\n\torderId?: number;\n\torigClientOrderId?: string;\n\trecvWindow?: number;\n\tsymbol: string;\n}"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "OrderQuery.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../src/Transaction/OrderQuery.ts"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;CAAyB;AAAzB,gCAAyB",
+  "sourcesContent": [
+    "export class OrderQuery{}"
+  ]
+}

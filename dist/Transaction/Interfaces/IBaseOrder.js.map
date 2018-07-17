@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "IBaseOrder.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/Transaction/Interfaces/IBaseOrder.ts"
+  ],
+  "names": [],
+  "mappings": "",
+  "sourcesContent": [
+    "export interface IBaseOrder {\r\n\tprice: string;\r\n\tside: string;\r\n\tsymbol: string;\r\n\ttimeInForce: string;\r\n\ttype: string;\r\n}"
+  ]
+}
