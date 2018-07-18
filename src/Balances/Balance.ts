@@ -1,7 +1,7 @@
 export class Balance {
 	asset: string;
 	available: number;
-	date: Date;
+	date?: Date;
 	onOrder: number;
 
 	constructor(asset: string, available: string, onOrder: string, date?: Date) {

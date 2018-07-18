@@ -46,8 +46,6 @@ opts.useServerTime = true;
 const bot = new Bot(opts);
 Bot.binance.init().then((markets) => __awaiter(this, void 0, void 0, function* () {
 	try {
-		let sellStorm = yield Bot.binance.rest.limitSell("STORMBTC", 550, 0.00000555, 5000);
-		console.log(sellStorm);
 	}
 	catch (err) {
 		console.log(err);

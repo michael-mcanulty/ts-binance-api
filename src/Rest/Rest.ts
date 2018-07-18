@@ -15,7 +15,7 @@ import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "../Transa
 import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {Order} from "../Transaction/Order";
 import {HttpError} from "../Error/HttpError";
-import {QueryCancelOrder} from "../Transaction/QueryCancelOrder";
+import {CancelOrder} from "../Transaction/CancelOrder";
 import {Signed} from "./Signed";
 import {DataStream} from "./DataStream";
 import {CallOptions} from "./CallOptions";
@@ -25,7 +25,7 @@ import {OpenOrder} from "../Transaction/OpenOrder";
 import {QueryOrder} from "../Transaction/QueryOrder";
 import {IOpenOrder} from "../Transaction/Interfaces/IOpenOrder";
 import {IQueryOrderResponse} from "../Transaction/Interfaces/IQueryOrderResponse";
-import {QueryAllOrders} from "../Transaction/QueryAllOrders";
+import {AllOrders} from "../Transaction/AllOrders";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import {Balance} from "../Balances/Balance";
 import {AccountInfoOptions} from "../Account/AccountInfoOptions";
@@ -36,23 +36,21 @@ import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
 
-	private _cancelOrder(cancelOrder: QueryCancelOrder): Promise<ICancelOrderResponse | {}> {
+	private _cancelOrder(cancelOrder: CancelOrder): Promise<CancelOrderResponse> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let orderRes: ICancelOrderResponse;
+				let orderResRaw: ICancelOrderResponse;
+				let response: CancelOrderResponse;
 				let privateOrder: IQueryCancelOrder | HttpError | {};
 				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
 				let callOpts: CallOptions = new CallOptions(EMethod.DELETE, true, false, false);
 				privateOrder = await this.privateCall(url, callOpts, cancelOrder);
-				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
-					resolve(<{}>privateOrder);
+				if (privateOrder instanceof HttpError) {
+					reject(privateOrder);
 				} else {
-					if (privateOrder instanceof HttpError) {
-						reject(privateOrder);
-					} else {
-						orderRes = <ICancelOrderResponse>privateOrder;
-						resolve(orderRes);
-					}
+					orderResRaw = <ICancelOrderResponse>privateOrder;
+					response = new CancelOrderResponse(orderResRaw);
+					resolve(response);
 				}
 			} catch (err) {
 				reject(err);
@@ -108,36 +106,32 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public cancelOrder(symbol: string, orderId: number): Promise<CancelOrderResponse | {}> {
+	public cancelOrder(symbol: string, orderId: number): Promise<CancelOrderResponse> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let result: CancelOrderResponse;
-				let cancelOrder: QueryCancelOrder = new QueryCancelOrder(symbol, orderId);
-				if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
-					OpenOrder.cancelOrderById(orderId);
-				}
-				let cancelResult: ICancelOrderResponse | {} = this._cancelOrder(cancelOrder);
-				if (cancelResult.hasOwnProperty("orderId")) {
-					result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
-					resolve(result);
-				} else {
-					resolve({});
-				}
+				let cancelOrder: CancelOrder = new CancelOrder(symbol, orderId);
+				let cancelResult: ICancelOrderResponse = await this._cancelOrder(cancelOrder);
+				result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
 		});
 	}
 
-	public cancelOrdersBySymbol(symbol: string) {
+	public cancelOrdersBySymbol(symbol: string): Promise<CancelOrderResponse[]> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let cancelOrder: QueryCancelOrder = new QueryCancelOrder(symbol);
-				if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
-					OpenOrder.cancelOrdersBySymbol(symbol);
+				let results: CancelOrderResponse[] = [];
+				let openOrders: OpenOrder[] = await this.getOpenOrders(symbol);
+				let symbolOrders: OpenOrder[] = openOrders.filter(order => order.symbol === symbol);
+
+				for (let order of symbolOrders) {
+					let cancelResp: CancelOrderResponse = await this.cancelOrder(order.symbol, order.orderId);
+					results.push(cancelResp);
 				}
-				let cancelResult: ICancelOrderResponse[] | {} = this._cancelOrder(cancelOrder);
-				resolve(cancelResult);
+				resolve(results);
 			} catch (err) {
 				reject(err);
 			}
@@ -176,7 +170,7 @@ export class Rest extends BotHttp {
 	public getAllOrders(symbol: string, limit: number = 500, orderId?: number, recvWindow?: number): Promise<Order[]> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let query: QueryAllOrders = new QueryAllOrders(symbol, orderId, limit, recvWindow);
+				let query: AllOrders = new AllOrders(symbol, orderId, limit, recvWindow);
 				let url: string = '/v3/allOrders';
 				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
 				let privateCall: IQueryOrderResponse[] = await this.privateCall(url, callOpts, query);

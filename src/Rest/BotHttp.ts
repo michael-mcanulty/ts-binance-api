@@ -9,7 +9,7 @@ import {ITimestamp} from "./Interfaces/ITimestamp";
 import {BinanceError} from "../Error/BinanceError";
 import {Signed} from "./Signed";
 import {NewOrder} from "../Transaction/NewOrder";
-import {QueryCancelOrder} from "../Transaction/QueryCancelOrder";
+import {CancelOrder} from "../Transaction/CancelOrder";
 import {OpenOrder} from "../Transaction/OpenOrder";
 import {DataStream} from "./DataStream";
 import {ApiHeader} from "./ApiHeader";
@@ -119,7 +119,7 @@ export class BotHttp {
 		});
 	}
 
-	public privateCall(path: string, callOptions: CallOptions, payload?: IOrder | QueryOrder | NewOrder | Signed | QueryCancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
+	public privateCall(path: string, callOptions: CallOptions, payload?: IOrder | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature: string;

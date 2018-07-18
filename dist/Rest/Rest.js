@@ -19,13 +19,13 @@ const NewOrder_1 = require("../Transaction/NewOrder");
 const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
 const Order_1 = require("../Transaction/Order");
 const HttpError_1 = require("../Error/HttpError");
-const QueryCancelOrder_1 = require("../Transaction/QueryCancelOrder");
+const CancelOrder_1 = require("../Transaction/CancelOrder");
 const Signed_1 = require("./Signed");
 const DataStream_1 = require("./DataStream");
 const CallOptions_1 = require("./CallOptions");
 const OpenOrder_1 = require("../Transaction/OpenOrder");
 const QueryOrder_1 = require("../Transaction/QueryOrder");
-const QueryAllOrders_1 = require("../Transaction/QueryAllOrders");
+const AllOrders_1 = require("../Transaction/AllOrders");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
 const AccountInfoOptions_1 = require("../Account/AccountInfoOptions");
 const CancelOrderResponse_1 = require("../Transaction/CancelOrderResponse");
@@ -33,22 +33,19 @@ class Rest extends BotHttp_1.BotHttp {
     _cancelOrder(cancelOrder) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let orderRes;
+							let orderResRaw;
+							let response;
                 let privateOrder;
                 let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.DELETE, true, false, false);
                 privateOrder = yield this.privateCall(url, callOpts, cancelOrder);
-                if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
-                    resolve(privateOrder);
-                }
-                else {
-                    if (privateOrder instanceof HttpError_1.HttpError) {
-                        reject(privateOrder);
-                    }
-                    else {
-                        orderRes = privateOrder;
-                        resolve(orderRes);
-                    }
+							if (privateOrder instanceof HttpError_1.HttpError) {
+								reject(privateOrder);
+							}
+							else {
+								orderResRaw = privateOrder;
+								response = new CancelOrderResponse_1.CancelOrderResponse(orderResRaw);
+								resolve(response);
                 }
             }
             catch (err) {
@@ -108,18 +105,10 @@ class Rest extends BotHttp_1.BotHttp {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
 							let result;
-                let cancelOrder = new QueryCancelOrder_1.QueryCancelOrder(symbol, orderId);
-                if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
-                    OpenOrder_1.OpenOrder.cancelOrderById(orderId);
-                }
-                let cancelResult = this._cancelOrder(cancelOrder);
-							if (cancelResult.hasOwnProperty("orderId")) {
-								result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
-								resolve(result);
-							}
-							else {
-								resolve({});
-							}
+							let cancelOrder = new CancelOrder_1.CancelOrder(symbol, orderId);
+							let cancelResult = yield this._cancelOrder(cancelOrder);
+							result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
+							resolve(result);
             }
             catch (err) {
                 reject(err);
@@ -129,12 +118,14 @@ class Rest extends BotHttp_1.BotHttp {
     cancelOrdersBySymbol(symbol) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let cancelOrder = new QueryCancelOrder_1.QueryCancelOrder(symbol);
-                if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
-                    OpenOrder_1.OpenOrder.cancelOrdersBySymbol(symbol);
+							let results = [];
+							let openOrders = yield this.getOpenOrders(symbol);
+							let symbolOrders = openOrders.filter(order => order.symbol === symbol);
+							for (let order of symbolOrders) {
+								let cancelResp = yield this.cancelOrder(order.symbol, order.orderId);
+								results.push(cancelResp);
                 }
-                let cancelResult = this._cancelOrder(cancelOrder);
-                resolve(cancelResult);
+							resolve(results);
             }
             catch (err) {
                 reject(err);
@@ -175,7 +166,7 @@ class Rest extends BotHttp_1.BotHttp {
 	getAllOrders(symbol, limit = 500, orderId, recvWindow) {
 		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 			try {
-				let query = new QueryAllOrders_1.QueryAllOrders(symbol, orderId, limit, recvWindow);
+				let query = new AllOrders_1.AllOrders(symbol, orderId, limit, recvWindow);
 				let url = '/v3/allOrders';
 				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
 				let privateCall = yield this.privateCall(url, callOpts, query);

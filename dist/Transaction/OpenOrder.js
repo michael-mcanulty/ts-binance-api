@@ -5,25 +5,15 @@ const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class OpenOrder extends BaseOrder_1.BaseOrder {
 	constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, type, timeInForce, icebergQty, isWorking, stopPrice, time) {
 		super(parseFloat(price), side, symbol, type, timeInForce);
+		this.clientOrderId = clientOrderId;
+		this.executedQty = parseFloat(executedQty);
+		this.orderId = orderId;
+		this.status = status;
         this.icebergQty = parseFloat(icebergQty);
         this.isWorking = isWorking;
         this.stopPrice = parseFloat(stopPrice);
         this.symbol = symbol;
         this.time = time;
-    }
-    static cancelOrderById(orderId) {
-        let boolRes = false;
-        let allOrderIds;
-        let removeIdx;
-        if (OpenOrder.allOpenOrders.length > 0) {
-            allOrderIds = OpenOrder.allOpenOrders.map(order => order.orderId);
-            removeIdx = allOrderIds.indexOf(orderId);
-            if (removeIdx >= 0) {
-                OpenOrder.allOpenOrders.splice(removeIdx, 1);
-                boolRes = true;
-            }
-        }
-        return boolRes;
     }
 
 	static toBinance(openOrder) {
@@ -44,22 +34,6 @@ class OpenOrder extends BaseOrder_1.BaseOrder {
         binance.type = EOrderEnums_1.EOrderType[openOrder.type];
         return binance;
     }
-    static cancelOrdersBySymbol(symbol) {
-        let boolResArr = [];
-        let res = false;
-        let cancelIds;
-        if (OpenOrder.allOpenOrders.length > 0) {
-            cancelIds = OpenOrder.allOpenOrders.filter(o => o.symbol === symbol).map(o => o.orderId);
-            if (cancelIds.length > 0) {
-                cancelIds.forEach(id => {
-                    boolResArr.push(OpenOrder.cancelOrderById(id));
-                });
-                res = boolResArr.every(b => b === true);
-            }
-        }
-        return res;
-    }
 }
-OpenOrder.allOpenOrders = [];
 exports.OpenOrder = OpenOrder;
 //# sourceMappingURL=OpenOrder.js.map
