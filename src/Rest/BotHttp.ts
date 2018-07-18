@@ -15,6 +15,8 @@ import {DataStream} from "./DataStream";
 import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {QueryOrder} from "../Transaction/QueryOrder";
+import {AccountInfoOptions} from "../Account/AccountInfoOptions";
+import {IOrder} from "../Transaction/Interfaces/IOrder";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -117,7 +119,7 @@ export class BotHttp {
 		});
 	}
 
-	public privateCall(path: string, callOptions: CallOptions, payload?: QueryOrder | NewOrder | Signed | QueryCancelOrder | OpenOrder | DataStream): Promise<any> {
+	public privateCall(path: string, callOptions: CallOptions, payload?: IOrder | QueryOrder | NewOrder | Signed | QueryCancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature: string;

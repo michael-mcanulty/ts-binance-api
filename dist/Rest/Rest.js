@@ -26,6 +26,9 @@ const CallOptions_1 = require("./CallOptions");
 const OpenOrder_1 = require("../Transaction/OpenOrder");
 const QueryOrder_1 = require("../Transaction/QueryOrder");
 const QueryAllOrders_1 = require("../Transaction/QueryAllOrders");
+const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
+const AccountInfoOptions_1 = require("../Account/AccountInfoOptions");
+const CancelOrderResponse_1 = require("../Transaction/CancelOrderResponse");
 class Rest extends BotHttp_1.BotHttp {
     _cancelOrder(cancelOrder) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -81,7 +84,7 @@ class Rest extends BotHttp_1.BotHttp {
                 let privateOrder;
                 let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.POST, true, false, false);
-                privateOrder = yield this.privateCall(url, callOpts, order);
+							privateOrder = yield this.privateCall(url, callOpts, NewOrder_1.NewOrder.toBinance(order));
                 if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
                     resolve(privateOrder);
                 }
@@ -104,12 +107,19 @@ class Rest extends BotHttp_1.BotHttp {
     cancelOrder(symbol, orderId) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
+							let result;
                 let cancelOrder = new QueryCancelOrder_1.QueryCancelOrder(symbol, orderId);
                 if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
                     OpenOrder_1.OpenOrder.cancelOrderById(orderId);
                 }
                 let cancelResult = this._cancelOrder(cancelOrder);
-                resolve(cancelResult);
+							if (cancelResult.hasOwnProperty("orderId")) {
+								result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
+								resolve(result);
+							}
+							else {
+								resolve({});
+							}
             }
             catch (err) {
                 reject(err);
@@ -145,6 +155,63 @@ class Rest extends BotHttp_1.BotHttp {
             }
         }));
     }
+
+	getAccountInfo(recvWindow) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let url = "/v3/account";
+				let opts = new AccountInfoOptions_1.AccountInfoOptions(recvWindow);
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+				let accountInfoRest = yield this.privateCall(url, callOpts, opts);
+				let info = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceRest(accountInfoRest);
+				resolve(info);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+
+	getAllOrders(symbol, limit = 500, orderId, recvWindow) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let query = new QueryAllOrders_1.QueryAllOrders(symbol, orderId, limit, recvWindow);
+				let url = '/v3/allOrders';
+				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+				let privateCall = yield this.privateCall(url, callOpts, query);
+				let results = [];
+				if (Array.isArray(privateCall) && privateCall.length > 0) {
+					results = privateCall.map(pCall => {
+						return new Order_1.Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
+					});
+				}
+				resolve(results);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
+
+	getBalances(recvWindow, gtZeroOnly = false) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let balances;
+				let accountInfo = yield this.getAccountInfo(recvWindow);
+				balances = accountInfo.balances;
+				if (gtZeroOnly) {
+					balances = accountInfo.balances.filter(bal => bal.available > 0);
+				}
+				else {
+					balances = accountInfo.balances;
+				}
+				resolve(balances);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
     getCandles(symbols, intervals, limit) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -164,22 +231,6 @@ class Rest extends BotHttp_1.BotHttp {
         }));
     }
     ;
-    getMarkets(quoteAsset) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let info = yield this.getExchangeInfo();
-                let symbols = info.symbols;
-                let markets = symbols.map(symbol => {
-                    return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
-                });
-                Binance_1.Binance.markets = markets;
-                resolve(markets);
-            }
-            catch (err) {
-                reject(err);
-            }
-        }));
-    }
     getDataStream() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -206,33 +257,42 @@ class Rest extends BotHttp_1.BotHttp {
         }));
     }
     ;
+
+	getMarkets(quoteAsset) {
+		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+			try {
+				let info = yield this.getExchangeInfo();
+				let symbols = info.symbols;
+				let markets = symbols.map(symbol => {
+					return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
+				});
+				Binance_1.Binance.markets = markets;
+				resolve(markets);
+			}
+			catch (err) {
+				reject(err);
+			}
+		}));
+	}
     getOpenOrders(symbol, orderId, recvWindow, origClientOrderId) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let url = "/v3/openOrders";
                 let nOpen = new QueryOrder_1.QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let iOpenOrders = yield this.privateCall(url, callOpts, nOpen);
-                let openOrders = iOpenOrders.map(o => {
-                    return new OpenOrder_1.OpenOrder(o.clientOrderId, o.executedQty, o.orderId, o.origQty, o.price, o.side, o.status, o.symbol, o.timeInForce, o.type, o.icebergQty, o.isWorking, o.stopPrice, o.time);
-                });
+							let privateCall = yield this.privateCall(url, callOpts, nOpen);
+							let openOrders = [];
+							if (Array.isArray(privateCall) && privateCall.length > 0) {
+								openOrders = privateCall.map(o => {
+									return new OpenOrder_1.OpenOrder(o.clientOrderId, o.executedQty, o.orderId, o.origQty, o.price, o.side, o.status, o.symbol, o.timeInForce, o.type, o.icebergQty, o.isWorking, o.stopPrice, o.time);
+								});
+							}
                 resolve(openOrders);
-                resolve();
             }
             catch (err) {
                 reject(err);
             }
         }));
-    }
-    getQuoteAssetName(symbol) {
-        let qa;
-        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
-        let market;
-        if (marketFilter && marketFilter.length > 0) {
-            market = marketFilter[0];
-            qa = market.quoteAsset;
-        }
-        return qa;
     }
     getOrder(symbol, orderId, recvWindow, origClientOrderId) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -253,25 +313,15 @@ class Rest extends BotHttp_1.BotHttp {
 				}));
 		}
 
-	getAllOrders(symbol, limit = 500, orderId, recvWindow) {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let query = new QueryAllOrders_1.QueryAllOrders(symbol, orderId, limit, recvWindow);
-				let url = '/v3/allOrders';
-				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-				let privateCall = yield this.privateCall(url, callOpts, query);
-				let results;
-				if (privateCall && privateCall.hasOwnProperty("symbol")) {
-					results = privateCall.map(pCall => {
-						return new Order_1.Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
-					});
-				}
-				resolve(results);
-			}
-			catch (err) {
-				reject(err);
-			}
-		}));
+	getQuoteAssetName(symbol) {
+		let qa;
+		let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
+		let market;
+		if (marketFilter && marketFilter.length > 0) {
+			market = marketFilter[0];
+			qa = market.quoteAsset;
+		}
+		return qa;
 	}
     keepDataStream() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -293,7 +343,7 @@ class Rest extends BotHttp_1.BotHttp {
             try {
                 let type = EOrderEnums_1.EOrderType.LIMIT;
                 let side = EOrderEnums_1.EOrderSide.BUY;
-							let order = new NewOrder_1.NewOrder(symbol, quantity, EOrderEnums_1.EOrderSide[side], EOrderEnums_1.EOrderType[type], price.toString(), iceburgQty.toString(), EOrderEnums_1.ETimeInForce[timeInForce], stopPrice.toString(), recvWindow, newClientOrderId, EOrderEnums_1.ENewOrderRespType[newOrderRespType]);
+							let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
                 let orderRes = yield this._newOrder(order);
                 resolve(orderRes);
             }
@@ -308,7 +358,7 @@ class Rest extends BotHttp_1.BotHttp {
             try {
                 let type = EOrderEnums_1.EOrderType.LIMIT;
                 let side = EOrderEnums_1.EOrderSide.SELL;
-							let order = new NewOrder_1.NewOrder(symbol, quantity, EOrderEnums_1.EOrderSide[side], EOrderEnums_1.EOrderType[type], price.toString(), iceburgQty.toString(), EOrderEnums_1.ETimeInForce[timeInForce], stopPrice.toString(), recvWindow, newClientOrderId, EOrderEnums_1.ENewOrderRespType[newOrderRespType]);
+							let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
 							let orderRes = yield this._newOrder(order);
 							resolve(orderRes);
             }
@@ -323,7 +373,7 @@ class Rest extends BotHttp_1.BotHttp {
             try {
                 let type = EOrderEnums_1.EOrderType.MARKET;
                 let side = EOrderEnums_1.EOrderSide.BUY;
-							let order = new NewOrder_1.NewOrder(symbol, quantity, EOrderEnums_1.EOrderSide[side], EOrderEnums_1.EOrderType[type], null, null, null, null, recvWindow, null, null);
+							let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
                 let orderRes = yield this._newOrder(order);
                 resolve(orderRes);
             }
@@ -338,7 +388,7 @@ class Rest extends BotHttp_1.BotHttp {
             try {
                 let type = EOrderEnums_1.EOrderType.MARKET;
                 let side = EOrderEnums_1.EOrderSide.SELL;
-							let order = new NewOrder_1.NewOrder(symbol, quantity, EOrderEnums_1.EOrderSide[side], EOrderEnums_1.EOrderType[type], null, null, null, null, recvWindow, null, null);
+							let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
                 let orderRes = yield this._newOrder(order);
                 resolve(orderRes);
             }

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", {value: true});
 const EErrorType_1 = require("./Email/Enums/EErrorType");
 const BinanceError_1 = require("./BinanceError");
 const ErrorHandler_1 = require("./ErrorHandler");
-
 class HttpError extends Error {
 	constructor(err) {
 		super();
@@ -47,6 +46,5 @@ class HttpError extends Error {
 		return result;
 	}
 }
-
 exports.HttpError = HttpError;
 //# sourceMappingURL=HttpError.js.map

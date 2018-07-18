@@ -1,11 +1,11 @@
-export interface IBalanceRaw {
+export interface IBalanceStream {
 	a: string;
 	f: string;
 	l: string;
 }
 
-export interface IOutboundAccountInfoRaw {
-	B: IBalanceRaw[];
+export interface IOutboundAccountInfoStream {
+	B: IBalanceStream[];
 	D: boolean;
 	E: number;
 	T: boolean;

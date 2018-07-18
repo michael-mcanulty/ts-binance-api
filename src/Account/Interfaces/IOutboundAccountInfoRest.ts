@@ -1,8 +1,8 @@
-import {IBinanceBalances} from "../../Balances/Interfaces/IBinanceBalances";
 import {IMessage} from "./IMessage";
+import {IBalanceRest} from "../../Balances/Interfaces/IBalanceRest";
 
-export interface IOutboundAccountInfo extends IMessage {
-	balances: IBinanceBalances;
+export interface IOutboundAccountInfoRest extends IMessage {
+	balances: IBalanceRest[];
 	buyerCommissionRate: number;
 	canDeposit: boolean;
 	canTrade: boolean;

@@ -1,13 +1,10 @@
-export interface INewOrder {
-	icebergQty?: number;
+import {IBaseOrder} from "./IBaseOrder";
+
+export interface INewOrder extends IBaseOrder {
+	icebergQty?: string;
 	newClientOrderId?: string;
 	newOrderRespType?: string;
-	price?: number;
-	side: string;
-	quantity: number;
+	quantity: string;
 	recvWindow?: number;
-	symbol: string;
-	stopPrice?: number;
-	timeInForce?: string;
-	type: string;
+	stopPrice?: string;
 }

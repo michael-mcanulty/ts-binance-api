@@ -23,7 +23,6 @@ const DEFAULT = {
 	maxRetries: Infinity,
 	debug: false,
 };
-
 class ReconnectingWebSocket {
 	constructor(url, protocols, options = {}) {
 		this._connectLock = false;
@@ -309,6 +308,5 @@ class ReconnectingWebSocket {
 		}
 	}
 }
-
 exports.default = ReconnectingWebSocket;
 //# sourceMappingURL=ReconnectingWebSocket.js.map

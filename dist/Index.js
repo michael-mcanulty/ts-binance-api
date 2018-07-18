@@ -29,14 +29,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", {value: true});
 const Auth_1 = require("./Account/Auth");
 const Binance_1 = require("./Binance/Binance");
-
 class Bot {
 	constructor(opts) {
 		Binance_1.Binance.options = opts;
 		Bot.binance = new Binance_1.Binance(opts);
 	}
 }
-
 exports.Bot = Bot;
 let opts = {};
 let auth = new Auth_1.Auth();
@@ -48,7 +46,8 @@ opts.useServerTime = true;
 const bot = new Bot(opts);
 Bot.binance.init().then((markets) => __awaiter(this, void 0, void 0, function* () {
 	try {
-		let purch = yield Bot.binance.rest.marketBuy("BNBUSDT", 1);
+		let sellStorm = yield Bot.binance.rest.limitSell("STORMBTC", 550, 0.00000555, 5000);
+		console.log(sellStorm);
 	}
 	catch (err) {
 		console.log(err);

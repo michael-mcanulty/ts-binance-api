@@ -8,10 +8,10 @@ import {Rest} from "../Rest/Rest";
 import {HttpError} from "../Error/HttpError";
 import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
 import {Candle} from "../ExchangeInfo/Candle";
-import {IOutboundAccountInfoRaw} from "../Account/Interfaces/IOutboundAccountInfoRaw";
-import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
+import {IOutboundAccountInfoStream} from "../Account/Interfaces/IOutboundAccountInfoStream";
 import {IExecutionReportRaw} from "../Account/Interfaces/IExecutionReportRaw";
 import {ExecutionReport} from "../Account/ExecutionReport";
+import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest {
 	private static _INSTANCE: BotWebsocket;
@@ -65,9 +65,9 @@ export class BotWebsocket extends Rest {
 			w.onmessage = (msg) => {
 				let json = JSON.parse(msg.data);
 				if (json.e === "outboundAccountInfo") {
-					let infoRaw: IOutboundAccountInfoRaw;
+					let infoRaw: IOutboundAccountInfoStream;
 					infoRaw = json;
-					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
+					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceStream(infoRaw);
 					callback(accountInfo);
 				}
 			};
@@ -122,9 +122,9 @@ export class BotWebsocket extends Rest {
 					let executionReport: ExecutionReport = ExecutionReport.fromBinanceApi(reportRaw);
 					callback(executionReport);
 				} else if (json.e === "outboundAccountInfo") {
-					let infoRaw: IOutboundAccountInfoRaw;
+					let infoRaw: IOutboundAccountInfoStream;
 					infoRaw = json;
-					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceApi(infoRaw);
+					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceStream(infoRaw);
 					callback(accountInfo);
 				}
 			};

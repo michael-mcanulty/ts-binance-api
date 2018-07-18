@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class Candle {
 	constructor(date, open, high, low, close, volume, symbol, interval, quoteAssetName) {
 		this.date = new Date(new Date(date).setSeconds(0, 0));
@@ -36,6 +35,5 @@ class Candle {
 		return new Candle(rawKline.T, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i, quoteAssetName);
 	}
 }
-
 exports.Candle = Candle;
 //# sourceMappingURL=Candle.js.map

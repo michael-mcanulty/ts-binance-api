@@ -29,11 +29,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", {value: true});
 const Rest_1 = require("../Rest/Rest");
 const BotWebsocket_1 = require("../Websocket/BotWebsocket");
-
 class Binance {
 	constructor(options) {
 		this.rest = new Rest_1.Rest(options);
 		this.websocket = new BotWebsocket_1.BotWebsocket(options);
+	}
+
+	static _getStepSizeBySymbol(symbol) {
+		let stepSize;
+		let marketMatch;
+		if (!Binance.markets || Binance.markets.length === 0) {
+			return null;
+		}
+		marketMatch = Binance.markets.filter(market => market.symbol === symbol);
+		if (marketMatch && marketMatch.length > 0) {
+			stepSize = marketMatch[0].limits.stepSize;
+		}
+		return stepSize;
+	}
+
+	static roundStep(amount, symbol) {
+		let precision = 0;
+		let stepSplit;
+		let stepSize = this._getStepSizeBySymbol(symbol);
+		if (stepSize) {
+			stepSplit = stepSize.toString().split('.');
+			if (amount && stepSplit.length > 1) {
+				precision = stepSplit[1].length;
+				return Number((Math.round(amount / stepSize) * stepSize).toFixed(precision));
+			}
+			else {
+				return Number((Math.round(amount / stepSize) * stepSize).toFixed(0));
+			}
+		}
+		else {
+			return amount;
+		}
 	}
 
 	init() {
@@ -48,7 +79,6 @@ class Binance {
 		}));
 	}
 }
-
 Binance.INTERVALS = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
 Binance.candleAPILimits = {
 	'1m': 1000,

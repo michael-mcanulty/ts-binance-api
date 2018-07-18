@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface INewOrder {\r\n\ticebergQty?: number;\r\n\tnewClientOrderId?: string;\r\n\tnewOrderRespType?: string;\r\n\tprice?: number;\r\n\tside: string;\r\n\tquantity: number;\r\n\trecvWindow?: number;\r\n\tsymbol: string;\r\n\tstopPrice?: number;\r\n\ttimeInForce?: string;\r\n\ttype: string;\r\n}"
+    "import {IBaseOrder} from \"./IBaseOrder\";\r\n\r\nexport interface INewOrder extends IBaseOrder {\r\n\ticebergQty?: string;\r\n\tnewClientOrderId?: string;\r\n\tnewOrderRespType?: string;\r\n\tquantity: string;\r\n\trecvWindow?: number;\r\n\tstopPrice?: string;\r\n}"
   ]
 }

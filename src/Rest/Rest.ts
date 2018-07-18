@@ -19,21 +19,27 @@ import {QueryCancelOrder} from "../Transaction/QueryCancelOrder";
 import {Signed} from "./Signed";
 import {DataStream} from "./DataStream";
 import {CallOptions} from "./CallOptions";
-import {ICancelOrderResult} from "../Transaction/Interfaces/ICancelOrderResult";
+import {ICancelOrderResponse} from "../Transaction/Interfaces/ICancelOrderResponse";
 import {IQueryCancelOrder} from "../Transaction/Interfaces/IQueryCancelOrder";
 import {OpenOrder} from "../Transaction/OpenOrder";
 import {QueryOrder} from "../Transaction/QueryOrder";
 import {IOpenOrder} from "../Transaction/Interfaces/IOpenOrder";
-import {IQueryOrderResult} from "../Transaction/Interfaces/IQueryOrderResult";
+import {IQueryOrderResponse} from "../Transaction/Interfaces/IQueryOrderResponse";
 import {QueryAllOrders} from "../Transaction/QueryAllOrders";
+import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
+import {Balance} from "../Balances/Balance";
+import {AccountInfoOptions} from "../Account/AccountInfoOptions";
+import {IOutboundAccountInfoRest} from "../Account/Interfaces/IOutboundAccountInfoRest";
+import {INewOrder} from "../Transaction/Interfaces/INewOrder";
+import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
 
-	private _cancelOrder(cancelOrder: QueryCancelOrder): Promise<ICancelOrderResult | {}> {
+	private _cancelOrder(cancelOrder: QueryCancelOrder): Promise<ICancelOrderResponse | {}> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let orderRes: ICancelOrderResult;
+				let orderRes: ICancelOrderResponse;
 				let privateOrder: IQueryCancelOrder | HttpError | {};
 				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
 				let callOpts: CallOptions = new CallOptions(EMethod.DELETE, true, false, false);
@@ -44,7 +50,7 @@ export class Rest extends BotHttp {
 					if (privateOrder instanceof HttpError) {
 						reject(privateOrder);
 					} else {
-						orderRes = <ICancelOrderResult>privateOrder;
+						orderRes = <ICancelOrderResponse>privateOrder;
 						resolve(orderRes);
 					}
 				}
@@ -79,10 +85,10 @@ export class Rest extends BotHttp {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let orderRes: Order;
-				let privateOrder: IOrder | {} | HttpError;
+				let privateOrder: INewOrder | HttpError | {};
 				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
 				let callOpts: CallOptions = new CallOptions(EMethod.POST, true, false, false);
-				privateOrder = await this.privateCall(url, callOpts, order);
+				privateOrder = await this.privateCall(url, callOpts, NewOrder.toBinance(order));
 				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
 					resolve(<{}>privateOrder);
 				} else {
@@ -102,15 +108,21 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public cancelOrder(symbol: string, orderId: number): Promise<ICancelOrderResult | {}> {
+	public cancelOrder(symbol: string, orderId: number): Promise<CancelOrderResponse | {}> {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let result: CancelOrderResponse;
 				let cancelOrder: QueryCancelOrder = new QueryCancelOrder(symbol, orderId);
 				if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
 					OpenOrder.cancelOrderById(orderId);
 				}
-				let cancelResult: ICancelOrderResult | {} = this._cancelOrder(cancelOrder);
-				resolve(cancelResult);
+				let cancelResult: ICancelOrderResponse | {} = this._cancelOrder(cancelOrder);
+				if (cancelResult.hasOwnProperty("orderId")) {
+					result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
+					resolve(result);
+				} else {
+					resolve({});
+				}
 			} catch (err) {
 				reject(err);
 			}
@@ -124,7 +136,7 @@ export class Rest extends BotHttp {
 				if (cancelOrder && cancelOrder.hasOwnProperty("symbol")) {
 					OpenOrder.cancelOrdersBySymbol(symbol);
 				}
-				let cancelResult: ICancelOrderResult[] | {} = this._cancelOrder(cancelOrder);
+				let cancelResult: ICancelOrderResponse[] | {} = this._cancelOrder(cancelOrder);
 				resolve(cancelResult);
 			} catch (err) {
 				reject(err);
@@ -140,6 +152,61 @@ export class Rest extends BotHttp {
 				let dStream: DataStream = new DataStream(Rest.listenKey);
 				result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
 				resolve(result);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getAccountInfo(recvWindow?: number): Promise<OutboundAccountInfo> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = "/v3/account";
+				let opts: AccountInfoOptions = new AccountInfoOptions(recvWindow);
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let accountInfoRest: IOutboundAccountInfoRest = await this.privateCall(url, callOpts, opts);
+				let info: OutboundAccountInfo = OutboundAccountInfo.fromBinanceRest(accountInfoRest);
+				resolve(info);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getAllOrders(symbol: string, limit: number = 500, orderId?: number, recvWindow?: number): Promise<Order[]> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let query: QueryAllOrders = new QueryAllOrders(symbol, orderId, limit, recvWindow);
+				let url: string = '/v3/allOrders';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let privateCall: IQueryOrderResponse[] = await this.privateCall(url, callOpts, query);
+				let results: Order[] = [];
+
+				if (Array.isArray(privateCall) && privateCall.length > 0) {
+					results = privateCall.map(pCall => {
+						return new Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
+					});
+				}
+				resolve(results);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getBalances(recvWindow?: number, gtZeroOnly: boolean = false): Promise<Balance[]> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let balances: Balance[];
+				let accountInfo: OutboundAccountInfo = await this.getAccountInfo(recvWindow);
+				balances = accountInfo.balances;
+
+				if (gtZeroOnly) {
+					balances = accountInfo.balances.filter(bal => bal.available > 0);
+				} else {
+					balances = accountInfo.balances;
+				}
+				resolve(balances);
 			} catch (err) {
 				reject(err);
 			}
@@ -163,22 +230,6 @@ export class Rest extends BotHttp {
 			}
 		});
 	};
-
-	public getMarkets(quoteAsset?: string): Promise<Market[]> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let info: IExchangeInfo = await this.getExchangeInfo();
-				let symbols: ISymbol[] = info.symbols;
-				let markets: Market[] = symbols.map(symbol => {
-					return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
-				});
-				Binance.markets = markets;
-				resolve(markets);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
 
 	public getDataStream(): Promise<IListenKey> {
 		return new Promise(async (resolve, reject) => {
@@ -205,18 +256,54 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	public getOpenOrders(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string): Promise<OpenOrder[]> {
+	public getMarkets(quoteAsset?: string): Promise<Market[]> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let info: IExchangeInfo = await this.getExchangeInfo();
+				let symbols: ISymbol[] = info.symbols;
+				let markets: Market[] = symbols.map(symbol => {
+					return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
+				});
+				Binance.markets = markets;
+				resolve(markets);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getOpenOrders(symbol: string, orderId?: number, recvWindow?: number, origClientOrderId?: string): Promise<OpenOrder[]> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let url: string = "/v3/openOrders";
 				let nOpen: QueryOrder = new QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
 				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let iOpenOrders: IOpenOrder[] = await this.privateCall(url, callOpts, nOpen);
-				let openOrders: OpenOrder[] = iOpenOrders.map(o => {
-					return new OpenOrder(o.clientOrderId, o.executedQty, o.orderId, o.origQty, o.price, o.side, o.status, o.symbol, o.timeInForce, o.type, o.icebergQty, o.isWorking, o.stopPrice, o.time);
-				});
+				let privateCall: IOpenOrder[] = await this.privateCall(url, callOpts, nOpen);
+				let openOrders: OpenOrder[] = [];
+				if (Array.isArray(privateCall) && privateCall.length > 0) {
+					openOrders = privateCall.map(o => {
+						return new OpenOrder(o.clientOrderId, o.executedQty, o.orderId, o.origQty, o.price, o.side, o.status, o.symbol, o.timeInForce, o.type, o.icebergQty, o.isWorking, o.stopPrice, o.time);
+					});
+				}
 				resolve(openOrders);
-				resolve();
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getOrder(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string): Promise<Order> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let query: QueryOrder = new QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
+				let url: string = '/v3/order';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let privateCall: IQueryOrderResponse = await this.privateCall(url, callOpts, query);
+				let result: Order;
+				if (privateCall && privateCall.hasOwnProperty("symbol")) {
+					result = new Order(privateCall.symbol, privateCall.price, privateCall.side, privateCall.executedQty, privateCall.orderId, privateCall.origQty, privateCall.status, privateCall.timeInForce, privateCall.type, privateCall.clientOrderId, privateCall.time);
+				}
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
@@ -232,44 +319,6 @@ export class Rest extends BotHttp {
 			qa = market.quoteAsset;
 		}
 		return qa;
-	}
-
-	public getOrder(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string): Promise<Order> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let query: QueryOrder = new QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
-				let url: string = '/v3/order';
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let privateCall: IQueryOrderResult = await this.privateCall(url, callOpts, query);
-				let result: Order;
-				if (privateCall && privateCall.hasOwnProperty("symbol")) {
-					result = new Order(privateCall.symbol, privateCall.price, privateCall.side, privateCall.executedQty, privateCall.orderId, privateCall.origQty, privateCall.status, privateCall.timeInForce, privateCall.type, privateCall.clientOrderId, privateCall.time);
-				}
-				resolve(result);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	public getAllOrders(symbol: string, limit: number = 500, orderId?: number, recvWindow?: number): Promise<Order[]> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let query: QueryAllOrders = new QueryAllOrders(symbol, orderId, limit, recvWindow);
-				let url: string = '/v3/allOrders';
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let privateCall: IQueryOrderResult[] = await this.privateCall(url, callOpts, query);
-				let results: Order[];
-				if (privateCall && privateCall.hasOwnProperty("symbol")) {
-					results = privateCall.map(pCall => {
-						return new Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
-					})
-				}
-				resolve(results);
-			} catch (err) {
-				reject(err);
-			}
-		});
 	}
 
 	public keepDataStream(): Promise<{}> {
@@ -291,9 +340,9 @@ export class Rest extends BotHttp {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
 				let side: EOrderSide = EOrderSide.BUY;
-				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], price.toString(), iceburgQty.toString(), ETimeInForce[timeInForce], stopPrice.toString(), recvWindow, newClientOrderId, ENewOrderRespType[newOrderRespType]);
+				let order: NewOrder = new NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
 				let orderRes: Order | {} = await this._newOrder(order);
-				resolve(orderRes)
+				resolve(orderRes);
 			} catch (err) {
 				reject(err);
 			}
@@ -305,7 +354,7 @@ export class Rest extends BotHttp {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
 				let side: EOrderSide = EOrderSide.SELL;
-				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], price.toString(), iceburgQty.toString(), ETimeInForce[timeInForce], stopPrice.toString(), recvWindow, newClientOrderId, ENewOrderRespType[newOrderRespType]);
+				let order: NewOrder = new NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes);
 			} catch (err) {
@@ -319,7 +368,7 @@ export class Rest extends BotHttp {
 			try {
 				let type: EOrderType = EOrderType.MARKET;
 				let side: EOrderSide = EOrderSide.BUY;
-				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], null, null, null, null, recvWindow, null, null);
+				let order: NewOrder = new NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes)
 			} catch (err) {
@@ -333,7 +382,7 @@ export class Rest extends BotHttp {
 			try {
 				let type: EOrderType = EOrderType.MARKET;
 				let side: EOrderSide = EOrderSide.SELL;
-				let order: NewOrder = new NewOrder(symbol, quantity, EOrderSide[side], EOrderType[type], null, null, null, null, recvWindow, null, null);
+				let order: NewOrder = new NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes);
 			} catch (err) {

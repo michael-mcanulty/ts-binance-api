@@ -8,6 +8,6 @@
   "names": [],
   "mappings": ";;AACA,qDAAgD;AAEhD,gBAAwB,SAAQ,+BAAc;IAG7C,YAAY,MAAc,EAAE,OAAe,EAAE,UAAmB,EAAE,iBAA0B;QAC3F,KAAK,CAAC,MAAM,EAAE,OAAO,EAAE,UAAU,CAAC,CAAC;QACnC,IAAI,CAAC,iBAAiB,GAAG,iBAAiB,CAAC;IAC5C,CAAC;CACD;AAPD,gCAOC",
   "sourcesContent": [
-    "import {IQueryOrder} from \"./Interfaces/IQueryOrder\";\nimport {BaseQueryOrder} from \"./BaseQueryOrder\";\n\nexport class QueryOrder extends BaseQueryOrder implements IQueryOrder {\n\torigClientOrderId: string;\n\n\tconstructor(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string) {\n\t\tsuper(symbol, orderId, recvWindow);\n\t\tthis.origClientOrderId = origClientOrderId;\n\t}\n}"
+    "import {IQueryOrder} from \"./Interfaces/IQueryOrder\";\r\nimport {BaseQueryOrder} from \"./BaseQueryOrder\";\r\n\r\nexport class QueryOrder extends BaseQueryOrder implements IQueryOrder {\r\n\torigClientOrderId: string;\r\n\r\n\tconstructor(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string) {\r\n\t\tsuper(symbol, orderId, recvWindow);\r\n\t\tthis.origClientOrderId = origClientOrderId;\r\n\t}\r\n}"
   ]
 }

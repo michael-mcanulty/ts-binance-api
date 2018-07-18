@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
-
 class ExecutionReport {
 	constructor(commission, commissionAsset, eventTime, eventType, executionType, icebergQuantity, isBuyerMaker, isOrderWorking, lastTradeQuantity, newClientOrderId, orderId, orderRejectReason, orderStatus, orderTime, orderType, originalClientOrderId, price, priceLastTrade, quantity, side, stopPrice, symbol, timeInForce, totalTradeQuantity, tradeId) {
 		this.commission = parseFloat(commission);
@@ -36,6 +35,5 @@ class ExecutionReport {
 		return result;
 	}
 }
-
 exports.ExecutionReport = ExecutionReport;
 //# sourceMappingURL=ExecutionReport.js.map

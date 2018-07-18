@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const EMethod_1 = require("./EMethod");
 const ApiHeader_1 = require("./ApiHeader");
-
 class CallOptions {
 	constructor(method, json, noData, noExtra, apiKey, headers) {
 		this.method = EMethod_1.EMethod[method];
@@ -14,6 +13,5 @@ class CallOptions {
 		}
 	}
 }
-
 exports.CallOptions = CallOptions;
 //# sourceMappingURL=CallOptions.js.map

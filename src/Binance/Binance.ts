@@ -101,6 +101,36 @@ export class Binance {
 		});
 	}
 
+	private static _getStepSizeBySymbol(symbol: string): number {
+		let stepSize: number;
+		let marketMatch: Market[];
+		if (!Binance.markets || Binance.markets.length === 0) {
+			return null;
+		}
+		marketMatch = Binance.markets.filter(market => market.symbol === symbol);
+		if (marketMatch && marketMatch.length > 0) {
+			stepSize = marketMatch[0].limits.stepSize;
+		}
+		return stepSize;
+	}
+
+	public static roundStep(amount: number, symbol: string): number {
+		let precision: number = 0;
+		let stepSplit: string[];
+		let stepSize: number = this._getStepSizeBySymbol(symbol);
+		if (stepSize) {
+			stepSplit = stepSize.toString().split('.');
+			if (amount && stepSplit.length > 1) {
+				precision = stepSplit[1].length;
+				return Number((Math.round(amount / stepSize) * stepSize).toFixed(precision));
+			} else {
+				return Number((Math.round(amount / stepSize) * stepSize).toFixed(0));
+			}
+		} else {
+			return amount;
+		}
+	}
+
 	constructor(options: IBinanceOptions) {
 		this.rest = new Rest(options);
 		this.websocket = new BotWebsocket(options);

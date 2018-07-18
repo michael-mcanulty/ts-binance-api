@@ -8,7 +8,7 @@ export class OpenOrder extends BaseOrder {
 	executedQty: number;
 	icebergQty: number;
 	isWorking: boolean;
-	status: EOrderStatus;
+	status: string;
 	orderId: number;
 	origQty: number;
 	stopPrice: number;
@@ -29,18 +29,18 @@ export class OpenOrder extends BaseOrder {
 		return boolRes;
 	}
 
-	static binanceFormat(openOrder: OpenOrder): IOpenOrder {
+	static toBinance(openOrder: OpenOrder): IOpenOrder {
 		let binance: IOpenOrder = <IOpenOrder>{};
 		binance.clientOrderId = openOrder.clientOrderId;
-		binance.executedQty = openOrder.executedQty.toString();
-		binance.icebergQty = openOrder.icebergQty.toString();
+		binance.executedQty = (openOrder.executedQty) ? openOrder.executedQty.toString() : undefined;
+		binance.icebergQty = (openOrder.icebergQty) ? openOrder.icebergQty.toString() : undefined;
 		binance.isWorking = openOrder.isWorking;
 		binance.orderId = openOrder.orderId;
-		binance.origQty = openOrder.origQty.toString();
-		binance.price = openOrder.price.toString();
+		binance.origQty = (openOrder.origQty) ? openOrder.origQty.toString() : undefined;
+		binance.price = (openOrder.price) ? openOrder.price.toString() : undefined;
 		binance.side = EOrderSide[openOrder.side];
 		binance.status = EOrderStatus[openOrder.status];
-		binance.stopPrice = openOrder.stopPrice.toString();
+		binance.stopPrice = (openOrder.stopPrice) ? openOrder.stopPrice.toString() : undefined;
 		binance.symbol = openOrder.symbol;
 		binance.timeInForce = ETimeInForce[openOrder.timeInForce];
 		binance.time = openOrder.time;
@@ -67,7 +67,7 @@ export class OpenOrder extends BaseOrder {
 	constructor(clientOrderId: string, executedQty: string, orderId: number, origQty: string,
 							price: string, side: string, status: string, symbol: string, type: string,
 							timeInForce: string, icebergQty: string, isWorking: boolean, stopPrice: string, time: number) {
-		super(price, side, symbol, type, timeInForce);
+		super(parseFloat(price), side, symbol, type, timeInForce);
 		this.icebergQty = parseFloat(icebergQty);
 		this.isWorking = isWorking;
 		this.stopPrice = parseFloat(stopPrice);

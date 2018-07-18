@@ -33,9 +33,8 @@ const ticker_1 = require("../ExchangeInfo/ticker");
 const Rest_1 = require("../Rest/Rest");
 const HttpError_1 = require("../Error/HttpError");
 const Candle_1 = require("../ExchangeInfo/Candle");
-const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
 const ExecutionReport_1 = require("../Account/ExecutionReport");
-
+const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
 class BotWebsocket extends Rest_1.Rest {
 	constructor(options) {
 		super(options);
@@ -109,7 +108,7 @@ class BotWebsocket extends Rest_1.Rest {
 				if (json.e === "outboundAccountInfo") {
 					let infoRaw;
 					infoRaw = json;
-					let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceApi(infoRaw);
+					let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceStream(infoRaw);
 					callback(accountInfo);
 				}
 			};
@@ -167,7 +166,7 @@ class BotWebsocket extends Rest_1.Rest {
 				else if (json.e === "outboundAccountInfo") {
 					let infoRaw;
 					infoRaw = json;
-					let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceApi(infoRaw);
+					let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceStream(infoRaw);
 					callback(accountInfo);
 				}
 			};
@@ -219,7 +218,6 @@ class BotWebsocket extends Rest_1.Rest {
 		this._getTickers(ticksToPrices);
 	}
 }
-
 BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';
 BotWebsocket.isAlive = false;
 exports.BotWebsocket = BotWebsocket;

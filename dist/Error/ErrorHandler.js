@@ -31,7 +31,6 @@ const EMethod_1 = require("../Rest/EMethod");
 const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
 const EErrorType_1 = require("./Email/Enums/EErrorType");
-
 class ErrorHandler {
 	constructor(code, port, type, method, sendEmail, timeout, emailAddress, emailOptions, endpoint = "http://localhost") {
 		this.type = type;
@@ -93,6 +92,5 @@ class ErrorHandler {
 		}));
 	}
 }
-
 exports.ErrorHandler = ErrorHandler;
 //# sourceMappingURL=ErrorHandler.js.map

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 const Logger_1 = require("../Logger/Logger");
-
 class Market {
 	constructor(symbol, baseAsset, quoteAsset, limits, id, date) {
 		this.symbol = symbol;
@@ -65,6 +64,5 @@ class Market {
 		return limits;
 	}
 }
-
 exports.Market = Market;
 //# sourceMappingURL=Market.js.map

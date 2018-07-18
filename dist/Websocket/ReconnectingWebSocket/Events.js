@@ -1,15 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
-
 class Event {
 	constructor(type, target) {
 		this.target = target;
 		this.type = type;
 	}
 }
-
 exports.Event = Event;
-
 class ErrorEvent extends Event {
 	constructor(error, target) {
 		super('error', target);
@@ -17,9 +14,7 @@ class ErrorEvent extends Event {
 		this.error = error;
 	}
 }
-
 exports.ErrorEvent = ErrorEvent;
-
 class CloseEvent extends Event {
 	constructor(code = 1000, reason = '', target) {
 		super('close', target);
@@ -28,6 +23,5 @@ class CloseEvent extends Event {
 		this.reason = reason;
 	}
 }
-
 exports.CloseEvent = CloseEvent;
 //# sourceMappingURL=Events.js.map

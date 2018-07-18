@@ -1,5 +1,7 @@
-import {IBalanceRaw, IOutboundAccountInfoRaw} from "./Interfaces/IOutboundAccountInfoRaw";
+import {IBalanceStream, IOutboundAccountInfoStream} from "./Interfaces/IOutboundAccountInfoStream";
 import {Balance} from "../Balances/Balance";
+import {IOutboundAccountInfoRest} from "./Interfaces/IOutboundAccountInfoRest";
+import {IBalanceRest} from "../Balances/Interfaces/IBalanceRest";
 
 export class OutboundAccountInfo{
 	balances: Balance[];
@@ -14,18 +16,31 @@ export class OutboundAccountInfo{
 	sellerCommissionRate: number;
 	takerCommissionRate: number;
 
-	public static fromBinanceApi(iOutInfoRaw: IOutboundAccountInfoRaw): OutboundAccountInfo {
-		let outbound: OutboundAccountInfo = new OutboundAccountInfo(iOutInfoRaw.B, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W,
+	public static fromBinanceRest(account: IOutboundAccountInfoRest): OutboundAccountInfo {
+		let balances: Balance[] = account.balances.map((bal: IBalanceRest) => {
+			return new Balance(bal.asset, bal.free, bal.locked);
+		});
+
+		let outbound: OutboundAccountInfo = new OutboundAccountInfo(balances, account.buyerCommissionRate,
+			account.canDeposit, account.canTrade, account.canWithdraw, account.eventTime, account.lastAccountUpdate,
+			account.makerCommissionRate, account.sellerCommissionRate, account.takerCommissionRate);
+		return outbound;
+	}
+
+	public static fromBinanceStream(iOutInfoRaw: IOutboundAccountInfoStream): OutboundAccountInfo {
+		let balances: Balance[] = iOutInfoRaw.B.map((bal: IBalanceStream) => {
+			return new Balance(bal.a, bal.f, bal.l);
+		});
+		let outbound: OutboundAccountInfo = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W,
 			iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
 		return outbound;
 	}
 
-	constructor(balances: IBalanceRaw[], buyerCommissionRate: number, canDeposit: boolean, canTrade: boolean,
+	constructor(balances: Balance[], buyerCommissionRate: number, canDeposit: boolean, canTrade: boolean,
 							canWithdraw: boolean, eventTime: number, lastAccountUpdate: number,
 							makerCommissionRate: number, sellerCommissionRate: number, takerCommissionRate: number) {
-		this.balances = balances.map((bal: IBalanceRaw) => {
-			return new Balance(bal.a, bal.f, bal.l);
-		});
+
+		this.balances = balances;
 		this.buyerCommissionRate = buyerCommissionRate;
 		this.canDeposit = canDeposit;
 		this.canTrade = canTrade;

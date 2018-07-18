@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", {value: true});
 const IndicatorInterval_1 = require("./IndicatorInterval");
 const Binance_1 = require("../Binance/Binance");
-
 class CandleInterval {
 	constructor(candles) {
 		this.candles = candles;
@@ -13,6 +12,5 @@ class CandleInterval {
 		this._interval = new IndicatorInterval_1.Interval(this.interval);
 	}
 }
-
 exports.CandleInterval = CandleInterval;
 //# sourceMappingURL=CandleInterval.js.map

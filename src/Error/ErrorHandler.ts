@@ -82,3 +82,8 @@ export class ErrorHandler {
 		this.url = url;
 	}
 }
+
+//TODO:
+//-1013 only 9xxxxxx is on binance INVALID_MESSAGE is -1013
+//Filter Failure: MIN_NOTATIONAL
+//NOT MEETING BTC MIN purchase QTY
