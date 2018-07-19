@@ -1,12 +1,13 @@
 import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
-import {ErrorHandler} from "./ErrorHandler";
+import {HttpErrorHandler} from "./HttpErrorHandler";
+import allErrors from "./ErrorCodes";
 
 export class HttpError extends Error {
-	public static all: HttpError[];
-	code: number;
-	handler?: ErrorHandler;
+	public static all: HttpError[] = <HttpError[]>allErrors;
+  code: number;
 	message: string;
+	handler?: HttpErrorHandler;
 
 	public static GetErrorType(err: BinanceError | HttpError): EErrorType {
 		let code: number = parseInt(err.code.toString());
@@ -19,12 +20,27 @@ export class HttpError extends Error {
 		return (isBinance) ? EErrorType.Binance : EErrorType.Node;
 	}
 
-	public static GetHttpErrorByCode(code: number): HttpError | null {
-		let result: HttpError = null;
-		if (HttpError.all && HttpError.all.length > 0) {
+	public static GetErrorByCode(code: number): HttpError {
+		let result: HttpError;
+		if (HttpError.all.length > 0) {
 			let filtered: HttpError[] = HttpError.all.filter(handler => handler.code === code);
 			if (filtered && filtered.length > 0) {
 				result = filtered[0];
+			}
+		}
+		return result;
+	}
+
+	public static GetTimeoutFromIPBannedMsg(err: BinanceError): number {
+		let strFloat: string;
+		let result: number = 0;
+		if (err && err.msg) {
+			let msg: string = "IP banned until ";
+			let startIdx = err.msg.indexOf(msg) + msg.length;
+			let float = parseFloat(err.msg.slice(startIdx, startIdx + 13));
+			strFloat = float.toString();
+			if (strFloat.length === 13) {
+				result = float - new Date().getTime();
 			}
 		}
 		return result;
@@ -35,15 +51,12 @@ export class HttpError extends Error {
 		this.code = parseInt(err.code.toString());
 		let type: EErrorType = HttpError.GetErrorType(err);
 		this.message = (type === EErrorType.Binance) ? err['msg'] : err['message'];
-		if (type === EErrorType.Binance) {
-			let matched: BinanceError | null = BinanceError.GetBinanceErrorByCode(this.code);
-			if (matched && matched !== null) {
-				this.handler = ErrorHandler.GetErrorHandler(this.code, EErrorType.Binance);
-			}
-		} else {
-			let matched: HttpError | null = HttpError.GetHttpErrorByCode(this.code);
-			if (matched && matched !== null) {
-				this.handler = ErrorHandler.GetErrorHandler(this.code, EErrorType.Node);
+		let error:HttpError = HttpError.GetErrorByCode(this.code);
+		if(error){
+			this.handler = error.handler;
+			if(error.handler && (!error.handler.code || !error.handler.message)) {
+				error.handler.code = this.code;
+				error.handler.message = this.message;
 			}
 		}
 	}

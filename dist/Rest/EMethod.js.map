@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "file": "EMethod.js",
-  "sourceRoot": "",
-  "sources": [
-    "../../src/Rest/EMethod.ts"
-  ],
-  "names": [],
-  "mappings": ";;AAAA,IAAY,OAKX;AALD,WAAY,OAAO;IAClB,mCAAG,CAAA;IACH,qCAAI,CAAA;IACJ,mCAAG,CAAA;IACH,yCAAM,CAAA;AACP,CAAC,EALW,OAAO,GAAP,eAAO,KAAP,eAAO,QAKlB",
-  "sourcesContent": [
-    "export enum EMethod {\r\n\tGET,\r\n\tPOST,\r\n\tPUT,\r\n\tDELETE\r\n}"
-  ]
-}
+{"version":3,"file":"EMethod.js","sourceRoot":"","sources":["../../src/Rest/EMethod.ts"],"names":[],"mappings":";;AAAA,IAAY,OAKX;AALD,WAAY,OAAO;IAClB,mCAAG,CAAA;IACH,qCAAI,CAAA;IACJ,mCAAG,CAAA;IACH,yCAAM,CAAA;AACP,CAAC,EALW,OAAO,GAAP,eAAO,KAAP,eAAO,QAKlB","sourcesContent":["export enum EMethod {\r\n\tGET,\r\n\tPOST,\r\n\tPUT,\r\n\tDELETE\r\n}"]}

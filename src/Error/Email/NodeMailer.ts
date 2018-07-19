@@ -1,4 +1,4 @@
-import {IServiceOptions} from "./Interfaces/IServiceOprtions";
+import {IEmailOptions} from "./Interfaces/IServiceOprtions";
 import {ServiceOptions} from "./ServiceOptions";
 import * as nodeMailer from "nodemailer";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
@@ -26,7 +26,7 @@ export class NodeMailer {
 		});
 	}
 
-	constructor(serviceOptions: IServiceOptions) {
+	constructor(serviceOptions: IEmailOptions) {
 		NodeMailer.Options = new ServiceOptions(serviceOptions);
 	}
 }

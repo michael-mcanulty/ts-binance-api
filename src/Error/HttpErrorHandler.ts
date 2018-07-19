@@ -1,40 +1,26 @@
 import {EMethod} from "../Rest/EMethod";
 import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./Email/NodeMailer";
-import {IServiceOptions} from "./Email/Interfaces/IServiceOprtions";
+import {IEmailOptions} from "./Email/Interfaces/IServiceOprtions";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
 import {BinanceError} from "./BinanceError";
 import {HttpError} from "./HttpError";
 import {EErrorType} from "./Email/Enums/EErrorType";
 
-export class ErrorHandler {
-	public static allItems: ErrorHandler[];
+export class HttpErrorHandler {
 	code: number;
+	emailOptions?: IEmailOptions;
 	emailAddress?: string;
-	emailOptions?: IServiceOptions;
+	message: string;
 	private static emailService: NodeMailer;
 	endpoint: string;
-	method: EMethod;
+	method: string;
 	port: number;
-	restart: boolean;
 	sendEmail: boolean;
-	shutdown: boolean;
-	timeout: number;
-	type: EErrorType;
-	protected url: string;
-
-	public static GetErrorHandler(code: number, type: EErrorType): ErrorHandler {
-		let result: ErrorHandler;
-		if (ErrorHandler.allItems && ErrorHandler.allItems.length > 0) {
-			let filtered: ErrorHandler[] = ErrorHandler.allItems.filter(handler => {
-				return handler.code === code && handler.type === type
-			});
-			if (filtered && filtered.length > 0) {
-				result = filtered[0];
-			}
-		}
-		return result;
-	}
+	payload?:any[];
+	type: string;
+	url: string;
+	urlParams?:any[];
 
 	executeApi(error: BinanceError | HttpError): Promise<any> {
 		return new Promise(async (resolve, reject) => {
@@ -44,15 +30,15 @@ export class ErrorHandler {
 				reqOpts.headers = new Headers();
 
 				if (this.sendEmail && this.emailOptions) {
-					ErrorHandler.emailService = new NodeMailer(this.emailOptions);
+					HttpErrorHandler.emailService = new NodeMailer(this.emailOptions);
 					let msgOptions: IMessageOptions = <IMessageOptions>{};
 					msgOptions.from = this.emailAddress;
 					msgOptions.to = this.emailAddress;
-					let message: string = (this.type === EErrorType.Binance) ? error['msg'] : error['message'];
+					let message: string = (this.type === EErrorType[EErrorType.Binance]) ? error['msg'] : error['message'];
 					msgOptions.subject = `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
 					msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
 					try {
-						await ErrorHandler.emailService.sendEmail(msgOptions);
+						await HttpErrorHandler.emailService.sendEmail(msgOptions);
 					} catch (err) {
 						reject(err);
 					}
@@ -67,19 +53,15 @@ export class ErrorHandler {
 		});
 	}
 
-	constructor(code: number, port: number, type: EErrorType, method: EMethod, sendEmail: boolean, timeout?: number, emailAddress?: string, emailOptions?: IServiceOptions, endpoint = "http://localhost") {
-		this.type = type;
+	constructor(code: number, endpoint:string, port: number, type: EErrorType, method: EMethod, sendEmail: boolean, emailAddress?: string, emailOptions?: IEmailOptions) {
 		this.code = code;
+		this.type = EErrorType[type];
 		this.port = port || null;
-		this.method = method;
+		this.method =EMethod[method];
 		this.emailAddress = emailAddress || null;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
-		this.timeout = timeout || 0;
-		let url: string = `${this.endpoint}:${this.port}`;
-		let props: any = {"timeout": this.timeout, "restart": this.restart, "shutdown": this.shutdown};
-		url += BotHttp.makeQueryString(props);
-		this.url = url;
+		this.url = `${this.endpoint}:${this.port}`;
 	}
 }
 

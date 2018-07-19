@@ -1,6 +1,8 @@
 import {Auth} from "./Account/Auth";
 import {IBinanceOptions} from "./Binance/Interfaces/IBinanceOptions";
 import {Binance} from "./Binance/Binance";
+import {Order} from "./Transaction/Order";
+import {TestOrder} from "./Transaction/TestOrder";
 
 export class Bot {
 	public static binance: Binance;
@@ -23,6 +25,8 @@ const bot = new Bot(opts);
 Bot.binance.init().then(async markets => {
 
 	try {
+		let buyStorm: Order | TestOrder = await Bot.binance.rest.limitBuy("STORMBTC", 550, 0.00000155, 5000);
+		console.log(buyStorm);
 
 		//Bot.binance.websocket.candles(["STORMBTC", "STORMUSDT"], ["1m", "1hr"], res=>{
 		//	console.log(res);

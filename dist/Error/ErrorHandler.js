@@ -32,32 +32,15 @@ const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
 const EErrorType_1 = require("./Email/Enums/EErrorType");
 class ErrorHandler {
-	constructor(code, port, type, method, sendEmail, timeout, emailAddress, emailOptions, endpoint = "http://localhost") {
-		this.type = type;
+	constructor(code, endpoint, port, type, method, sendEmail, emailAddress, emailOptions) {
 		this.code = code;
+		this.type = EErrorType_1.EErrorType[type];
 		this.port = port || null;
-		this.method = method;
+		this.method = EMethod_1.EMethod[method];
 		this.emailAddress = emailAddress || null;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
-		this.timeout = timeout || 0;
-		let url = `${this.endpoint}:${this.port}`;
-		let props = {"timeout": this.timeout, "restart": this.restart, "shutdown": this.shutdown};
-		url += BotHttp_1.BotHttp.makeQueryString(props);
-		this.url = url;
-	}
-
-	static GetErrorHandler(code, type) {
-		let result;
-		if (ErrorHandler.allItems && ErrorHandler.allItems.length > 0) {
-			let filtered = ErrorHandler.allItems.filter(handler => {
-				return handler.code === code && handler.type === type;
-			});
-			if (filtered && filtered.length > 0) {
-				result = filtered[0];
-			}
-		}
-		return result;
+		this.url = `${this.endpoint}:${this.port}`;
 	}
 
 	executeApi(error) {
@@ -71,7 +54,7 @@ class ErrorHandler {
 					let msgOptions = {};
 					msgOptions.from = this.emailAddress;
 					msgOptions.to = this.emailAddress;
-					let message = (this.type === EErrorType_1.EErrorType.Binance) ? error['msg'] : error['message'];
+					let message = (this.type === EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance]) ? error['msg'] : error['message'];
 					msgOptions.subject = `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
 					msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
 					try {

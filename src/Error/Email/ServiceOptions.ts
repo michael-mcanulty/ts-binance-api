@@ -1,5 +1,5 @@
 import {ServiceProviders} from "./Enums/EServiceProviders";
-import {IAuth, IServiceOptions} from "./Interfaces/IServiceOprtions";
+import {IEmailAuth, IEmailOptions} from "./Interfaces/IServiceOprtions";
 
 export class Auth {
 	private _pass: string;
@@ -22,7 +22,7 @@ export class Auth {
 		this._user = value;
 	}
 
-	constructor(auth: IAuth) {
+	constructor(auth: IEmailAuth) {
 		this.user = auth.user;
 		this.pass = auth.pass;
 	}
@@ -45,7 +45,7 @@ export class ServiceOptions {
 		this._service = value;
 	}
 
-	constructor(opts: IServiceOptions) {
+	constructor(opts: IEmailOptions) {
 		this.auth = new Auth(opts.auth);
 		this.service = ServiceProviders[opts.service];
 	}

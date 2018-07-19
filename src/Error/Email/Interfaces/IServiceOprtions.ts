@@ -1,11 +1,11 @@
 import {ServiceProviders} from "../Enums/EServiceProviders";
 
-export interface IAuth {
+export interface IEmailAuth {
 	pass: string;
 	user: string;
 }
 
-export interface IServiceOptions {
-	auth: IAuth;
+export interface IEmailOptions {
+	auth: IEmailAuth;
 	service: ServiceProviders;
 }
