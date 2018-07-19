@@ -30,8 +30,8 @@ class ExecutionReport {
 		this.tradeId = tradeId;
 	}
 
-	static fromBinanceApi(iExecReportRaw) {
-		let result = new ExecutionReport(iExecReportRaw.n, iExecReportRaw.N, iExecReportRaw.E, iExecReportRaw.e, EOrderEnums_1.EExecutionType[iExecReportRaw.x], iExecReportRaw.F, iExecReportRaw.m, iExecReportRaw.w, iExecReportRaw.l, iExecReportRaw.c, iExecReportRaw.i, iExecReportRaw.r, EOrderEnums_1.EOrderStatus[iExecReportRaw.X], iExecReportRaw.T, EOrderEnums_1.EExecutionType[iExecReportRaw.x], iExecReportRaw.C, iExecReportRaw.p, iExecReportRaw.L, iExecReportRaw.q, EOrderEnums_1.EOrderSide.BUY[iExecReportRaw.S], iExecReportRaw.P, iExecReportRaw.s, EOrderEnums_1.ETimeInForce[iExecReportRaw.f], iExecReportRaw.z, iExecReportRaw.t);
+	static fromBinanceStream(iExecReportRaw) {
+		let result = new ExecutionReport(iExecReportRaw.n, iExecReportRaw.N, iExecReportRaw.E, iExecReportRaw.e, EOrderEnums_1.EExecutionType[iExecReportRaw.x], iExecReportRaw.F, iExecReportRaw.m, iExecReportRaw.w, iExecReportRaw.l, iExecReportRaw.c, iExecReportRaw.i, iExecReportRaw.r, EOrderEnums_1.EOrderStatus[iExecReportRaw.X], iExecReportRaw.T, EOrderEnums_1.EExecutionType[iExecReportRaw.x], iExecReportRaw.C, iExecReportRaw.p, iExecReportRaw.L, iExecReportRaw.q, EOrderEnums_1.EOrderSide[iExecReportRaw.S], iExecReportRaw.P, iExecReportRaw.s, EOrderEnums_1.ETimeInForce[iExecReportRaw.f], iExecReportRaw.z, iExecReportRaw.t);
 		return result;
 	}
 }

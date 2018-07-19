@@ -32,6 +32,7 @@ import {AccountInfoOptions} from "../Account/AccountInfoOptions";
 import {IOutboundAccountInfoRest} from "../Account/Interfaces/IOutboundAccountInfoRest";
 import {INewOrder} from "../Transaction/Interfaces/INewOrder";
 import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
+import {TestOrder} from "../Transaction/TestOrder";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -79,16 +80,16 @@ export class Rest extends BotHttp {
 		});
 	};
 
-	private _newOrder(order: NewOrder): Promise<Order | HttpError | {}> {
+	private _newOrder(order: NewOrder): Promise<Order | HttpError | TestOrder> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let orderRes: Order;
-				let privateOrder: INewOrder | HttpError | {};
+				let privateOrder: INewOrder | HttpError | TestOrder;
 				let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
 				let callOpts: CallOptions = new CallOptions(EMethod.POST, true, false, false);
 				privateOrder = await this.privateCall(url, callOpts, NewOrder.toBinance(order));
 				if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
-					resolve(<{}>privateOrder);
+					resolve(new TestOrder());
 				} else {
 					if (privateOrder instanceof HttpError) {
 						reject(privateOrder);
@@ -319,7 +320,7 @@ export class Rest extends BotHttp {
 		return new Promise(async (resolve, reject) => {
 			let result: object;
 			try {
-				let callOpts: CallOptions = new CallOptions(EMethod.PUT, true, false, true)
+				let callOpts: CallOptions = new CallOptions(EMethod.PUT, true, false, true);
 				let dStream: DataStream = new DataStream(Rest.listenKey);
 				result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
 				resolve(result);
@@ -329,13 +330,13 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType) {
+	public limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
 				let side: EOrderSide = EOrderSide.BUY;
 				let order: NewOrder = new NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
-				let orderRes: Order | {} = await this._newOrder(order);
+				let orderRes: Order | TestOrder = await this._newOrder(order);
 				resolve(orderRes);
 			} catch (err) {
 				reject(err);
@@ -343,7 +344,7 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public limitSell(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType) {
+	public limitSell(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
@@ -357,7 +358,7 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public marketBuy(symbol: string, quantity: number, recvWindow?: number): Promise<Order | {}> {
+	public marketBuy(symbol: string, quantity: number, recvWindow?: number): Promise<Order | TestOrder> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.MARKET;
@@ -371,7 +372,7 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public marketSell(symbol: string, quantity: number, recvWindow?: number): Promise<NewOrder | {}> {
+	public marketSell(symbol: string, quantity: number, recvWindow?: number): Promise<Order | TestOrder> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let type: EOrderType = EOrderType.MARKET;

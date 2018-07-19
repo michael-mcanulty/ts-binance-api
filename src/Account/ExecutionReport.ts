@@ -35,11 +35,11 @@ export class ExecutionReport implements IExecutionReport {
 	eventType: string;
 	tradeId: number;
 
-	public static fromBinanceApi(iExecReportRaw: IExecutionReportRaw): ExecutionReport {
+	public static fromBinanceStream(iExecReportRaw: IExecutionReportRaw): ExecutionReport {
 		let result = new ExecutionReport(iExecReportRaw.n, iExecReportRaw.N, iExecReportRaw.E, iExecReportRaw.e, EExecutionType[iExecReportRaw.x],
 			iExecReportRaw.F, iExecReportRaw.m, iExecReportRaw.w, iExecReportRaw.l, iExecReportRaw.c, iExecReportRaw.i, iExecReportRaw.r,
 			EOrderStatus[iExecReportRaw.X], iExecReportRaw.T, EExecutionType[iExecReportRaw.x], iExecReportRaw.C,
-			iExecReportRaw.p, iExecReportRaw.L, iExecReportRaw.q, EOrderSide.BUY[iExecReportRaw.S], iExecReportRaw.P, iExecReportRaw.s, ETimeInForce[iExecReportRaw.f],
+			iExecReportRaw.p, iExecReportRaw.L, iExecReportRaw.q, EOrderSide[iExecReportRaw.S], iExecReportRaw.P, iExecReportRaw.s, ETimeInForce[iExecReportRaw.f],
 			iExecReportRaw.z, iExecReportRaw.t);
 		return result;
 	}

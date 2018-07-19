@@ -29,6 +29,7 @@ const AllOrders_1 = require("../Transaction/AllOrders");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
 const AccountInfoOptions_1 = require("../Account/AccountInfoOptions");
 const CancelOrderResponse_1 = require("../Transaction/CancelOrderResponse");
+const TestOrder_1 = require("../Transaction/TestOrder");
 class Rest extends BotHttp_1.BotHttp {
     _cancelOrder(cancelOrder) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -83,7 +84,7 @@ class Rest extends BotHttp_1.BotHttp {
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.POST, true, false, false);
 							privateOrder = yield this.privateCall(url, callOpts, NewOrder_1.NewOrder.toBinance(order));
                 if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
-                    resolve(privateOrder);
+									resolve(new TestOrder_1.TestOrder());
                 }
                 else {
                     if (privateOrder instanceof HttpError_1.HttpError) {

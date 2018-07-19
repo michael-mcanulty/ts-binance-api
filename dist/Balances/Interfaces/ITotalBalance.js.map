@@ -8,6 +8,6 @@
   "names": [],
   "mappings": "",
   "sourcesContent": [
-    "export interface ITotalBalance {\r\n\tavailableBNBQty: number;\r\n\tavailableUSDTQty: number;\r\n\tinUseQAQty: number;\r\n\tinUseUSDTQty: number;\r\n}"
+    "export interface ITotalBalance {\n\tavailableBNBQty: number;\n\tavailableUSDTQty: number;\n\tinUseQAQty: number;\n\tinUseUSDTQty: number;\n}"
   ]
 }

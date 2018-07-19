@@ -134,6 +134,8 @@ export class BotHttp {
 				if (!callOptions.noExtra) {
 					payload.timestamp = tStamp.timestamp;
 					payload.signature = signature;
+				} else {
+					delete payload.timestamp;
 				}
 				result = await this.fetch(path, callOptions, payload);
 				resolve(result);

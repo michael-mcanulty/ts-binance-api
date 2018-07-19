@@ -1,7 +1,8 @@
-import {IBalanceStream, IOutboundAccountInfoStream} from "./Interfaces/IOutboundAccountInfoStream";
+import {IOutboundAccountInfoStream} from "./Interfaces/IOutboundAccountInfoStream";
 import {Balance} from "../Balances/Balance";
 import {IOutboundAccountInfoRest} from "./Interfaces/IOutboundAccountInfoRest";
 import {IBalanceRest} from "../Balances/Interfaces/IBalanceRest";
+import {IBalanceStream} from "../Balances/Interfaces/IBalanceStream";
 
 export class OutboundAccountInfo{
 	balances: Balance[];

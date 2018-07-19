@@ -1,8 +1,4 @@
-export interface IBalanceStream {
-	a: string;
-	f: string;
-	l: string;
-}
+import {IBalanceStream} from "../../Balances/Interfaces/IBalanceStream";
 
 export interface IOutboundAccountInfoStream {
 	B: IBalanceStream[];

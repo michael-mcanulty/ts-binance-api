@@ -1,7 +1,7 @@
 import {BaseQueryOrder} from "./BaseQueryOrder";
-import {IQueryAllOrders} from "./Interfaces/IQueryAllOrders";
+import {IAllOrders} from "./Interfaces/IAllOrders";
 
-export class AllOrders extends BaseQueryOrder implements IQueryAllOrders {
+export class AllOrders extends BaseQueryOrder implements IAllOrders {
 	limit: number;
 
 	constructor(symbol: string, orderId: number, limit: number, recvWindow?: number) {

@@ -153,6 +153,9 @@ class BotHttp {
 					payload.timestamp = tStamp.timestamp;
 					payload.signature = signature;
 				}
+				else {
+					delete payload.timestamp;
+				}
 				result = yield this.fetch(path, callOptions, payload);
 				resolve(result);
 			}

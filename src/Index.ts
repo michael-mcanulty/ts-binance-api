@@ -23,9 +23,17 @@ const bot = new Bot(opts);
 Bot.binance.init().then(async markets => {
 
 	try {
-		//let sellStorm: Order | {} = await Bot.binance.rest.limitSell("STORMBTC", 550, 0.00000555, 5000);
-		//console.log(sellStorm);
 
+		//Bot.binance.websocket.candles(["STORMBTC", "STORMUSDT"], ["1m", "1hr"], res=>{
+		//	console.log(res);
+		//});
+		/*
+				Bot.binance.websocket.orders(res=>{console.log(res)});
+				setTimeout(async( )=>{
+					let sellStorm: Order | TestOrder = await Bot.binance.rest.limitSell("STORMBTC", 550, 0.00000555, 5000);
+					console.log(sellStorm);
+				}, 3000);
+		*/
 		//let allOrders:Order[]= await Bot.binance.rest.getAllOrders("ETHUSDT", 100, null, 5000);
 		//console.log(allOrders);
 

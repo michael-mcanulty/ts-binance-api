@@ -98,7 +98,7 @@ class BotWebsocket extends Rest_1.Rest {
 
 	balances(callback) {
 		const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () {
-			return yield method.call(this, {listenKey});
+			return yield method.apply(this, {listenKey});
 		});
 		this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
 			const listenKey = lk.listenKey;
@@ -124,7 +124,7 @@ class BotWebsocket extends Rest_1.Rest {
 
 	orders(callback) {
 		const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () {
-			return yield method.call(this, {listenKey});
+			return yield method.apply(this, {listenKey});
 		});
 		this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
 			const listenKey = lk.listenKey;
@@ -134,7 +134,7 @@ class BotWebsocket extends Rest_1.Rest {
 				if (json.e === "executionReport") {
 					let reportRaw;
 					reportRaw = json;
-					let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceApi(reportRaw);
+					let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceStream(reportRaw);
 					callback(executionReport);
 				}
 			};
@@ -160,7 +160,7 @@ class BotWebsocket extends Rest_1.Rest {
 				if (json.e === "executionReport") {
 					let reportRaw;
 					reportRaw = json;
-					let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceApi(reportRaw);
+					let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceStream(reportRaw);
 					callback(executionReport);
 				}
 				else if (json.e === "outboundAccountInfo") {

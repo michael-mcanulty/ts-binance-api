@@ -58,7 +58,7 @@ export class BotWebsocket extends Rest {
 	}
 
 	public balances(callback: Function): void {
-		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
+		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
 		this.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
@@ -84,7 +84,7 @@ export class BotWebsocket extends Rest {
 	}
 
 	public orders(callback: Function): void {
-		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
+		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
 		this.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
@@ -93,7 +93,7 @@ export class BotWebsocket extends Rest {
 				if (json.e === "executionReport") {
 					let reportRaw: IExecutionReportRaw;
 					reportRaw = json;
-					let executionReport: ExecutionReport = ExecutionReport.fromBinanceApi(reportRaw);
+					let executionReport: ExecutionReport = ExecutionReport.fromBinanceStream(reportRaw);
 					callback(executionReport);
 				}
 			};
@@ -119,7 +119,7 @@ export class BotWebsocket extends Rest {
 				if (json.e === "executionReport") {
 					let reportRaw: IExecutionReportRaw;
 					reportRaw = json;
-					let executionReport: ExecutionReport = ExecutionReport.fromBinanceApi(reportRaw);
+					let executionReport: ExecutionReport = ExecutionReport.fromBinanceStream(reportRaw);
 					callback(executionReport);
 				} else if (json.e === "outboundAccountInfo") {
 					let infoRaw: IOutboundAccountInfoStream;
