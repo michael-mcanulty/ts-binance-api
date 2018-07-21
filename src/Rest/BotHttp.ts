@@ -1,7 +1,6 @@
 import * as Fetch from 'isomorphic-fetch'
 import * as crypto from 'crypto'
 import {HttpError} from "../Error/HttpError";
-import {BinanceApiAuth} from "../Account/BinanceApiAuth";
 import {IServerTime} from "./Interfaces/IServerTime";
 import {EMethod} from "./EMethod";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
@@ -17,11 +16,12 @@ import {CallOptions} from "./CallOptions";
 import {QueryOrder} from "../Transaction/QueryOrder";
 import {AccountInfoOptions} from "../Account/AccountInfoOptions";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
+import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
 	public static fetch: Function = Fetch;
-	public auth: BinanceApiAuth;
+	public auth: IBinanceApiAuth;
 	public options: IBinanceOptions;
 
 	static buildUrl(path: string, noData: boolean, data: object): string {
