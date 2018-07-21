@@ -32,7 +32,7 @@ import {IOutboundAccountInfoRest} from "../Account/Interfaces/IOutboundAccountIn
 import {INewOrder} from "../Transaction/Interfaces/INewOrder";
 import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 import {TestOrder} from "../Transaction/TestOrder";
-import {IExchangeInfo} from "..";
+import {IExchangeInfo} from "../ExchangeInfo/Interfaces/IExchangeInfo";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
