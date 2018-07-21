@@ -1,5 +1,5 @@
 {
-  "name": "ts-binance-api",
+  "name": "@michael-mcanulty/ts-binance-api",
   "version": "1.0.1",
   "description": "Typescript Binance api",
   "main": "dist/Main.js",
