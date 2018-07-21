@@ -2,11 +2,12 @@
   "name": "ts-binance-api",
   "version": "1.0.0",
   "description": "Typescript Binance api",
-  "main": "Index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "start": "tsc -p tsconfig.json && node dist/Index.js",
-    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/Index.ts",
-    "debug": "tsc -p tsconfig.json && node --inspect --debug-brk  dist/Index.js"
+    "start": "tsc -p tsconfig.json && node dist/index.js",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
+    "debug": "tsc -p tsconfig.json && node --inspect --debug-brk  dist/index.js"
   },
   "author": "Michael McAnulty",
   "license": "ISC",
