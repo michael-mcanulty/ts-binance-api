@@ -1,5 +1,4 @@
 import { HttpError } from "../Error/HttpError";
-import { BinanceApiAuth } from "../Account/BinanceApiAuth";
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { Signed } from "./Signed";
 import { NewOrder } from "../Transaction/NewOrder";
@@ -10,10 +9,11 @@ import { CallOptions } from "./CallOptions";
 import { QueryOrder } from "../Transaction/QueryOrder";
 import { AccountInfoOptions } from "../Account/AccountInfoOptions";
 import { IOrder } from "../Transaction/Interfaces/IOrder";
+import { IBinanceApiAuth } from "../Account/Interfaces/IBinanceApiAuth";
 export declare class BotHttp {
     static BASE: string;
     static fetch: Function;
-    auth: BinanceApiAuth;
+    auth: IBinanceApiAuth;
     options: IBinanceOptions;
     static buildUrl(path: string, noData: boolean, data: object): string;
     call(path: string, callOptions: CallOptions, payload?: any): Promise<any>;

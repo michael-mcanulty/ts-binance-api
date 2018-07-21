@@ -1,3 +1,4 @@
+export { IBinanceApiAuth } from "./Account/Interfaces/IBinanceApiAuth";
 export { AccountInfoOptions } from "./Account/AccountInfoOptions";
 export { Balance } from "./Balances/Balance";
 export { IBalance } from "./Balances/Interfaces/IBalance";

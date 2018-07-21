@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const BinanceApiAuth_1 = require("./Account/BinanceApiAuth");
 const Binance_1 = require("./Binance/Binance");
 class Bot {
     constructor(opts) {
@@ -18,10 +17,9 @@ class Bot {
 }
 exports.Bot = Bot;
 let opts = {};
-let auth = new BinanceApiAuth_1.BinanceApiAuth();
-auth.key = "S05wQBtvZ8LmuAkqiDMXWKvJI1SBeR9H6kE9poWQVeA6MLGp508h7gLX0Wce92u6";
-auth.secret = "iDCk1PtTyucLSlj5wRYIeSrphteLX2ESRONkcsxjhbg2PubidzGps34bKw98tm2D";
-opts.auth = auth;
+opts.auth.key = "S05wQBtvZ8LmuAkqiDMXWKvJI1SBeR9H6kE9poWQVeA6MLGp508h7gLX0Wce92u6";
+opts.auth.secret = "iDCk1PtTyucLSlj5wRYIeSrphteLX2ESRONkcsxjhbg2PubidzGps34bKw98tm2D";
+opts.auth = opts.auth;
 opts.test = false;
 opts.useServerTime = true;
 const bot = new Bot(opts);
