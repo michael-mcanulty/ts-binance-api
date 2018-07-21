@@ -1,6 +1,6 @@
 {
   "name": "ts-binance-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Typescript Binance api",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
