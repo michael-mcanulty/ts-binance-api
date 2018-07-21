@@ -1,4 +1,4 @@
-export class Auth{
+export class BinanceApiAuth {
 	private _key:string;
 
 	get key(): string {

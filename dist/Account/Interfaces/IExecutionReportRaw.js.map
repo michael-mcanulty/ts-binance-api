@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "file": "IExecutionReportRaw.js",
-  "sourceRoot": "",
-  "sources": [
-    "../../../src/Account/Interfaces/IExecutionReportRaw.ts"
-  ],
-  "names": [],
-  "mappings": "",
-  "sourcesContent": [
-    "export interface IExecutionReportRaw {\r\n\tC: string;\r\n\tE: number;\r\n\tF: string;\r\n\tI: number;\r\n\tL: string;\r\n\tM: boolean;\r\n\tN?: any;\r\n\tP: string;\r\n\tS: string;\r\n\tT: number;\r\n\tX: string;\r\n\tc: string;\r\n\te: string;\r\n\tf: string;\r\n\tg: number;\r\n\ti: number;\r\n\tl: string;\r\n\tm: boolean;\r\n\tn: string;\r\n\to: string;\r\n\tp: string;\r\n\tq: string;\r\n\tr: string;\r\n\ts: string;\r\n\tt: number;\r\n\tw: boolean;\r\n\tx: string;\r\n\tz: string;\r\n}"
-  ]
-}
+{"version":3,"file":"IExecutionReportRaw.js","sourceRoot":"","sources":["../../../src/Account/Interfaces/IExecutionReportRaw.ts"],"names":[],"mappings":"","sourcesContent":["export interface IExecutionReportRaw {\r\n\tC: string;\r\n\tE: number;\r\n\tF: string;\r\n\tI: number;\r\n\tL: string;\r\n\tM: boolean;\r\n\tN?: any;\r\n\tP: string;\r\n\tS: string;\r\n\tT: number;\r\n\tX: string;\r\n\tc: string;\r\n\te: string;\r\n\tf: string;\r\n\tg: number;\r\n\ti: number;\r\n\tl: string;\r\n\tm: boolean;\r\n\tn: string;\r\n\to: string;\r\n\tp: string;\r\n\tq: string;\r\n\tr: string;\r\n\ts: string;\r\n\tt: number;\r\n\tw: boolean;\r\n\tx: string;\r\n\tz: string;\r\n}"]}

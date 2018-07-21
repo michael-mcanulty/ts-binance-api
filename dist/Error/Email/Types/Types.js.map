@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "file": "Types.js",
-  "sourceRoot": "",
-  "sources": [
-    "../../../../src/Error/Email/Types/Types.ts"
-  ],
-  "names": [],
-  "mappings": "",
-  "sourcesContent": [
-    "import {IMessageOptions} from \"../Interfaces/IMessageOptions\";\r\nimport {ServiceOptions} from \"../ServiceOptions\";\r\n\r\nexport type Transport = (serviceOpts: ServiceOptions) => NodeMailerService;\r\nexport type SendMail = (msgOpts: IMessageOptions, Function) => void;\r\nexport type NodeMailerService = { createTransport: Transport, sendMail: SendMail };"
-  ]
-}
+{"version":3,"file":"Types.js","sourceRoot":"","sources":["../../../../src/Error/Email/Types/Types.ts"],"names":[],"mappings":"","sourcesContent":["import {IMessageOptions} from \"../Interfaces/IMessageOptions\";\r\nimport {ServiceOptions} from \"../ServiceOptions\";\r\n\r\nexport type Transport = (serviceOpts: ServiceOptions) => NodeMailerService;\r\nexport type SendMail = (msgOpts: IMessageOptions, Function) => void;\r\nexport type NodeMailerService = { createTransport: Transport, sendMail: SendMail };"]}

@@ -24,7 +24,7 @@ export interface IStreamTickerRaw {
 	x: string;
 }
 
-export interface iStreamTicker {
+export interface IStreamTicker {
 	bestAsk: string;
 	bestAskQnt: string;
 	bestBid: string;

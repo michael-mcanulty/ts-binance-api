@@ -1,46 +1,39 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", {value: true});
+Object.defineProperty(exports, "__esModule", { value: true });
 const EServiceProviders_1 = require("./Enums/EServiceProviders");
-class Auth {
-	constructor(auth) {
-		this.user = auth.user;
-		this.pass = auth.pass;
-	}
-
-	get pass() {
-		return this._pass;
-	}
-
-	set pass(value) {
-		this._pass = value;
-	}
-
-	get user() {
-		return this._user;
-	}
-
-	set user(value) {
-		this._user = value;
-	}
+class NodeMailerAuth {
+    get pass() {
+        return this._pass;
+    }
+    set pass(value) {
+        this._pass = value;
+    }
+    get user() {
+        return this._user;
+    }
+    set user(value) {
+        this._user = value;
+    }
+    constructor(auth) {
+        this.user = auth.user;
+        this.pass = auth.pass;
+    }
 }
-exports.Auth = Auth;
+exports.NodeMailerAuth = NodeMailerAuth;
 class ServiceOptions {
-	constructor(opts) {
-		this.auth = new Auth(opts.auth);
-		this.service = EServiceProviders_1.ServiceProviders[opts.service];
-	}
-
-	get auth() {
-		return this._auth;
-	}
-
-	set auth(value) {
-		this._auth = value;
-	}
-
-	set service(value) {
-		this._service = value;
-	}
+    get auth() {
+        return this._auth;
+    }
+    set auth(value) {
+        this._auth = value;
+    }
+    set service(value) {
+        this._service = value;
+    }
+    constructor(opts) {
+        this.auth = new NodeMailerAuth(opts.auth);
+        this.service = EServiceProviders_1.EServiceProviders[opts.service];
+    }
 }
 exports.ServiceOptions = ServiceOptions;
 //# sourceMappingURL=ServiceOptions.js.map

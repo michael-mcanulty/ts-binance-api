@@ -6,23 +6,8 @@
  * License MIT
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const WebSocket = require('ws');
+const WebSocket = require("ws");
 const Events_1 = require("./Events");
-const getGlobalWebSocket = () => {
-    if (typeof WebSocket !== 'undefined') {
-        return WebSocket;
-    }
-};
-const isWebSocket = (w) => typeof w === 'function' && w.CLOSING === 2;
-const DEFAULT = {
-    maxReconnectionDelay: 10000,
-    minReconnectionDelay: 1000 + Math.random() * 4000,
-    minUptime: 5000,
-    reconnectionDelayGrowFactor: 1.3,
-    connectionTimeout: 4000,
-    maxRetries: Infinity,
-    debug: false,
-};
 class ReconnectingWebSocket {
     constructor(url, protocols, options = {}) {
         this._connectLock = false;
@@ -49,35 +34,82 @@ class ReconnectingWebSocket {
         this._protocols = protocols;
         this._options = options;
         this._connect();
+        if (Object.keys(options).length === 0) {
+            this._options = {
+                maxReconnectionDelay: 10000,
+                minReconnectionDelay: 1000 + Math.random() * 4000,
+                minUptime: 5000,
+                reconnectionDelayGrowFactor: 1.3,
+                connectionTimeout: 4000,
+                maxRetries: Infinity,
+                debug: false,
+            };
+        }
+        else {
+            this._options = options;
+        }
+    }
+    _connect() {
+        if (this._connectLock) {
+            return;
+        }
+        this._connectLock = true;
+        const { maxRetries = this._options.maxRetries, connectionTimeout = this._options.connectionTimeout, WebSocket = ReconnectingWebSocket.getGlobalWebSocket(), } = this._options;
+        if (this._retryCount >= maxRetries) {
+            this._debug('max retries reached', this._retryCount, '>=', maxRetries);
+            return;
+        }
+        this._retryCount++;
+        this._debug('connect', this._retryCount);
+        this._removeListeners();
+        if (!ReconnectingWebSocket.isWebSocket(WebSocket)) {
+            throw Error('No valid BaseWebSocket class provided');
+        }
+        this._wait()
+            .then(() => this._getNextUrl(this._url))
+            .then(url => {
+            this._debug('connect', { url, protocols: this._protocols });
+            this._ws = new WebSocket(url, this._protocols);
+            this._ws.binaryType = this._binaryType;
+            this._connectLock = false;
+            this._addListeners();
+            this._connectTimeout = setTimeout(() => this._handleTimeout(), connectionTimeout);
+        });
+    }
+    _getNextDelay() {
+        let delay = 0;
+        if (this._retryCount > 0) {
+            const { reconnectionDelayGrowFactor = this._options.reconnectionDelayGrowFactor, minReconnectionDelay = this._options.minReconnectionDelay, maxReconnectionDelay = this._options.maxReconnectionDelay, } = this._options;
+            delay =
+                minReconnectionDelay + Math.pow(this._retryCount - 1, reconnectionDelayGrowFactor);
+            if (delay > maxReconnectionDelay) {
+                delay = maxReconnectionDelay;
+            }
+        }
+        this._debug('next delay', delay);
+        return delay;
     }
     static get CLOSED() {
         return 3;
     }
-
-    static get CLOSING() {
-        return 2;
-    }
-
-    static get CONNECTING() {
-        return 0;
-    }
-
-    static get OPEN() {
-        return 1;
-    }
-
     get CLOSED() {
         return ReconnectingWebSocket.CLOSED;
     }
-
+    static get CLOSING() {
+        return 2;
+    }
     get CLOSING() {
         return ReconnectingWebSocket.CLOSING;
     }
-
+    static get CONNECTING() {
+        return 0;
+    }
     get CONNECTING() {
         return ReconnectingWebSocket.CONNECTING;
     }
-
+    static get OPEN() {
+        return 1;
+    }
     get OPEN() {
         return ReconnectingWebSocket.OPEN;
     }
@@ -117,32 +149,17 @@ class ReconnectingWebSocket {
             this._ws.addEventListener(type, handler);
         }
     }
-    _connect() {
-        if (this._connectLock) {
-            return;
+    _handleOpen(event) {
+        this._debug('open event');
+        const { minUptime = this._options.minUptime } = this._options;
+        clearTimeout(this._connectTimeout);
+        this._uptimeTimeout = setTimeout(() => this._acceptOpen(), minUptime);
+        this._debug('assign binary type');
+        this._ws.binaryType = this._binaryType;
+        if (this.onopen) {
+            this.onopen(event);
         }
-        this._connectLock = true;
-        const { maxRetries = DEFAULT.maxRetries, connectionTimeout = DEFAULT.connectionTimeout, WebSocket = getGlobalWebSocket(), } = this._options;
-        if (this._retryCount >= maxRetries) {
-            this._debug('max retries reached', this._retryCount, '>=', maxRetries);
-            return;
-        }
-        this._retryCount++;
-        this._debug('connect', this._retryCount);
-        this._removeListeners();
-        if (!isWebSocket(WebSocket)) {
-            throw Error('No valid BaseWebSocket class provided');
-        }
-        this._wait()
-            .then(() => this._getNextUrl(this._url))
-            .then(url => {
-            this._debug('connect', { url, protocols: this._protocols });
-            this._ws = new WebSocket(url, this._protocols);
-            this._ws.binaryType = this._binaryType;
-            this._connectLock = false;
-            this._addListeners();
-            this._connectTimeout = setTimeout(() => this._handleTimeout(), connectionTimeout);
-        });
+        this._listeners.open.forEach(listener => listener(event));
     }
     _debug(...params) {
         if (this._options.debug) {
@@ -162,18 +179,10 @@ class ReconnectingWebSocket {
         catch (error) {
         }
     }
-    _getNextDelay() {
-        let delay = 0;
-        if (this._retryCount > 0) {
-            const { reconnectionDelayGrowFactor = DEFAULT.reconnectionDelayGrowFactor, minReconnectionDelay = DEFAULT.minReconnectionDelay, maxReconnectionDelay = DEFAULT.maxReconnectionDelay, } = this._options;
-            delay =
-                minReconnectionDelay + Math.pow(this._retryCount - 1, reconnectionDelayGrowFactor);
-            if (delay > maxReconnectionDelay) {
-                delay = maxReconnectionDelay;
-            }
+    static getGlobalWebSocket() {
+        if (typeof WebSocket !== 'undefined') {
+            return WebSocket;
         }
-        this._debug('next delay', delay);
-        return delay;
     }
     _getNextUrl(urlProvider) {
         if (typeof urlProvider === 'string') {
@@ -214,17 +223,8 @@ class ReconnectingWebSocket {
         }
         this._listeners.message.forEach(listener => listener(event));
     }
-    _handleOpen(event) {
-        this._debug('open event');
-        const { minUptime = DEFAULT.minUptime } = this._options;
-        clearTimeout(this._connectTimeout);
-        this._uptimeTimeout = setTimeout(() => this._acceptOpen(), minUptime);
-        this._debug('assign binary type');
-        this._ws.binaryType = this._binaryType;
-        if (this.onopen) {
-            this.onopen(event);
-        }
-        this._listeners.open.forEach(listener => listener(event));
+    static isWebSocket(w) {
+        return typeof w === 'function' && w.CLOSING === 2;
     }
     _handleTimeout() {
         this._debug('timeout event');

@@ -1,15 +1,14 @@
 import {BotHttp} from "./BotHttp";
 import {EMethod} from "./EMethod";
-import {IListenKey} from "./IListenKey";
+import {IListenKey} from "./Interfaces/IListenKey";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ICandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
 import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
-import {IExchangeInfo} from "./Interfaces/IExchangeInfo";
 import {Market} from "../Market/Market";
 import {ISymbol} from "ExchangeInfo/Interfaces/ISymbol";
 import {Binance} from "../Binance/Binance";
-import {Bot} from "../Index";
+import {Bot} from "../Bot";
 import {NewOrder} from "../Transaction/NewOrder";
 import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "../Transaction/Interfaces/EOrderEnums";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
@@ -33,6 +32,7 @@ import {IOutboundAccountInfoRest} from "../Account/Interfaces/IOutboundAccountIn
 import {INewOrder} from "../Transaction/Interfaces/INewOrder";
 import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 import {TestOrder} from "../Transaction/TestOrder";
+import {IExchangeInfo} from "..";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;

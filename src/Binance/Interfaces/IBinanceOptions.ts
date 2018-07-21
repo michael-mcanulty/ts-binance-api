@@ -1,7 +1,7 @@
-import {Auth} from "../../Account/Auth";
+import {BinanceApiAuth} from "../../Account/BinanceApiAuth";
 
 export interface IBinanceOptions {
-	auth: Auth;
+	auth: BinanceApiAuth;
 	test: boolean;
 	useServerTime: boolean;
 }

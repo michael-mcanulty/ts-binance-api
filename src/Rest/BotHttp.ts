@@ -1,7 +1,7 @@
 import * as Fetch from 'isomorphic-fetch'
 import * as crypto from 'crypto'
 import {HttpError} from "../Error/HttpError";
-import {Auth} from "../Account/Auth";
+import {BinanceApiAuth} from "../Account/BinanceApiAuth";
 import {IServerTime} from "./Interfaces/IServerTime";
 import {EMethod} from "./EMethod";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
@@ -21,10 +21,10 @@ import {IOrder} from "../Transaction/Interfaces/IOrder";
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
 	public static fetch: Function = Fetch;
-	public auth: Auth;
+	public auth: BinanceApiAuth;
 	public options: IBinanceOptions;
 
-	public buildUrl(path: string, noData: boolean, data: object): string {
+	static buildUrl(path: string, noData: boolean, data: object): string {
 		return `${BotHttp.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BotHttp.makeQueryString(data)}`;
 	}
 
@@ -45,7 +45,7 @@ export class BotHttp {
 
 			try{
 				let err: HttpError;
-				let url: string = this.buildUrl(path, callOptions.noData, payload);
+				let url: string = BotHttp.buildUrl(path, callOptions.noData, payload);
 				let res: Response = await BotHttp.fetch(url, callOptions);
 				let json = await res.json();
 				let binanceError: BinanceError;

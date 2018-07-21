@@ -1,5 +1,5 @@
 import {Signed} from "./Signed";
-import {IListenKey} from "./IListenKey";
+import {IListenKey} from "./Interfaces/IListenKey";
 
 export class DataStream extends Signed {
 	listenKey: string;

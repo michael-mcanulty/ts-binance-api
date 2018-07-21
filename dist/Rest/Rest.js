@@ -14,7 +14,7 @@ const CandleInterval_1 = require("../ExchangeInfo/CandleInterval");
 const Candle_1 = require("../ExchangeInfo/Candle");
 const Market_1 = require("../Market/Market");
 const Binance_1 = require("../Binance/Binance");
-const Index_1 = require("../Index");
+const Bot_1 = require("../Bot");
 const NewOrder_1 = require("../Transaction/NewOrder");
 const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
 const Order_1 = require("../Transaction/Order");
@@ -65,7 +65,7 @@ class Rest extends BotHttp_1.BotHttp {
                 let raw = yield this.call('/v1/klines', callOpts, candleOpts);
                 let candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
                 candles.forEach((candle) => {
-                    candle.quoteAsset = Index_1.Bot.binance.rest.getQuoteAssetName(symbol);
+                    candle.quoteAsset = Bot_1.Bot.binance.rest.getQuoteAssetName(symbol);
                 });
                 resolve(candles);
             }

@@ -1,4 +1,4 @@
-export enum ServiceProviders {
+export enum EServiceProviders {
 	"AOL",
 	"DebugMail",
 	"DynectEmail",

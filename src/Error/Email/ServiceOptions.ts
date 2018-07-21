@@ -1,7 +1,7 @@
-import {ServiceProviders} from "./Enums/EServiceProviders";
+import {EServiceProviders} from "./Enums/EServiceProviders";
 import {IEmailAuth, IEmailOptions} from "./Interfaces/IServiceOprtions";
 
-export class Auth {
+export class NodeMailerAuth {
 	private _pass: string;
 
 	get pass(): string {
@@ -29,13 +29,13 @@ export class Auth {
 }
 
 export class ServiceOptions {
-	private _auth: Auth;
+	private _auth: NodeMailerAuth;
 
-	get auth(): Auth {
+	get auth(): NodeMailerAuth {
 		return this._auth;
 	}
 
-	set auth(value: Auth) {
+	set auth(value: NodeMailerAuth) {
 		this._auth = value;
 	}
 
@@ -46,7 +46,7 @@ export class ServiceOptions {
 	}
 
 	constructor(opts: IEmailOptions) {
-		this.auth = new Auth(opts.auth);
-		this.service = ServiceProviders[opts.service];
+		this.auth = new NodeMailerAuth(opts.auth);
+		this.service = EServiceProviders[opts.service];
 	}
 }

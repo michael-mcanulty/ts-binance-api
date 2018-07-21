@@ -1,5 +1,5 @@
 import * as Html5WebSocket from 'html5-websocket'
-import {default as ReconnectingWebSocket, iReconWSOptions} from "./ReconnectingWebSocket/ReconnectingWebSocket";
+import {default as ReconnectingWebSocket, IReconOptions} from "./ReconnectingWebSocket/ReconnectingWebSocket";
 import {IStreamTickerRaw} from "../ExchangeInfo/Interfaces/IStreamTickerRaw";
 import {Price} from "../Transaction/Price";
 import {Ticker} from "../ExchangeInfo/ticker";
@@ -15,7 +15,7 @@ import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest {
 	private static _INSTANCE: BotWebsocket;
-	private readonly _reconOptions: iReconWSOptions = <iReconWSOptions>{};
+	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private static _ws: ReconnectingWebSocket;
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private static isAlive: boolean = false;
@@ -194,7 +194,7 @@ export class BotWebsocket extends Rest {
 	constructor(options?: IBinanceOptions) {
 		super(options);
 		this.options = options;
-		this._reconOptions = <iReconWSOptions>{};
+		this._reconOptions = <IReconOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
 		this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;
 		this._reconOptions.debug = false;

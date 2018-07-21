@@ -1,7 +1,7 @@
 import {Price} from "../Transaction/Price";
-import {iStreamTicker, IStreamTickerRaw} from "./Interfaces/IStreamTickerRaw";
+import {IStreamTicker, IStreamTickerRaw} from "./Interfaces/IStreamTickerRaw";
 
-export class Ticker implements iStreamTicker{
+export class Ticker implements IStreamTicker {
 	bestAsk: string;
 	bestAskQnt: string;
 	bestBid: string;
@@ -32,7 +32,7 @@ export class Ticker implements iStreamTicker{
 
 	constructor(rawStreamTicker: IStreamTickerRaw) {
 		let m = rawStreamTicker;
-		let ticker: iStreamTicker = {
+		let ticker: IStreamTicker = {
 			eventType: m.e,
 			eventTime: m.E,
 			symbol: m.s,

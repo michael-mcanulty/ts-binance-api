@@ -1,7 +1,7 @@
 import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
-import allErrors from "./ErrorCodes";
+import allErrors from "./allErrors";
 
 export class HttpError extends Error {
 	public static all: HttpError[] = <HttpError[]>allErrors;
@@ -57,6 +57,7 @@ export class HttpError extends Error {
 			if(error.handler && (!error.handler.code || !error.handler.message)) {
 				error.handler.code = this.code;
 				error.handler.message = this.message;
+				error.handler.handleError(error);
 			}
 		}
 	}

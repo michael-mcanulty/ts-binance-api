@@ -1,4 +1,4 @@
-import {ServiceProviders} from "../Enums/EServiceProviders";
+import {EServiceProviders} from "../Enums/EServiceProviders";
 
 export interface IEmailAuth {
 	pass: string;
@@ -7,5 +7,5 @@ export interface IEmailAuth {
 
 export interface IEmailOptions {
 	auth: IEmailAuth;
-	service: ServiceProviders;
+	service: EServiceProviders;
 }

@@ -38,19 +38,6 @@ class BotWebsocket extends Rest_1.Rest {
     set url(value) {
         this._url = value;
     }
-
-    static heartbeat() {
-        setInterval(() => __awaiter(this, void 0, void 0, function* () {
-            try {
-                this.isAlive = yield BotWebsocket.Instance.ping();
-            }
-            catch (err) {
-                let error = new HttpError_1.HttpError({ msg: 'DISCONNECTED', code: -1001 });
-                BotWebsocket._ws.close(error.code, error.message);
-            }
-        }), 3000);
-    }
-
     _getTickerUrl(symbol) {
         if (symbol && symbol !== null) {
             return `${BotWebsocket.BASE}/${symbol.toLowerCase()}@ticker`;
@@ -59,7 +46,6 @@ class BotWebsocket extends Rest_1.Rest {
             return `${BotWebsocket.BASE}/!ticker@arr`;
         }
     }
-
     _getTickers(callback) {
         let tickers;
         let w = this.openWebSocket(this._getTickerUrl(null));
@@ -73,7 +59,6 @@ class BotWebsocket extends Rest_1.Rest {
         };
         return (options) => w.close(1000, 'Close handle was called');
     }
-
     balances(callback) {
         const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
         this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
@@ -97,7 +82,6 @@ class BotWebsocket extends Rest_1.Rest {
             });
         }));
     }
-
     orders(callback) {
         const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
         this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
@@ -121,7 +105,6 @@ class BotWebsocket extends Rest_1.Rest {
             });
         }));
     }
-
     user(callback) {
         const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.call(this, { listenKey }); });
         this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
@@ -151,7 +134,6 @@ class BotWebsocket extends Rest_1.Rest {
             });
         }));
     }
-
     candles(symbols, intervals, callback) {
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
@@ -171,7 +153,17 @@ class BotWebsocket extends Rest_1.Rest {
         });
         return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
     }
-
+    static heartbeat() {
+        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+            try {
+                this.isAlive = yield BotWebsocket.Instance.ping();
+            }
+            catch (err) {
+                let error = new HttpError_1.HttpError({ msg: 'DISCONNECTED', code: -1001 });
+                BotWebsocket._ws.close(error.code, error.message);
+            }
+        }), 3000);
+    }
     openWebSocket(url) {
         if (url) {
             this.url = url;

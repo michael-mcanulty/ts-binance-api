@@ -20,14 +20,18 @@ export class HttpErrorHandler {
 	payload?:any[];
 	type: string;
 	url: string;
-	urlParams?:any[];
 
-	executeApi(error: BinanceError | HttpError): Promise<any> {
+	handleError(error: BinanceError | HttpError): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (this.port !== null && this.method !== null) {
+				let url: string = this.url;
 				let reqOpts: RequestInit = <RequestInit>{};
 				reqOpts.method = EMethod[this.method];
 				reqOpts.headers = new Headers();
+
+				if (this.payload && this.payload.length > 0) {
+					url = BotHttp.buildUrl(this.url, false, this.payload);
+				}
 
 				if (this.sendEmail && this.emailOptions) {
 					HttpErrorHandler.emailService = new NodeMailer(this.emailOptions);
@@ -37,6 +41,7 @@ export class HttpErrorHandler {
 					let message: string = (this.type === EErrorType[EErrorType.Binance]) ? error['msg'] : error['message'];
 					msgOptions.subject = `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
 					msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${error.code} \n Message: ${message}`;
+
 					try {
 						await HttpErrorHandler.emailService.sendEmail(msgOptions);
 					} catch (err) {
@@ -44,7 +49,8 @@ export class HttpErrorHandler {
 					}
 				}
 				try {
-					let fetch = await BotHttp.fetch(this.url, reqOpts);
+					let fetch: any = {};
+					//fetch = await BotHttp.fetch(url, reqOpts);
 					resolve(fetch);
 				} catch (err) {
 					reject(err);
@@ -57,15 +63,10 @@ export class HttpErrorHandler {
 		this.code = code;
 		this.type = EErrorType[type];
 		this.port = port || null;
-		this.method =EMethod[method];
+		this.method = EMethod[method];
 		this.emailAddress = emailAddress || null;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
 		this.url = `${this.endpoint}:${this.port}`;
 	}
 }
-
-//TODO:
-//-1013 only 9xxxxxx is on binance INVALID_MESSAGE is -1013
-//Filter Failure: MIN_NOTATIONAL
-//NOT MEETING BTC MIN purchase QTY

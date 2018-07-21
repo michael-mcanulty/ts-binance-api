@@ -1,4 +1,4 @@
-import {Auth} from "./Account/Auth";
+import {BinanceApiAuth} from "./Account/BinanceApiAuth";
 import {IBinanceOptions} from "./Binance/Interfaces/IBinanceOptions";
 import {Binance} from "./Binance/Binance";
 import {Order} from "./Transaction/Order";
@@ -14,7 +14,7 @@ export class Bot {
 }
 
 let opts: IBinanceOptions = <IBinanceOptions>{};
-let auth:Auth = new Auth();
+let auth: BinanceApiAuth = new BinanceApiAuth();
 auth.key = "S05wQBtvZ8LmuAkqiDMXWKvJI1SBeR9H6kE9poWQVeA6MLGp508h7gLX0Wce92u6";
 auth.secret = "iDCk1PtTyucLSlj5wRYIeSrphteLX2ESRONkcsxjhbg2PubidzGps34bKw98tm2D";
 opts.auth = auth;

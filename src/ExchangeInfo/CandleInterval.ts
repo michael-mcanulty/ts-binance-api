@@ -1,5 +1,5 @@
 import {Candle} from "./Candle";
-import {Interval} from "./IndicatorInterval";
+import {Interval} from "./Interval";
 import {Binance} from "../Binance/Binance";
 
 export class CandleInterval {

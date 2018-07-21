@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "file": "ICallOpts.js",
-  "sourceRoot": "",
-  "sources": [
-    "../../../src/Rest/Interfaces/ICallOpts.ts"
-  ],
-  "names": [],
-  "mappings": "",
-  "sourcesContent": [
-    "export interface ICallOpts {\r\n\theaders: any;\r\n\tjson: boolean;\r\n\tmethod: string;\r\n\tnoData?: boolean;\r\n\tnoExtra?: boolean;\r\n}"
-  ]
-}
+{"version":3,"file":"ICallOpts.js","sourceRoot":"","sources":["../../../src/Rest/Interfaces/ICallOpts.ts"],"names":[],"mappings":"","sourcesContent":["export interface ICallOpts {\r\n\theaders: any;\r\n\tjson: boolean;\r\n\tmethod: string;\r\n\tnoData?: boolean;\r\n\tnoExtra?: boolean;\r\n}"]}

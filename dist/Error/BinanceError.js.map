@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "file": "BinanceError.js",
-  "sourceRoot": "",
-  "sources": [
-    "../../src/Error/BinanceError.ts"
-  ],
-  "names": [],
-  "mappings": ";;AAEA;IAUC;IAEA,CAAC;;AAXc,mCAAsB,GAAW,CAAC,IAAI,CAAC;AADvD,oCAaC",
-  "sourcesContent": [
-    "import {HttpErrorHandler} from \"./HttpErrorHandler\";\r\n\r\nexport class BinanceError {\r\n\tprivate static TOO_MANY_REQUESTS_CODE: number = -1003;\r\n\tpublic static all: BinanceError[] | Error[];\r\n\tcode: number;\r\n\thandler?: HttpErrorHandler;\r\n\tworkerIdOrigin?:number;\r\n\tmsg: string;\r\n\r\n\r\n\r\n\tconstructor() {\r\n\t\t//TODO: BinanceError.GetTimeoutFromIPBannedMsg(err);\r\n\t}\r\n}"
-  ]
-}
+{"version":3,"file":"BinanceError.js","sourceRoot":"","sources":["../../src/Error/BinanceError.ts"],"names":[],"mappings":";;AAAA;CAGC;AAHD,oCAGC","sourcesContent":["export class BinanceError {\r\n\tcode: number;\r\n\tmsg: string;\r\n}"]}
