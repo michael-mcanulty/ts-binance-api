@@ -6,7 +6,6 @@ import {ICandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
 import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
 import {Market} from "../Market/Market";
-import {ISymbol} from "ExchangeInfo/Interfaces/ISymbol";
 import {Binance} from "../Binance/Binance";
 import {Bot} from "../Bot";
 import {NewOrder} from "../Transaction/NewOrder";
@@ -33,6 +32,7 @@ import {INewOrder} from "../Transaction/Interfaces/INewOrder";
 import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 import {TestOrder} from "../Transaction/TestOrder";
 import {IExchangeInfo} from "../ExchangeInfo/Interfaces/IExchangeInfo";
+import {ISymbol} from "../ExchangeInfo/Interfaces/ISymbol";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
