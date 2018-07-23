@@ -1,3 +1,11 @@
+export {ITransactionRate} from "./Transaction/Interfaces/ITransactionRate";
+export {IQueryOrderResponse} from "./Transaction/Interfaces/IQueryOrderResponse";
+export {INewOrder} from "./Transaction/Interfaces/INewOrder";
+export {IOpenOrder} from "./Transaction/Interfaces/IOpenOrder";
+export {IQueryCancelOrder} from "./Transaction/Interfaces/IQueryCancelOrder";
+export {IBaseQueryOrder} from "./Transaction/Interfaces/IBaseQueryOrder";
+export {IBaseOrder} from "./Transaction/Interfaces/IBaseOrder";
+export {ICancelOrderResponse} from "./Transaction/Interfaces/ICancelOrderResponse";
 export {IBinanceApiAuth} from "./Account/Interfaces/IBinanceApiAuth";
 export {AccountInfoOptions} from "./Account/AccountInfoOptions";
 export {Balance} from "./Balances/Balance";
@@ -64,3 +72,4 @@ export {
 	EExecutionType, ENewOrderRespType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce
 }from "./Transaction/Interfaces/EOrderEnums";
 export {CloseEvent, ErrorEvent, EventListener, WebSocketEventMap} from "./Websocket/ReconnectingWebSocket/Events";
+
