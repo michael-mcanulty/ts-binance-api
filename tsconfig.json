@@ -7,8 +7,7 @@
     ],
     "sourceMap": true,
     "inlineSources": true,
-    "declaration": true,
-    "declarationDir": "dist",
+
     "outDir": "dist",
     "baseUrl": "src",
     "module": "commonjs",
