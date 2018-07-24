@@ -1,14 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Candle {
-    static fromCandleList(candleList, symbol, interval) {
-        let candles = [];
-        candleList.close.forEach((close, i) => {
-            let candle = new Candle(candleList.timestamp[i], candleList.open[i].toString(), candleList.high[i].toString(), candleList.low[i].toString(), candleList.close[i].toString(), candleList.volume[i].toString(), symbol, interval);
-            candles.push(candle);
-        });
-        return candles;
-    }
     static fromHttpByInterval(rawData, symbol, interval, quoteAssetName) {
         return rawData.map(candle => {
             return new Candle(candle[0], candle[1], candle[2], candle[3], candle[4], candle[5], symbol, interval, quoteAssetName);

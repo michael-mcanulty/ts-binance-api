@@ -1,4 +1,3 @@
-import {CandleList} from "./StockData";
 import {IStreamRawKline, IStreamRawKlineResponse} from "./Interfaces/ICandleBinance";
 
 export class Candle {
@@ -11,15 +10,6 @@ export class Candle {
 	quoteAsset?: string;
 	symbol?: string;
 	volume: number;
-
-	static fromCandleList(candleList: CandleList, symbol: string, interval: string): Candle[] {
-		let candles: Candle[] = [];
-		candleList.close.forEach((close, i) => {
-			let candle: Candle = new Candle(candleList.timestamp[i], candleList.open[i].toString(), candleList.high[i].toString(), candleList.low[i].toString(), candleList.close[i].toString(), candleList.volume[i].toString(), symbol, interval);
-			candles.push(candle);
-		});
-		return candles;
-	}
 
 	static fromHttpByInterval(rawData: any[][], symbol: string, interval: string, quoteAssetName?: string): Candle[] {
 		return rawData.map(candle => {

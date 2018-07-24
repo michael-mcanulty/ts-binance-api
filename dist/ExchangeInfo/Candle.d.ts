@@ -1,4 +1,3 @@
-import { CandleList } from "./StockData";
 import { IStreamRawKlineResponse } from "./Interfaces/ICandleBinance";
 export declare class Candle {
     close: number;
@@ -10,7 +9,6 @@ export declare class Candle {
     quoteAsset?: string;
     symbol?: string;
     volume: number;
-    static fromCandleList(candleList: CandleList, symbol: string, interval: string): Candle[];
     static fromHttpByInterval(rawData: any[][], symbol: string, interval: string, quoteAssetName?: string): Candle[];
     static fromStream(rawKlineResponse: IStreamRawKlineResponse, quoteAssetName?: string): Candle;
     constructor(date: number, open: string, high: string, low: string, close: string, volume: string, symbol?: string, interval?: string, quoteAssetName?: string);

@@ -16,7 +16,6 @@ export { IBalanceRest } from "./Balances/Interfaces/IBalanceRest";
 export { IBinanceOptions } from "./Binance/Interfaces/IBinanceOptions";
 export { Binance } from "./Binance/Binance";
 export { BinanceError } from "./Error/BinanceError";
-export { Bot } from "./Bot";
 export { IEmailAuth, IEmailOptions } from "./Error/Email/Interfaces/IServiceOprtions";
 export { EServiceProviders } from "./Error/Email/Enums/EServiceProviders";
 export { EErrorType } from "./Error/Email/Enums/EErrorType";
@@ -37,7 +36,6 @@ export { IStreamTicker, IStreamTickerRaw } from "./ExchangeInfo/Interfaces/IStre
 export { ISymbol } from "./ExchangeInfo/Interfaces/ISymbol";
 export { Ticker } from "./ExchangeInfo/ticker";
 export { IStreamRawKline, IStreamRawKlineResponse } from "./ExchangeInfo/Interfaces/ICandleBinance";
-export { CandleData, CandleList, StockData } from "./ExchangeInfo/StockData";
 export { CandleInterval } from "./ExchangeInfo/CandleInterval";
 export { Candle } from "./ExchangeInfo/Candle";
 export { Interval } from "./ExchangeInfo/Interval";
