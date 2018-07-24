@@ -142,7 +142,7 @@ class BotWebsocket extends Rest_1.Rest {
                     let klineRes;
                     klineRes = JSON.parse(msg.data);
                     let candle;
-                    let qa = this.getQuoteAssetName(symbol);
+                    let qa = Rest_1.Rest.getQuoteAssetName(symbol);
                     if (klineRes.k.x) {
                         candle = Candle_1.Candle.fromStream(klineRes, qa);
                         callback(candle);

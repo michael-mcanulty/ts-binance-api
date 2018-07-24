@@ -28,8 +28,5 @@ export declare class Binance {
     static options: IBinanceOptions;
     rest: Rest;
     websocket: BotWebsocket;
-    init(): Promise<{}>;
-    private static _getStepSizeBySymbol(symbol);
-    static roundStep(amount: number, symbol: string): number;
     constructor(options: IBinanceOptions);
 }

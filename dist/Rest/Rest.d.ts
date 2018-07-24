@@ -15,6 +15,7 @@ export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
     private _cancelOrder(cancelOrder);
     private _getCandlesInterval(symbol, interval, limit?);
+    static getQuoteAssetName(symbol: string): string;
     private _newOrder(order);
     cancelOrder(symbol: string, orderId: number): Promise<CancelOrderResponse>;
     cancelOrdersBySymbol(symbol: string): Promise<CancelOrderResponse[]>;
@@ -28,7 +29,6 @@ export declare class Rest extends BotHttp {
     getMarkets(quoteAsset?: string): Promise<Market[]>;
     getOpenOrders(symbol: string, orderId?: number, recvWindow?: number, origClientOrderId?: string): Promise<OpenOrder[]>;
     getOrder(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string): Promise<Order>;
-    getQuoteAssetName(symbol: string): string;
     keepDataStream(): Promise<{}>;
     limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder>;
     limitSell(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder>;

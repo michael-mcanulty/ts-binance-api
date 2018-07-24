@@ -2,6 +2,7 @@ import {Rest} from "../Rest/Rest";
 import {BotWebsocket} from "../Websocket/BotWebsocket";
 import {IBinanceOptions} from "./Interfaces/IBinanceOptions";
 import {Market} from "../Market/Market";
+import {BBLogger} from "../Logger/BBLogger";
 
 export class Binance {
 	public static INTERVALS: string[] = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
@@ -90,48 +91,8 @@ export class Binance {
 	public rest: Rest;
 	public websocket: BotWebsocket;
 
-	public init() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				Binance.markets = await this.rest.getMarkets();
-				resolve(Binance.markets);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	private static _getStepSizeBySymbol(symbol: string): number {
-		let stepSize: number;
-		let marketMatch: Market[];
-		if (!Binance.markets || Binance.markets.length === 0) {
-			return null;
-		}
-		marketMatch = Binance.markets.filter(market => market.symbol === symbol);
-		if (marketMatch && marketMatch.length > 0) {
-			stepSize = marketMatch[0].limits.stepSize;
-		}
-		return stepSize;
-	}
-
-	public static roundStep(amount: number, symbol: string): number {
-		let precision: number = 0;
-		let stepSplit: string[];
-		let stepSize: number = this._getStepSizeBySymbol(symbol);
-		if (stepSize) {
-			stepSplit = stepSize.toString().split('.');
-			if (amount && stepSplit.length > 1) {
-				precision = stepSplit[1].length;
-				return Number((Math.round(amount / stepSize) * stepSize).toFixed(precision));
-			} else {
-				return Number((Math.round(amount / stepSize) * stepSize).toFixed(0));
-			}
-		} else {
-			return amount;
-		}
-	}
-
 	constructor(options: IBinanceOptions) {
+		Binance.options = options;
 		this.rest = new Rest(options);
 		this.websocket = new BotWebsocket(options);
 	}

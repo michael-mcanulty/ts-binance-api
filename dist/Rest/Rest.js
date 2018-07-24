@@ -14,7 +14,6 @@ const CandleInterval_1 = require("../ExchangeInfo/CandleInterval");
 const Candle_1 = require("../ExchangeInfo/Candle");
 const Market_1 = require("../Market/Market");
 const Binance_1 = require("../Binance/Binance");
-const Bot_1 = require("../Bot");
 const NewOrder_1 = require("../Transaction/NewOrder");
 const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
 const Order_1 = require("../Transaction/Order");
@@ -65,7 +64,7 @@ class Rest extends BotHttp_1.BotHttp {
                 let raw = yield this.call('/v1/klines', callOpts, candleOpts);
                 let candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
                 candles.forEach((candle) => {
-                    candle.quoteAsset = Bot_1.Bot.binance.rest.getQuoteAssetName(symbol);
+                    candle.quoteAsset = Rest.getQuoteAssetName(symbol);
                 });
                 resolve(candles);
             }
@@ -75,6 +74,16 @@ class Rest extends BotHttp_1.BotHttp {
         }));
     }
     ;
+    static getQuoteAssetName(symbol) {
+        let qa;
+        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
+        let market;
+        if (marketFilter && marketFilter.length > 0) {
+            market = marketFilter[0];
+            qa = market.quoteAsset;
+        }
+        return qa;
+    }
     _newOrder(order) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -299,16 +308,6 @@ class Rest extends BotHttp_1.BotHttp {
                 reject(err);
             }
         }));
-    }
-    getQuoteAssetName(symbol) {
-        let qa;
-        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
-        let market;
-        if (marketFilter && marketFilter.length > 0) {
-            market = marketFilter[0];
-            qa = market.quoteAsset;
-        }
-        return qa;
     }
     keepDataStream() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {

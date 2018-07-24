@@ -7,7 +7,6 @@ import {CandleInterval} from "../ExchangeInfo/CandleInterval";
 import {Candle} from "../ExchangeInfo/Candle";
 import {Market} from "../Market/Market";
 import {Binance} from "../Binance/Binance";
-import {Bot} from "../Bot";
 import {NewOrder} from "../Transaction/NewOrder";
 import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "../Transaction/Interfaces/EOrderEnums";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
@@ -71,7 +70,7 @@ export class Rest extends BotHttp {
 				let raw: any[][] = await this.call('/v1/klines', callOpts, candleOpts);
 				let candles: Candle[] = Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
 				candles.forEach((candle) => {
-					candle.quoteAsset = Bot.binance.rest.getQuoteAssetName(symbol);
+					candle.quoteAsset = Rest.getQuoteAssetName(symbol);
 				});
 				resolve(candles);
 			} catch (err) {
@@ -79,6 +78,17 @@ export class Rest extends BotHttp {
 			}
 		});
 	};
+
+	public static getQuoteAssetName(symbol: string): string {
+		let qa: string;
+		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
+		let market: Market;
+		if (marketFilter && marketFilter.length > 0) {
+			market = marketFilter[0];
+			qa = market.quoteAsset;
+		}
+		return qa;
+	}
 
 	private _newOrder(order: NewOrder): Promise<Order | HttpError | TestOrder> {
 		return new Promise(async (resolve, reject) => {
@@ -303,17 +313,6 @@ export class Rest extends BotHttp {
 				reject(err);
 			}
 		});
-	}
-
-	public getQuoteAssetName(symbol: string): string {
-		let qa: string;
-		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
-		let market: Market;
-		if (marketFilter && marketFilter.length > 0) {
-			market = marketFilter[0];
-			qa = market.quoteAsset;
-		}
-		return qa;
 	}
 
 	public keepDataStream(): Promise<{}> {
