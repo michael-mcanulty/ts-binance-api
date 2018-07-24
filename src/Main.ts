@@ -1,3 +1,4 @@
+export {IOrder} from "./Transaction/Interfaces/IOrder";
 export {ITransactionRate} from "./Transaction/Interfaces/ITransactionRate";
 export {IQueryOrderResponse} from "./Transaction/Interfaces/IQueryOrderResponse";
 export {INewOrder} from "./Transaction/Interfaces/INewOrder";
