@@ -39,7 +39,7 @@ export { IStreamRawKline, IStreamRawKlineResponse } from "./ExchangeInfo/Interfa
 export { CandleInterval } from "./ExchangeInfo/CandleInterval";
 export { Candle } from "./ExchangeInfo/Candle";
 export { Interval } from "./ExchangeInfo/Interval";
-export { Logger } from "./Logger/Logger";
+export { BBLogger } from "./Logger/BBLogger";
 export { IMarket } from "./Market/interfaces/IMarket";
 export { Market } from "./Market/Market";
 export { IRestOpts } from "./Rest/Interfaces/IRestOptions";
