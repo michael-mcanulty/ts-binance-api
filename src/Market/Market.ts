@@ -7,7 +7,6 @@ import {ILimitsBinance} from "../ExchangeInfo/Interfaces/ILimitsBinance";
 
 export class Market {
 	baseAsset: string;
-	date?: Date;
 	limits: ILimits;
 	quoteAsset: string;
 	symbol: string;
