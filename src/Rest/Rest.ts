@@ -32,6 +32,7 @@ import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 import {TestOrder} from "../Transaction/TestOrder";
 import {IExchangeInfo} from "../ExchangeInfo/Interfaces/IExchangeInfo";
 import {ISymbol} from "../ExchangeInfo/Interfaces/ISymbol";
+import {IPrice, Price} from "..";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -311,6 +312,20 @@ export class Rest extends BotHttp {
 				resolve(result);
 			} catch (err) {
 				reject(err);
+			}
+		});
+	}
+
+	public getPrices(): Promise<Price[]> {
+		return new Promise(async (resolve, reject) => {
+			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			let url: string = '/v1/ticker/allPrices';
+
+			try {
+				let rawPrices: IPrice[] = await this.call(url, callOpts);
+				let prices = Price.toPrices(rawPrices);
+			} catch (err) {
+
 			}
 		});
 	}

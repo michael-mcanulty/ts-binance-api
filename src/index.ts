@@ -1,3 +1,4 @@
+export {IPrice} from "./Transaction/Interfaces/IPrice";
 export {IOrder} from "./Transaction/Interfaces/IOrder";
 export {ITransactionRate} from "./Transaction/Interfaces/ITransactionRate";
 export {IQueryOrderResponse} from "./Transaction/Interfaces/IQueryOrderResponse";
@@ -69,4 +70,3 @@ export {OpenOrder} from "./Transaction/OpenOrder";
 export {BotWebsocket} from "./Websocket/BotWebsocket";
 export {EExecutionType, ENewOrderRespType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce}from "./Transaction/Interfaces/EOrderEnums";
 export {CloseEvent, ErrorEvent, EventListener, WebSocketEventMap} from "./Websocket/ReconnectingWebSocket/Events";
-

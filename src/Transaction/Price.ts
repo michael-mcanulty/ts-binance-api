@@ -1,3 +1,5 @@
+import {IPrice} from "./Interfaces/IPrice";
+
 export class Price {
 	symbol: string;
 	value: number;
@@ -11,6 +13,13 @@ export class Price {
 		}
 		return price;
 	}
+
+	public static toPrices(rawPrices: IPrice[]): Price[] {
+		return rawPrices.map((price: IPrice) => {
+			return new Price(price.symbol, price.price);
+		});
+	}
+
 	constructor(symbol: string, value: string | number) {
 		this.symbol = symbol;
 		if (value) {
