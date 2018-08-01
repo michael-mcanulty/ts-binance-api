@@ -1,0 +1,32 @@
+import { IExecutionReport } from "./Interfaces/IExecutionReport";
+import { EExecutionType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce } from "../Transaction/Interfaces/EOrderEnums";
+import { IExecutionReportRaw } from "./Interfaces/IExecutionReportRaw";
+export declare class ExecutionReport implements IExecutionReport {
+    commission: number;
+    commissionAsset: string;
+    executionType: string;
+    icebergQuantity: number;
+    lastTradeQuantity: number;
+    orderStatus: string;
+    isBuyerMaker: boolean;
+    isOrderWorking: boolean;
+    orderType: string;
+    newClientOrderId: string;
+    orderId: number;
+    orderRejectReason: string;
+    price: number;
+    orderTime: number;
+    priceLastTrade: number;
+    originalClientOrderId: string;
+    quantity: number;
+    side: string;
+    stopPrice: number;
+    timeInForce: string;
+    totalTradeQuantity: number;
+    symbol: string;
+    eventTime: number;
+    eventType: string;
+    tradeId: number;
+    static fromBinanceStream(iExecReportRaw: IExecutionReportRaw): ExecutionReport;
+    constructor(commission: string, commissionAsset: string, eventTime: number, eventType: string, executionType: EExecutionType, icebergQuantity: string, isBuyerMaker: boolean, isOrderWorking: boolean, lastTradeQuantity: string, newClientOrderId: string, orderId: number, orderRejectReason: string, orderStatus: EOrderStatus, orderTime: number, orderType: EOrderType, originalClientOrderId: string, price: string, priceLastTrade: string, quantity: string, side: EOrderSide, stopPrice: string, symbol: string, timeInForce: ETimeInForce, totalTradeQuantity: string, tradeId: number);
+}

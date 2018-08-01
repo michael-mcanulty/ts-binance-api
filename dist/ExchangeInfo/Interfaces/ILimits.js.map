@@ -1,0 +1,1 @@
+{"version":3,"file":"ILimits.js","sourceRoot":"","sources":["../../../src/ExchangeInfo/Interfaces/ILimits.ts"],"names":[],"mappings":"","sourcesContent":["export interface ILimits {\r\n\tmaxPrice: number;\r\n\tmaxQty: number;\r\n\tminNotional: number;\r\n\tminPrice: number;\r\n\tminQty: number;\r\n\tstepSize: number;\r\n}\r\n"]}

@@ -1,0 +1,1 @@
+{"version":3,"file":"IBinanceApiAuth.js","sourceRoot":"","sources":["../../../src/Account/Interfaces/IBinanceApiAuth.ts"],"names":[],"mappings":"","sourcesContent":["export interface IBinanceApiAuth{\r\n\tkey:string;\r\n\tsecret:string;\r\n}"]}
