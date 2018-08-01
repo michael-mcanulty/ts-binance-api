@@ -323,9 +323,12 @@ export class Rest extends BotHttp {
 
 			try {
 				let rawPrices: IPrice[] = await this.call(url, callOpts);
-				let prices = Price.toPrices(rawPrices);
+				if (Array.isArray(rawPrices) && rawPrices.length > 0) {
+					let prices = Price.toPrices(rawPrices);
+					resolve(prices);
+				}
 			} catch (err) {
-
+				reject(err);
 			}
 		});
 	}
