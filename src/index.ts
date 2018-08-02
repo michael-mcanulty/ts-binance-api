@@ -1,3 +1,5 @@
+export {IAvailBalance} from "./Balances/Interfaces/IAvailBalance";
+export {ITotalBalance} from "./Balances/Interfaces/ITotalBalance";
 export {IPrice} from "./Transaction/Interfaces/IPrice";
 export {IOrder} from "./Transaction/Interfaces/IOrder";
 export {ITransactionRate} from "./Transaction/Interfaces/ITransactionRate";
