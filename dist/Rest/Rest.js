@@ -192,67 +192,66 @@ class Rest extends BotHttp_1.BotHttp {
             }
         }));
     }
-
-	getAvailableTotalBalance(quoteAsset, dollarBaseAsset = "USDT", primaryBaseAsset = "BTC") {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let balances = yield this.getBalances();
-				let prices = yield this.getPrices();
-				if (balances.length === 0) {
-					reject("Error: Balances not working");
-				}
-				const QA = quoteAsset;
-				const USDT = dollarBaseAsset;
-				const FA = "BNB";
-				const BTC = primaryBaseAsset;
-				let balVals = [];
-				let result = {};
-				balances.forEach((bal) => {
-					let avail = {};
-					let BA = bal.asset;
-					let available = bal.available;
-					let symbol;
-					if (BA !== BTC && BTC !== QA) {
-						symbol = BA + BTC;
-						let exchangeValue = __1.Price.GetPriceValue(prices, symbol);
-						avail.quoteAsset = quoteAsset;
-						let totalBTCVal = available * exchangeValue;
-						avail.totalVal = totalBTCVal * __1.Price.GetPriceValue(prices, BTC + USDT);
-						balVals.push(avail);
-					}
-					else {
-						if (BA === BTC && BTC !== QA) {
-							symbol = BA + QA;
-							avail.quoteAsset = quoteAsset;
-							avail.totalVal = available * __1.Price.GetPriceValue(prices, BTC + USDT);
-							balVals.push(avail);
-						}
-						else if (BTC === QA && BA !== BTC) {
-							symbol = BA + QA;
-							let exchangeValue = __1.Price.GetPriceValue(prices, symbol);
-							avail.quoteAsset = quoteAsset;
-							avail.totalVal = available * exchangeValue;
-							balVals.push(avail);
-						}
-						else if (BTC === QA && BA === BTC) {
-							symbol = BA + QA;
-							avail.quoteAsset = quoteAsset;
-							avail.totalVal = available;
-							balVals.push(avail);
-						}
-					}
-				});
-				result.totalVal = balVals.reduce((prev, cur) => {
-					return prev + cur.totalVal;
-				}, 0);
-				result.quoteAsset = quoteAsset;
-				resolve(result);
-			}
-			catch (err) {
-				reject(err);
-			}
-		}));
-	}
+    getAvailableTotalBalance(quoteAsset, dollarBaseAsset = "USDT", primaryBaseAsset = "BTC") {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let balances = yield this.getBalances();
+                let prices = yield this.getPrices();
+                if (balances.length === 0) {
+                    reject("Error: Balances not working");
+                }
+                const QA = quoteAsset;
+                const USDT = dollarBaseAsset;
+                const FA = "BNB";
+                const BTC = primaryBaseAsset;
+                let balVals = [];
+                let result = {};
+                balances.forEach((bal) => {
+                    let avail = {};
+                    let BA = bal.asset;
+                    let available = bal.available;
+                    let symbol;
+                    if (BA !== BTC && BTC !== QA) {
+                        symbol = BA + BTC;
+                        let exchangeValue = __1.Price.GetPriceValue(prices, symbol);
+                        avail.quoteAsset = quoteAsset;
+                        let totalBTCVal = available * exchangeValue;
+                        avail.totalVal = totalBTCVal * __1.Price.GetPriceValue(prices, BTC + USDT);
+                        balVals.push(avail);
+                    }
+                    else {
+                        if (BA === BTC && BTC !== QA) {
+                            symbol = BA + QA;
+                            avail.quoteAsset = quoteAsset;
+                            avail.totalVal = available * __1.Price.GetPriceValue(prices, BTC + USDT);
+                            balVals.push(avail);
+                        }
+                        else if (BTC === QA && BA !== BTC) {
+                            symbol = BA + QA;
+                            let exchangeValue = __1.Price.GetPriceValue(prices, symbol);
+                            avail.quoteAsset = quoteAsset;
+                            avail.totalVal = available * exchangeValue;
+                            balVals.push(avail);
+                        }
+                        else if (BTC === QA && BA === BTC) {
+                            symbol = BA + QA;
+                            avail.quoteAsset = quoteAsset;
+                            avail.totalVal = available;
+                            balVals.push(avail);
+                        }
+                    }
+                });
+                result.totalVal = balVals.reduce((prev, cur) => {
+                    return prev + cur.totalVal;
+                }, 0);
+                result.quoteAsset = quoteAsset;
+                resolve(result);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
     getBalances(recvWindow, gtZeroOnly = false) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -452,66 +451,62 @@ class Rest extends BotHttp_1.BotHttp {
                 let orderRes = yield this._newOrder(order);
                 resolve(orderRes);
             }
-						catch (err) {
-							reject(err);
-						}
-				}));
-		}
-
-	getDepositAddress(request) {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let url = '/wapi/v3/depositAddress.html';
-				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-				let depositAddress = yield this.privateCall(url, callOpts, request);
-				resolve(depositAddress);
-			}
-			catch (err) {
-				reject(err);
-			}
-		}));
-	}
-
-	getDepositHisory(request) {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let url = '/wapi/v3/depositHistory.html';
-				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-				let depositHistory = yield this.privateCall(url, callOpts, request);
-				resolve(depositHistory);
-			}
-			catch (err) {
-				reject(err);
-			}
-		}));
-	}
-
-	getStatus() {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-				let status = yield this.call('/wapi/v3/systemStatus.html', opts);
-				resolve(status);
-			}
-			catch (err) {
-				reject(`Error retrieving the system status. Message: ${err}`);
-			}
-		}));
-	}
-
-	getWithdrawlHisory(request) {
-		return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-			try {
-				let url = '/wapi/v3/withdrawHistory.html';
-				let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-				let withdrawlHistory = yield this.privateCall(url, callOpts, request);
-				resolve(withdrawlHistory);
-			}
-			catch (err) {
-				reject(err);
-			}
-		}));
-	}
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
+    getDepositAddress(request) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let url = '/wapi/v3/depositAddress.html';
+                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                let depositAddress = yield this.privateCall(url, callOpts, request);
+                resolve(depositAddress);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
+    getDepositHisory(request) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let url = '/wapi/v3/depositHistory.html';
+                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                let depositHistory = yield this.privateCall(url, callOpts, request);
+                resolve(depositHistory);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
+    getStatus() {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
+                let status = yield this.call('/wapi/v3/systemStatus.html', opts);
+                resolve(status);
+            }
+            catch (err) {
+                reject(`Error retrieving the system status. Message: ${err}`);
+            }
+        }));
+    }
+    getWithdrawlHisory(request) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let url = '/wapi/v3/withdrawHistory.html';
+                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                let withdrawlHistory = yield this.privateCall(url, callOpts, request);
+                resolve(withdrawlHistory);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
     constructor(options) {
         super(options);
     }
