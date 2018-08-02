@@ -11,14 +11,14 @@ import { Balance } from "../Balances/Balance";
 import { CancelOrderResponse } from "../Transaction/CancelOrderResponse";
 import { TestOrder } from "../Transaction/TestOrder";
 import { IExchangeInfo } from "../ExchangeInfo/Interfaces/IExchangeInfo";
-import {ITotalBalance, Price} from "..";
-import {IDepositAddressResult} from "../Deposit/Interfaces/IDepositAddressResult";
-import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
-import {IDepositHistoryResult} from "../Deposit/Interfaces/IDepositHistoryResult";
-import {IDepositHistoryReq} from "../Deposit/Interfaces/IDepositHistoryReq";
-import {ISystemStatus} from "../Binance/Interfaces/ISystemStatus";
-import {IWithdrawlHistoryReq} from "../Withdrawl/Interfaces/IWithdrawlHistoryReq";
-import {IWithdrawlHistoryResult} from "../Withdrawl/Interfaces/IWithdrawlHistoryResult";
+import { ITotalBalance, Price } from "..";
+import { IDepositAddressResult } from "../Deposit/Interfaces/IDepositAddressResult";
+import { IDepositAddressReq } from "../Deposit/Interfaces/IDepositAddressReq";
+import { IDepositHistoryResult } from "../Deposit/Interfaces/IDepositHistoryResult";
+import { IDepositHistoryReq } from "../Deposit/Interfaces/IDepositHistoryReq";
+import { ISystemStatus } from "../Binance/Interfaces/ISystemStatus";
+import { IWithdrawHistoryReq } from "../Withdraw/Interfaces/IWithdrawHistoryReq";
+import { IWithdrawHistoryResult } from "../Withdraw/Interfaces/IWithdrawHistoryResult";
 export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
     private _cancelOrder(cancelOrder);
@@ -30,8 +30,7 @@ export declare class Rest extends BotHttp {
     closeDataStream(): Promise<{}>;
     getAccountInfo(recvWindow?: number): Promise<OutboundAccountInfo>;
     getAllOrders(symbol: string, limit?: number, orderId?: number, recvWindow?: number): Promise<Order[]>;
-
-	getAvailableTotalBalance(quoteAsset: string, dollarBaseAsset?: string, primaryBaseAsset?: string): Promise<ITotalBalance>;
+    getAvailableTotalBalance(quoteAsset: string, dollarBaseAsset?: string, primaryBaseAsset?: string): Promise<ITotalBalance>;
     getBalances(recvWindow?: number, gtZeroOnly?: boolean): Promise<Balance[]>;
     getCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]>;
     getDataStream(): Promise<IListenKey>;
@@ -45,13 +44,9 @@ export declare class Rest extends BotHttp {
     limitSell(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder>;
     marketBuy(symbol: string, quantity: number, recvWindow?: number): Promise<Order | TestOrder>;
     marketSell(symbol: string, quantity: number, recvWindow?: number): Promise<Order | TestOrder>;
-
-	getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult>;
-
-	getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult>;
-
-	getStatus(): Promise<ISystemStatus>;
-
-	getWithdrawlHisory(request: IWithdrawlHistoryReq): Promise<IWithdrawlHistoryResult>;
+    getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult>;
+    getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult>;
+    getStatus(): Promise<ISystemStatus>;
+    getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult>;
     constructor(options: IBinanceOptions);
 }

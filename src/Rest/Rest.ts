@@ -518,7 +518,7 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public getWithdrawlHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
+	public getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let url: string = '/wapi/v3/withdrawHistory.html';

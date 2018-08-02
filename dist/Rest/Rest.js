@@ -494,7 +494,7 @@ class Rest extends BotHttp_1.BotHttp {
             }
         }));
     }
-    getWithdrawlHisory(request) {
+    getWithdrawHisory(request) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let url = '/wapi/v3/withdrawHistory.html';
