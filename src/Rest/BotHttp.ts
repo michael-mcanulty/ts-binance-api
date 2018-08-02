@@ -19,7 +19,7 @@ import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
 import {IDepositHistoryReq} from '../Deposit/Interfaces/IDepositHistoryReq';
-import {IWithdrawlHistoryReq} from "../Withdrawl/Interfaces/IWithdrawlHistoryReq";
+import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -122,7 +122,7 @@ export class BotHttp {
 		});
 	}
 
-	public privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawlHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
+	public privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let result: any;
 			let signature: string;

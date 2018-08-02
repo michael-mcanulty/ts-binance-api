@@ -10,4 +10,4 @@ var EWithdrawlStatus;
     EWithdrawlStatus[EWithdrawlStatus["failure"] = 5] = "failure";
     EWithdrawlStatus[EWithdrawlStatus["completed"] = 6] = "completed";
 })(EWithdrawlStatus = exports.EWithdrawlStatus || (exports.EWithdrawlStatus = {}));
-//# sourceMappingURL=EWithdrawlStatus.js.map
+//# sourceMappingURL=EWithdrawStatus.js.map

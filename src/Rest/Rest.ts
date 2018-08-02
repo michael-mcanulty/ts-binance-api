@@ -39,8 +39,8 @@ import {IDepositHistoryResult} from "../Deposit/Interfaces/IDepositHistoryResult
 import {IDepositHistoryReq} from "../Deposit/Interfaces/IDepositHistoryReq";
 import {ISystemStatus} from "../Binance/Interfaces/ISystemStatus";
 import {IServerTime} from "./Interfaces/IServerTime";
-import {IWithdrawlHistoryReq} from "../Withdrawl/Interfaces/IWithdrawlHistoryReq";
-import {IWithdrawlHistoryResult} from "../Withdrawl/Interfaces/IWithdrawlHistoryResult";
+import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
+import {IWithdrawHistoryResult} from "../Withdraw/Interfaces/IWithdrawHistoryResult";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -518,13 +518,13 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public getWithdrawlHisory(request: IWithdrawlHistoryReq): Promise<IWithdrawlHistoryResult> {
+	public getWithdrawlHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let url: string = '/wapi/v3/withdrawHistory.html';
 				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let withdrawlHistory: IWithdrawlHistoryResult = await this.privateCall(url, callOpts, request);
-				resolve(withdrawlHistory);
+				let withdrawHistory: IWithdrawHistoryResult = await this.privateCall(url, callOpts, request);
+				resolve(withdrawHistory);
 			} catch (err) {
 				reject(err);
 			}

@@ -499,8 +499,8 @@ class Rest extends BotHttp_1.BotHttp {
             try {
                 let url = '/wapi/v3/withdrawHistory.html';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let withdrawlHistory = yield this.privateCall(url, callOpts, request);
-                resolve(withdrawlHistory);
+                let withdrawHistory = yield this.privateCall(url, callOpts, request);
+                resolve(withdrawHistory);
             }
             catch (err) {
                 reject(err);

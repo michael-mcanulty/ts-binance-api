@@ -1,4 +1,4 @@
-export enum EWithdrawlStatus {
+export enum EWithdrawStatus {
 	emailSent,
 	cancelled,
 	awaitingApproval,
