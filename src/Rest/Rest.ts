@@ -32,7 +32,15 @@ import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 import {TestOrder} from "../Transaction/TestOrder";
 import {IExchangeInfo} from "../ExchangeInfo/Interfaces/IExchangeInfo";
 import {ISymbol} from "../ExchangeInfo/Interfaces/ISymbol";
-import {IPrice, Price} from "..";
+import {IPrice, ITotalBalance, Price} from "..";
+import {IDepositAddressResult} from "../Deposit/Interfaces/IDepositAddressResult";
+import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
+import {IDepositHistoryResult} from "../Deposit/Interfaces/IDepositHistoryResult";
+import {IDepositHistoryReq} from "../Deposit/Interfaces/IDepositHistoryReq";
+import {ISystemStatus} from "../Binance/Interfaces/ISystemStatus";
+import {IServerTime} from "./Interfaces/IServerTime";
+import {IWithdrawlHistoryReq} from "../Withdrawl/Interfaces/IWithdrawlHistoryReq";
+import {IWithdrawlHistoryResult} from "../Withdrawl/Interfaces/IWithdrawlHistoryResult";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -194,6 +202,70 @@ export class Rest extends BotHttp {
 					});
 				}
 				resolve(results);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getAvailableTotalBalance(quoteAsset: string, dollarBaseAsset: string = "USDT", primaryBaseAsset: string = "BTC"): Promise<ITotalBalance> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				//get BTC qty first
+				let balances: Balance[] = await this.getBalances();
+				let prices: Price[] = await this.getPrices();
+				if (balances.length === 0) {
+					reject("Error: Balances not working");
+				}
+
+				const QA = quoteAsset;
+				const USDT = dollarBaseAsset;
+				const FA = "BNB";
+				const BTC = primaryBaseAsset;
+
+				let balVals: ITotalBalance[] = [];
+				let result: ITotalBalance = <ITotalBalance>{};
+
+				balances.forEach((bal: Balance) => {
+					let avail: ITotalBalance = <ITotalBalance>{};
+					let BA: string = bal.asset;
+					let available: number = bal.available;
+
+					let symbol: string;
+
+					if (BA !== BTC && BTC !== QA) {
+						symbol = BA + BTC;
+						let exchangeValue: number = Price.GetPriceValue(prices, symbol);
+						avail.quoteAsset = quoteAsset;
+						let totalBTCVal: number = available * exchangeValue;
+						avail.totalVal = totalBTCVal * Price.GetPriceValue(prices, BTC + USDT);
+						balVals.push(avail);
+					} else {
+						if (BA === BTC && BTC !== QA) {
+							symbol = BA + QA;
+							avail.quoteAsset = quoteAsset;
+							avail.totalVal = available * Price.GetPriceValue(prices, BTC + USDT);
+							balVals.push(avail);
+						} else if (BTC === QA && BA !== BTC) {
+							symbol = BA + QA;
+							let exchangeValue: number = Price.GetPriceValue(prices, symbol);
+							avail.quoteAsset = quoteAsset;
+							avail.totalVal = available * exchangeValue;
+							balVals.push(avail);
+						} else if (BTC === QA && BA === BTC) {
+							symbol = BA + QA;
+							avail.quoteAsset = quoteAsset;
+							avail.totalVal = available;
+							balVals.push(avail);
+						}
+					}
+				});
+
+				result.totalVal = balVals.reduce((prev, cur) => {
+					return prev + cur.totalVal;
+				}, 0);
+				result.quoteAsset = quoteAsset;
+				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
@@ -399,6 +471,62 @@ export class Rest extends BotHttp {
 				resolve(orderRes);
 			} catch (err) {
 				reject(err)
+			}
+		});
+	}
+
+	//withdraw: payload => pCall('/wapi/v3/withdraw.html', payload, 'POST'),
+//	withdrawHistory: payload => pCall('/wapi/v3/withdrawHistory.html', payload),
+//	depositHistory: payload => pCall('/wapi/v3/depositHistory.html', payload),
+	//depositAddress: payload => pCall('/wapi/v3/depositAddress.html', payload),
+
+	public getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = '/wapi/v3/depositAddress.html';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let depositAddress: IDepositAddressResult = await this.privateCall(url, callOpts, request);
+				resolve(depositAddress);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = '/wapi/v3/depositHistory.html';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let depositHistory: IDepositHistoryResult = await this.privateCall(url, callOpts, request);
+				resolve(depositHistory);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getStatus(): Promise<ISystemStatus> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+				let status: ISystemStatus = await this.call('/wapi/v3/systemStatus.html', opts);
+				resolve(status);
+			} catch (err) {
+				reject(`Error retrieving the system status. Message: ${err}`);
+			}
+		});
+	}
+
+	public getWithdrawlHisory(request: IWithdrawlHistoryReq): Promise<IWithdrawlHistoryResult> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = '/wapi/v3/withdrawHistory.html';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let withdrawlHistory: IWithdrawlHistoryResult = await this.privateCall(url, callOpts, request);
+				resolve(withdrawlHistory);
+			} catch (err) {
+				reject(err);
 			}
 		});
 	}

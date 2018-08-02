@@ -8,8 +8,10 @@ import { DataStream } from "./DataStream";
 import { CallOptions } from "./CallOptions";
 import { QueryOrder } from "../Transaction/QueryOrder";
 import { AccountInfoOptions } from "../Account/AccountInfoOptions";
-import { IOrder } from "../Transaction/Interfaces/IOrder";
 import { IBinanceApiAuth } from "../Account/Interfaces/IBinanceApiAuth";
+import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
+import {IDepositHistoryReq} from '../Deposit/Interfaces/IDepositHistoryReq';
+import {IWithdrawlHistoryReq} from "../Withdrawl/Interfaces/IWithdrawlHistoryReq";
 export declare class BotHttp {
     static BASE: string;
     static fetch: Function;
@@ -22,7 +24,8 @@ export declare class BotHttp {
     private getTimestamp();
     static makeQueryString(params: any): string;
     ping(): Promise<boolean>;
-    privateCall(path: string, callOptions: CallOptions, payload?: IOrder | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any>;
+
+	privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawlHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any>;
     private time();
     timestamp(): Promise<number>;
     constructor(options: IBinanceOptions);
