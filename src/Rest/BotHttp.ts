@@ -15,7 +15,6 @@ import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {QueryOrder} from "../Transaction/QueryOrder";
 import {AccountInfoOptions} from "../Account/AccountInfoOptions";
-import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
 import {IDepositHistoryReq} from '../Deposit/Interfaces/IDepositHistoryReq';
@@ -23,8 +22,8 @@ import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
-	public static fetch: Function = Fetch;
 	public auth: IBinanceApiAuth;
+	public static fetch: Function = Fetch;
 	public options: IBinanceOptions;
 
 	static buildUrl(path: string, noData: boolean, data: object): string {
@@ -44,9 +43,9 @@ export class BotHttp {
 	}
 
 	public fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError> {
-		return new Promise(async (resolve, reject)=>{
+		return new Promise(async (resolve, reject) => {
 
-			try{
+			try {
 				let err: HttpError;
 				let url: string = BotHttp.buildUrl(path, callOptions.noData, payload);
 				let res: Response = await BotHttp.fetch(url, callOptions);
@@ -67,10 +66,10 @@ export class BotHttp {
 						reject(err);
 					}
 
-				}else{
+				} else {
 					resolve(<Response>json);
 				}
-			}catch(err){
+			} catch (err) {
 				reject(err);
 			}
 		});
@@ -99,12 +98,12 @@ export class BotHttp {
 	}
 
 	public static makeQueryString(params: any): string {
-		let result:string;
+		let result: string;
 		let keys: string[];
 		keys = Object.keys(params).filter(k => params[k]);
-		if(!params){
+		if (!params) {
 			result = "";
-		}else{
+		} else {
 			result = `?${keys.map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`).join('&')}`;
 		}
 		return result;
@@ -112,11 +111,11 @@ export class BotHttp {
 
 	public ping(): Promise<boolean> {
 		return new Promise(async (resolve, reject) => {
-			try{
+			try {
 				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
 				await this.call('/v1/ping', opts);
 				resolve(true);
-			}catch(err){
+			} catch (err) {
 				reject(err);
 			}
 		});
@@ -150,11 +149,11 @@ export class BotHttp {
 
 	private time(): Promise<IServerTime> {
 		return new Promise(async (resolve, reject) => {
-			try{
+			try {
 				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
 				let server: IServerTime = await this.call('/v1/time', opts);
 				resolve(server);
-			}catch(err){
+			} catch (err) {
 				reject(`Error in server time sync. Message: ${err}`);
 			}
 		});

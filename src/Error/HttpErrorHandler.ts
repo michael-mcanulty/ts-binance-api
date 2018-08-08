@@ -9,15 +9,15 @@ import {EErrorType} from "./Email/Enums/EErrorType";
 
 export class HttpErrorHandler {
 	code: number;
-	emailOptions?: IEmailOptions;
 	emailAddress?: string;
-	message: string;
+	emailOptions?: IEmailOptions;
 	private static emailService: NodeMailer;
 	endpoint: string;
+	message: string;
 	method: string;
+	payload?: any[];
 	port: number;
 	sendEmail: boolean;
-	payload?:any[];
 	type: string;
 	url: string;
 
@@ -59,7 +59,7 @@ export class HttpErrorHandler {
 		});
 	}
 
-	constructor(code: number, endpoint:string, port: number, type: EErrorType, method: EMethod, sendEmail: boolean, emailAddress?: string, emailOptions?: IEmailOptions) {
+	constructor(code: number, endpoint: string, port: number, type: EErrorType, method: EMethod, sendEmail: boolean, emailAddress?: string, emailOptions?: IEmailOptions) {
 		this.code = code;
 		this.type = EErrorType[type];
 		this.port = port || null;

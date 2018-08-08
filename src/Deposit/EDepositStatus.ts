@@ -1,4 +1,4 @@
-export enum EDepositStatus{
+export enum EDepositStatus {
 	pending,
 	success
 }

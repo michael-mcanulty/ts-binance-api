@@ -1,4 +1,4 @@
-export interface IBinanceApiAuth{
-	key:string;
-	secret:string;
+export interface IBinanceApiAuth {
+	key: string;
+	secret: string;
 }

@@ -1,17 +1,17 @@
 import {EWithdrawStatus} from "../EWithdrawStatus";
 
 export interface WithdrawList {
-	id: string;
-	amount: number;
 	address: string;
-	asset: string;
-	txId: string;
-	applyTime: any;
-	status: EWithdrawStatus;
 	addressTag: string;
+	amount: number;
+	applyTime: any;
+	asset: string;
+	id: string;
+	status: EWithdrawStatus;
+	txId: string;
 }
 
 export interface IWithdrawHistoryResult {
-	withdrawList: WithdrawList[];
 	success: boolean;
+	withdrawList: WithdrawList[];
 }

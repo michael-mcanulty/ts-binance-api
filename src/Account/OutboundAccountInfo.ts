@@ -4,7 +4,7 @@ import {IOutboundAccountInfoRest} from "./Interfaces/IOutboundAccountInfoRest";
 import {IBalanceRest} from "../Balances/Interfaces/IBalanceRest";
 import {IBalanceStream} from "../Balances/Interfaces/IBalanceStream";
 
-export class OutboundAccountInfo{
+export class OutboundAccountInfo {
 	balances: Balance[];
 	buyerCommissionRate: number;
 	canDeposit: boolean;

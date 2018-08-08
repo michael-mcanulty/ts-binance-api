@@ -1,6 +1,7 @@
 export class Event {
 	public target: any;
 	public type: string;
+
 	constructor(type: string, target: any) {
 		this.target = target;
 		this.type = type;
@@ -22,12 +23,14 @@ export class CloseEvent extends Event {
 	public code: number;
 	public reason: string;
 	public wasClean = true;
+
 	constructor(code: number = 1000, reason: string = '', target: any) {
 		super('close', target);
 		this.code = code;
 		this.reason = reason;
 	}
 }
+
 export interface WebSocketEventMap {
 	close: CloseEvent;
 	error: ErrorEvent;

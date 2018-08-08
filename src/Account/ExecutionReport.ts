@@ -13,27 +13,27 @@ export class ExecutionReport implements IExecutionReport {
 	commissionAsset: string;
 	executionType: string;
 	icebergQuantity: number;
-	lastTradeQuantity: number;
-	orderStatus: string;
 	isBuyerMaker: boolean;
 	isOrderWorking: boolean;
-	orderType: string;
+	lastTradeQuantity: number;
 	newClientOrderId: string;
 	orderId: number;
 	orderRejectReason: string;
-	price: number;
+	orderStatus: string;
 	orderTime: number;
-	priceLastTrade: number;
+	orderType: string;
 	originalClientOrderId: string;
+	price: number;
+	priceLastTrade: number;
 	quantity: number;
 	side: string;
 	stopPrice: number;
+	symbol: string;
 	timeInForce: string;
 	totalTradeQuantity: number;
-	symbol: string;
+	tradeId: number;
 	eventTime: number;
 	eventType: string;
-	tradeId: number;
 
 	public static fromBinanceStream(iExecReportRaw: IExecutionReportRaw): ExecutionReport {
 		let result = new ExecutionReport(iExecReportRaw.n, iExecReportRaw.N, iExecReportRaw.E, iExecReportRaw.e, EExecutionType[iExecReportRaw.x],

@@ -7,8 +7,8 @@ export class Order extends BaseOrder {
 	executedQty: number;
 	orderId: number;
 	origQty: number;
-	transactTime: number;
 	status: string;
+	transactTime: number;
 
 	static toBinance(order: Order): IOrder {
 		let binance: IOrder = <IOrder>{};

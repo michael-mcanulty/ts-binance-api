@@ -82,58 +82,6 @@ class BotWebsocket extends Rest_1.Rest {
             });
         }));
     }
-    orders(callback) {
-        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
-        this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
-            const listenKey = lk.listenKey;
-            const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
-            w.onmessage = (msg) => {
-                let json = JSON.parse(msg.data);
-                if (json.e === "executionReport") {
-                    let reportRaw;
-                    reportRaw = json;
-                    let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceStream(reportRaw);
-                    callback(executionReport);
-                }
-            };
-            const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-            keepStreamAlive(this.keepDataStream, listenKey)();
-            return () => __awaiter(this, void 0, void 0, function* () {
-                clearInterval(int);
-                yield this.closeDataStream();
-                w.close(1000, 'Close handle was called');
-            });
-        }));
-    }
-    user(callback) {
-        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.call(this, { listenKey }); });
-        this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
-            const listenKey = lk.listenKey;
-            const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
-            w.onmessage = (msg) => {
-                let json = JSON.parse(msg.data);
-                if (json.e === "executionReport") {
-                    let reportRaw;
-                    reportRaw = json;
-                    let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceStream(reportRaw);
-                    callback(executionReport);
-                }
-                else if (json.e === "outboundAccountInfo") {
-                    let infoRaw;
-                    infoRaw = json;
-                    let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceStream(infoRaw);
-                    callback(accountInfo);
-                }
-            };
-            const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-            keepStreamAlive(this.keepDataStream, listenKey)();
-            return () => __awaiter(this, void 0, void 0, function* () {
-                clearInterval(int);
-                yield this.closeDataStream();
-                w.close(1000, 'Close handle was called');
-            });
-        }));
-    }
     candles(symbols, intervals, callback) {
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
@@ -171,6 +119,29 @@ class BotWebsocket extends Rest_1.Rest {
             return BotWebsocket._ws;
         }
     }
+    orders(callback) {
+        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
+        this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+            const listenKey = lk.listenKey;
+            const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+            w.onmessage = (msg) => {
+                let json = JSON.parse(msg.data);
+                if (json.e === "executionReport") {
+                    let reportRaw;
+                    reportRaw = json;
+                    let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceStream(reportRaw);
+                    callback(executionReport);
+                }
+            };
+            const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+            keepStreamAlive(this.keepDataStream, listenKey)();
+            return () => __awaiter(this, void 0, void 0, function* () {
+                clearInterval(int);
+                yield this.closeDataStream();
+                w.close(1000, 'Close handle was called');
+            });
+        }));
+    }
     prices(callback) {
         let ticksToPrices = (tickers) => {
             let prices = tickers.map(t => {
@@ -179,6 +150,35 @@ class BotWebsocket extends Rest_1.Rest {
             callback(prices);
         };
         this._getTickers(ticksToPrices);
+    }
+    user(callback) {
+        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.call(this, { listenKey }); });
+        this.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+            const listenKey = lk.listenKey;
+            const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+            w.onmessage = (msg) => {
+                let json = JSON.parse(msg.data);
+                if (json.e === "executionReport") {
+                    let reportRaw;
+                    reportRaw = json;
+                    let executionReport = ExecutionReport_1.ExecutionReport.fromBinanceStream(reportRaw);
+                    callback(executionReport);
+                }
+                else if (json.e === "outboundAccountInfo") {
+                    let infoRaw;
+                    infoRaw = json;
+                    let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceStream(infoRaw);
+                    callback(accountInfo);
+                }
+            };
+            const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+            keepStreamAlive(this.keepDataStream, listenKey)();
+            return () => __awaiter(this, void 0, void 0, function* () {
+                clearInterval(int);
+                yield this.closeDataStream();
+                w.close(1000, 'Close handle was called');
+            });
+        }));
     }
 }
 BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';

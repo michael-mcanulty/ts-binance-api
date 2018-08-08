@@ -38,7 +38,6 @@ import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
 import {IDepositHistoryResult} from "../Deposit/Interfaces/IDepositHistoryResult";
 import {IDepositHistoryReq} from "../Deposit/Interfaces/IDepositHistoryReq";
 import {ISystemStatus} from "../Binance/Interfaces/ISystemStatus";
-import {IServerTime} from "./Interfaces/IServerTime";
 import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
 import {IWithdrawHistoryResult} from "../Withdraw/Interfaces/IWithdrawHistoryResult";
 
@@ -87,17 +86,6 @@ export class Rest extends BotHttp {
 			}
 		});
 	};
-
-	public static getQuoteAssetName(symbol: string): string {
-		let qa: string;
-		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
-		let market: Market;
-		if (marketFilter && marketFilter.length > 0) {
-			market = marketFilter[0];
-			qa = market.quoteAsset;
-		}
-		return qa;
-	}
 
 	private _newOrder(order: NewOrder): Promise<Order | HttpError | TestOrder> {
 		return new Promise(async (resolve, reject) => {
@@ -322,6 +310,32 @@ export class Rest extends BotHttp {
 		});
 	}
 
+	public getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = '/wapi/v3/depositAddress.html';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let depositAddress: IDepositAddressResult = await this.privateCall(url, callOpts, request);
+				resolve(depositAddress);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	public getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = '/wapi/v3/depositHistory.html';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let depositHistory: IDepositHistoryResult = await this.privateCall(url, callOpts, request);
+				resolve(depositHistory);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 	public getExchangeInfo(): Promise<IExchangeInfo> {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -405,6 +419,42 @@ export class Rest extends BotHttp {
 		});
 	}
 
+	public static getQuoteAssetName(symbol: string): string {
+		let qa: string;
+		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
+		let market: Market;
+		if (marketFilter && marketFilter.length > 0) {
+			market = marketFilter[0];
+			qa = market.quoteAsset;
+		}
+		return qa;
+	}
+
+	public getStatus(): Promise<ISystemStatus> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+				let status: ISystemStatus = await this.call('/wapi/v3/systemStatus.html', opts);
+				resolve(status);
+			} catch (err) {
+				reject(`Error retrieving the system status. Message: ${err}`);
+			}
+		});
+	}
+
+	public getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let url: string = '/wapi/v3/withdrawHistory.html';
+				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+				let withdrawHistory: IWithdrawHistoryResult = await this.privateCall(url, callOpts, request);
+				resolve(withdrawHistory);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 	public keepDataStream(): Promise<{}> {
 		return new Promise(async (resolve, reject) => {
 			let result: object;
@@ -418,6 +468,11 @@ export class Rest extends BotHttp {
 			}
 		});
 	}
+
+	//withdraw: payload => pCall('/wapi/v3/withdraw.html', payload, 'POST'),
+//	withdrawHistory: payload => pCall('/wapi/v3/withdrawHistory.html', payload),
+//	depositHistory: payload => pCall('/wapi/v3/depositHistory.html', payload),
+	//depositAddress: payload => pCall('/wapi/v3/depositAddress.html', payload),
 
 	public limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder> {
 		return new Promise(async (resolve, reject) => {
@@ -471,62 +526,6 @@ export class Rest extends BotHttp {
 				resolve(orderRes);
 			} catch (err) {
 				reject(err)
-			}
-		});
-	}
-
-	//withdraw: payload => pCall('/wapi/v3/withdraw.html', payload, 'POST'),
-//	withdrawHistory: payload => pCall('/wapi/v3/withdrawHistory.html', payload),
-//	depositHistory: payload => pCall('/wapi/v3/depositHistory.html', payload),
-	//depositAddress: payload => pCall('/wapi/v3/depositAddress.html', payload),
-
-	public getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let url: string = '/wapi/v3/depositAddress.html';
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let depositAddress: IDepositAddressResult = await this.privateCall(url, callOpts, request);
-				resolve(depositAddress);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	public getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let url: string = '/wapi/v3/depositHistory.html';
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let depositHistory: IDepositHistoryResult = await this.privateCall(url, callOpts, request);
-				resolve(depositHistory);
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
-
-	public getStatus(): Promise<ISystemStatus> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
-				let status: ISystemStatus = await this.call('/wapi/v3/systemStatus.html', opts);
-				resolve(status);
-			} catch (err) {
-				reject(`Error retrieving the system status. Message: ${err}`);
-			}
-		});
-	}
-
-	public getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let url: string = '/wapi/v3/withdrawHistory.html';
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let withdrawHistory: IWithdrawHistoryResult = await this.privateCall(url, callOpts, request);
-				resolve(withdrawHistory);
-			} catch (err) {
-				reject(err);
 			}
 		});
 	}

@@ -18,6 +18,16 @@ class HttpError extends Error {
             }
         }
     }
+    static GetErrorByCode(code) {
+        let result;
+        if (HttpError.all.length > 0) {
+            let filtered = HttpError.all.filter(handler => handler.code === code);
+            if (filtered && filtered.length > 0) {
+                result = filtered[0];
+            }
+        }
+        return result;
+    }
     static GetErrorType(err) {
         let code = parseInt(err.code.toString());
         let isBinance = false;
@@ -28,16 +38,6 @@ class HttpError extends Error {
             isBinance = false;
         }
         return (isBinance) ? EErrorType_1.EErrorType.Binance : EErrorType_1.EErrorType.Node;
-    }
-    static GetErrorByCode(code) {
-        let result;
-        if (HttpError.all.length > 0) {
-            let filtered = HttpError.all.filter(handler => handler.code === code);
-            if (filtered && filtered.length > 0) {
-                result = filtered[0];
-            }
-        }
-        return result;
     }
     static GetTimeoutFromIPBannedMsg(err) {
         let strFloat;

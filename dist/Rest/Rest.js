@@ -75,16 +75,6 @@ class Rest extends BotHttp_1.BotHttp {
         }));
     }
     ;
-    static getQuoteAssetName(symbol) {
-        let qa;
-        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
-        let market;
-        if (marketFilter && marketFilter.length > 0) {
-            market = marketFilter[0];
-            qa = market.quoteAsset;
-        }
-        return qa;
-    }
     _newOrder(order) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -303,6 +293,32 @@ class Rest extends BotHttp_1.BotHttp {
             }
         }));
     }
+    getDepositAddress(request) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let url = '/wapi/v3/depositAddress.html';
+                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                let depositAddress = yield this.privateCall(url, callOpts, request);
+                resolve(depositAddress);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
+    getDepositHisory(request) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let url = '/wapi/v3/depositHistory.html';
+                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                let depositHistory = yield this.privateCall(url, callOpts, request);
+                resolve(depositHistory);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
     getExchangeInfo() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -386,6 +402,41 @@ class Rest extends BotHttp_1.BotHttp {
             }
         }));
     }
+    static getQuoteAssetName(symbol) {
+        let qa;
+        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
+        let market;
+        if (marketFilter && marketFilter.length > 0) {
+            market = marketFilter[0];
+            qa = market.quoteAsset;
+        }
+        return qa;
+    }
+    getStatus() {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
+                let status = yield this.call('/wapi/v3/systemStatus.html', opts);
+                resolve(status);
+            }
+            catch (err) {
+                reject(`Error retrieving the system status. Message: ${err}`);
+            }
+        }));
+    }
+    getWithdrawHisory(request) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let url = '/wapi/v3/withdrawHistory.html';
+                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                let withdrawHistory = yield this.privateCall(url, callOpts, request);
+                resolve(withdrawHistory);
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
     keepDataStream() {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             let result;
@@ -450,57 +501,6 @@ class Rest extends BotHttp_1.BotHttp {
                 let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
                 let orderRes = yield this._newOrder(order);
                 resolve(orderRes);
-            }
-            catch (err) {
-                reject(err);
-            }
-        }));
-    }
-    getDepositAddress(request) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let url = '/wapi/v3/depositAddress.html';
-                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let depositAddress = yield this.privateCall(url, callOpts, request);
-                resolve(depositAddress);
-            }
-            catch (err) {
-                reject(err);
-            }
-        }));
-    }
-    getDepositHisory(request) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let url = '/wapi/v3/depositHistory.html';
-                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let depositHistory = yield this.privateCall(url, callOpts, request);
-                resolve(depositHistory);
-            }
-            catch (err) {
-                reject(err);
-            }
-        }));
-    }
-    getStatus() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-                let status = yield this.call('/wapi/v3/systemStatus.html', opts);
-                resolve(status);
-            }
-            catch (err) {
-                reject(`Error retrieving the system status. Message: ${err}`);
-            }
-        }));
-    }
-    getWithdrawHisory(request) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let url = '/wapi/v3/withdrawHistory.html';
-                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let withdrawHistory = yield this.privateCall(url, callOpts, request);
-                resolve(withdrawHistory);
             }
             catch (err) {
                 reject(err);

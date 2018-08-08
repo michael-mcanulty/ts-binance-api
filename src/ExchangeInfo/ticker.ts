@@ -26,7 +26,7 @@ export class Ticker implements IStreamTicker {
 	volumeQuote: string;
 	weightedAvg: string;
 
-	public toPrice():Price{
+	public toPrice(): Price {
 		return new Price(this.symbol, this.curDayClose);
 	}
 

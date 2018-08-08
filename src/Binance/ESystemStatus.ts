@@ -1,4 +1,4 @@
-export enum ESystemStatus{
+export enum ESystemStatus {
 	normal,
 	maintenance
 }

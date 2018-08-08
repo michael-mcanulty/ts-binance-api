@@ -5,20 +5,9 @@ import allErrors from "./allErrors";
 
 export class HttpError extends Error {
 	public static all: HttpError[] = <HttpError[]>allErrors;
-  code: number;
-	message: string;
+	code: number;
 	handler?: HttpErrorHandler;
-
-	public static GetErrorType(err: BinanceError | HttpError): EErrorType {
-		let code: number = parseInt(err.code.toString());
-		let isBinance: boolean = false;
-		if (typeof err['msg'] === "string" && code < 0) {
-			isBinance = true;
-		} else if (typeof err['message'] === "string") {
-			isBinance = false;
-		}
-		return (isBinance) ? EErrorType.Binance : EErrorType.Node;
-	}
+	message: string;
 
 	public static GetErrorByCode(code: number): HttpError {
 		let result: HttpError;
@@ -29,6 +18,17 @@ export class HttpError extends Error {
 			}
 		}
 		return result;
+	}
+
+	public static GetErrorType(err: BinanceError | HttpError): EErrorType {
+		let code: number = parseInt(err.code.toString());
+		let isBinance: boolean = false;
+		if (typeof err['msg'] === "string" && code < 0) {
+			isBinance = true;
+		} else if (typeof err['message'] === "string") {
+			isBinance = false;
+		}
+		return (isBinance) ? EErrorType.Binance : EErrorType.Node;
 	}
 
 	public static GetTimeoutFromIPBannedMsg(err: BinanceError): number {
@@ -51,10 +51,10 @@ export class HttpError extends Error {
 		this.code = parseInt(err.code.toString());
 		let type: EErrorType = HttpError.GetErrorType(err);
 		this.message = (type === EErrorType.Binance) ? err['msg'] : err['message'];
-		let error:HttpError = HttpError.GetErrorByCode(this.code);
-		if(error){
+		let error: HttpError = HttpError.GetErrorByCode(this.code);
+		if (error) {
 			this.handler = error.handler;
-			if(error.handler && (!error.handler.code || !error.handler.message)) {
+			if (error.handler && (!error.handler.code || !error.handler.message)) {
 				error.handler.code = this.code;
 				error.handler.message = this.message;
 				error.handler.handleError(error);

@@ -2,7 +2,6 @@ import {Rest} from "../Rest/Rest";
 import {BotWebsocket} from "../Websocket/BotWebsocket";
 import {IBinanceOptions} from "./Interfaces/IBinanceOptions";
 import {Market} from "../Market/Market";
-import {BBLogger} from "../Logger/BBLogger";
 
 export class Binance {
 	public static INTERVALS: string[] = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
@@ -70,6 +69,7 @@ export class Binance {
 		'3d': 60 * 24 * 3,
 		'1w': 60 * 24 * 7,
 	};
+	public static markets: Market[];
 	public static minutesToInterval: any = {
 		1: '1m',
 		3: '3m',
@@ -86,7 +86,6 @@ export class Binance {
 		4320: '3d',
 		10080: '1w'
 	};
-	public static markets: Market[];
 	public static options: IBinanceOptions;
 	public rest: Rest;
 	public websocket: BotWebsocket;

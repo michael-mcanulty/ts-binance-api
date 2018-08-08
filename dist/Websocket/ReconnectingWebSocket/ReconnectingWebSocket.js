@@ -49,46 +49,6 @@ class ReconnectingWebSocket {
             this._options = options;
         }
     }
-    _connect() {
-        if (this._connectLock) {
-            return;
-        }
-        this._connectLock = true;
-        const { maxRetries = this._options.maxRetries, connectionTimeout = this._options.connectionTimeout, WebSocket = ReconnectingWebSocket.getGlobalWebSocket(), } = this._options;
-        if (this._retryCount >= maxRetries) {
-            this._debug('max retries reached', this._retryCount, '>=', maxRetries);
-            return;
-        }
-        this._retryCount++;
-        this._debug('connect', this._retryCount);
-        this._removeListeners();
-        if (!ReconnectingWebSocket.isWebSocket(WebSocket)) {
-            throw Error('No valid BaseWebSocket class provided');
-        }
-        this._wait()
-            .then(() => this._getNextUrl(this._url))
-            .then(url => {
-            this._debug('connect', { url, protocols: this._protocols });
-            this._ws = new WebSocket(url, this._protocols);
-            this._ws.binaryType = this._binaryType;
-            this._connectLock = false;
-            this._addListeners();
-            this._connectTimeout = setTimeout(() => this._handleTimeout(), connectionTimeout);
-        });
-    }
-    _getNextDelay() {
-        let delay = 0;
-        if (this._retryCount > 0) {
-            const { reconnectionDelayGrowFactor = this._options.reconnectionDelayGrowFactor, minReconnectionDelay = this._options.minReconnectionDelay, maxReconnectionDelay = this._options.maxReconnectionDelay, } = this._options;
-            delay =
-                minReconnectionDelay + Math.pow(this._retryCount - 1, reconnectionDelayGrowFactor);
-            if (delay > maxReconnectionDelay) {
-                delay = maxReconnectionDelay;
-            }
-        }
-        this._debug('next delay', delay);
-        return delay;
-    }
     static get CLOSED() {
         return 3;
     }
@@ -149,17 +109,32 @@ class ReconnectingWebSocket {
             this._ws.addEventListener(type, handler);
         }
     }
-    _handleOpen(event) {
-        this._debug('open event');
-        const { minUptime = this._options.minUptime } = this._options;
-        clearTimeout(this._connectTimeout);
-        this._uptimeTimeout = setTimeout(() => this._acceptOpen(), minUptime);
-        this._debug('assign binary type');
-        this._ws.binaryType = this._binaryType;
-        if (this.onopen) {
-            this.onopen(event);
+    _connect() {
+        if (this._connectLock) {
+            return;
         }
-        this._listeners.open.forEach(listener => listener(event));
+        this._connectLock = true;
+        const { maxRetries = this._options.maxRetries, connectionTimeout = this._options.connectionTimeout, WebSocket = ReconnectingWebSocket.getGlobalWebSocket(), } = this._options;
+        if (this._retryCount >= maxRetries) {
+            this._debug('max retries reached', this._retryCount, '>=', maxRetries);
+            return;
+        }
+        this._retryCount++;
+        this._debug('connect', this._retryCount);
+        this._removeListeners();
+        if (!ReconnectingWebSocket.isWebSocket(WebSocket)) {
+            throw Error('No valid BaseWebSocket class provided');
+        }
+        this._wait()
+            .then(() => this._getNextUrl(this._url))
+            .then(url => {
+            this._debug('connect', { url, protocols: this._protocols });
+            this._ws = new WebSocket(url, this._protocols);
+            this._ws.binaryType = this._binaryType;
+            this._connectLock = false;
+            this._addListeners();
+            this._connectTimeout = setTimeout(() => this._handleTimeout(), connectionTimeout);
+        });
     }
     _debug(...params) {
         if (this._options.debug) {
@@ -179,10 +154,18 @@ class ReconnectingWebSocket {
         catch (error) {
         }
     }
-    static getGlobalWebSocket() {
-        if (typeof WebSocket !== 'undefined') {
-            return WebSocket;
+    _getNextDelay() {
+        let delay = 0;
+        if (this._retryCount > 0) {
+            const { reconnectionDelayGrowFactor = this._options.reconnectionDelayGrowFactor, minReconnectionDelay = this._options.minReconnectionDelay, maxReconnectionDelay = this._options.maxReconnectionDelay, } = this._options;
+            delay =
+                minReconnectionDelay + Math.pow(this._retryCount - 1, reconnectionDelayGrowFactor);
+            if (delay > maxReconnectionDelay) {
+                delay = maxReconnectionDelay;
+            }
         }
+        this._debug('next delay', delay);
+        return delay;
     }
     _getNextUrl(urlProvider) {
         if (typeof urlProvider === 'string') {
@@ -223,8 +206,17 @@ class ReconnectingWebSocket {
         }
         this._listeners.message.forEach(listener => listener(event));
     }
-    static isWebSocket(w) {
-        return typeof w === 'function' && w.CLOSING === 2;
+    _handleOpen(event) {
+        this._debug('open event');
+        const { minUptime = this._options.minUptime } = this._options;
+        clearTimeout(this._connectTimeout);
+        this._uptimeTimeout = setTimeout(() => this._acceptOpen(), minUptime);
+        this._debug('assign binary type');
+        this._ws.binaryType = this._binaryType;
+        if (this.onopen) {
+            this.onopen(event);
+        }
+        this._listeners.open.forEach(listener => listener(event));
     }
     _handleTimeout() {
         this._debug('timeout event');
@@ -258,6 +250,14 @@ class ReconnectingWebSocket {
             return;
         }
         this._ws.close(code, reason);
+    }
+    static getGlobalWebSocket() {
+        if (typeof WebSocket !== 'undefined') {
+            return WebSocket;
+        }
+    }
+    static isWebSocket(w) {
+        return typeof w === 'function' && w.CLOSING === 2;
     }
     reconnect(code, reason) {
         this._shouldReconnect = true;

@@ -1,4 +1,3 @@
-import {IFill} from "./IFill";
 import {IBaseOrder} from "./IBaseOrder";
 
 export interface IOrder extends IBaseOrder {

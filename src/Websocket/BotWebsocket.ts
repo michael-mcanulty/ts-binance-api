@@ -14,17 +14,18 @@ import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest {
+	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private static _INSTANCE: BotWebsocket;
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private static _ws: ReconnectingWebSocket;
-	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private static isAlive: boolean = false;
 	public options: IBinanceOptions;
-	private _url: string;
 
 	public static get Instance() {
 		return this._INSTANCE;
 	}
+
+	private _url: string;
 
 	get url(): string {
 		return this._url;
@@ -83,63 +84,6 @@ export class BotWebsocket extends Rest {
 		});
 	}
 
-	public orders(callback: Function): void {
-		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
-		this.getDataStream().then(async lk => {
-			const listenKey = lk.listenKey;
-			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
-			w.onmessage = (msg) => {
-				let json = JSON.parse(msg.data);
-				if (json.e === "executionReport") {
-					let reportRaw: IExecutionReportRaw;
-					reportRaw = json;
-					let executionReport: ExecutionReport = ExecutionReport.fromBinanceStream(reportRaw);
-					callback(executionReport);
-				}
-			};
-
-			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(this.keepDataStream, listenKey)();
-
-			return async () => {
-				clearInterval(int);
-				await this.closeDataStream();
-				w.close(1000, 'Close handle was called');
-			};
-		});
-	}
-
-	public user(callback: Function): void {
-		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
-		this.getDataStream().then(async lk => {
-			const listenKey = lk.listenKey;
-			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
-			w.onmessage = (msg) => {
-				let json = JSON.parse(msg.data);
-				if (json.e === "executionReport") {
-					let reportRaw: IExecutionReportRaw;
-					reportRaw = json;
-					let executionReport: ExecutionReport = ExecutionReport.fromBinanceStream(reportRaw);
-					callback(executionReport);
-				} else if (json.e === "outboundAccountInfo") {
-					let infoRaw: IOutboundAccountInfoStream;
-					infoRaw = json;
-					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceStream(infoRaw);
-					callback(accountInfo);
-				}
-			};
-
-			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(this.keepDataStream, listenKey)();
-
-			return async () => {
-				clearInterval(int);
-				await this.closeDataStream();
-				w.close(1000, 'Close handle was called');
-			};
-		});
-	}
-
 	public candles(symbols: string[], intervals: string[], callback: Function): any {
 		const symbolCache = symbols.map(symbol => {
 			return intervals.map(interval => {
@@ -180,6 +124,32 @@ export class BotWebsocket extends Rest {
 		}
 	}
 
+	public orders(callback: Function): void {
+		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
+		this.getDataStream().then(async lk => {
+			const listenKey = lk.listenKey;
+			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+			w.onmessage = (msg) => {
+				let json = JSON.parse(msg.data);
+				if (json.e === "executionReport") {
+					let reportRaw: IExecutionReportRaw;
+					reportRaw = json;
+					let executionReport: ExecutionReport = ExecutionReport.fromBinanceStream(reportRaw);
+					callback(executionReport);
+				}
+			};
+
+			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.keepDataStream, listenKey)();
+
+			return async () => {
+				clearInterval(int);
+				await this.closeDataStream();
+				w.close(1000, 'Close handle was called');
+			};
+		});
+	}
+
 	public prices(callback: Function) {
 		let ticksToPrices = (tickers: Ticker[]) => {
 			let prices: Price[] = tickers.map(t => {
@@ -189,6 +159,37 @@ export class BotWebsocket extends Rest {
 		};
 
 		this._getTickers(ticksToPrices);
+	}
+
+	public user(callback: Function): void {
+		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
+		this.getDataStream().then(async lk => {
+			const listenKey = lk.listenKey;
+			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
+			w.onmessage = (msg) => {
+				let json = JSON.parse(msg.data);
+				if (json.e === "executionReport") {
+					let reportRaw: IExecutionReportRaw;
+					reportRaw = json;
+					let executionReport: ExecutionReport = ExecutionReport.fromBinanceStream(reportRaw);
+					callback(executionReport);
+				} else if (json.e === "outboundAccountInfo") {
+					let infoRaw: IOutboundAccountInfoStream;
+					infoRaw = json;
+					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceStream(infoRaw);
+					callback(accountInfo);
+				}
+			};
+
+			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.keepDataStream, listenKey)();
+
+			return async () => {
+				clearInterval(int);
+				await this.closeDataStream();
+				w.close(1000, 'Close handle was called');
+			};
+		});
 	}
 
 	constructor(options?: IBinanceOptions) {
