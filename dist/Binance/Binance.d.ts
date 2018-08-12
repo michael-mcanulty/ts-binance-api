@@ -23,8 +23,8 @@ export declare class Binance {
     static intervalDays: any;
     static intervalToMilliseconds: any;
     static intervalToMinutes: any;
-    static minutesToInterval: any;
     static markets: Market[];
+    static minutesToInterval: any;
     static options: IBinanceOptions;
     rest: Rest;
     websocket: BotWebsocket;

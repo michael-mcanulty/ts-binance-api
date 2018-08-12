@@ -5,15 +5,15 @@ import { HttpError } from "./HttpError";
 import { EErrorType } from "./Email/Enums/EErrorType";
 export declare class HttpErrorHandler {
     code: number;
-    emailOptions?: IEmailOptions;
     emailAddress?: string;
-    message: string;
+    emailOptions?: IEmailOptions;
     private static emailService;
     endpoint: string;
+    message: string;
     method: string;
+    payload?: any[];
     port: number;
     sendEmail: boolean;
-    payload?: any[];
     type: string;
     url: string;
     handleError(error: BinanceError | HttpError): Promise<any>;

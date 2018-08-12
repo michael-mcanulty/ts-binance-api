@@ -4,10 +4,10 @@ import { HttpErrorHandler } from "./HttpErrorHandler";
 export declare class HttpError extends Error {
     static all: HttpError[];
     code: number;
-    message: string;
     handler?: HttpErrorHandler;
-    static GetErrorType(err: BinanceError | HttpError): EErrorType;
+    message: string;
     static GetErrorByCode(code: number): HttpError;
+    static GetErrorType(err: BinanceError | HttpError): EErrorType;
     static GetTimeoutFromIPBannedMsg(err: BinanceError): number;
     constructor(err: BinanceError | HttpError);
 }

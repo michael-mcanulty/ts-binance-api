@@ -14,8 +14,8 @@ import { IDepositHistoryReq } from '../Deposit/Interfaces/IDepositHistoryReq';
 import { IWithdrawHistoryReq } from "../Withdraw/Interfaces/IWithdrawHistoryReq";
 export declare class BotHttp {
     static BASE: string;
-    static fetch: Function;
     auth: IBinanceApiAuth;
+    static fetch: Function;
     options: IBinanceOptions;
     static buildUrl(path: string, noData: boolean, data: object): string;
     call(path: string, callOptions: CallOptions, payload?: any): Promise<any>;

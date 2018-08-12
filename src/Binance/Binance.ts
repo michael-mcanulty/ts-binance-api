@@ -93,6 +93,6 @@ export class Binance {
 	constructor(options: IBinanceOptions) {
 		Binance.options = options;
 		this.rest = new Rest(options);
-		this.websocket = new BotWebsocket(options);
+		this.websocket = new BotWebsocket(options, this.rest);
 	}
 }

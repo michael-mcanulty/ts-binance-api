@@ -2,9 +2,9 @@ import { EWithdrawStatus } from "../EWithdrawStatus";
 import { Signed } from "../..";
 export interface IWithdrawHistoryReq extends Signed {
     asset: string;
-    startTime: number;
     endTime: number;
-    status: EWithdrawStatus;
     recvWindow: number;
+    startTime: number;
+    status: EWithdrawStatus;
     timestamp: number;
 }

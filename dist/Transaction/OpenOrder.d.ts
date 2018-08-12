@@ -5,9 +5,9 @@ export declare class OpenOrder extends BaseOrder {
     executedQty: number;
     icebergQty: number;
     isWorking: boolean;
-    status: string;
     orderId: number;
     origQty: number;
+    status: string;
     stopPrice: number;
     time: number;
     static toBinance(openOrder: OpenOrder): IOpenOrder;

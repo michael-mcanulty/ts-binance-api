@@ -469,11 +469,6 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	//withdraw: payload => pCall('/wapi/v3/withdraw.html', payload, 'POST'),
-//	withdrawHistory: payload => pCall('/wapi/v3/withdrawHistory.html', payload),
-//	depositHistory: payload => pCall('/wapi/v3/depositHistory.html', payload),
-	//depositAddress: payload => pCall('/wapi/v3/depositAddress.html', payload),
-
 	public limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder> {
 		return new Promise(async (resolve, reject) => {
 			try {

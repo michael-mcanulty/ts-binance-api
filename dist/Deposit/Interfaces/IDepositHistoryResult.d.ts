@@ -1,12 +1,12 @@
 import { EDepositStatus } from "../EDepositStatus";
 export interface IDepositList {
-    insertTime: any;
+    address: string;
+    addressTag: string;
     amount: number;
     asset: string;
-    address: string;
-    txId: string;
+    insertTime: any;
     status: EDepositStatus;
-    addressTag: string;
+    txId: string;
 }
 export interface IDepositHistoryResult {
     depositList: IDepositList[];

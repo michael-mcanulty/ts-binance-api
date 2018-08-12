@@ -7,13 +7,13 @@
 import { CloseEvent, ErrorEvent, Event, WebSocketEventMap } from './Events';
 export interface IReconOptions {
     WebSocket?: any;
-    maxReconnectionDelay?: number;
-    minReconnectionDelay?: number;
-    reconnectionDelayGrowFactor?: number;
-    minUptime?: number;
     connectionTimeout?: number;
-    maxRetries?: number;
     debug?: boolean;
+    maxReconnectionDelay?: number;
+    maxRetries?: number;
+    minReconnectionDelay?: number;
+    minUptime?: number;
+    reconnectionDelayGrowFactor?: number;
 }
 export declare type UrlProvider = string | (() => string) | (() => Promise<string>);
 export declare type ListenersMap = {
@@ -23,12 +23,10 @@ export declare type ListenersMap = {
     close: Array<((event: CloseEvent) => void)>;
 };
 export default class ReconnectingWebSocket {
-    private _options;
-    private _connect();
     private _connectLock;
     private _connectTimeout;
     private _listeners;
-    private _getNextDelay();
+    private _options;
     private readonly _protocols?;
     private _shouldReconnect;
     private _uptimeTimeout;
@@ -58,21 +56,23 @@ export default class ReconnectingWebSocket {
     readonly url: string;
     private _acceptOpen();
     private _addListeners();
-    private _handleOpen(event);
+    private _connect();
     private _debug(...params);
     private _disconnect(code?, reason?);
-    private static getGlobalWebSocket();
+    private _getNextDelay();
     private _getNextUrl(urlProvider);
     private _handleClose(event);
     private _handleError(event);
     private _handleMessage(event);
-    static isWebSocket(w: any): boolean;
+    private _handleOpen(event);
     private _handleTimeout();
     private _isPromise(obj);
     private _removeListeners();
     private _wait();
     addEventListener<K extends keyof WebSocketEventMap>(type: K, listener: ((event: WebSocketEventMap[K]) => void)): void;
     close(code?: number, reason?: string): void;
+    private static getGlobalWebSocket();
+    static isWebSocket(w: any): boolean;
     reconnect(code?: number, reason?: string): void;
     removeEventListener<K extends keyof WebSocketEventMap>(type: K, listener: ((event: WebSocketEventMap[K]) => void)): void;
     send(data: string | ArrayBuffer | Blob | ArrayBufferView): void;

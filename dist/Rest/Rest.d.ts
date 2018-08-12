@@ -23,7 +23,6 @@ export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
     private _cancelOrder(cancelOrder);
     private _getCandlesInterval(symbol, interval, limit?);
-    static getQuoteAssetName(symbol: string): string;
     private _newOrder(order);
     cancelOrder(symbol: string, orderId: number): Promise<CancelOrderResponse>;
     cancelOrdersBySymbol(symbol: string): Promise<CancelOrderResponse[]>;
@@ -34,19 +33,20 @@ export declare class Rest extends BotHttp {
     getBalances(recvWindow?: number, gtZeroOnly?: boolean): Promise<Balance[]>;
     getCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]>;
     getDataStream(): Promise<IListenKey>;
+    getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult>;
+    getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult>;
     getExchangeInfo(): Promise<IExchangeInfo>;
     getMarkets(quoteAsset?: string): Promise<Market[]>;
     getOpenOrders(symbol: string, orderId?: number, recvWindow?: number, origClientOrderId?: string): Promise<OpenOrder[]>;
     getOrder(symbol: string, orderId: number, recvWindow?: number, origClientOrderId?: string): Promise<Order>;
     getPrices(): Promise<Price[]>;
+    static getQuoteAssetName(symbol: string): string;
+    getStatus(): Promise<ISystemStatus>;
+    getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult>;
     keepDataStream(): Promise<{}>;
     limitBuy(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder>;
     limitSell(symbol: string, quantity: number, price: number, recvWindow?: number, iceburgQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType): Promise<Order | TestOrder>;
     marketBuy(symbol: string, quantity: number, recvWindow?: number): Promise<Order | TestOrder>;
     marketSell(symbol: string, quantity: number, recvWindow?: number): Promise<Order | TestOrder>;
-    getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult>;
-    getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult>;
-    getStatus(): Promise<ISystemStatus>;
-    getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult>;
     constructor(options: IBinanceOptions);
 }

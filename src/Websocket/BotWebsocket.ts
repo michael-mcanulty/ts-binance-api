@@ -13,14 +13,14 @@ import {IExecutionReportRaw} from "../Account/Interfaces/IExecutionReportRaw";
 import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
-export class BotWebsocket extends Rest {
+export class BotWebsocket{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private static _INSTANCE: BotWebsocket;
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private static _ws: ReconnectingWebSocket;
 	private static isAlive: boolean = false;
 	public options: IBinanceOptions;
-
+	public rest: Rest;
 	public static get Instance() {
 		return this._INSTANCE;
 	}
@@ -60,7 +60,7 @@ export class BotWebsocket extends Rest {
 
 	public balances(callback: Function): void {
 		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
-		this.getDataStream().then(async lk => {
+		this.rest.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
@@ -73,12 +73,12 @@ export class BotWebsocket extends Rest {
 				}
 			};
 
-			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(this.keepDataStream, listenKey)();
+			const int = setInterval(keepStreamAlive(this.rest.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.rest.keepDataStream, listenKey)();
 
 			return async () => {
 				clearInterval(int);
-				await this.closeDataStream();
+				await this.rest.closeDataStream();
 				w.close(1000, 'Close handle was called');
 			};
 		});
@@ -108,7 +108,7 @@ export class BotWebsocket extends Rest {
 	private static heartbeat(): void {
 		setInterval(async () => {
 			try {
-				this.isAlive = await BotWebsocket.Instance.ping();
+				this.isAlive = await BotWebsocket.Instance.rest.ping();
 			} catch (err) {
 				let error: HttpError = new HttpError({msg: 'DISCONNECTED', code: -1001});
 				BotWebsocket._ws.close(error.code, error.message);
@@ -126,7 +126,7 @@ export class BotWebsocket extends Rest {
 
 	public orders(callback: Function): void {
 		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
-		this.getDataStream().then(async lk => {
+		this.rest.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
@@ -139,12 +139,12 @@ export class BotWebsocket extends Rest {
 				}
 			};
 
-			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(this.keepDataStream, listenKey)();
+			const int = setInterval(keepStreamAlive(this.rest.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.rest.keepDataStream, listenKey)();
 
 			return async () => {
 				clearInterval(int);
-				await this.closeDataStream();
+				await this.rest.closeDataStream();
 				w.close(1000, 'Close handle was called');
 			};
 		});
@@ -163,7 +163,7 @@ export class BotWebsocket extends Rest {
 
 	public user(callback: Function): void {
 		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
-		this.getDataStream().then(async lk => {
+		this.rest.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
@@ -181,19 +181,19 @@ export class BotWebsocket extends Rest {
 				}
 			};
 
-			const int = setInterval(keepStreamAlive(this.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(this.keepDataStream, listenKey)();
+			const int = setInterval(keepStreamAlive(this.rest.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(this.rest.keepDataStream, listenKey)();
 
 			return async () => {
 				clearInterval(int);
-				await this.closeDataStream();
+				await this.rest.closeDataStream();
 				w.close(1000, 'Close handle was called');
 			};
 		});
 	}
 
-	constructor(options?: IBinanceOptions) {
-		super(options);
+	constructor(options?: IBinanceOptions, rest?:Rest) {
+		this.rest = rest || new Rest(options);
 		this.options = options;
 		this._reconOptions = <IReconOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
