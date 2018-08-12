@@ -1,3 +1,4 @@
+export {ILimits} from "./ExchangeInfo/Interfaces/ILimits";
 export {IAvailBalance} from "./Balances/Interfaces/IAvailBalance";
 export {ITotalBalance} from "./Balances/Interfaces/ITotalBalance";
 export {IPrice} from "./Transaction/Interfaces/IPrice";
