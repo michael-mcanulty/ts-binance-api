@@ -1,1 +1,0 @@
-{"version":3,"file":"ILotSize.js","sourceRoot":"","sources":["../../../src/ExchangeInfo/Interfaces/ILotSize.ts"],"names":[],"mappings":"","sourcesContent":["export interface ILotSize {\r\n\tfilterType: string;\r\n\tmaxQty: string;\r\n\tminQty: string;\r\n\tstepSize: string;\r\n}"]}
