@@ -1,7 +1,6 @@
-import {Rest} from "../Rest/Rest";
-import {BotWebsocket} from "../Websocket/BotWebsocket";
 import {IBinanceOptions} from "./Interfaces/IBinanceOptions";
-import {Market} from "../Market/Market";
+import {BotWebsocket, Market, Rest} from "..";
+
 
 export class Binance {
 	public static INTERVALS: string[] = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
