@@ -8,7 +8,7 @@
     "start": "tsc -p tsconfig.json && node dist/index.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "debug": "tsc -p tsconfig.json && node --inspect --debug-brk  dist/index.js",
-    "install": "tsc -p tsconfig.json --declaration -d --declarationDir dist"
+    "compile": "tsc -p tsconfig.json --declaration -d --declarationDir dist"
   },
   "author": "Michael McAnulty",
   "license": "ISC",
