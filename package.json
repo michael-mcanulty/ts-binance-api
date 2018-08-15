@@ -10,6 +10,10 @@
     "debug": "tsc -p tsconfig.json && node --inspect --debug-brk  dist/index.js",
     "compile": "tsc -p tsconfig.json --declaration -d --declarationDir dist"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michael-mcanulty/ts-binance-api.git"
+  },
   "author": "Michael McAnulty",
   "license": "ISC",
   "dependencies": {
