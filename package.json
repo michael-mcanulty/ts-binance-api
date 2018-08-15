@@ -8,7 +8,7 @@
     "start": "tsc -p tsconfig.json && node dist/index.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "debug": "tsc -p tsconfig.json && node --inspect --debug-brk  dist/index.js",
-    "sync": "cd .. && cd binance-bot-cli/dist && npm run-script start --repo=ts-binance-api"
+    "sync": "cd .. && cd binance-bot-cli/dist && node Cli.js --repo=ts-binance-api"
   },
   "author": "Michael McAnulty",
   "license": "ISC",
