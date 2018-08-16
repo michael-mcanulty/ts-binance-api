@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const EErrorType_1 = require("./Email/Enums/EErrorType");
-const allErrors_1 = require("./allErrors");
+const HttpErrorHandler_1 = require("./HttpErrorHandler");
 class HttpError extends Error {
     constructor(err) {
         super();
@@ -54,6 +54,6 @@ class HttpError extends Error {
         return result;
     }
 }
-HttpError.all = allErrors_1.default;
+HttpError.all = HttpErrorHandler_1.HttpErrorHandler.allErrors;
 exports.HttpError = HttpError;
 //# sourceMappingURL=HttpError.js.map

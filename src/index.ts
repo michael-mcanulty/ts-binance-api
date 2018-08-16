@@ -28,7 +28,6 @@ export {NodeMailer} from "./Error/Email/NodeMailer";
 export {NodeMailerAuth, ServiceOptions} from "./Error/Email/ServiceOptions";
 export {HttpErrorHandler} from "./Error/HttpErrorHandler";
 export {HttpError} from "./Error/HttpError";
-export {default as allErrors} from "./Error/allErrors";
 export {NodeMailerService, SendMail, Transport} from "./Error/Email/Types/Types";
 export {IPriceFilter} from "./ExchangeInfo/Interfaces/IPriceFilter";
 export {IMinNotional} from "./ExchangeInfo/Interfaces/IMinNotional";

@@ -1,10 +1,9 @@
 import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
-import allErrors from "./allErrors";
 
 export class HttpError extends Error {
-	public static all: HttpError[] = <HttpError[]>allErrors;
+	public static all: HttpError[] = <HttpError[]>HttpErrorHandler.allErrors;
 	code: number;
 	handler?: HttpErrorHandler;
 	message: string;

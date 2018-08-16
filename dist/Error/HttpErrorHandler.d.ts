@@ -16,6 +16,11 @@ export declare class HttpErrorHandler {
     sendEmail: boolean;
     type: string;
     url: string;
+    static allErrors: {
+        "message": string;
+        "code": number;
+        handler: HttpErrorHandler;
+    }[];
     handleError(error: BinanceError | HttpError): Promise<any>;
     constructor(code: number, endpoint: string, port: number, type: EErrorType, method: EMethod, sendEmail: boolean, emailAddress?: string, emailOptions?: IEmailOptions);
 }
