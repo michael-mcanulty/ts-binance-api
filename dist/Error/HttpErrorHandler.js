@@ -13,20 +13,6 @@ const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
 const EErrorType_1 = require("./Email/Enums/EErrorType");
 class HttpErrorHandler {
-    constructor(method, type, port, sendEmail, endpoint, recipientEmail) {
-        this.method = EMethod_1.EMethod[method] || EMethod_1.EMethod[EMethod_1.EMethod.GET];
-        this.type = EErrorType_1.EErrorType[type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
-        this.port = port || 4001;
-        this.sendEmail = sendEmail || false;
-        this.endpoint = endpoint || "http://localhost";
-        this.recipientEmail = recipientEmail;
-        if (this.endpoint && this.port) {
-            this._url = `${this.endpoint}:${this.port}`;
-        }
-        else {
-            this._url = null;
-        }
-    }
     get url() {
         return `${this.endpoint}:${this.port}`;
     }
@@ -64,36 +50,20 @@ class HttpErrorHandler {
             }
         }));
     }
+    constructor(type, method, port, sendEmail, endpoint, recipientEmail) {
+        this.type = EErrorType_1.EErrorType[type];
+        this.method = EMethod_1.EMethod[method] || EMethod_1.EMethod[EMethod_1.EMethod.GET];
+        this.port = port || 4001;
+        this.sendEmail = sendEmail || false;
+        this.endpoint = endpoint || "http://localhost";
+        this.recipientEmail = recipientEmail;
+        if (this.endpoint && this.port) {
+            this._url = `${this.endpoint}:${this.port}`;
+        }
+        else {
+            this._url = null;
+        }
+    }
 }
-HttpErrorHandler.allErrors = [
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-    new HttpErrorHandler(EMethod_1.EMethod.GET, EErrorType_1.EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com")
-];
 exports.HttpErrorHandler = HttpErrorHandler;
 //# sourceMappingURL=HttpErrorHandler.js.map

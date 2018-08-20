@@ -107,7 +107,7 @@ class BotWebsocket {
                 this.isAlive = yield BotWebsocket.Instance.rest.ping();
             }
             catch (err) {
-                let error = new HttpError_1.HttpError({ msg: 'DISCONNECTED', code: -1001 });
+                let error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
                 BotWebsocket._ws.close(error.code, error.message);
             }
         }), 3000);

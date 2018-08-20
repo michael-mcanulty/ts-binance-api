@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const EErrorType_1 = require("./Email/Enums/EErrorType");
+const HttpErrorHandler_1 = require("./HttpErrorHandler");
 class HttpError extends Error {
     constructor(code, message, handler) {
         super();
@@ -16,20 +17,35 @@ class HttpError extends Error {
         this.message = message;
         if (handler) {
             this.handler = handler;
-            (() => __awaiter(this, void 0, void 0, function* () {
-                yield this.handler.handleError(code, message);
-            }))();
+        }
+        else {
+            let errHandler = HttpError._getErrorHandler(this);
+            if (errHandler !== null) {
+                this.handler = errHandler;
+                (() => __awaiter(this, void 0, void 0, function* () {
+                    yield this.handler.handleError(code, message);
+                }))();
+            }
         }
     }
     static _getErrorByCode(code) {
         let result;
-        if (HttpError.binanceErrors.length > 0) {
-            let filtered = HttpError.binanceErrors.filter(handler => handler.code === code);
+        if (HttpError.allErrors.length > 0) {
+            let filtered = HttpError.allErrors.filter(handler => handler.code === code);
             if (filtered && filtered.length > 0) {
                 result = filtered[0];
             }
         }
         return result;
+    }
+    static _getErrorHandler(error) {
+        let match = HttpError.allErrors.filter(err => err.code === error.code);
+        if (Array.isArray(match[0]) && match.length > 0 && typeof match[0].handler === "object") {
+            return match[0].handler;
+        }
+        else {
+            return null;
+        }
     }
     static _getErrorParameters(err) {
         let code = parseInt(err.code.toString());
@@ -73,35 +89,35 @@ class HttpError extends Error {
         return _httpError;
     }
 }
-HttpError.binanceErrors = [
-    new HttpError(-1000, "UNKNOWN"),
-    new HttpError(-1001, "DISCONNECTED"),
-    new HttpError(-1002, "UNAUTHORIZED"),
-    new HttpError(-1003, "TOO_MANY_REQUESTS"),
-    new HttpError(-1006, "UNEXPECTED_RESP"),
-    new HttpError(-1007, "TIMEOUT"),
-    new HttpError(-1013, "INVALID_MESSAGE"),
-    new HttpError(-1014, "UNKNOWN_ORDER_COMPOSITION"),
-    new HttpError(-1015, "TOO_MANY_ORDERS"),
-    new HttpError(-1016, "SERVICE_SHUTTING_DOWN"),
-    new HttpError(-1020, "UNSUPPORTED_OPERATION"),
-    new HttpError(-1021, "INVALID_TIMESTAMP"),
-    new HttpError(-1022, "INVALID_SIGNATURE"),
-    new HttpError(-1100, "ILLEGAL_CHARS"),
-    new HttpError(-1101, "TOO_MANY_PARAMETERS"),
-    new HttpError(-1102, "MANDATORY_PARAM_EMPTY_OR_MALFORMED"),
-    new HttpError(-1103, "UNKNOWN_PARAM"),
-    new HttpError(-1104, "UNREAD_PARAMETERS"),
-    new HttpError(-1105, "PARAM_EMPTY"),
-    new HttpError(-1106, "PARAM_NOT_REQUIRED"),
-    new HttpError(-1130, "INVALID_PARAMETER"),
-    new HttpError(-2008, "BAD_API_ID"),
-    new HttpError(-2009, "DUPLICATE_API_KEY_DESC"),
-    new HttpError(-2010, "INSUFFICIENT_BALANCE"),
-    new HttpError(-2012, "CANCEL_ALL_FAIL"),
-    new HttpError(-2013, "NO_SUCH_ORDER"),
-    new HttpError(-2014, "BAD_API_KEY_FMT"),
-    new HttpError(-2015, "REJECTED_MBX_KEY")
+HttpError.allErrors = [
+    new HttpError(-1000, "UNKNOWN", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1001, "DISCONNECTED", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1002, "UNAUTHORIZED", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1003, "TOO_MANY_REQUESTS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1006, "UNEXPECTED_RESP", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1007, "TIMEOUT", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1013, "INVALID_MESSAGE", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1014, "UNKNOWN_ORDER_COMPOSITION", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1015, "TOO_MANY_ORDERS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1016, "SERVICE_SHUTTING_DOWN", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1020, "UNSUPPORTED_OPERATION", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1021, "INVALID_TIMESTAMP", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1022, "INVALID_SIGNATURE", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1100, "ILLEGAL_CHARS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1101, "TOO_MANY_PARAMETERS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1102, "MANDATORY_PARAM_EMPTY_OR_MALFORMED", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1103, "UNKNOWN_PARAM", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1104, "UNREAD_PARAMETERS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1105, "PARAM_EMPTY", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1106, "PARAM_NOT_REQUIRED", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1130, "INVALID_PARAMETER", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2009, "DUPLICATE_API_KEY_DESC", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance))
 ];
 exports.HttpError = HttpError;
 //# sourceMappingURL=HttpError.js.map

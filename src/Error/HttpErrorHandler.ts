@@ -7,36 +7,6 @@ import {EErrorType} from "./Email/Enums/EErrorType";
 
 export class HttpErrorHandler {
 	private static _emailService: NodeMailer;
-	public static allErrors: HttpErrorHandler[] = [
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com"),
-		new HttpErrorHandler(EMethod.GET, EErrorType.Binance, 4001, false, "http://localhost", "michael.mcanulty88@gmail.com")
-	];
 	static emailOptions?: IEmailOptions;
 	endpoint?: string;
 	method?: string;
@@ -44,7 +14,7 @@ export class HttpErrorHandler {
 	port?: number;
 	recipientEmail?: string;
 	sendEmail?: boolean;
-	type?: string;
+	type: string;
 
 	private readonly _url?: string;
 
@@ -90,16 +60,15 @@ export class HttpErrorHandler {
 	}
 
 	constructor(
+		type: EErrorType,
 		method?: EMethod,
-		type?: EErrorType,
 		port?: number,
 		sendEmail?: boolean,
 		endpoint?: string,
 		recipientEmail?: string
 	) {
+		this.type = EErrorType[type];
 		this.method = EMethod[method] || EMethod[EMethod.GET];
-		this.type = EErrorType[type] || EErrorType[EErrorType.Binance];
-
 		this.port = port || 4001;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint || "http://localhost";

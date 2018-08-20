@@ -5,7 +5,6 @@ import {IServerTime} from "./Interfaces/IServerTime";
 import {EMethod} from "./EMethod";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ITimestamp} from "./Interfaces/ITimestamp";
-import {BinanceError} from "../Error/BinanceError";
 import {Signed} from "./Signed";
 import {NewOrder} from "../Transaction/NewOrder";
 import {CancelOrder} from "../Transaction/CancelOrder";
@@ -44,28 +43,13 @@ export class BotHttp {
 
 	public fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError> {
 		return new Promise(async (resolve, reject) => {
-
 			try {
-				let err: HttpError;
 				let url: string = BotHttp.buildUrl(path, callOptions.noData, payload);
 				let res: Response = await BotHttp.fetch(url, callOptions);
 				let json = await res.json();
-				let binanceError: BinanceError;
-				let errObj: HttpError = <HttpError>{"message": res.statusText, "code": res.status};
-
-				if (json) {
-					binanceError = <BinanceError>json;
-				}
 
 				if (res.ok === false) {
-					if (!binanceError) {
-						err = new HttpError(errObj);
-						reject(err);
-					} else if (binanceError) {
-						err = new HttpError(binanceError);
-						reject(err);
-					}
-
+					new HttpError(parseInt(res.status.toString()), res.statusText);
 				} else {
 					resolve(<Response>json);
 				}

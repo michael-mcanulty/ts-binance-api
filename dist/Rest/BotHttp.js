@@ -37,24 +37,11 @@ class BotHttp {
     fetch(path, callOptions, payload) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let err;
                 let url = BotHttp.buildUrl(path, callOptions.noData, payload);
                 let res = yield BotHttp.fetch(url, callOptions);
                 let json = yield res.json();
-                let binanceError;
-                let errObj = { "message": res.statusText, "code": res.status };
-                if (json) {
-                    binanceError = json;
-                }
                 if (res.ok === false) {
-                    if (!binanceError) {
-                        err = new HttpError_1.HttpError(errObj);
-                        reject(err);
-                    }
-                    else if (binanceError) {
-                        err = new HttpError_1.HttpError(binanceError);
-                        reject(err);
-                    }
+                    new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
                 }
                 else {
                     resolve(json);
