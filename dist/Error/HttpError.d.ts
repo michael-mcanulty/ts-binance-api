@@ -1,13 +1,15 @@
-import { EErrorType } from "./Email/Enums/EErrorType";
 import { BinanceError } from "./BinanceError";
 import { HttpErrorHandler } from "./HttpErrorHandler";
 export declare class HttpError extends Error {
-    static all: HttpError[];
+    static allErrors: HttpError[];
     code: number;
     handler?: HttpErrorHandler;
     message: string;
-    static GetErrorByCode(code: number): HttpError;
-    static GetErrorType(err: BinanceError | HttpError): EErrorType;
+    private static _getErrorByCode(code);
+    private static _getErrorHandler(error);
+    private static _getErrorParameters(err);
+    private static _getErrorType(err);
     static GetTimeoutFromIPBannedMsg(err: BinanceError): number;
-    constructor(err: BinanceError | HttpError);
+    static fromError(err: HttpError | BinanceError): HttpError;
+    constructor(code: number, message: string, handler?: HttpErrorHandler);
 }
