@@ -1,4 +1,4 @@
-import {HttpErrorHandler} from "../../../../src/Error/HttpErrorHandler";
+import {HttpErrorHandler} from "../../../../src/Error/HttpError";
 
 export class IHttpError{
 	code: number;
