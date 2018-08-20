@@ -3,15 +3,44 @@ import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
 
 export class HttpError extends Error {
-	public static all: HttpError[] = <HttpError[]>HttpErrorHandler.allErrors;
+	public static binanceErrors: HttpError[] = [
+		new HttpError(-1000, "UNKNOWN"),
+		new HttpError(-1001, "DISCONNECTED"),
+		new HttpError(-1002, "UNAUTHORIZED"),
+		new HttpError(-1003, "TOO_MANY_REQUESTS"),
+		new HttpError(-1006, "UNEXPECTED_RESP"),
+		new HttpError(-1007, "TIMEOUT"),
+		new HttpError(-1013, "INVALID_MESSAGE"),
+		new HttpError(-1014, "UNKNOWN_ORDER_COMPOSITION"),
+		new HttpError(-1015, "TOO_MANY_ORDERS"),
+		new HttpError(-1016, "SERVICE_SHUTTING_DOWN"),
+		new HttpError(-1020, "UNSUPPORTED_OPERATION"),
+		new HttpError(-1021, "INVALID_TIMESTAMP"),
+		new HttpError(-1022, "INVALID_SIGNATURE"),
+		new HttpError(-1100, "ILLEGAL_CHARS"),
+		new HttpError(-1101, "TOO_MANY_PARAMETERS"),
+		new HttpError(-1102, "MANDATORY_PARAM_EMPTY_OR_MALFORMED"),
+		new HttpError(-1103, "UNKNOWN_PARAM"),
+		new HttpError(-1104, "UNREAD_PARAMETERS"),
+		new HttpError(-1105, "PARAM_EMPTY"),
+		new HttpError(-1106, "PARAM_NOT_REQUIRED"),
+		new HttpError(-1130, "INVALID_PARAMETER"),
+		new HttpError(-2008, "BAD_API_ID"),
+		new HttpError(-2009, "DUPLICATE_API_KEY_DESC"),
+		new HttpError(-2010, "INSUFFICIENT_BALANCE"),
+		new HttpError(-2012, "CANCEL_ALL_FAIL"),
+		new HttpError(-2013, "NO_SUCH_ORDER"),
+		new HttpError(-2014, "BAD_API_KEY_FMT"),
+		new HttpError(-2015, "REJECTED_MBX_KEY")
+	];
 	code: number;
 	handler?: HttpErrorHandler;
 	message: string;
 
-	public static GetErrorByCode(code: number): HttpError {
+	private static _getErrorByCode(code: number): HttpError {
 		let result: HttpError;
-		if (HttpError.all.length > 0) {
-			let filtered: HttpError[] = HttpError.all.filter(handler => handler.code === code);
+		if (HttpError.binanceErrors.length > 0) {
+			let filtered: HttpError[] = HttpError.binanceErrors.filter(handler => handler.code === code);
 			if (filtered && filtered.length > 0) {
 				result = filtered[0];
 			}
@@ -19,7 +48,15 @@ export class HttpError extends Error {
 		return result;
 	}
 
-	public static GetErrorType(err: BinanceError | HttpError): EErrorType {
+	private static _getErrorParameters(err: BinanceError | HttpError): {code: number, message: string}{
+		let code: number = parseInt(err.code.toString());
+		let type: EErrorType = HttpError._getErrorType(err);
+		let message: string = (type === EErrorType.Binance) ? err['msg'] : err['message'];
+		return {code: code, message: message};
+	}
+
+	private static _getErrorType(err: BinanceError | HttpError): EErrorType {
+		//parseInt(code.toString());
 		let code: number = parseInt(err.code.toString());
 		let isBinance: boolean = false;
 		if (typeof err['msg'] === "string" && code < 0) {
@@ -45,19 +82,26 @@ export class HttpError extends Error {
 		return result;
 	}
 
-	constructor(err: BinanceError | HttpError) {
+	public static fromError(err: HttpError|BinanceError): HttpError{
+		let code: number = parseInt(err.code.toString());
+		let type: EErrorType = HttpError._getErrorType(err);
+		let message: string = (type === EErrorType.Binance) ? err['msg'] : err['message'];
+		let _httpError: HttpError = new HttpError(code, message);
+		if(type === EErrorType.Binance && typeof err['handler']==="object"){
+			_httpError.handler = err['handler'];
+		}
+		return _httpError;
+	}
+
+	constructor(code: number, message: string, handler?:HttpErrorHandler) {
 		super();
-		this.code = parseInt(err.code.toString());
-		let type: EErrorType = HttpError.GetErrorType(err);
-		this.message = (type === EErrorType.Binance) ? err['msg'] : err['message'];
-		let error: HttpError = HttpError.GetErrorByCode(this.code);
-		if (error) {
-			this.handler = error.handler;
-			if (error.handler && (!error.handler.code || !error.handler.message)) {
-				error.handler.code = this.code;
-				error.handler.message = this.message;
-				error.handler.handleError(error);
-			}
+		this.code = code;
+		this.message = message;
+		if (handler) {
+			this.handler = handler;
+			(async()=>{
+				await this.handler.handleError(code, message);
+			})()
 		}
 	}
 }

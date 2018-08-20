@@ -1,1 +1,1 @@
-{"version":3,"file":"IMessageOptions.js","sourceRoot":"","sources":["../../../../src/Error/Email/Interfaces/IMessageOptions.ts"],"names":[],"mappings":"","sourcesContent":["export interface IMessageOptions {\r\n\tfrom: string;\r\n\tsubject: string;\r\n\ttext: string;\r\n\tto: string;\r\n}"]}
+{"version":3,"file":"IMessageOptions.js","sourceRoot":"","sources":["../../../../src/Error/Email/Interfaces/IMessageOptions.ts"],"names":[],"mappings":"","sourcesContent":["export interface IMessageOptions {\n\tfrom: string;\n\tsubject: string;\n\ttext: string;\n\tto: string;\n}"]}

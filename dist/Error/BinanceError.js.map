@@ -1,1 +1,1 @@
-{"version":3,"file":"BinanceError.js","sourceRoot":"","sources":["../../src/Error/BinanceError.ts"],"names":[],"mappings":";;AAAA;CAGC;AAHD,oCAGC","sourcesContent":["export class BinanceError {\r\n\tcode: number;\r\n\tmsg: string;\r\n}"]}
+{"version":3,"file":"BinanceError.js","sourceRoot":"","sources":["../../src/Error/BinanceError.ts"],"names":[],"mappings":";;AAAA;CAGC;AAHD,oCAGC","sourcesContent":["export class BinanceError {\n\tcode: number;\n\tmsg: string;\n}"]}
