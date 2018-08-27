@@ -20,7 +20,6 @@ class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
-        this.options = options;
         this._reconOptions = {};
         this._reconOptions.connectionTimeout = 4E3;
         this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;
@@ -28,9 +27,6 @@ class BotWebsocket extends Rest_1.Rest {
         this._reconOptions.maxReconnectionDelay = 10E3;
         this._reconOptions.maxRetries = Infinity;
         this._reconOptions.minReconnectionDelay = 4E3;
-    }
-    static get Instance() {
-        return this._INSTANCE;
     }
     get url() {
         return this._url;
@@ -60,8 +56,9 @@ class BotWebsocket extends Rest_1.Rest {
         return (options) => w.close(1000, 'Close handle was called');
     }
     balances(callback) {
+        const self = this;
         const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
-        BotWebsocket.Instance.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+        self.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
             const listenKey = lk.listenKey;
             const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
             w.onmessage = (msg) => {
@@ -73,11 +70,11 @@ class BotWebsocket extends Rest_1.Rest {
                     callback(accountInfo);
                 }
             };
-            const int = setInterval(keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey), 50e3);
-            keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey)();
+            const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
+            keepStreamAlive(self.keepDataStream, listenKey)();
             return () => __awaiter(this, void 0, void 0, function* () {
                 clearInterval(int);
-                yield BotWebsocket.Instance.closeDataStream();
+                yield self.closeDataStream();
                 w.close(1000, 'Close handle was called');
             });
         }));
@@ -101,10 +98,11 @@ class BotWebsocket extends Rest_1.Rest {
         });
         return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
     }
-    static heartbeat() {
+    heartbeat() {
+        const self = this;
         setInterval(() => __awaiter(this, void 0, void 0, function* () {
             try {
-                this.isAlive = yield BotWebsocket.Instance.ping();
+                BotWebsocket.isAlive = yield self.ping();
             }
             catch (err) {
                 let error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
@@ -120,8 +118,9 @@ class BotWebsocket extends Rest_1.Rest {
         }
     }
     orders(callback) {
+        const self = this;
         const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
-        BotWebsocket.Instance.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+        self.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
             const listenKey = lk.listenKey;
             const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
             w.onmessage = (msg) => {
@@ -133,11 +132,11 @@ class BotWebsocket extends Rest_1.Rest {
                     callback(executionReport);
                 }
             };
-            const int = setInterval(keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey), 50e3);
-            keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey)();
+            const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
+            keepStreamAlive(self.keepDataStream, listenKey)();
             return () => __awaiter(this, void 0, void 0, function* () {
                 clearInterval(int);
-                yield BotWebsocket.Instance.closeDataStream();
+                yield self.closeDataStream();
                 w.close(1000, 'Close handle was called');
             });
         }));
@@ -152,8 +151,9 @@ class BotWebsocket extends Rest_1.Rest {
         this._getTickers(ticksToPrices);
     }
     user(callback) {
+        const self = this;
         const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.call(this, { listenKey }); });
-        BotWebsocket.Instance.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+        self.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
             const listenKey = lk.listenKey;
             const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
             w.onmessage = (msg) => {
@@ -171,11 +171,11 @@ class BotWebsocket extends Rest_1.Rest {
                     callback(accountInfo);
                 }
             };
-            const int = setInterval(keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey), 50e3);
-            keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey)();
+            const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
+            keepStreamAlive(self.keepDataStream, listenKey)();
             return () => __awaiter(this, void 0, void 0, function* () {
                 clearInterval(int);
-                yield BotWebsocket.Instance.closeDataStream();
+                yield self.closeDataStream();
                 w.close(1000, 'Close handle was called');
             });
         }));

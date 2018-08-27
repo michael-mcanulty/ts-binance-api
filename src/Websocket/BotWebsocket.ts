@@ -15,14 +15,9 @@ import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
-	private static _INSTANCE: BotWebsocket;
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private static _ws: ReconnectingWebSocket;
 	private static isAlive: boolean = false;
-	public options: IBinanceOptions;
-	public static get Instance() {
-		return this._INSTANCE;
-	}
 
 	private _url: string;
 
@@ -58,8 +53,9 @@ export class BotWebsocket extends Rest{
 	}
 
 	public balances(callback: Function): void {
+		const self = this;
 		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
-		BotWebsocket.Instance.getDataStream().then(async lk => {
+			self.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
@@ -72,12 +68,12 @@ export class BotWebsocket extends Rest{
 				}
 			};
 
-			const int = setInterval(keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey)();
+			const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(self.keepDataStream, listenKey)();
 
 			return async () => {
 				clearInterval(int);
-				await BotWebsocket.Instance.closeDataStream();
+				await self.closeDataStream();
 				w.close(1000, 'Close handle was called');
 			};
 		});
@@ -104,10 +100,11 @@ export class BotWebsocket extends Rest{
 		return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
 	}
 
-	private static heartbeat(): void {
+	private heartbeat(): void {
+		const self = this;
 		setInterval(async () => {
 			try {
-				this.isAlive = await BotWebsocket.Instance.ping();
+				BotWebsocket.isAlive = await self.ping();
 			} catch (err) {
 				let error: HttpError = new HttpError(-1001, 'DISCONNECTED');
 				BotWebsocket._ws.close(error.code, error.message);
@@ -124,8 +121,9 @@ export class BotWebsocket extends Rest{
 	}
 
 	public orders(callback: Function): void {
+		const self = this;
 		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
-		BotWebsocket.Instance.getDataStream().then(async lk => {
+		self.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
@@ -138,12 +136,12 @@ export class BotWebsocket extends Rest{
 				}
 			};
 
-			const int = setInterval(keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey)();
+			const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(self.keepDataStream, listenKey)();
 
 			return async () => {
 				clearInterval(int);
-				await BotWebsocket.Instance.closeDataStream();
+				await self.closeDataStream();
 				w.close(1000, 'Close handle was called');
 			};
 		});
@@ -161,8 +159,9 @@ export class BotWebsocket extends Rest{
 	}
 
 	public user(callback: Function): void {
+		const self = this;
 		const keepStreamAlive = (method, listenKey) => async () => await method.call(this, {listenKey});
-		BotWebsocket.Instance.getDataStream().then(async lk => {
+		self.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
@@ -180,12 +179,12 @@ export class BotWebsocket extends Rest{
 				}
 			};
 
-			const int = setInterval(keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey), 50e3);
-			keepStreamAlive(BotWebsocket.Instance.keepDataStream, listenKey)();
+			const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
+			keepStreamAlive(self.keepDataStream, listenKey)();
 
 			return async () => {
 				clearInterval(int);
-				await BotWebsocket.Instance.closeDataStream();
+				await self.closeDataStream();
 				w.close(1000, 'Close handle was called');
 			};
 		});
@@ -193,7 +192,6 @@ export class BotWebsocket extends Rest{
 
 	constructor(options: IBinanceOptions) {
 		super(options);
-		this.options = options;
 		this._reconOptions = <IReconOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
 		this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;
