@@ -192,6 +192,7 @@ export class BotWebsocket extends Rest{
 
 	constructor(options: IBinanceOptions) {
 		super(options);
+		this.heartbeat();
 		this._reconOptions = <IReconOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
 		this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;

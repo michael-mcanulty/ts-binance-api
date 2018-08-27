@@ -20,6 +20,7 @@ class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
+        this.heartbeat();
         this._reconOptions = {};
         this._reconOptions.connectionTimeout = 4E3;
         this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;
