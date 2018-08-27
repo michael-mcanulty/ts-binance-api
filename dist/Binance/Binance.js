@@ -5,7 +5,7 @@ class Binance {
     constructor(options) {
         Binance.options = options;
         this.rest = new __1.Rest(options);
-        this.websocket = new __1.BotWebsocket(options, this.rest);
+        this.websocket = new __1.BotWebsocket(options);
     }
 }
 Binance.INTERVALS = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
@@ -73,6 +73,7 @@ Binance.intervalToMinutes = {
     '3d': 60 * 24 * 3,
     '1w': 60 * 24 * 7,
 };
+Binance.markets = [];
 Binance.minutesToInterval = {
     1: '1m',
     3: '3m',

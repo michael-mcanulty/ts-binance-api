@@ -68,7 +68,7 @@ export class Binance {
 		'3d': 60 * 24 * 3,
 		'1w': 60 * 24 * 7,
 	};
-	public static markets: Market[];
+	public static markets: Market[]=[];
 	public static minutesToInterval: any = {
 		1: '1m',
 		3: '3m',
@@ -92,6 +92,6 @@ export class Binance {
 	constructor(options: IBinanceOptions) {
 		Binance.options = options;
 		this.rest = new Rest(options);
-		this.websocket = new BotWebsocket(options, this.rest);
+		this.websocket = new BotWebsocket(options);
 	}
 }
