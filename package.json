@@ -7,8 +7,9 @@
   "scripts": {
     "start": "tsc -p tsconfig.json && node dist/index.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
-    "debug": "tsc -p tsconfig.json && node --inspect --debug-brk  dist/index.js",
-    "sync": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node dist/Cli.js"
+    "debug": "tsc -p tsconfig.json && node --inspect --debug-brk dist/index.js",
+    "sync": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node dist/Cli.js",
+    "sync-debug": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node  --inspect --debug-brk dist/Cli.js --repo=ts-binance-api"
   },
   "author": "Michael McAnulty",
   "license": "ISC",
