@@ -5,17 +5,19 @@ import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./Email/NodeMailer";
 import {IEmailOptions} from "./Email/Interfaces/IServiceOprtions";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
+import {ServiceOptions} from "./Email/ServiceOptions";
 
 export class HttpErrorHandler {
 	private static _emailService: NodeMailer;
-	static emailOptions?: IEmailOptions;
+	emailOptions?: IEmailOptions;
 	endpoint?: string;
 	method?: string;
 	payload?: any[];
 	port?: number;
-	recipientEmail?: string;
 	sendEmail?: boolean;
+	msgOptions?: IMessageOptions;
 	type: string;
+	msgServiceOptions?: ServiceOptions;
 
 	private readonly _url?: string;
 
@@ -35,23 +37,20 @@ export class HttpErrorHandler {
 					url = BotHttp.buildUrl(this._url, false, this.payload);
 				}
 
-				if (this.sendEmail && HttpErrorHandler.emailOptions) {
-					let msgOptions: IMessageOptions = <IMessageOptions>{};
-					HttpErrorHandler._emailService = new NodeMailer(HttpErrorHandler.emailOptions);
-					msgOptions.from = this.recipientEmail;
-					msgOptions.to = this.recipientEmail;
-					msgOptions.subject = `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
-					msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`;
+				if (this.sendEmail && this.emailOptions) {
+					HttpErrorHandler._emailService = new NodeMailer();
+					this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.msgOptions.subject;
+					this.msgOptions.text =(!this.msgOptions.text || this.msgOptions.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.msgOptions.text;
 
 					try {
-						await HttpErrorHandler._emailService.sendEmail(msgOptions);
+						await HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
 					} catch (err) {
 						reject(err);
 					}
 				}
 				try {
 					let fetch: any = {};
-					//fetch = await BotHttp.fetch(url, reqOpts);
+					//fetch = await BotHttp.fetch(url, reqOpts);//TODO Uncomment
 					resolve(fetch);
 				} catch (err) {
 					reject(err);
@@ -66,14 +65,14 @@ export class HttpErrorHandler {
 		port?: number,
 		sendEmail?: boolean,
 		endpoint?: string,
-		recipientEmail?: string
+		msgOptions?: IMessageOptions,
+		msgServiceOptions?: ServiceOptions
 	) {
 		this.type = EErrorType[type];
 		this.method = EMethod[method] || EMethod[EMethod.GET];
 		this.port = port || 4001;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint || "http://localhost";
-		this.recipientEmail = recipientEmail;
 
 		if (this.endpoint && this.port) {
 			this._url = `${this.endpoint}:${this.port}`;

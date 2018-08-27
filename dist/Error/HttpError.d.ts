@@ -2,20 +2,23 @@ import { EErrorType } from "./Email/Enums/EErrorType";
 import { BinanceError } from "./BinanceError";
 import { EMethod } from "../Rest/EMethod";
 import { IEmailOptions } from "./Email/Interfaces/IServiceOprtions";
+import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
+import { ServiceOptions } from "./Email/ServiceOptions";
 export declare class HttpErrorHandler {
     private static _emailService;
-    static emailOptions?: IEmailOptions;
+    emailOptions?: IEmailOptions;
     endpoint?: string;
     method?: string;
     payload?: any[];
     port?: number;
-    recipientEmail?: string;
     sendEmail?: boolean;
+    msgOptions?: IMessageOptions;
     type: string;
+    msgServiceOptions?: ServiceOptions;
     private readonly _url?;
     readonly url: string;
     handleError(code: number, message: string): Promise<any>;
-    constructor(type: EErrorType, method?: EMethod, port?: number, sendEmail?: boolean, endpoint?: string, recipientEmail?: string);
+    constructor(type: EErrorType, method?: EMethod, port?: number, sendEmail?: boolean, endpoint?: string, msgOptions?: IMessageOptions, msgServiceOptions?: ServiceOptions);
 }
 export declare class HttpError extends Error {
     static allErrors: HttpError[];

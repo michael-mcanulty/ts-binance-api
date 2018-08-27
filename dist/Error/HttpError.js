@@ -26,15 +26,12 @@ class HttpErrorHandler {
                 if (this.payload && this.payload.length > 0) {
                     url = BotHttp_1.BotHttp.buildUrl(this._url, false, this.payload);
                 }
-                if (this.sendEmail && HttpErrorHandler.emailOptions) {
-                    let msgOptions = {};
-                    HttpErrorHandler._emailService = new NodeMailer_1.NodeMailer(HttpErrorHandler.emailOptions);
-                    msgOptions.from = this.recipientEmail;
-                    msgOptions.to = this.recipientEmail;
-                    msgOptions.subject = `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}`;
-                    msgOptions.text = `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`;
+                if (this.sendEmail && this.emailOptions) {
+                    HttpErrorHandler._emailService = new NodeMailer_1.NodeMailer();
+                    this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.msgOptions.subject;
+                    this.msgOptions.text = (!this.msgOptions.text || this.msgOptions.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.msgOptions.text;
                     try {
-                        yield HttpErrorHandler._emailService.sendEmail(msgOptions);
+                        yield HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
                     }
                     catch (err) {
                         reject(err);
@@ -50,13 +47,12 @@ class HttpErrorHandler {
             }
         }));
     }
-    constructor(type, method, port, sendEmail, endpoint, recipientEmail) {
+    constructor(type, method, port, sendEmail, endpoint, msgOptions, msgServiceOptions) {
         this.type = EErrorType_1.EErrorType[type];
         this.method = EMethod_1.EMethod[method] || EMethod_1.EMethod[EMethod_1.EMethod.GET];
         this.port = port || 4001;
         this.sendEmail = sendEmail || false;
         this.endpoint = endpoint || "http://localhost";
-        this.recipientEmail = recipientEmail;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;
         }
