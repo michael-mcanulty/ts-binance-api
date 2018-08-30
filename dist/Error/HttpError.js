@@ -52,12 +52,14 @@ class HttpErrorHandler {
         }));
     }
     constructor(type, method, port, sendEmail, endpoint, msgOptions, msgServiceOptions) {
+        let msgOpts = {};
+        msgOpts.to = HttpErrorHandler.errorMsgRecipient;
         this.type = EErrorType_1.EErrorType[type];
         this.method = EMethod_1.EMethod[method];
         this.port = port;
         this.sendEmail = sendEmail || false;
         this.endpoint = endpoint;
-        this.msgOptions = msgOptions || HttpErrorHandler.emailMessageOpts;
+        this.msgOptions = msgOptions || msgOpts;
         this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.emailServiceOpts;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;

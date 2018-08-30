@@ -10,7 +10,7 @@ import {BBLogger} from "..";
 
 export class HttpErrorHandler {
 	private static _emailService: NodeMailer;
-	public static emailMessageOpts: IMessageOptions;
+	public static errorMsgRecipient: string;
 	public static emailServiceOpts: ServiceOptions;
 	emailOptions?: IServiceOptions;
 	endpoint?: string;
@@ -77,12 +77,14 @@ export class HttpErrorHandler {
 		msgOptions?: IMessageOptions,
 		msgServiceOptions?: ServiceOptions
 	) {
+		let msgOpts: IMessageOptions = <IMessageOptions>{};
+		msgOpts.to = HttpErrorHandler.errorMsgRecipient;
 		this.type = EErrorType[type];
 		this.method = EMethod[method];
 		this.port = port;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
-		this.msgOptions = msgOptions || HttpErrorHandler.emailMessageOpts;
+		this.msgOptions = msgOptions || msgOpts;
 		this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.emailServiceOpts;
 
 		if (this.endpoint && this.port) {
