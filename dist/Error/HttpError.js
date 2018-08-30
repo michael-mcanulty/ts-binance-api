@@ -12,6 +12,7 @@ const EErrorType_1 = require("./Email/Enums/EErrorType");
 const EMethod_1 = require("../Rest/EMethod");
 const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
+const __1 = require("..");
 class HttpErrorHandler {
     get url() {
         return `${this.endpoint}:${this.port}`;
@@ -26,33 +27,38 @@ class HttpErrorHandler {
                 if (this.payload && this.payload.length > 0) {
                     url = BotHttp_1.BotHttp.buildUrl(this._url, false, this.payload);
                 }
-                if (this.sendEmail && this.emailOptions) {
-                    HttpErrorHandler._emailService = new NodeMailer_1.NodeMailer();
-                    this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.msgOptions.subject;
-                    this.msgOptions.text = (!this.msgOptions.text || this.msgOptions.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.msgOptions.text;
-                    try {
-                        yield HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
-                    }
-                    catch (err) {
-                        reject(err);
-                    }
-                }
                 try {
                     let fetch = {};
-                    resolve(fetch);
+                    fetch = yield BotHttp_1.BotHttp.fetch(url, reqOpts);
                 }
                 catch (err) {
+                    __1.BBLogger.error(err);
                     reject(err);
                 }
             }
+            if (this.sendEmail && this.emailOptions && this.msgServiceOptions) {
+                HttpErrorHandler._emailService = new NodeMailer_1.NodeMailer();
+                this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.msgOptions.subject;
+                this.msgOptions.text = (!this.msgOptions.text || this.msgOptions.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.msgOptions.text;
+                try {
+                    yield HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
+                }
+                catch (err) {
+                    __1.BBLogger.error(err);
+                    reject(err);
+                }
+            }
+            resolve();
         }));
     }
     constructor(type, method, port, sendEmail, endpoint, msgOptions, msgServiceOptions) {
         this.type = EErrorType_1.EErrorType[type];
-        this.method = EMethod_1.EMethod[method] || EMethod_1.EMethod[EMethod_1.EMethod.GET];
-        this.port = port || 4001;
+        this.method = EMethod_1.EMethod[method];
+        this.port = port;
         this.sendEmail = sendEmail || false;
-        this.endpoint = endpoint || "http://localhost";
+        this.endpoint = endpoint;
+        this.msgOptions = msgOptions || HttpErrorHandler.defaultMsgOpts;
+        this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.defaultMsgServiceOpts;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;
         }

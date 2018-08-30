@@ -1,12 +1,14 @@
 import { EErrorType } from "./Email/Enums/EErrorType";
 import { BinanceError } from "./BinanceError";
 import { EMethod } from "../Rest/EMethod";
-import { IEmailOptions } from "./Email/Interfaces/IServiceOprtions";
+import { IServiceOptions } from "./Email/Interfaces/IServiceOptions";
 import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
 import { ServiceOptions } from "./Email/ServiceOptions";
 export declare class HttpErrorHandler {
     private static _emailService;
-    emailOptions?: IEmailOptions;
+    static defaultMsgOpts: IMessageOptions;
+    static defaultMsgServiceOpts: ServiceOptions;
+    emailOptions?: IServiceOptions;
     endpoint?: string;
     method?: string;
     payload?: any[];

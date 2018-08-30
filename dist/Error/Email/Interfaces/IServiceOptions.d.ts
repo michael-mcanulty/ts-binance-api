@@ -3,7 +3,7 @@ export interface IEmailAuth {
     pass: string;
     user: string;
 }
-export interface IEmailOptions {
+export interface IServiceOptions {
     auth: IEmailAuth;
     service: EServiceProviders;
 }

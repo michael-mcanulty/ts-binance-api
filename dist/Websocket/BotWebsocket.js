@@ -114,7 +114,7 @@ class BotWebsocket extends Rest_1.Rest {
     openWebSocket(url) {
         if (url) {
             this.url = url;
-            BotWebsocket._ws = new ReconnectingWebSocket_1.default(this.url, undefined, this._reconOptions);
+            BotWebsocket._ws = new ReconnectingWebSocket_1.default(this.url, this._reconOptions);
             return BotWebsocket._ws;
         }
     }

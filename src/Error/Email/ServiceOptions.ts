@@ -1,5 +1,5 @@
 import {EServiceProviders} from "./Enums/EServiceProviders";
-import {IEmailAuth, IEmailOptions} from "./Interfaces/IServiceOprtions";
+import {IEmailAuth, IServiceOptions} from "./Interfaces/IServiceOptions";
 
 export class NodeMailerAuth {
 	private _pass: string;
@@ -45,7 +45,7 @@ export class ServiceOptions {
 		this._service = value;
 	}
 
-	constructor(opts: IEmailOptions) {
+	constructor(opts: IServiceOptions) {
 		this.auth = new NodeMailerAuth(opts.auth);
 		this.service = EServiceProviders[opts.service];
 	}

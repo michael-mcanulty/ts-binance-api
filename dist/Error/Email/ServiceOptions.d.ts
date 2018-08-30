@@ -1,4 +1,4 @@
-import { IEmailAuth, IEmailOptions } from "./Interfaces/IServiceOprtions";
+import { IEmailAuth, IServiceOptions } from "./Interfaces/IServiceOptions";
 export declare class NodeMailerAuth {
     private _pass;
     pass: string;
@@ -11,5 +11,5 @@ export declare class ServiceOptions {
     auth: NodeMailerAuth;
     private _service;
     service: string;
-    constructor(opts: IEmailOptions);
+    constructor(opts: IServiceOptions);
 }

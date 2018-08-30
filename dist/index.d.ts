@@ -21,7 +21,7 @@ export { IBalanceRest } from "./Balances/Interfaces/IBalanceRest";
 export { IBinanceOptions } from "./Binance/Interfaces/IBinanceOptions";
 export { Binance } from "./Binance/Binance";
 export { BinanceError } from "./Error/BinanceError";
-export { IEmailAuth, IEmailOptions } from "./Error/Email/Interfaces/IServiceOprtions";
+export { IEmailAuth, IServiceOptions } from "./Error/Email/Interfaces/IServiceOptions";
 export { EServiceProviders } from "./Error/Email/Enums/EServiceProviders";
 export { EErrorType } from "./Error/Email/Enums/EErrorType";
 export { NodeMailer } from "./Error/Email/NodeMailer";

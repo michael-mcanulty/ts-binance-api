@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const WebSocket = require("ws");
 const Events_1 = require("./Events");
 class ReconnectingWebSocket {
-    constructor(url, protocols, options = {}) {
+    constructor(url, options = {}, protocols) {
         this._connectLock = false;
         this._listeners = {
             error: [],

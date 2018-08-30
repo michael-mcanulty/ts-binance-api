@@ -26,7 +26,7 @@ export default class ReconnectingWebSocket {
     private _connectLock;
     private _connectTimeout;
     private _listeners;
-    private _options;
+    private readonly _options;
     private readonly _protocols?;
     private _shouldReconnect;
     private _uptimeTimeout;
@@ -76,5 +76,5 @@ export default class ReconnectingWebSocket {
     reconnect(code?: number, reason?: string): void;
     removeEventListener<K extends keyof WebSocketEventMap>(type: K, listener: ((event: WebSocketEventMap[K]) => void)): void;
     send(data: string | ArrayBuffer | Blob | ArrayBufferView): void;
-    constructor(url: UrlProvider, protocols?: string | string[], options?: IReconOptions);
+    constructor(url: UrlProvider, options?: IReconOptions, protocols?: string | string[]);
 }

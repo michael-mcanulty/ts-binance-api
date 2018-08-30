@@ -42,7 +42,7 @@ export default class ReconnectingWebSocket {
 		open: [],
 		close: [],
 	};
-	private _options: IReconOptions;
+	private readonly _options: IReconOptions;
 	private readonly _protocols?: string | string[];
 	private _shouldReconnect = true;
 	private _uptimeTimeout: any;
@@ -426,7 +426,7 @@ export default class ReconnectingWebSocket {
 		}
 	}
 
-	constructor(url: UrlProvider, protocols?: string | string[], options: IReconOptions = {}) {
+	constructor(url: UrlProvider, options: IReconOptions = {}, protocols?: string | string[]) {
 		this._url = url;
 		this._protocols = protocols;
 		this._options = options;

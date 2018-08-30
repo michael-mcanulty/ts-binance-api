@@ -3,13 +3,16 @@ import {BinanceError} from "./BinanceError";
 import {EMethod} from "../Rest/EMethod";
 import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./Email/NodeMailer";
-import {IEmailOptions} from "./Email/Interfaces/IServiceOprtions";
+import {IServiceOptions} from "./Email/Interfaces/IServiceOptions";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
 import {ServiceOptions} from "./Email/ServiceOptions";
+import {BBLogger} from "..";
 
 export class HttpErrorHandler {
 	private static _emailService: NodeMailer;
-	emailOptions?: IEmailOptions;
+	public static defaultMsgOpts: IMessageOptions;
+	public static defaultMsgServiceOpts: ServiceOptions;
+	emailOptions?: IServiceOptions;
 	endpoint?: string;
 	method?: string;
 	payload?: any[];
@@ -27,6 +30,8 @@ export class HttpErrorHandler {
 
 	handleError(code: number, message: string): Promise<any> {
 		return new Promise(async (resolve, reject) => {
+
+			//posts message via REST
 			if (this.port !== null && this.method !== null) {
 				let url: string = this._url;
 				let reqOpts: RequestInit = <RequestInit>{};
@@ -37,25 +42,29 @@ export class HttpErrorHandler {
 					url = BotHttp.buildUrl(this._url, false, this.payload);
 				}
 
-				if (this.sendEmail && this.emailOptions) {
-					HttpErrorHandler._emailService = new NodeMailer();
-					this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.msgOptions.subject;
-					this.msgOptions.text =(!this.msgOptions.text || this.msgOptions.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.msgOptions.text;
-
-					try {
-						await HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
-					} catch (err) {
-						reject(err);
-					}
-				}
 				try {
 					let fetch: any = {};
-					//fetch = await BotHttp.fetch(url, reqOpts);//TODO Uncomment
-					resolve(fetch);
+					fetch = await BotHttp.fetch(url, reqOpts);
 				} catch (err) {
+					BBLogger.error(err);
 					reject(err);
 				}
 			}
+
+			//Send an email
+			if (this.sendEmail && this.emailOptions && this.msgServiceOptions) {
+				HttpErrorHandler._emailService = new NodeMailer();
+				this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.msgOptions.subject;
+				this.msgOptions.text =(!this.msgOptions.text || this.msgOptions.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.msgOptions.text;
+
+				try {
+					await HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
+				} catch (err) {
+					BBLogger.error(err);
+					reject(err);
+				}
+			}
+			resolve();
 		});
 	}
 
@@ -69,10 +78,12 @@ export class HttpErrorHandler {
 		msgServiceOptions?: ServiceOptions
 	) {
 		this.type = EErrorType[type];
-		this.method = EMethod[method] || EMethod[EMethod.GET];
-		this.port = port || 4001;
+		this.method = EMethod[method];
+		this.port = port;
 		this.sendEmail = sendEmail || false;
-		this.endpoint = endpoint || "http://localhost";
+		this.endpoint = endpoint;
+		this.msgOptions = msgOptions || HttpErrorHandler.defaultMsgOpts;
+		this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.defaultMsgServiceOpts;
 
 		if (this.endpoint && this.port) {
 			this._url = `${this.endpoint}:${this.port}`;
@@ -192,6 +203,8 @@ export class HttpError extends Error {
 			let errHandler: HttpErrorHandler|null = HttpError._getErrorHandler(this);
 			if(errHandler !== null){
 				this.handler = errHandler;
+
+				//TODO remove ifee
 				(async()=>{
 					await this.handler.handleError(code, message);
 				})()
