@@ -6,8 +6,8 @@ import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
 import { ServiceOptions } from "./Email/ServiceOptions";
 export declare class HttpErrorHandler {
     private static _emailService;
-    static defaultMsgOpts: IMessageOptions;
-    static defaultMsgServiceOpts: ServiceOptions;
+    static emailMessageOpts: IMessageOptions;
+    static emailServiceOpts: ServiceOptions;
     emailOptions?: IServiceOptions;
     endpoint?: string;
     method?: string;

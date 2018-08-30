@@ -1,5 +1,7 @@
 import { IBinanceOptions } from "./Interfaces/IBinanceOptions";
-import { BotWebsocket, Market, Rest } from "..";
+import { BotWebsocket } from "../Websocket/BotWebsocket";
+import { Market } from "../Market/Market";
+import { Rest } from "../Rest/Rest";
 export declare class Binance {
     static INTERVALS: string[];
     static candleAPILimits: {

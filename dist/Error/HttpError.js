@@ -57,8 +57,8 @@ class HttpErrorHandler {
         this.port = port;
         this.sendEmail = sendEmail || false;
         this.endpoint = endpoint;
-        this.msgOptions = msgOptions || HttpErrorHandler.defaultMsgOpts;
-        this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.defaultMsgServiceOpts;
+        this.msgOptions = msgOptions || HttpErrorHandler.emailMessageOpts;
+        this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.emailServiceOpts;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;
         }

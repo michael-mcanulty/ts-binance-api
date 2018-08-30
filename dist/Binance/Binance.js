@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const __1 = require("..");
+const BotWebsocket_1 = require("../Websocket/BotWebsocket");
+const Rest_1 = require("../Rest/Rest");
 class Binance {
     constructor(options) {
         Binance.options = options;
-        this.rest = new __1.Rest(options);
-        this.websocket = new __1.BotWebsocket(options);
+        this.rest = new Rest_1.Rest(options);
+        this.websocket = new BotWebsocket_1.BotWebsocket(options);
     }
 }
 Binance.INTERVALS = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
