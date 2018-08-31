@@ -18,7 +18,7 @@ export declare class HttpErrorHandler {
     private readonly _url?;
     readonly url: string;
     handleError(code: number, message: string): Promise<any>;
-    constructor(type: EErrorType, method?: EMethod, port?: number, sendEmail?: boolean, endpoint?: string, msgOptions?: IMessageOptions, msgServiceOptions?: ServiceOptions);
+    constructor(type: EErrorType, method?: EMethod, port?: number, sendEmail?: boolean, endpoint?: string, emailMsgOpts?: IMessageOptions, emailServiceOpts?: ServiceOptions);
 }
 export declare class HttpError extends Error {
     static allErrors: HttpError[];

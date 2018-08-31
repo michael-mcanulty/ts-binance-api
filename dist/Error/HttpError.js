@@ -51,7 +51,7 @@ class HttpErrorHandler {
             resolve();
         }));
     }
-    constructor(type, method, port, sendEmail, endpoint, msgOptions, msgServiceOptions) {
+    constructor(type, method, port, sendEmail, endpoint, emailMsgOpts, emailServiceOpts) {
         let msgOpts = {};
         msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
         this.type = EErrorType_1.EErrorType[type];
@@ -59,8 +59,8 @@ class HttpErrorHandler {
         this.port = port;
         this.sendEmail = sendEmail || false;
         this.endpoint = endpoint;
-        this.emailMsgOpts = msgOptions || msgOpts;
-        this.emailServiceOpts = msgServiceOptions || HttpErrorHandler.defaultEmailServiceOpts;
+        this.emailMsgOpts = emailMsgOpts || msgOpts;
+        this.emailServiceOpts = emailServiceOpts || HttpErrorHandler.defaultEmailServiceOpts;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;
         }

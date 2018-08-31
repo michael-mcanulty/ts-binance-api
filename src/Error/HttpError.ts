@@ -73,8 +73,8 @@ export class HttpErrorHandler {
 		port?: number,
 		sendEmail?: boolean,
 		endpoint?: string,
-		msgOptions?: IMessageOptions,
-		msgServiceOptions?: ServiceOptions
+		emailMsgOpts?: IMessageOptions,
+		emailServiceOpts?: ServiceOptions
 	) {
 		let msgOpts: IMessageOptions = <IMessageOptions>{};
 		msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
@@ -83,8 +83,8 @@ export class HttpErrorHandler {
 		this.port = port;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
-		this.emailMsgOpts = msgOptions || msgOpts;
-		this.emailServiceOpts = msgServiceOptions || HttpErrorHandler.defaultEmailServiceOpts;
+		this.emailMsgOpts = emailMsgOpts || msgOpts;
+		this.emailServiceOpts = emailServiceOpts || HttpErrorHandler.defaultEmailServiceOpts;
 
 		if (this.endpoint && this.port) {
 			this._url = `${this.endpoint}:${this.port}`;
