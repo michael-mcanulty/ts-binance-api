@@ -1,22 +1,20 @@
 import { EErrorType } from "./Email/Enums/EErrorType";
 import { BinanceError } from "./BinanceError";
 import { EMethod } from "../Rest/EMethod";
-import { IServiceOptions } from "./Email/Interfaces/IServiceOptions";
 import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
 import { ServiceOptions } from "./Email/ServiceOptions";
 export declare class HttpErrorHandler {
-    private static _emailService;
-    static errorMsgRecipient: string;
-    static emailServiceOpts: ServiceOptions;
-    emailOptions?: IServiceOptions;
+    private static _nodemailerService;
+    static defaultErrMsgRecipient: string;
+    static defaultEmailServiceOpts: ServiceOptions;
     endpoint?: string;
     method?: string;
     payload?: any[];
     port?: number;
     sendEmail?: boolean;
-    msgOptions?: IMessageOptions;
+    emailMsgOpts?: IMessageOptions;
     type: string;
-    msgServiceOptions?: ServiceOptions;
+    emailServiceOpts?: ServiceOptions;
     private readonly _url?;
     readonly url: string;
     handleError(code: number, message: string): Promise<any>;

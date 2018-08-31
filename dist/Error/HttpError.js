@@ -19,8 +19,8 @@ class HttpErrorHandler {
     }
     handleError(code, message) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            if (this.port !== null && this.method !== null) {
-                let url = this._url;
+            if (this.port && this.method) {
+                let url = this.url;
                 let reqOpts = {};
                 reqOpts.method = EMethod_1.EMethod[this.method];
                 reqOpts.headers = new Headers();
@@ -36,12 +36,12 @@ class HttpErrorHandler {
                     reject(err);
                 }
             }
-            if (this.sendEmail && this.emailOptions && this.msgServiceOptions) {
-                HttpErrorHandler._emailService = new NodeMailer_1.NodeMailer();
-                this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.msgOptions.subject;
-                this.msgOptions.text = (!this.msgOptions.text || this.msgOptions.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.msgOptions.text;
+            if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
+                HttpErrorHandler._nodemailerService = new NodeMailer_1.NodeMailer();
+                this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.emailMsgOpts.subject;
+                this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.emailMsgOpts.text;
                 try {
-                    yield HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
+                    yield HttpErrorHandler._nodemailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
                 }
                 catch (err) {
                     __1.BBLogger.error(err);
@@ -53,14 +53,14 @@ class HttpErrorHandler {
     }
     constructor(type, method, port, sendEmail, endpoint, msgOptions, msgServiceOptions) {
         let msgOpts = {};
-        msgOpts.to = HttpErrorHandler.errorMsgRecipient;
+        msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
         this.type = EErrorType_1.EErrorType[type];
         this.method = EMethod_1.EMethod[method];
         this.port = port;
         this.sendEmail = sendEmail || false;
         this.endpoint = endpoint;
-        this.msgOptions = msgOptions || msgOpts;
-        this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.emailServiceOpts;
+        this.emailMsgOpts = msgOptions || msgOpts;
+        this.emailServiceOpts = msgServiceOptions || HttpErrorHandler.defaultEmailServiceOpts;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;
         }

@@ -70,7 +70,5 @@ export {Price} from "./Transaction/Price";
 export {Order} from "./Transaction/Order";
 export {OpenOrder} from "./Transaction/OpenOrder";
 export {BotWebsocket} from "./Websocket/BotWebsocket";
-export {
-	EExecutionType, ENewOrderRespType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce
-}from "./Transaction/Interfaces/EOrderEnums";
+export {EExecutionType, ENewOrderRespType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce}from "./Transaction/Interfaces/EOrderEnums";
 export {CloseEvent, ErrorEvent, EventListener, WebSocketEventMap} from "./Websocket/ReconnectingWebSocket/Events";

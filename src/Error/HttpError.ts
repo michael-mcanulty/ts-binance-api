@@ -9,18 +9,17 @@ import {ServiceOptions} from "./Email/ServiceOptions";
 import {BBLogger} from "..";
 
 export class HttpErrorHandler {
-	private static _emailService: NodeMailer;
-	public static errorMsgRecipient: string;
-	public static emailServiceOpts: ServiceOptions;
-	emailOptions?: IServiceOptions;
+	private static _nodemailerService: NodeMailer;
+	public static defaultErrMsgRecipient: string;
+	public static defaultEmailServiceOpts: ServiceOptions;
 	endpoint?: string;
 	method?: string;
 	payload?: any[];
 	port?: number;
 	sendEmail?: boolean;
-	msgOptions?: IMessageOptions;
+	emailMsgOpts?: IMessageOptions;
 	type: string;
-	msgServiceOptions?: ServiceOptions;
+	emailServiceOpts?: ServiceOptions;
 
 	private readonly _url?: string;
 
@@ -32,8 +31,8 @@ export class HttpErrorHandler {
 		return new Promise(async (resolve, reject) => {
 
 			//posts message via REST
-			if (this.port !== null && this.method !== null) {
-				let url: string = this._url;
+			if (this.port && this.method) {
+				let url: string = this.url;
 				let reqOpts: RequestInit = <RequestInit>{};
 				reqOpts.method = EMethod[this.method];
 				reqOpts.headers = new Headers();
@@ -52,13 +51,13 @@ export class HttpErrorHandler {
 			}
 
 			//Send an email
-			if (this.sendEmail && this.emailOptions && this.msgServiceOptions) {
-				HttpErrorHandler._emailService = new NodeMailer();
-				this.msgOptions.subject = (!this.msgOptions.subject || this.msgOptions.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.msgOptions.subject;
-				this.msgOptions.text =(!this.msgOptions.text || this.msgOptions.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.msgOptions.text;
+			if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
+				HttpErrorHandler._nodemailerService = new NodeMailer();
+				this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.emailMsgOpts.subject;
+				this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.emailMsgOpts.text;
 
 				try {
-					await HttpErrorHandler._emailService.sendEmail(this.msgOptions, this.msgServiceOptions);
+					await HttpErrorHandler._nodemailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
 				} catch (err) {
 					BBLogger.error(err);
 					reject(err);
@@ -78,14 +77,14 @@ export class HttpErrorHandler {
 		msgServiceOptions?: ServiceOptions
 	) {
 		let msgOpts: IMessageOptions = <IMessageOptions>{};
-		msgOpts.to = HttpErrorHandler.errorMsgRecipient;
+		msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
 		this.type = EErrorType[type];
 		this.method = EMethod[method];
 		this.port = port;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
-		this.msgOptions = msgOptions || msgOpts;
-		this.msgServiceOptions = msgServiceOptions || HttpErrorHandler.emailServiceOpts;
+		this.emailMsgOpts = msgOptions || msgOpts;
+		this.emailServiceOpts = msgServiceOptions || HttpErrorHandler.defaultEmailServiceOpts;
 
 		if (this.endpoint && this.port) {
 			this._url = `${this.endpoint}:${this.port}`;
