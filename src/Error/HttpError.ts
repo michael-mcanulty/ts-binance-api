@@ -6,6 +6,8 @@ import {NodeMailer} from "./Email/NodeMailer";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
 import {ServiceOptions} from "./Email/ServiceOptions";
 import {BBLogger} from "..";
+import {IServiceOptions} from "./Email/Interfaces/IServiceOptions";
+import {EServiceProviders} from "./Email/Enums/EServiceProviders";
 
 export class HttpErrorHandler {
 	private static _nodeMailerService: NodeMailer;
@@ -82,8 +84,8 @@ export class HttpErrorHandler {
 		this.port = port;
 		this.sendEmail = sendEmail || false;
 		this.endpoint = endpoint;
-		this.emailMsgOpts = emailMsgOpts || msgOpts;
 		this.emailServiceOpts = emailServiceOpts || HttpErrorHandler.defaultEmailServiceOpts;
+		this.emailMsgOpts = emailMsgOpts || msgOpts;
 
 		if (this.endpoint && this.port) {
 			this._url = `${this.endpoint}:${this.port}`;
@@ -121,7 +123,7 @@ export class HttpError extends Error {
 		new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType.Binance)),
+		new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType.Binance, EMethod.GET, 3001, true, "http://localhost", <IMessageOptions>{to: "michael.mcanulty88@gmail.com"}, <IServiceOptions>{service: EServiceProviders.Gmail})),
 		new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler(EErrorType.Binance))
 	];
 	code: number;

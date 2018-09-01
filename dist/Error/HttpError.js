@@ -13,6 +13,7 @@ const EMethod_1 = require("../Rest/EMethod");
 const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
 const __1 = require("..");
+const EServiceProviders_1 = require("./Email/Enums/EServiceProviders");
 class HttpErrorHandler {
     get url() {
         return `${this.endpoint}:${this.port}`;
@@ -59,8 +60,8 @@ class HttpErrorHandler {
         this.port = port;
         this.sendEmail = sendEmail || false;
         this.endpoint = endpoint;
-        this.emailMsgOpts = emailMsgOpts || msgOpts;
         this.emailServiceOpts = emailServiceOpts || HttpErrorHandler.defaultEmailServiceOpts;
+        this.emailMsgOpts = emailMsgOpts || msgOpts;
         if (this.endpoint && this.port) {
             this._url = `${this.endpoint}:${this.port}`;
         }
@@ -176,7 +177,7 @@ HttpError.allErrors = [
     new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
-    new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType_1.EErrorType.Binance, EMethod_1.EMethod.GET, 3001, true, "http://localhost", { to: "michael.mcanulty88@gmail.com" }, { service: EServiceProviders_1.EServiceProviders.Gmail })),
     new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler(EErrorType_1.EErrorType.Binance))
 ];
 exports.HttpError = HttpError;
