@@ -3,13 +3,12 @@ import {BinanceError} from "./BinanceError";
 import {EMethod} from "../Rest/EMethod";
 import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./Email/NodeMailer";
-import {IServiceOptions} from "./Email/Interfaces/IServiceOptions";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
 import {ServiceOptions} from "./Email/ServiceOptions";
 import {BBLogger} from "..";
 
 export class HttpErrorHandler {
-	private static _nodemailerService: NodeMailer;
+	private static _nodeMailerService: NodeMailer;
 	public static defaultErrMsgRecipient: string;
 	public static defaultEmailServiceOpts: ServiceOptions;
 	endpoint?: string;
@@ -52,12 +51,12 @@ export class HttpErrorHandler {
 
 			//Send an email
 			if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
-				HttpErrorHandler._nodemailerService = new NodeMailer();
+				HttpErrorHandler._nodeMailerService = new NodeMailer();
 				this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.emailMsgOpts.subject;
 				this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.emailMsgOpts.text;
 
 				try {
-					await HttpErrorHandler._nodemailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
+					await HttpErrorHandler._nodeMailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
 				} catch (err) {
 					BBLogger.error(err);
 					reject(err);
@@ -129,7 +128,7 @@ export class HttpError extends Error {
 	handler?: HttpErrorHandler;
 	message: string;
 
-	private static _getErrorByCode(code: number): HttpError {
+	public static getErrorByCode(code: number): HttpError {
 		let result: HttpError;
 		if (HttpError.allErrors.length > 0) {
 			let filtered: HttpError[] = HttpError.allErrors.filter(handler => handler.code === code);

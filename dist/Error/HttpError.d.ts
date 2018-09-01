@@ -4,7 +4,7 @@ import { EMethod } from "../Rest/EMethod";
 import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
 import { ServiceOptions } from "./Email/ServiceOptions";
 export declare class HttpErrorHandler {
-    private static _nodemailerService;
+    private static _nodeMailerService;
     static defaultErrMsgRecipient: string;
     static defaultEmailServiceOpts: ServiceOptions;
     endpoint?: string;
@@ -25,7 +25,7 @@ export declare class HttpError extends Error {
     code: number;
     handler?: HttpErrorHandler;
     message: string;
-    private static _getErrorByCode(code);
+    static getErrorByCode(code: number): HttpError;
     private static _getErrorHandler(error);
     private static _getErrorParameters(err);
     private static _getErrorType(err);

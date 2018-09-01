@@ -37,11 +37,11 @@ class HttpErrorHandler {
                 }
             }
             if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
-                HttpErrorHandler._nodemailerService = new NodeMailer_1.NodeMailer();
+                HttpErrorHandler._nodeMailerService = new NodeMailer_1.NodeMailer();
                 this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.emailMsgOpts.subject;
                 this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.emailMsgOpts.text;
                 try {
-                    yield HttpErrorHandler._nodemailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
+                    yield HttpErrorHandler._nodeMailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
                 }
                 catch (err) {
                     __1.BBLogger.error(err);
@@ -88,7 +88,7 @@ class HttpError extends Error {
             }
         }
     }
-    static _getErrorByCode(code) {
+    static getErrorByCode(code) {
         let result;
         if (HttpError.allErrors.length > 0) {
             let filtered = HttpError.allErrors.filter(handler => handler.code === code);
