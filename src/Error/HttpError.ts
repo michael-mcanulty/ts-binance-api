@@ -1,6 +1,7 @@
 import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
+import {type} from "os";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [
@@ -20,22 +21,23 @@ export class HttpError extends Error {
 		new HttpError(-1100, "ILLEGAL_CHARS", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-1101, "TOO_MANY_PARAMETERS", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-1102, "MANDATORY_PARAM_EMPTY_OR_MALFORMED", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-1103, "UNKNOWN_PARAM", new HttpErrorHandler(EErrorType.Binance)),
+		new HttpError(-1103, "UNKNOWN_PARAM", new HttpErrorHandler(EErrorType.Binance,true)),
 		new HttpError(-1104, "UNREAD_PARAMETERS", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-1105, "PARAM_EMPTY", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-1106, "PARAM_NOT_REQUIRED", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-1130, "INVALID_PARAMETER", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler(EErrorType.Binance)),
+		new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler(EErrorType.Binance, true, ["http://localhost:3002", "http://localhost:3001"])),
 		new HttpError(-2009, "DUPLICATE_API_KEY_DESC", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType.Binance,true)),
-		new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler(EErrorType.Binance))
+		new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler(EErrorType.Binance, true)),
+		new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler(EErrorType.Binance, true)),
+		new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType.Binance,true, ["http://localhost:3002", "http://localhost:3001"])),
+		new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler(EErrorType.Binance, true))
 	];
 	code: number;
 	handler?: HttpErrorHandler;
 	message: string;
+	altMessage?: string;
 
 	public static getErrorByCode(code: number): HttpError {
 		let result: HttpError;
@@ -100,6 +102,10 @@ export class HttpError extends Error {
 			_httpError.handler = err['handler'];
 		}
 		return _httpError;
+	}
+
+	public static isHttpError(err: HttpError|Error){
+		return err && err instanceof HttpError;
 	}
 
 	constructor(code: number, message: string, handler?:HttpErrorHandler) {

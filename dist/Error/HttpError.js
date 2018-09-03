@@ -77,6 +77,9 @@ class HttpError extends Error {
         }
         return _httpError;
     }
+    static isHttpError(err) {
+        return err && err instanceof HttpError;
+    }
 }
 HttpError.allErrors = [
     new HttpError(-1000, "UNKNOWN", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
@@ -95,18 +98,18 @@ HttpError.allErrors = [
     new HttpError(-1100, "ILLEGAL_CHARS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-1101, "TOO_MANY_PARAMETERS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-1102, "MANDATORY_PARAM_EMPTY_OR_MALFORMED", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
-    new HttpError(-1103, "UNKNOWN_PARAM", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-1103, "UNKNOWN_PARAM", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true)),
     new HttpError(-1104, "UNREAD_PARAMETERS", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-1105, "PARAM_EMPTY", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-1106, "PARAM_NOT_REQUIRED", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-1130, "INVALID_PARAMETER", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
-    new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
+    new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true, ["http://localhost:3002", "http://localhost:3001"])),
     new HttpError(-2009, "DUPLICATE_API_KEY_DESC", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
     new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
-    new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
-    new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance)),
-    new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true)),
-    new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance))
+    new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true)),
+    new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true)),
+    new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true, ["http://localhost:3002", "http://localhost:3001"])),
+    new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler_1.HttpErrorHandler(EErrorType_1.EErrorType.Binance, true))
 ];
 exports.HttpError = HttpError;
 //# sourceMappingURL=HttpError.js.map

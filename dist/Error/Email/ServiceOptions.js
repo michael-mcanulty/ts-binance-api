@@ -31,8 +31,10 @@ class ServiceOptions {
         this._service = value;
     }
     constructor(opts) {
-        this.auth = new NodeMailerAuth(opts.auth);
-        this.service = EServiceProviders_1.EServiceProviders[opts.service];
+        if (opts && typeof opts.auth === "object" && typeof opts.service === "string") {
+            this.auth = new NodeMailerAuth(opts.auth);
+            this.service = EServiceProviders_1.EServiceProviders[opts.service];
+        }
     }
 }
 exports.ServiceOptions = ServiceOptions;

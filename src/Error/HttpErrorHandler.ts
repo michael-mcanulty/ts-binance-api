@@ -6,6 +6,7 @@ import {ServiceOptions} from "./Email/ServiceOptions";
 import {BBLogger} from "../Logger/BBLogger";
 import {IServiceOptions} from "./Email/Interfaces/IServiceOptions";
 import {EErrorType} from "../../dist/Error/Email/Enums/EErrorType";
+import {HttpError} from "./HttpError";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
@@ -21,22 +22,27 @@ export class HttpErrorHandler {
 	sendEmail: boolean;
 	type: string;
 
-	handleException(code: number, message: string, method: EMethod, endpoint: string[]|string, workerId: number): Promise<any> {
+	public static hasHandler(err: HttpError){
+		return HttpError.isHttpError(err) && err.handler instanceof HttpError;
+	}
+
+	handleException(code: number, message: string, method: EMethod, workerId: number, endpoint?: string|string[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			//posts message via REST
-			if (method != undefined && endpoint) {
+			if (method != undefined && (this.endpoint || endpoint)) {
+				let _endpoint: string[] = (Array.isArray(endpoint))?<string[]>endpoint:<string[]>new Array(endpoint);
 				this.method = EMethod[method];
-				this.endpoint = (Array.isArray(endpoint))?<string[]>endpoint:<string[]>[endpoint];
 				let reqOpts: RequestInit = <RequestInit>{};
 				let url: string;
 				reqOpts.method = this.method;
-				reqOpts.headers = {"Content-Type": "application/json"};
+				reqOpts.headers = <Headers>{};
+				reqOpts.headers.set("Content-Type", "application/json");
 				reqOpts.body = null;
 				if(this.payload || (this.killWorkerOnError && workerId)){
 					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": workerId});
 				}
 
-				for(let endpoint of this.endpoint){
+				for(let endpoint of _endpoint){
 					try {
 						let fetch: any = {};
 						fetch = await BotHttp.fetch(endpoint, reqOpts);
@@ -67,7 +73,7 @@ export class HttpErrorHandler {
 	constructor(
 		type: EErrorType,
 		sendEmail?: boolean,
-		endpoint?: string[],
+		endpoint?: string[]|string,
 		emailServiceOpts?: IServiceOptions,
 		emailMsgOpts?: IMessageOptions
 	) {
@@ -75,8 +81,12 @@ export class HttpErrorHandler {
 		msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
 		this.type = EErrorType[type];
 		this.sendEmail = sendEmail || false;
-		this.endpoint = endpoint;
-		this.emailServiceOpts = new ServiceOptions(emailServiceOpts) || HttpErrorHandler.defaultEmailServiceOpts;
+		this.endpoint = (Array.isArray(endpoint))?<string[]>endpoint:<string[]>new Array(endpoint);
+		this.emailServiceOpts = HttpErrorHandler.defaultEmailServiceOpts;
+
+		if(emailServiceOpts && typeof emailServiceOpts.auth === "object"){
+			this.emailServiceOpts = new ServiceOptions(emailServiceOpts);
+		}
 		this.emailMsgOpts = emailMsgOpts || msgOpts;
 	}
 }

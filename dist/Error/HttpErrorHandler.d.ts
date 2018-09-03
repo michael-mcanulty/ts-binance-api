@@ -4,6 +4,7 @@ import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
 import { ServiceOptions } from "./Email/ServiceOptions";
 import { IServiceOptions } from "./Email/Interfaces/IServiceOptions";
 import { EErrorType } from "../../dist/Error/Email/Enums/EErrorType";
+import { HttpError } from "./HttpError";
 export declare class HttpErrorHandler {
     static mailService: NodeMailer;
     static defaultErrMsgRecipient: string;
@@ -17,6 +18,7 @@ export declare class HttpErrorHandler {
     killWorkerOnError: boolean;
     sendEmail: boolean;
     type: string;
-    handleException(code: number, message: string, method: EMethod, endpoint: string[] | string, workerId: number): Promise<any>;
-    constructor(type: EErrorType, sendEmail?: boolean, endpoint?: string[], emailServiceOpts?: IServiceOptions, emailMsgOpts?: IMessageOptions);
+    static hasHandler(err: HttpError): boolean;
+    handleException(code: number, message: string, method: EMethod, workerId: number, endpoint?: string | string[]): Promise<any>;
+    constructor(type: EErrorType, sendEmail?: boolean, endpoint?: string[] | string, emailServiceOpts?: IServiceOptions, emailMsgOpts?: IMessageOptions);
 }

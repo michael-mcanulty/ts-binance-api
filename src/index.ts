@@ -26,7 +26,7 @@ export {EServiceProviders} from "./Error/Email/Enums/EServiceProviders";
 export {EErrorType} from "./Error/Email/Enums/EErrorType";
 export {NodeMailer} from "./Error/Email/NodeMailer";
 export {NodeMailerAuth, ServiceOptions} from "./Error/Email/ServiceOptions";
-export {HttpErrorHandler} from "./Error/HttpError";
+export {HttpErrorHandler} from "./Error/HttpErrorHandler";
 export {HttpError} from "./Error/HttpError";
 export {NodeMailerService, SendMail, Transport} from "./Error/Email/Types/Types";
 export {IPriceFilter} from "./ExchangeInfo/Interfaces/IPriceFilter";
