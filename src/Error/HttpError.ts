@@ -1,99 +1,6 @@
 import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
-import {EMethod} from "../Rest/EMethod";
-import {BotHttp} from "../Rest/BotHttp";
-import {NodeMailer} from "./Email/NodeMailer";
-import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
-import {ServiceOptions} from "./Email/ServiceOptions";
-import {BBLogger} from "..";
-import {IServiceOptions} from "./Email/Interfaces/IServiceOptions";
-import {EServiceProviders} from "./Email/Enums/EServiceProviders";
-
-export class HttpErrorHandler {
-	private static _nodeMailerService: NodeMailer;
-	public static defaultErrMsgRecipient: string;
-	public static defaultEmailServiceOpts: ServiceOptions;
-	endpoint?: string;
-	method?: string;
-	payload?: any[];
-	port?: number;
-	sendEmail?: boolean;
-	emailMsgOpts?: IMessageOptions;
-	type: string;
-	emailServiceOpts?: ServiceOptions;
-
-	private readonly _url?: string;
-
-	get url(): string {
-		return `${this.endpoint}:${this.port}`
-	}
-
-	handleError(code: number, message: string): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-
-			//posts message via REST
-			if (this.port && this.method) {
-				let url: string = this.url;
-				let reqOpts: RequestInit = <RequestInit>{};
-				reqOpts.method = EMethod[this.method];
-				reqOpts.headers = new Headers();
-
-				if (this.payload && this.payload.length > 0) {
-					url = BotHttp.buildUrl(this._url, false, this.payload);
-				}
-
-				try {
-					let fetch: any = {};
-					fetch = await BotHttp.fetch(url, reqOpts);
-				} catch (err) {
-					BBLogger.error(err);
-					reject(err);
-				}
-			}
-
-			//Send an email
-			if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
-				HttpErrorHandler._nodeMailerService = new NodeMailer();
-				this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${message}`: this.emailMsgOpts.subject;
-				this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}`: this.emailMsgOpts.text;
-
-				try {
-					await HttpErrorHandler._nodeMailerService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
-				} catch (err) {
-					BBLogger.error(err);
-					reject(err);
-				}
-			}
-			resolve();
-		});
-	}
-
-	constructor(
-		type: EErrorType,
-		method?: EMethod,
-		port?: number,
-		sendEmail?: boolean,
-		endpoint?: string,
-		emailMsgOpts?: IMessageOptions,
-		emailServiceOpts?: ServiceOptions
-	) {
-		let msgOpts: IMessageOptions = <IMessageOptions>{};
-		msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
-		this.type = EErrorType[type];
-		this.method = EMethod[method];
-		this.port = port;
-		this.sendEmail = sendEmail || false;
-		this.endpoint = endpoint;
-		this.emailServiceOpts = emailServiceOpts || HttpErrorHandler.defaultEmailServiceOpts;
-		this.emailMsgOpts = emailMsgOpts || msgOpts;
-
-		if (this.endpoint && this.port) {
-			this._url = `${this.endpoint}:${this.port}`;
-		} else {
-			this._url = null;
-		}
-	}
-}
+import {HttpErrorHandler} from "./HttpErrorHandler";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [
@@ -123,7 +30,7 @@ export class HttpError extends Error {
 		new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler(EErrorType.Binance)),
 		new HttpError(-2013, "NO_SUCH_ORDER", new HttpErrorHandler(EErrorType.Binance)),
-		new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType.Binance, EMethod.GET, 3001, true, "http://localhost", <IMessageOptions>{to: "michael.mcanulty88@gmail.com"}, <IServiceOptions>{service: EServiceProviders.Gmail})),
+		new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler(EErrorType.Binance,true)),
 		new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler(EErrorType.Binance))
 	];
 	code: number;
@@ -205,11 +112,6 @@ export class HttpError extends Error {
 			let errHandler: HttpErrorHandler|null = HttpError._getErrorHandler(this);
 			if(errHandler !== null){
 				this.handler = errHandler;
-
-				//TODO remove ifee
-				(async()=>{
-					await this.handler.handleError(code, message);
-				})()
 			}
 		}
 		}

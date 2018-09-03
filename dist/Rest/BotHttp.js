@@ -41,7 +41,8 @@ class BotHttp {
                 let res = yield BotHttp.fetch(url, callOptions);
                 let json = yield res.json();
                 if (res.ok === false) {
-                    new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
+                    let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
+                    reject(error);
                 }
                 else {
                     resolve(json);

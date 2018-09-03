@@ -49,7 +49,8 @@ export class BotHttp {
 				let json = await res.json();
 
 				if (res.ok === false) {
-					new HttpError(parseInt(res.status.toString()), res.statusText);
+					let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
+					reject(error);
 				} else {
 					resolve(<Response>json);
 				}
