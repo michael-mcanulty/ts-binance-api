@@ -1,3 +1,5 @@
+export {IHandleExceptionOpts} from "./Error/Email/Interfaces/IHandleExceptionOpts";
+export {IHttpErrorHandlerOptions} from "./Error/Email/Interfaces/IHttpErrorHandlerOptions";
 export {ILimits} from "./ExchangeInfo/Interfaces/ILimits";
 export {IAvailBalance} from "./Balances/Interfaces/IAvailBalance";
 export {ITotalBalance} from "./Balances/Interfaces/ITotalBalance";

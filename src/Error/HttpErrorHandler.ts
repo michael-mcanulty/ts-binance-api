@@ -4,42 +4,46 @@ import {NodeMailer} from "./Email/NodeMailer";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
 import {ServiceOptions} from "./Email/ServiceOptions";
 import {BBLogger} from "../Logger/BBLogger";
-import {IServiceOptions} from "./Email/Interfaces/IServiceOptions";
-import {EErrorType} from "../../dist/Error/Email/Enums/EErrorType";
+import {EErrorType} from "../Error/Email/Enums/EErrorType";
 import {HttpError} from "./HttpError";
+import {IHttpErrorHandlerOptions} from "./Email/Interfaces/IHttpErrorHandlerOptions";
+import {IHandleExceptionOpts} from "./Email/Interfaces/IHandleExceptionOpts";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
 	public static defaultErrMsgRecipient: string;
 	public static defaultEmailServiceOpts: ServiceOptions;
-	endpoint?: string[];
-	method?: string;
-	payload?: any;
+	type: string;
+	sendEmail: boolean;
 	killAppOnError?: boolean;
 	emailMsgOpts?: IMessageOptions;
 	emailServiceOpts?: ServiceOptions;
 	killWorkerOnError: boolean;
-	sendEmail: boolean;
-	type: string;
+	endpoint?: string[]|string;
+	method?: EMethod;
+	payload?: any;
 
 	public static hasHandler(err: HttpError){
 		return HttpError.isHttpError(err) && err.handler instanceof HttpError;
 	}
 
-	handleException(code: number, message: string, method: EMethod, workerId: number, endpoint?: string|string[]): Promise<any> {
+	handleException(code: number, message: string, opts?: IHandleExceptionOpts): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			//posts message via REST
-			if (method != undefined && (this.endpoint || endpoint)) {
-				let _endpoint: string[] = (Array.isArray(endpoint))?<string[]>endpoint:<string[]>new Array(endpoint);
-				this.method = EMethod[method];
+			if(opts.endpoint)this.endpoint = opts.endpoint;
+			if(opts.method)this.method = opts.method;
+			if(opts.payload)this.payload = opts.payload;
+
+			if ( (this.method != undefined && this.method !== null) && this.endpoint) {
+				let _endpoint: string[] = (Array.isArray(opts.endpoint))?<string[]>opts.endpoint:<string[]>new Array(opts.endpoint);
+				this.method = opts.method;
 				let reqOpts: RequestInit = <RequestInit>{};
 				let url: string;
-				reqOpts.method = this.method;
+				reqOpts.method = EMethod[this.method];
 				reqOpts.headers = <Headers>{};
 				reqOpts.headers.set("Content-Type", "application/json");
 				reqOpts.body = null;
-				if(this.payload || (this.killWorkerOnError && workerId)){
-					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": workerId});
+				if(this.payload || (this.killWorkerOnError && opts.workerId)){
+					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": opts.workerId});
 				}
 
 				for(let endpoint of _endpoint){
@@ -70,23 +74,23 @@ export class HttpErrorHandler {
 		});
 	}
 
-	constructor(
-		type: EErrorType,
-		sendEmail?: boolean,
-		endpoint?: string[]|string,
-		emailServiceOpts?: IServiceOptions,
-		emailMsgOpts?: IMessageOptions
-	) {
+	constructor(config: IHttpErrorHandlerOptions) {
 		let msgOpts: IMessageOptions = <IMessageOptions>{};
 		msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
-		this.type = EErrorType[type];
-		this.sendEmail = sendEmail || false;
-		this.endpoint = (Array.isArray(endpoint))?<string[]>endpoint:<string[]>new Array(endpoint);
-		this.emailServiceOpts = HttpErrorHandler.defaultEmailServiceOpts;
 
-		if(emailServiceOpts && typeof emailServiceOpts.auth === "object"){
-			this.emailServiceOpts = new ServiceOptions(emailServiceOpts);
+		if(config){
+			if(config.endpoint){
+				this.endpoint = (Array.isArray(config.endpoint))?<string[]>config.endpoint:<string[]>new Array(config.endpoint);
+			}
+			this.type = EErrorType[config.type] || EErrorType[EErrorType.Binance];
+			this.sendEmail = config.sendEmail;
+			this.emailServiceOpts = HttpErrorHandler.defaultEmailServiceOpts;
+
+			if(config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object"){
+				this.emailServiceOpts = new ServiceOptions(config.emailServiceOpts);
+			}
+
+			this.emailMsgOpts = config.emailMsgOpts || msgOpts;
 		}
-		this.emailMsgOpts = emailMsgOpts || msgOpts;
 	}
 }

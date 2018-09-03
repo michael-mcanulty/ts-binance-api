@@ -13,25 +13,31 @@ const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
 const ServiceOptions_1 = require("./Email/ServiceOptions");
 const BBLogger_1 = require("../Logger/BBLogger");
-const EErrorType_1 = require("../../dist/Error/Email/Enums/EErrorType");
+const EErrorType_1 = require("../Error/Email/Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
 class HttpErrorHandler {
     static hasHandler(err) {
         return HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpError_1.HttpError;
     }
-    handleException(code, message, method, workerId, endpoint) {
+    handleException(code, message, opts) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            if (method != undefined && (this.endpoint || endpoint)) {
-                let _endpoint = (Array.isArray(endpoint)) ? endpoint : new Array(endpoint);
-                this.method = EMethod_1.EMethod[method];
+            if (opts.endpoint)
+                this.endpoint = opts.endpoint;
+            if (opts.method)
+                this.method = opts.method;
+            if (opts.payload)
+                this.payload = opts.payload;
+            if ((this.method != undefined && this.method !== null) && this.endpoint) {
+                let _endpoint = (Array.isArray(opts.endpoint)) ? opts.endpoint : new Array(opts.endpoint);
+                this.method = opts.method;
                 let reqOpts = {};
                 let url;
-                reqOpts.method = this.method;
+                reqOpts.method = EMethod_1.EMethod[this.method];
                 reqOpts.headers = {};
                 reqOpts.headers.set("Content-Type", "application/json");
                 reqOpts.body = null;
-                if (this.payload || (this.killWorkerOnError && workerId)) {
-                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": workerId });
+                if (this.payload || (this.killWorkerOnError && opts.workerId)) {
+                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": opts.workerId });
                 }
                 for (let endpoint of _endpoint) {
                     try {
@@ -59,17 +65,21 @@ class HttpErrorHandler {
             resolve();
         }));
     }
-    constructor(type, sendEmail, endpoint, emailServiceOpts, emailMsgOpts) {
+    constructor(config) {
         let msgOpts = {};
         msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
-        this.type = EErrorType_1.EErrorType[type];
-        this.sendEmail = sendEmail || false;
-        this.endpoint = (Array.isArray(endpoint)) ? endpoint : new Array(endpoint);
-        this.emailServiceOpts = HttpErrorHandler.defaultEmailServiceOpts;
-        if (emailServiceOpts && typeof emailServiceOpts.auth === "object") {
-            this.emailServiceOpts = new ServiceOptions_1.ServiceOptions(emailServiceOpts);
+        if (config) {
+            if (config.endpoint) {
+                this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
+            }
+            this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
+            this.sendEmail = config.sendEmail;
+            this.emailServiceOpts = HttpErrorHandler.defaultEmailServiceOpts;
+            if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
+                this.emailServiceOpts = new ServiceOptions_1.ServiceOptions(config.emailServiceOpts);
+            }
+            this.emailMsgOpts = config.emailMsgOpts || msgOpts;
         }
-        this.emailMsgOpts = emailMsgOpts || msgOpts;
     }
 }
 exports.HttpErrorHandler = HttpErrorHandler;
