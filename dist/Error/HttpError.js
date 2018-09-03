@@ -30,7 +30,7 @@ class HttpError extends Error {
     }
     static _getErrorHandler(error) {
         let match = HttpError.allErrors.filter(err => err.code === error.code);
-        if (Array.isArray(match) && typeof match[0].handler === "object") {
+        if (Array.isArray(match) && typeof match[0] === "object" && match[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler) {
             return match[0].handler;
         }
         else {
@@ -125,7 +125,10 @@ HttpError.allErrors = [
     })),
     new HttpError(-1016, "SERVICE_SHUTTING_DOWN", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
-        sendEmail: true
+        sendEmail: true,
+        killAppOnError: true,
+        endpoint: ["http://localhost:3002", "http://localhost:3001"],
+        method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1020, "UNSUPPORTED_OPERATION", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
@@ -182,7 +185,7 @@ HttpError.allErrors = [
     })),
     new HttpError(-2010, "INSUFFICIENT_BALANCE", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
-        sendEmail: true
+        sendEmail: false
     })),
     new HttpError(-2012, "CANCEL_ALL_FAIL", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,

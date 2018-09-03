@@ -5,7 +5,6 @@ export declare class HttpError extends Error {
     code: number;
     handler?: HttpErrorHandler;
     message: string;
-    altMessage?: string;
     static getErrorByCode(code: number): HttpError;
     private static _getErrorHandler(error);
     private static _getErrorParameters(err);

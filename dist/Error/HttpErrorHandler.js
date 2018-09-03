@@ -17,7 +17,7 @@ const EErrorType_1 = require("../Error/Email/Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
 class HttpErrorHandler {
     static hasHandler(err) {
-        return HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpError_1.HttpError;
+        return err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpError_1.HttpError;
     }
     handleException(code, message, opts) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
