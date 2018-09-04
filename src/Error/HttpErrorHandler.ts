@@ -42,6 +42,19 @@ export class HttpErrorHandler {
 					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": options.workerId});
 				}
 
+				//Send an email
+				if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
+					HttpErrorHandler.mailService = new NodeMailer();
+					this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${options.message}`: this.emailMsgOpts.subject;
+					this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${options.code} \n Message: ${options.message}`: this.emailMsgOpts.text;
+
+					try {
+						await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
+					} catch (err) {
+						BBLogger.error(err);
+						reject(err);
+					}
+				}
 				for(let endpoint of _endpoint){
 					try {
 						let fetch: any = {};
@@ -51,25 +64,12 @@ export class HttpErrorHandler {
 							BBLogger.error(err.message);
 							reject(err);
 						}else{
-							BBLogger.warning("Tried to kill a non-active server.");
+							BBLogger.warning("Tried to kill a dead server.");
 						}
 					}
 				}
 			}
 
-			//Send an email
-			if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
-				HttpErrorHandler.mailService = new NodeMailer();
-				this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${EErrorType[this.type] || "Unknown"} error has been received | ${options.message}`: this.emailMsgOpts.subject;
-				this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} : \n Code: ${options.code} \n Message: ${options.message}`: this.emailMsgOpts.text;
-
-				try {
-					await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
-				} catch (err) {
-					BBLogger.error(err);
-					reject(err);
-				}
-			}
 			resolve();
 		});
 	}

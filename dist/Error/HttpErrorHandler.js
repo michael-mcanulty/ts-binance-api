@@ -31,6 +31,18 @@ class HttpErrorHandler {
                 if (!this.killAppOnError && this.payload || (this.killWorkerOnError && options.workerId)) {
                     reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": options.workerId });
                 }
+                if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
+                    HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
+                    this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${options.message}` : this.emailMsgOpts.subject;
+                    this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${options.code} \n Message: ${options.message}` : this.emailMsgOpts.text;
+                    try {
+                        yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
+                    }
+                    catch (err) {
+                        BBLogger_1.BBLogger.error(err);
+                        reject(err);
+                    }
+                }
                 for (let endpoint of _endpoint) {
                     try {
                         let fetch = {};
@@ -42,21 +54,9 @@ class HttpErrorHandler {
                             reject(err);
                         }
                         else {
-                            BBLogger_1.BBLogger.warning("Tried to kill a non-active server.");
+                            BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
                         }
                     }
-                }
-            }
-            if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
-                HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
-                this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${options.message}` : this.emailMsgOpts.subject;
-                this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${options.code} \n Message: ${options.message}` : this.emailMsgOpts.text;
-                try {
-                    yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
-                }
-                catch (err) {
-                    BBLogger_1.BBLogger.error(err);
-                    reject(err);
                 }
             }
             resolve();
