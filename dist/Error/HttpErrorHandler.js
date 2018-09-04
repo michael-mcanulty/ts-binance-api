@@ -11,7 +11,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const EMethod_1 = require("../Rest/EMethod");
 const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./Email/NodeMailer");
-const ServiceOptions_1 = require("./Email/ServiceOptions");
 const BBLogger_1 = require("../Logger/BBLogger");
 const EErrorType_1 = require("../Error/Email/Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
@@ -35,7 +34,7 @@ class HttpErrorHandler {
                     HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
                     this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${this.type || "Unknown"} error has been received | ${options.message}` : this.emailMsgOpts.subject;
                     this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} \n Code: ${options.code} \n Message: ${options.message}` : this.emailMsgOpts.text;
-                    let defaultServiceOpts = new ServiceOptions_1.ServiceOptions(HttpErrorHandler.emailServiceOptions);
+                    let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
                     try {
                         yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
                     }
@@ -64,7 +63,7 @@ class HttpErrorHandler {
         }));
     }
     constructor(config) {
-        this.emailServiceOpts = (HttpErrorHandler.emailServiceOptions) ? new ServiceOptions_1.ServiceOptions(HttpErrorHandler.emailServiceOptions) : new ServiceOptions_1.ServiceOptions({});
+        this.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
         this.emailMsgOpts = (HttpErrorHandler.emailMsgOptions) ? HttpErrorHandler.emailMsgOptions : {};
         if (config) {
             if (config.endpoint) {
@@ -77,7 +76,7 @@ class HttpErrorHandler {
             this.killAppOnError = config.killAppOnError;
             this.killWorkerOnError = config.killWorkerOnError;
             if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
-                this.emailServiceOpts = new ServiceOptions_1.ServiceOptions(config.emailServiceOpts);
+                this.emailServiceOpts = config.emailServiceOpts;
             }
             this.emailMsgOpts = config.emailMsgOpts;
         }

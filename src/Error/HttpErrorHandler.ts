@@ -2,23 +2,22 @@ import {EMethod} from "../Rest/EMethod";
 import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./Email/NodeMailer";
 import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
-import {ServiceOptions} from "./Email/ServiceOptions";
 import {BBLogger} from "../Logger/BBLogger";
 import {EErrorType} from "../Error/Email/Enums/EErrorType";
 import {HttpError} from "./HttpError";
 import {IHttpErrorHandlerOptions} from "./Email/Interfaces/IHttpErrorHandlerOptions";
 import {IHandleExceptionOptions} from "./Email/Interfaces/IHandleExceptionOptions";
-import {IServiceOptions} from "../Error/Email/Interfaces/IServiceOptions";
+import {ISMTPOptions} from "./Email/Interfaces/ISMTPOptions";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
 	public static emailMsgOptions: IMessageOptions;
-	public static emailServiceOptions: IServiceOptions;
+	public static emailServiceOptions: ISMTPOptions;
 	type: string;
 	sendEmail: boolean;
 	killAppOnError?: boolean;
 	emailMsgOpts?: IMessageOptions;
-	emailServiceOpts?: ServiceOptions;
+	emailServiceOpts?: ISMTPOptions;
 	killWorkerOnError: boolean;
 	endpoint?: string[]|string;
 	method?: EMethod;
@@ -47,7 +46,7 @@ export class HttpErrorHandler {
 					HttpErrorHandler.mailService = new NodeMailer();
 					this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${this.type || "Unknown"} error has been received | ${options.message}`: this.emailMsgOpts.subject;
 					this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} \n Code: ${options.code} \n Message: ${options.message}`: this.emailMsgOpts.text;
-					let defaultServiceOpts: ServiceOptions = new ServiceOptions(HttpErrorHandler.emailServiceOptions);
+					let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
 
 					try {
 						await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
@@ -77,7 +76,7 @@ export class HttpErrorHandler {
 	}
 
 	constructor(config: IHttpErrorHandlerOptions) {
-		this.emailServiceOpts	= (HttpErrorHandler.emailServiceOptions)? new ServiceOptions(HttpErrorHandler.emailServiceOptions): new ServiceOptions(<IServiceOptions>{});
+		this.emailServiceOpts	= HttpErrorHandler.emailServiceOptions;
 		this.emailMsgOpts	= (HttpErrorHandler.emailMsgOptions)? HttpErrorHandler.emailMsgOptions: <IMessageOptions>{};
 
 		if(config){
@@ -92,7 +91,7 @@ export class HttpErrorHandler {
 			this.killWorkerOnError = config.killWorkerOnError;
 
 			if(config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object"){
-				this.emailServiceOpts = new ServiceOptions(config.emailServiceOpts);
+				this.emailServiceOpts = config.emailServiceOpts;
 			}
 
 			this.emailMsgOpts = config.emailMsgOpts;

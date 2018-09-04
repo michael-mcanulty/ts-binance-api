@@ -1,6 +1,6 @@
 import {IMessageOptions} from "../Interfaces/IMessageOptions";
-import {ServiceOptions} from "../ServiceOptions";
+import {ISMTPOptions} from "../Interfaces/ISMTPOptions";
 
-export type Transport = (serviceOpts: ServiceOptions) => NodeMailerService;
+export type Transport = (serviceOpts: ISMTPOptions) => NodeMailerService;
 export type SendMail = (msgOpts: IMessageOptions, Function) => void;
 export type NodeMailerService = { createTransport: Transport, sendMail: SendMail };

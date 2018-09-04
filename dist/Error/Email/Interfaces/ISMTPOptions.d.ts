@@ -1,4 +1,4 @@
-import { IEmailAuth } from "./IServiceOptions";
+import { IEmailAuth } from "../../../Error/Email/Interfaces/IEmailAuth";
 export interface ISMTPOptions {
     host: string;
     port: number;

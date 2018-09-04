@@ -1,12 +1,12 @@
-import {ServiceOptions} from "./ServiceOptions";
 import * as nodeMailer from "nodemailer";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {NodeMailerService} from "./Types/Types";
+import {ISMTPOptions} from "./Interfaces/ISMTPOptions";
 
 export class NodeMailer {
 	public static Service: NodeMailerService = nodeMailer;
 
-	public sendEmail(msgOpts: IMessageOptions, serviceOptions: ServiceOptions): Promise<any> {
+	public sendEmail(msgOpts: IMessageOptions, serviceOptions: ISMTPOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (!serviceOptions || !msgOpts) {
 				reject("Service Options must be provided");

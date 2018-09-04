@@ -1,0 +1,1 @@
+{"version":3,"file":"IEmailAuth.js","sourceRoot":"","sources":["../../../../src/Error/Email/Interfaces/IEmailAuth.ts"],"names":[],"mappings":"","sourcesContent":["export interface IEmailAuth{\r\n\tuser: string;\r\n\tpass: string;\r\n}"]}
