@@ -47,8 +47,7 @@ export class HttpErrorHandler {
 						let fetch: any = {};
 						fetch = await BotHttp.fetch(endpoint, reqOpts);
 					} catch (err) {
-						BBLogger.error(err);
-						reject(err);
+						BBLogger.warning(err);
 					}
 				}
 			}

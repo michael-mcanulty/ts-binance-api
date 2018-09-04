@@ -37,8 +37,7 @@ class HttpErrorHandler {
                         fetch = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
                     }
                     catch (err) {
-                        BBLogger_1.BBLogger.error(err);
-                        reject(err);
+                        BBLogger_1.BBLogger.warning(err);
                     }
                 }
             }
