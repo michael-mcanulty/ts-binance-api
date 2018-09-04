@@ -19,25 +19,17 @@ class HttpErrorHandler {
     static hasHandler(err) {
         return err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpError_1.HttpError;
     }
-    handleException(code, message, opts) {
+    execute(code, message, workerId) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            if (opts.endpoint)
-                this.endpoint = opts.endpoint;
-            if (opts.method)
-                this.method = opts.method;
-            if (opts.payload)
-                this.payload = opts.payload;
             if ((this.method != undefined && this.method !== null) && this.endpoint) {
-                let _endpoint = (Array.isArray(opts.endpoint)) ? opts.endpoint : new Array(opts.endpoint);
-                this.method = opts.method;
+                let _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
                 let reqOpts = {};
-                let url;
                 reqOpts.method = EMethod_1.EMethod[this.method];
                 reqOpts.headers = {};
                 reqOpts.headers.set("Content-Type", "application/json");
-                reqOpts.body = null;
-                if (this.payload || (this.killWorkerOnError && opts.workerId)) {
-                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": opts.workerId });
+                reqOpts.body = this.payload || null;
+                if (!this.killAppOnError && this.payload || (this.killWorkerOnError && workerId)) {
+                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": workerId });
                 }
                 for (let endpoint of _endpoint) {
                     try {

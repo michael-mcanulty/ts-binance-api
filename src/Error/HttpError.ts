@@ -5,6 +5,15 @@ import {EMethod} from "../Rest/EMethod";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [
+		new HttpError(401, "UNAUTHORIZED",
+			new HttpErrorHandler({
+				type: EErrorType.Node,
+				sendEmail: true,
+				killAppOnError: true,
+				endpoint: ["http://localhost:3002", "http://localhost:3001"],
+				method: EMethod.POST
+			})),
+
 		new HttpError(-1000, "UNKNOWN",
 			new HttpErrorHandler({
 				type: EErrorType.Binance,

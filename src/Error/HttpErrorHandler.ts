@@ -7,7 +7,6 @@ import {BBLogger} from "../Logger/BBLogger";
 import {EErrorType} from "../Error/Email/Enums/EErrorType";
 import {HttpError} from "./HttpError";
 import {IHttpErrorHandlerOptions} from "./Email/Interfaces/IHttpErrorHandlerOptions";
-import {IHandleExceptionOpts} from "./Email/Interfaces/IHandleExceptionOpts";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
@@ -27,23 +26,18 @@ export class HttpErrorHandler {
 		return err && HttpError.isHttpError(err) && err.handler instanceof HttpError;
 	}
 
-	handleException(code: number, message: string, opts?: IHandleExceptionOpts): Promise<any> {
+	execute(code: number, message: string, workerId?: number): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			if(opts.endpoint)this.endpoint = opts.endpoint;
-			if(opts.method)this.method = opts.method;
-			if(opts.payload)this.payload = opts.payload;
 
 			if ( (this.method != undefined && this.method !== null) && this.endpoint) {
-				let _endpoint: string[] = (Array.isArray(opts.endpoint))?<string[]>opts.endpoint:<string[]>new Array(opts.endpoint);
-				this.method = opts.method;
+				let _endpoint: string[] = (Array.isArray(this.endpoint))?<string[]>this.endpoint:<string[]>new Array(this.endpoint);
 				let reqOpts: RequestInit = <RequestInit>{};
-				let url: string;
 				reqOpts.method = EMethod[this.method];
 				reqOpts.headers = <Headers>{};
 				reqOpts.headers.set("Content-Type", "application/json");
-				reqOpts.body = null;
-				if(this.payload || (this.killWorkerOnError && opts.workerId)){
-					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": opts.workerId});
+				reqOpts.body = this.payload || null;
+				if(!this.killAppOnError && this.payload || (this.killWorkerOnError && workerId)){
+					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": workerId});
 				}
 
 				for(let endpoint of _endpoint){
