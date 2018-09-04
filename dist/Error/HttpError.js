@@ -88,16 +88,16 @@ HttpError.allErrors = [
         sendEmail: true,
         killAppOnError: true,
         endpoint: ["http://localhost:3002", "http://localhost:3001"],
-        method: EMethod_1.EMethod.POST
+        method: EMethod_1.EMethod.POST,
     })),
     new HttpError(-1000, "UNKNOWN", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
-        sendEmail: true
+        sendEmail: true,
     })),
     new HttpError(-1001, "DISCONNECTED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        killWorkerOnError: true
+        killWorkerOnError: true,
     })),
     new HttpError(-1002, "UNAUTHORIZED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,

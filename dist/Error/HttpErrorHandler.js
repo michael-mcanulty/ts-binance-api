@@ -19,7 +19,7 @@ class HttpErrorHandler {
     static hasHandler(err) {
         return err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpError_1.HttpError;
     }
-    execute(code, message, workerId) {
+    execute(options) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             if ((this.method != undefined && this.method !== null) && this.endpoint) {
                 let _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
@@ -28,8 +28,8 @@ class HttpErrorHandler {
                 reqOpts.headers = {};
                 reqOpts.headers.set("Content-Type", "application/json");
                 reqOpts.body = this.payload || null;
-                if (!this.killAppOnError && this.payload || (this.killWorkerOnError && workerId)) {
-                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": workerId });
+                if (!this.killAppOnError && this.payload || (this.killWorkerOnError && options.workerId)) {
+                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": options.workerId });
                 }
                 for (let endpoint of _endpoint) {
                     try {
@@ -44,8 +44,8 @@ class HttpErrorHandler {
             }
             if (this.sendEmail && this.emailMsgOpts && this.emailServiceOpts) {
                 HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
-                this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${message}` : this.emailMsgOpts.subject;
-                this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${code} \n Message: ${message}` : this.emailMsgOpts.text;
+                this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `A new ${EErrorType_1.EErrorType[this.type] || "Unknown"} error has been received | ${options.message}` : this.emailMsgOpts.subject;
+                this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `${new Date().toLocaleDateString()} : \n Code: ${options.code} \n Message: ${options.message}` : this.emailMsgOpts.text;
                 try {
                     yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts);
                 }
@@ -58,19 +58,18 @@ class HttpErrorHandler {
         }));
     }
     constructor(config) {
-        let msgOpts = {};
-        msgOpts.to = HttpErrorHandler.defaultErrMsgRecipient;
+        this.emailServiceOpts = (HttpErrorHandler.emailServiceOptions) ? new ServiceOptions_1.ServiceOptions(HttpErrorHandler.emailServiceOptions) : new ServiceOptions_1.ServiceOptions({});
+        this.emailMsgOpts = (HttpErrorHandler.emailMsgOptions) ? HttpErrorHandler.emailMsgOptions : {};
         if (config) {
             if (config.endpoint) {
                 this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
             }
             this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
             this.sendEmail = config.sendEmail;
-            this.emailServiceOpts = HttpErrorHandler.defaultEmailServiceOpts;
             if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
                 this.emailServiceOpts = new ServiceOptions_1.ServiceOptions(config.emailServiceOpts);
             }
-            this.emailMsgOpts = config.emailMsgOpts || msgOpts;
+            this.emailMsgOpts = config.emailMsgOpts;
         }
     }
 }

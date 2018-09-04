@@ -2,6 +2,9 @@ import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
 import {EMethod} from "../Rest/EMethod";
+import {IServiceOptions} from "../Error/Email/Interfaces/IServiceOptions";
+import {IEmailAuth} from "../Error/Email/Interfaces/IServiceOptions";
+import {EServiceProviders} from "./Email/Enums/EServiceProviders";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [
@@ -11,20 +14,20 @@ export class HttpError extends Error {
 				sendEmail: true,
 				killAppOnError: true,
 				endpoint: ["http://localhost:3002", "http://localhost:3001"],
-				method: EMethod.POST
+				method: EMethod.POST,
 			})),
 
 		new HttpError(-1000, "UNKNOWN",
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
-				sendEmail: true
+				sendEmail: true,
 			})),
 
 		new HttpError(-1001, "DISCONNECTED",
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				killWorkerOnError: true
+				killWorkerOnError: true,
 			})),
 
 		new HttpError(-1002, "UNAUTHORIZED",
