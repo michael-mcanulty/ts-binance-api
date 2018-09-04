@@ -1,7 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ISMTPConfig_1 = require("./Error/Email/Interfaces/ISMTPConfig");
-exports.ISMTPConfig = ISMTPConfig_1.ISMTPConfig;
 var AccountInfoOptions_1 = require("./Account/AccountInfoOptions");
 exports.AccountInfoOptions = AccountInfoOptions_1.AccountInfoOptions;
 var Balance_1 = require("./Balances/Balance");

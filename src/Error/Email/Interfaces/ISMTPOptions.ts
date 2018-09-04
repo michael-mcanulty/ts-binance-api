@@ -1,6 +1,6 @@
 import {IEmailAuth} from "./IServiceOptions";
 
-export interface ISMTPConfig {
+export interface ISMTPOptions {
 	host: string;
 	port: number;
 	secure: boolean;
