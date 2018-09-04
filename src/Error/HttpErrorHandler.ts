@@ -44,8 +44,8 @@ export class HttpErrorHandler {
 				//Send an email
 				if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
 					HttpErrorHandler.mailService = new NodeMailer();
-					this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `A new ${this.type || "Unknown"} error has been received | ${options.message}`: this.emailMsgOpts.subject;
-					this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`${new Date().toLocaleDateString()} \n Code: ${options.code} \n Message: ${options.message}`: this.emailMsgOpts.text;
+					this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `${options.message} ${this.type || "Unknown"} Error Received`: this.emailMsgOpts.subject;
+					this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`Error code: ${options.code} \n Message: ${options.message}`: this.emailMsgOpts.text;
 					let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
 
 					try {
