@@ -10,7 +10,7 @@ export class HttpError extends Error {
 				type: EErrorType.Node,
 				sendEmail: true,
 				killAppOnError: true,
-				endpoint: ["http://localhost:3002", "http://localhost:3001"],
+				endpoint: ["http://localhost:3002/kill", "http://localhost:3001/kill"],
 				method: EMethod.POST,
 			})),
 
