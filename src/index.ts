@@ -1,3 +1,4 @@
+export {ISMTPConfig} from "./Error/Email/Interfaces/ISMTPConfig";
 export {IHandleExceptionOptions} from "./Error/Email/Interfaces/IHandleExceptionOptions";
 export {IHttpErrorHandlerOptions} from "./Error/Email/Interfaces/IHttpErrorHandlerOptions";
 export {ILimits} from "./ExchangeInfo/Interfaces/ILimits";
