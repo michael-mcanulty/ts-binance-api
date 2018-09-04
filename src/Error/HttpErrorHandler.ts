@@ -47,7 +47,12 @@ export class HttpErrorHandler {
 						let fetch: any = {};
 						fetch = await BotHttp.fetch(endpoint, reqOpts);
 					} catch (err) {
-						BBLogger.warning(err);
+						if(err.code !== 127){
+							BBLogger.error(err.message);
+							reject(err);
+						}else{
+							BBLogger.warning("Tried to kill a non-active server.");
+						}
 					}
 				}
 			}

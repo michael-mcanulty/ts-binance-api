@@ -5,6 +5,13 @@ import {EMethod} from "../Rest/EMethod";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [
+
+		new HttpError(127, "ECONNREFUSED",
+			new HttpErrorHandler({
+				type: EErrorType.Node,
+				sendEmail: false
+			})),
+
 		new HttpError(401, "UNAUTHORIZED",
 			new HttpErrorHandler({
 				type: EErrorType.Node,

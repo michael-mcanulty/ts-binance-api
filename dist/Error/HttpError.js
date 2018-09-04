@@ -83,6 +83,10 @@ class HttpError extends Error {
     }
 }
 HttpError.allErrors = [
+    new HttpError(127, "ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
+        type: EErrorType_1.EErrorType.Node,
+        sendEmail: false
+    })),
     new HttpError(401, "UNAUTHORIZED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
         sendEmail: true,

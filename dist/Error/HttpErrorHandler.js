@@ -37,7 +37,13 @@ class HttpErrorHandler {
                         fetch = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
                     }
                     catch (err) {
-                        BBLogger_1.BBLogger.warning(err);
+                        if (err.code !== 127) {
+                            BBLogger_1.BBLogger.error(err.message);
+                            reject(err);
+                        }
+                        else {
+                            BBLogger_1.BBLogger.warning("Tried to kill a non-active server.");
+                        }
                     }
                 }
             }
