@@ -2,9 +2,6 @@ import {EErrorType} from "./Email/Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
 import {EMethod} from "../Rest/EMethod";
-import {IServiceOptions} from "../Error/Email/Interfaces/IServiceOptions";
-import {IEmailAuth} from "../Error/Email/Interfaces/IServiceOptions";
-import {EServiceProviders} from "./Email/Enums/EServiceProviders";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [

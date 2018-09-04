@@ -64,8 +64,12 @@ class HttpErrorHandler {
             if (config.endpoint) {
                 this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
             }
+            this.method = config.method;
             this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
             this.sendEmail = config.sendEmail;
+            this.payload = config.payload;
+            this.killAppOnError = config.killAppOnError;
+            this.killWorkerOnError = config.killWorkerOnError;
             if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
                 this.emailServiceOpts = new ServiceOptions_1.ServiceOptions(config.emailServiceOpts);
             }
