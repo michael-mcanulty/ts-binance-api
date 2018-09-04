@@ -25,7 +25,7 @@ export class HttpErrorHandler {
 	payload?: any;
 
 	public static hasHandler(err: HttpError){
-		return err && HttpError.isHttpError(err) && err.handler instanceof HttpError;
+		return (err && HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
 	}
 
 	execute(options: IHandleExceptionOptions): Promise<any> {
