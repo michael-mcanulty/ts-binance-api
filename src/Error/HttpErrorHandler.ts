@@ -12,7 +12,7 @@ import {IServiceOptions} from "../Error/Email/Interfaces/IServiceOptions";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
-	public static emailMsgOptions: IMessageOptions
+	public static emailMsgOptions: IMessageOptions;
 	public static emailServiceOptions: IServiceOptions;
 	type: string;
 	sendEmail: boolean;
