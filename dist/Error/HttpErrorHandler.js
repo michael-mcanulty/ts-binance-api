@@ -25,7 +25,7 @@ class HttpErrorHandler {
                 let _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
                 let reqOpts = {};
                 reqOpts.method = EMethod_1.EMethod[this.method];
-                reqOpts.headers = {};
+                reqOpts.headers = new Headers();
                 reqOpts.headers.set("Content-Type", "application/json");
                 reqOpts.body = this.payload || null;
                 if (!this.killAppOnError && this.payload || (this.killWorkerOnError && options.workerId)) {
