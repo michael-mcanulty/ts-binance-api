@@ -46,7 +46,7 @@ export class ServiceOptions {
 	}
 
 	constructor(opts: IServiceOptions) {
-		if(opts && typeof opts.auth === "object" && typeof opts.service === "string"){
+		if(opts && typeof opts.auth === "object" && typeof opts.service === "number"){
 			this.auth = new NodeMailerAuth(opts.auth);
 			this.service = EServiceProviders[opts.service];
 		}

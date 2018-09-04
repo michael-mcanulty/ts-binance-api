@@ -56,7 +56,7 @@ export class HttpErrorHandler {
 						reject(err);
 					}
 				}
-				
+
 				for(let endpoint of _endpoint){
 					try {
 						let fetch: any = {};

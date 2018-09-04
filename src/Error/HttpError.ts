@@ -205,7 +205,7 @@ export class HttpError extends Error {
 	public static getErrorByCode(code: number): HttpError {
 		let result: HttpError;
 		if (HttpError.allErrors.length > 0) {
-			let filtered: HttpError[] = HttpError.allErrors.filter(handler => handler.code === code);
+			let filtered: HttpError[] = HttpError.allErrors.filter(handler => { return (typeof code === "number" && handler.code === code)});
 			if (filtered && filtered.length > 0) {
 				result = filtered[0];
 			}
