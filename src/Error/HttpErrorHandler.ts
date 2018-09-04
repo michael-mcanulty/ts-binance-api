@@ -47,7 +47,7 @@ export class HttpErrorHandler {
 						let fetch: any = {};
 						fetch = await BotHttp.fetch(endpoint, reqOpts);
 					} catch (err) {
-						if(err.code !== 127){
+						if(err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED"){
 							BBLogger.error(err.message);
 							reject(err);
 						}else{
