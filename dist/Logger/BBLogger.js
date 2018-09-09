@@ -36,9 +36,9 @@ class BBLogger {
             try {
                 fs.readFile(filename, 'utf8', (err, data) => {
                     let lines = data.split('\n');
-                    if (lines.length >= BBLogger.lineLimit) {
+                    if (lines.length > BBLogger.lineLimit) {
                         let diff = BBLogger.lineLimit - lines.length;
-                        fs.writeFile(filename, lines.slice(-diff).join('\n'), err => {
+                        fs.writeFile(filename, lines.slice(diff, lines.length - 1).join('\n'), err => {
                             if (err) {
                                 throw err;
                             }
