@@ -47,6 +47,9 @@ class BBLogger {
                             }
                         });
                     }
+                    else {
+                        resolve();
+                    }
                 });
             }
             catch (err) {

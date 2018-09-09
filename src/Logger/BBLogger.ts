@@ -41,6 +41,8 @@ export class BBLogger {
 								resolve();
 							}
 						});
+					}else{
+						resolve();
 					}
 				});
 			} catch (err) {
