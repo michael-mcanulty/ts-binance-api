@@ -3,7 +3,7 @@ export interface IHandleExceptionOptions {
     endpoint?: string[] | string;
     method?: EMethod;
     payload?: any;
-    workerId?: number;
+    killWorker?: number;
     code: number;
     message: string;
 }
