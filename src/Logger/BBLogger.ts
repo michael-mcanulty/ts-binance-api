@@ -5,7 +5,7 @@ export class BBLogger {
 	public static lineLimit: number= 100;
 	private static _INSTANCE: BBLogger;
 	private static _base: string = path.dirname(process.cwd());
-	private static _dirBase: string = `${BBLogger._base}/${BBLogger._getAppName()}/logs/`;
+	private static _dirBase: string = `${BBLogger._base}/${BBLogger._getAppName()}/logs`;
 	private static _getFilename(name: string){
 		return `${BBLogger._dirBase}/${name}.txt`;
 	}

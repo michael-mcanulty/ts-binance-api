@@ -126,6 +126,6 @@ class BBLogger {
 }
 BBLogger.lineLimit = 100;
 BBLogger._base = path.dirname(process.cwd());
-BBLogger._dirBase = `${BBLogger._base}/${BBLogger._getAppName()}/logs/`;
+BBLogger._dirBase = `${BBLogger._base}/${BBLogger._getAppName()}/logs`;
 exports.BBLogger = BBLogger;
 //# sourceMappingURL=BBLogger.js.map
