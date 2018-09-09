@@ -1,15 +1,14 @@
 import * as fs from "fs";
-import {WriteStream} from "fs";
 import * as path from "path";
 
 export class BBLogger {
+	public static lineLimit: number= 100;
 	private static _INSTANCE: BBLogger;
 	private static _base: string = path.dirname(process.cwd());
 	private static _dirBase: string = `${BBLogger._base}/${BBLogger._getAppName()}/logs/`;
-	private static _errorStreamPath: string = `${BBLogger._dirBase}/error.txt`;
-	private static _infoStreamPath: string = `${BBLogger._dirBase}/info.txt`;
-	private static _warningStreamPath: string = `${BBLogger._dirBase}/warning.txt`;
-
+	private static _getFilename(name: string){
+		return `${BBLogger._dirBase}/${name}.txt`;
+	}
 	public static get Instance() {
 		return this._INSTANCE || (this._INSTANCE = new this());
 	}
@@ -28,10 +27,56 @@ export class BBLogger {
 		return `${BBLogger.utcToPST(new Date()).toISOString()} at ${BBLogger._getAppName()} \n ${msg} \r\n`;
 	}
 
-	public static error(msg: string) {
-		let logStream: WriteStream = fs.createWriteStream(BBLogger._errorStreamPath, {flags: 'a'});
-		logStream.write(BBLogger._getMsg(msg), () => {
-			logStream.close();
+	private static limitedLines(filename: string): Promise<void>{
+		return new Promise((resolve, reject)=> {
+			try {
+				fs.readFile(filename, 'utf8', (err, data)=>{
+					let lines: string[] = data.split('\n');
+					if(lines.length >=BBLogger.lineLimit){
+						let diff: number = BBLogger.lineLimit - lines.length;
+						fs.writeFile(filename, lines.slice(-diff).join('\n'), err=>{
+							if (err){
+								throw err;
+							}else{
+								resolve();
+							}
+						});
+					}
+				});
+			} catch (err) {
+				reject(err);
+			}
+		});
+
+	}
+
+	private static _writeToFile(filename: string, msg: string): Promise<void>{
+		return new Promise(async (resolve, reject)=>{
+			try{
+				await BBLogger.limitedLines(filename);
+				fs.appendFile(filename, BBLogger._getMsg(msg), err=>{
+					if (err){
+						throw err;
+					}else{
+						resolve();
+					}
+				});
+			}catch(err){
+				reject(err);
+			}
+		})
+	}
+
+	public static info(msg: string): Promise<void>{
+		return new Promise(async (resolve, reject)=> {
+			try{
+				let name: string = BBLogger.name;
+				let filename: string = BBLogger._getFilename(name);
+				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+				resolve();
+			}catch(err){
+				reject(err);
+			}
 		});
 	}
 
@@ -44,10 +89,16 @@ export class BBLogger {
 		return idx;
 	}
 
-	public static info(msg: string) {
-		let logStream: WriteStream = fs.createWriteStream(BBLogger._infoStreamPath, {flags: 'a'});
-		logStream.write(BBLogger._getMsg(msg), () => {
-			logStream.close();
+	public static error(msg: string): Promise<void>{
+		return new Promise(async (resolve, reject)=> {
+			try{
+				let name: string = BBLogger.name;
+				let filename: string = BBLogger._getFilename(name);
+				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+				resolve();
+			}catch(err){
+				reject(err);
+			}
 		});
 	}
 
@@ -56,10 +107,16 @@ export class BBLogger {
 		return new Date(_date.getTime() - new Date().getTimezoneOffset() * 60000);
 	}
 
-	public static warning(msg: string) {
-		let logStream: WriteStream = fs.createWriteStream(BBLogger._warningStreamPath, {flags: 'a'});
-		logStream.write(BBLogger._getMsg(msg), () => {
-			logStream.close();
+	public static warning(msg: string): Promise<void>{
+		return new Promise(async (resolve, reject)=> {
+			try{
+				let name: string = BBLogger.name;
+				let filename: string = BBLogger._getFilename(name);
+				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+				resolve();
+			}catch(err){
+				reject(err);
+			}
 		});
 	}
 

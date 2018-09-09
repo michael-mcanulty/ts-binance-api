@@ -1,9 +1,20 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 class BBLogger {
     constructor() {
+    }
+    static _getFilename(name) {
+        return `${BBLogger._dirBase}/${name}.txt`;
     }
     static get Instance() {
         return this._INSTANCE || (this._INSTANCE = new this());
@@ -20,11 +31,59 @@ class BBLogger {
     static _getMsg(msg) {
         return `${BBLogger.utcToPST(new Date()).toISOString()} at ${BBLogger._getAppName()} \n ${msg} \r\n`;
     }
-    static error(msg) {
-        let logStream = fs.createWriteStream(BBLogger._errorStreamPath, { flags: 'a' });
-        logStream.write(BBLogger._getMsg(msg), () => {
-            logStream.close();
+    static limitedLines(filename) {
+        return new Promise((resolve, reject) => {
+            try {
+                fs.readFile(filename, 'utf8', (err, data) => {
+                    let lines = data.split('\n');
+                    if (lines.length >= BBLogger.lineLimit) {
+                        let diff = BBLogger.lineLimit - lines.length;
+                        fs.writeFile(filename, lines.slice(-diff).join('\n'), err => {
+                            if (err) {
+                                throw err;
+                            }
+                            else {
+                                resolve();
+                            }
+                        });
+                    }
+                });
+            }
+            catch (err) {
+                reject(err);
+            }
         });
+    }
+    static _writeToFile(filename, msg) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield BBLogger.limitedLines(filename);
+                fs.appendFile(filename, BBLogger._getMsg(msg), err => {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    }
+    static info(msg) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let name = BBLogger.name;
+                let filename = BBLogger._getFilename(name);
+                yield BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                resolve();
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
     }
     static indexContains(arr, strContains) {
         let idx = -1;
@@ -34,27 +93,39 @@ class BBLogger {
         });
         return idx;
     }
-    static info(msg) {
-        let logStream = fs.createWriteStream(BBLogger._infoStreamPath, { flags: 'a' });
-        logStream.write(BBLogger._getMsg(msg), () => {
-            logStream.close();
-        });
+    static error(msg) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let name = BBLogger.name;
+                let filename = BBLogger._getFilename(name);
+                yield BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                resolve();
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
     }
     static utcToPST(date) {
         let _date = (date) ? date : new Date();
         return new Date(_date.getTime() - new Date().getTimezoneOffset() * 60000);
     }
     static warning(msg) {
-        let logStream = fs.createWriteStream(BBLogger._warningStreamPath, { flags: 'a' });
-        logStream.write(BBLogger._getMsg(msg), () => {
-            logStream.close();
-        });
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let name = BBLogger.name;
+                let filename = BBLogger._getFilename(name);
+                yield BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                resolve();
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
     }
 }
+BBLogger.lineLimit = 100;
 BBLogger._base = path.dirname(process.cwd());
 BBLogger._dirBase = `${BBLogger._base}/${BBLogger._getAppName()}/logs/`;
-BBLogger._errorStreamPath = `${BBLogger._dirBase}/error.txt`;
-BBLogger._infoStreamPath = `${BBLogger._dirBase}/info.txt`;
-BBLogger._warningStreamPath = `${BBLogger._dirBase}/warning.txt`;
 exports.BBLogger = BBLogger;
 //# sourceMappingURL=BBLogger.js.map
