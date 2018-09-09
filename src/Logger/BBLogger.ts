@@ -70,7 +70,7 @@ export class BBLogger {
 	public static info(msg: string): Promise<void>{
 		return new Promise(async (resolve, reject)=> {
 			try{
-				let name: string = BBLogger.name;
+				let name: string = BBLogger.info.name;
 				let filename: string = BBLogger._getFilename(name);
 				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
 				resolve();
@@ -92,7 +92,7 @@ export class BBLogger {
 	public static error(msg: string): Promise<void>{
 		return new Promise(async (resolve, reject)=> {
 			try{
-				let name: string = BBLogger.name;
+				let name: string = BBLogger.error.name;
 				let filename: string = BBLogger._getFilename(name);
 				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
 				resolve();
@@ -110,7 +110,7 @@ export class BBLogger {
 	public static warning(msg: string): Promise<void>{
 		return new Promise(async (resolve, reject)=> {
 			try{
-				let name: string = BBLogger.name;
+				let name: string = BBLogger.warning.name;
 				let filename: string = BBLogger._getFilename(name);
 				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
 				resolve();
