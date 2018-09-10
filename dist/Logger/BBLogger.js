@@ -35,20 +35,25 @@ class BBLogger {
         return new Promise((resolve, reject) => {
             try {
                 fs.readFile(filename, 'utf8', (err, data) => {
-                    let lines = data.split('\n');
-                    if (lines.length > BBLogger.lineLimit) {
-                        let diff = BBLogger.lineLimit - lines.length;
-                        fs.writeFile(filename, lines.slice(diff, lines.length - 1).join('\n'), err => {
-                            if (err) {
-                                throw err;
-                            }
-                            else {
-                                resolve();
-                            }
-                        });
+                    if (err) {
+                        throw err;
                     }
                     else {
-                        resolve();
+                        let lines = data.split('\n');
+                        if (lines.length > BBLogger.lineLimit) {
+                            let diff = BBLogger.lineLimit - lines.length;
+                            fs.writeFile(filename, lines.slice(diff, lines.length - 1).join('\n'), err => {
+                                if (err) {
+                                    throw err;
+                                }
+                                else {
+                                    resolve();
+                                }
+                            });
+                        }
+                        else {
+                            resolve();
+                        }
                     }
                 });
             }
