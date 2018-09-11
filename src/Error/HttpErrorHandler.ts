@@ -37,8 +37,8 @@ export class HttpErrorHandler {
 				reqOpts.headers = new Headers();
 				reqOpts.headers.set("Content-Type", "application/json");
 				reqOpts.body = this.payload || null;
-				if(!this.killAppOnError && this.payload || (this.killWorkerOnError && options.killWorker)){
-					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"killWorker": options.killWorker});
+				if(!this.killAppOnError && this.payload || (this.killWorkerOnError && options.workerId)){
+					reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId": options.workerId});
 				}
 
 				//Send an email

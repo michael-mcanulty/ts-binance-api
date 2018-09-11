@@ -9,6 +9,7 @@ export class BBLogger {
 	private static _getFilename(name: string){
 		return `${BBLogger._dirBase}/${name}.txt`;
 	}
+
 	public static get Instance() {
 		return this._INSTANCE || (this._INSTANCE = new this());
 	}
