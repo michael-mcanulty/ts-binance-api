@@ -5,7 +5,12 @@ import {EMethod} from "../Rest/EMethod";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[] = [
-
+		new HttpError(3001, "DATASERVER_ECONNREFUSED",
+			new HttpErrorHandler({
+				type: EErrorType.Node,
+				sendEmail: true,
+				endpoint: ["http://localhost:3001", "http://localhost:3002"]
+			})),
 		new HttpError(127, "ECONNREFUSED",
 			new HttpErrorHandler({
 				type: EErrorType.Node,
@@ -75,7 +80,7 @@ export class HttpError extends Error {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				killAppOnError: true,
-				endpoint: ["http://localhost:3002", "http://localhost:3001"],
+				endpoint: ["http://localhost:3001", "http://localhost:3002"],
 				method: EMethod.POST
 			})),
 
@@ -84,7 +89,7 @@ export class HttpError extends Error {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				killAppOnError: true,
-				endpoint: ["http://localhost:3002", "http://localhost:3001"],
+				endpoint: ["http://localhost:3001", "http://localhost:3002"],
 				method: EMethod.POST
 			})),
 
@@ -158,7 +163,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				endpoint: ["http://localhost:3002", "http://localhost:3001"]
+				endpoint: ["http://localhost:3001", "http://localhost:3002"]
 			})),
 
 		new HttpError(-2009, "DUPLICATE_API_KEY_DESC",
@@ -189,7 +194,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				endpoint: ["http://localhost:3002", "http://localhost:3001"]
+				endpoint: ["http://localhost:3001", "http://localhost:3002"]
 			})),
 
 		new HttpError(-2015, "REJECTED_MBX_KEY",

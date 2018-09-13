@@ -7,4 +7,5 @@ export interface IHandleExceptionOptions {
     workerId?: number;
     code: number;
     message: string;
+    originAddress: string;
 }

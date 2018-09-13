@@ -29,9 +29,17 @@ export class HttpErrorHandler {
 
 	execute(options: IHandleExceptionOptions): Promise<any> {
 		return new Promise(async (resolve, reject) => {
+			try{
+				let remoteEndpoints: string[]=[];
+				let _endpoint: string[];
 
-			if ( (this.method != undefined && this.method !== null) && this.endpoint) {
-				let _endpoint: string[] = (Array.isArray(this.endpoint))?<string[]>this.endpoint:<string[]>new Array(this.endpoint);
+				if ( (this.method != undefined && this.method !== null) && this.endpoint) {
+					_endpoint = (Array.isArray(this.endpoint))?<string[]>this.endpoint:<string[]>new Array(this.endpoint);
+					remoteEndpoints = _endpoint;
+					if(options.originAddress && _endpoint.length > 1){
+						remoteEndpoints = _endpoint.filter(e=>e!==options.originAddress);
+					}
+				}
 				let reqOpts: RequestInit = <RequestInit>{};
 				reqOpts.method = EMethod[this.method];
 				reqOpts.headers = new Headers();
@@ -48,31 +56,34 @@ export class HttpErrorHandler {
 					this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`Error code: ${options.code} \n Message: ${options.message}`: this.emailMsgOpts.text;
 					let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
 
-					try {
-						await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
-					} catch (err) {
-						BBLogger.error(err);
-						reject(err);
+					await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+
+					for(let endpoint of remoteEndpoints){
+						await postToEndpoint(endpoint, reqOpts, reject);
+					}
+					if(options.originAddress && _endpoint.length > remoteEndpoints.length){
+						await postToEndpoint(options.originAddress, reqOpts, reject);
 					}
 				}
-
-				for(let endpoint of _endpoint){
-					try {
-						let fetch: any = {};
-						fetch = await BotHttp.fetch(endpoint, reqOpts);
-					} catch (err) {
-						if(err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED"){
-							BBLogger.error(err.message);
-							reject(err);
-						}else{
-							BBLogger.warning("Tried to kill a dead server.");
-						}
-					}
+				resolve();
+			}catch(err){
+				await BBLogger.error(err);
+				reject(err);
+			}
+		});
+		async function postToEndpoint(endpoint: string, reqOpts: RequestInit, errorCallback: Function){
+			try {
+				let fetch: any = {};
+				fetch = await BotHttp.fetch(endpoint, reqOpts);
+			} catch (err) {
+				if(err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED"){
+					await BBLogger.error(err.message);
+					errorCallback(err);
+				}else{
+					await BBLogger.warning("Tried to kill a dead server.");
 				}
 			}
-
-			resolve();
-		});
+		}
 	}
 
 	constructor(config: IHttpErrorHandlerOptions) {

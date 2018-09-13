@@ -20,8 +20,16 @@ class HttpErrorHandler {
     }
     execute(options) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            if ((this.method != undefined && this.method !== null) && this.endpoint) {
-                let _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
+            try {
+                let remoteEndpoints = [];
+                let _endpoint;
+                if ((this.method != undefined && this.method !== null) && this.endpoint) {
+                    _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
+                    remoteEndpoints = _endpoint;
+                    if (options.originAddress && _endpoint.length > 1) {
+                        remoteEndpoints = _endpoint.filter(e => e !== options.originAddress);
+                    }
+                }
                 let reqOpts = {};
                 reqOpts.method = EMethod_1.EMethod[this.method];
                 reqOpts.headers = new Headers();
@@ -35,32 +43,38 @@ class HttpErrorHandler {
                     this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${options.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
                     this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${options.code} \n Message: ${options.message}` : this.emailMsgOpts.text;
                     let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                    try {
-                        yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+                    yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+                    for (let endpoint of remoteEndpoints) {
+                        yield postToEndpoint(endpoint, reqOpts, reject);
                     }
-                    catch (err) {
-                        BBLogger_1.BBLogger.error(err);
-                        reject(err);
-                    }
-                }
-                for (let endpoint of _endpoint) {
-                    try {
-                        let fetch = {};
-                        fetch = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
-                    }
-                    catch (err) {
-                        if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
-                            BBLogger_1.BBLogger.error(err.message);
-                            reject(err);
-                        }
-                        else {
-                            BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
-                        }
+                    if (options.originAddress && _endpoint.length > remoteEndpoints.length) {
+                        yield postToEndpoint(options.originAddress, reqOpts, reject);
                     }
                 }
+                resolve();
             }
-            resolve();
+            catch (err) {
+                yield BBLogger_1.BBLogger.error(err);
+                reject(err);
+            }
         }));
+        function postToEndpoint(endpoint, reqOpts, errorCallback) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    let fetch = {};
+                    fetch = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
+                }
+                catch (err) {
+                    if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
+                        yield BBLogger_1.BBLogger.error(err.message);
+                        errorCallback(err);
+                    }
+                    else {
+                        yield BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
+                    }
+                }
+            });
+        }
     }
     constructor(config) {
         this.emailServiceOpts = HttpErrorHandler.emailServiceOptions;

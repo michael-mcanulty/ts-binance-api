@@ -83,6 +83,11 @@ class HttpError extends Error {
     }
 }
 HttpError.allErrors = [
+    new HttpError(3001, "DATASERVER_ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
+        type: EErrorType_1.EErrorType.Node,
+        sendEmail: true,
+        endpoint: ["http://localhost:3001", "http://localhost:3002"]
+    })),
     new HttpError(127, "ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
         sendEmail: false
@@ -131,14 +136,14 @@ HttpError.allErrors = [
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
         killAppOnError: true,
-        endpoint: ["http://localhost:3002", "http://localhost:3001"],
+        endpoint: ["http://localhost:3001", "http://localhost:3002"],
         method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1016, "SERVICE_SHUTTING_DOWN", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
         killAppOnError: true,
-        endpoint: ["http://localhost:3002", "http://localhost:3001"],
+        endpoint: ["http://localhost:3001", "http://localhost:3002"],
         method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1020, "UNSUPPORTED_OPERATION", new HttpErrorHandler_1.HttpErrorHandler({
@@ -188,7 +193,7 @@ HttpError.allErrors = [
     new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        endpoint: ["http://localhost:3002", "http://localhost:3001"]
+        endpoint: ["http://localhost:3001", "http://localhost:3002"]
     })),
     new HttpError(-2009, "DUPLICATE_API_KEY_DESC", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
@@ -209,7 +214,7 @@ HttpError.allErrors = [
     new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        endpoint: ["http://localhost:3002", "http://localhost:3001"]
+        endpoint: ["http://localhost:3001", "http://localhost:3002"]
     })),
     new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
