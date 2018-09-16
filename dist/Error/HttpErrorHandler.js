@@ -14,6 +14,7 @@ const NodeMailer_1 = require("./Email/NodeMailer");
 const BBLogger_1 = require("../Logger/BBLogger");
 const EErrorType_1 = require("../Error/Email/Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
+const url_1 = require("url");
 class HttpErrorHandler {
     static hasHandler(err) {
         return (err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
@@ -40,7 +41,7 @@ class HttpErrorHandler {
                             _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
                             remoteEndpoints = _endpoint;
                             if (origin && _endpoint.length > 1) {
-                                remoteEndpoints = _endpoint.filter(e => new URL(e).origin !== origin);
+                                remoteEndpoints = _endpoint.filter(e => new url_1.URL(e).origin !== origin);
                             }
                         }
                         let reqOpts = {};

@@ -8,6 +8,7 @@ import {HttpError} from "./HttpError";
 import {IHttpErrorHandlerOptions} from "./Email/Interfaces/IHttpErrorHandlerOptions";
 import {IHandleExceptionOptions} from "./Email/Interfaces/IHandleExceptionOptions";
 import {ISMTPOptions} from "./Email/Interfaces/ISMTPOptions";
+import {URL} from "url";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
