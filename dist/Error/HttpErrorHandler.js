@@ -47,7 +47,7 @@ class HttpErrorHandler {
                     reqOpts.headers = new Headers();
                     reqOpts.headers.set("Content-Type", "application/json");
                     reqOpts.body = this.payload || null;
-                    if (this.sendEmail && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
+                    if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
                         HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
                         this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${opts.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
                         this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
