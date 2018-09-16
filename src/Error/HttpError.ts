@@ -8,22 +8,13 @@ import {ISMTPOptions} from "./Email/Interfaces/ISMTPOptions";
 import {IMessageOptions} from "../Error/Email/Interfaces/IMessageOptions";
 
 export class HttpError extends Error {
+	public static allErrors: HttpError[];
 	code: number;
 	handler?: HttpErrorHandler;
-	message: string;
-	public static allErrors: HttpError[];
-	public static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISMTPOptions){
-		HttpError.allErrors = HttpError.httpErrors.map(err=>{
-			err.handler.emailMsgOpts = msgOptions;
-			err.handler.emailServiceOpts = emailServiceOptions;
-			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler))
-		});
-		return HttpError.allErrors;
-	}
-	private static httpErrors:IHttpError[] = [
+	private static httpErrors: IHttpError[] = [
 		{
 			code: 3001, message: "DATASERVER_ECONNREFUSED",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Node,
 				sendEmail: true,
 				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
@@ -31,7 +22,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: 127, message: "ECONNREFUSED",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Node,
 				sendEmail: false,
 				endpoint: []
@@ -39,7 +30,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: 401, message: "UNAUTHORIZED",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
@@ -48,14 +39,14 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1000, message: "UNKNOWN",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true
 			}
 		},
 		{
 			code: -1001, message: "DISCONNECTED",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
@@ -63,7 +54,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1002, message: "UNAUTHORIZED",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
@@ -72,7 +63,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1003, message: "TOO_MANY_REQUESTS",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -81,7 +72,7 @@ export class HttpError extends Error {
 		{
 
 			code: -1006, message: "UNEXPECTED_RESP",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -89,7 +80,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1007, message: "TIMEOUT",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
@@ -97,7 +88,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1013, message: "INVALID_MESSAGE",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: false,
 				endpoint: []
@@ -105,7 +96,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: false,
 				endpoint: []
@@ -113,7 +104,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1015, message: "TOO_MANY_ORDERS",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
@@ -122,7 +113,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1016, message: "SERVICE_SHUTTING_DOWN",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
@@ -131,7 +122,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1020, message: "UNSUPPORTED_OPERATION",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -139,7 +130,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -1021, message: "INVALID_TIMESTAMP",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -148,7 +139,7 @@ export class HttpError extends Error {
 		{
 			code: -1022, message: "INVALID_SIGNATURE",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -158,7 +149,7 @@ export class HttpError extends Error {
 
 			code: -1100, message: "ILLEGAL_CHARS",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -168,7 +159,7 @@ export class HttpError extends Error {
 
 			code: -1101, message: "TOO_MANY_PARAMETERS",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -178,7 +169,7 @@ export class HttpError extends Error {
 
 			code: -1102, message: "MANDATORY_PARAM_EMPTY_OR_MALFORMED",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -188,7 +179,7 @@ export class HttpError extends Error {
 
 			code: -1103, message: "UNKNOWN_PARAM",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -198,7 +189,7 @@ export class HttpError extends Error {
 
 			code: -1104, message: "UNREAD_PARAMETERS",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -208,7 +199,7 @@ export class HttpError extends Error {
 
 			code: -1105, message: "PARAM_EMPTY",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -218,7 +209,7 @@ export class HttpError extends Error {
 
 			code: -1106, message: "PARAM_NOT_REQUIRED"
 			,
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -228,7 +219,7 @@ export class HttpError extends Error {
 
 			code: -1130, message: "INVALID_PARAMETER",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -238,7 +229,7 @@ export class HttpError extends Error {
 
 			code: -2008, message: "BAD_API_ID",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
@@ -248,7 +239,7 @@ export class HttpError extends Error {
 
 			code: -2009, message: "DUPLICATE_API_KEY_DESC",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
@@ -258,7 +249,7 @@ export class HttpError extends Error {
 
 			code: -2010, message: "INSUFFICIENT_BALANCE",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -266,7 +257,7 @@ export class HttpError extends Error {
 		},
 		{
 			code: -2012, message: "CANCEL_ALL_FAIL",
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -276,7 +267,7 @@ export class HttpError extends Error {
 
 			code: -2013, message: "NO_SUCH_ORDER",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
@@ -285,7 +276,7 @@ export class HttpError extends Error {
 		{
 			code: -2014, message: "BAD_API_KEY_FMT",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
@@ -295,13 +286,14 @@ export class HttpError extends Error {
 
 			code: -2015, message: "REJECTED_MBX_KEY",
 
-			handler:<IHttpErrorHandler> {
+			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				endpoint: []
 			}
 		},
 	];
+	message: string;
 
 	public static GetTimeoutFromIPBannedMsg(err: BinanceError): number {
 		let strFloat: string;
@@ -350,8 +342,7 @@ export class HttpError extends Error {
 		let code: number = parseInt(err.code.toString());
 		let type: EErrorType = HttpError._getErrorType(err);
 		let message: string = (type === EErrorType.Binance) ? err['msg'] : err['message'];
-		let _
-		HttpError = new HttpError(code, message);
+		let _httpError: HttpError = new HttpError(code, message);
 		if (type === EErrorType.Binance && typeof err['handler'] === "object") {
 			_httpError.handler = err['handler'];
 		}
@@ -371,6 +362,15 @@ export class HttpError extends Error {
 		return result;
 	}
 
+	public static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISMTPOptions) {
+		HttpError.allErrors = HttpError.httpErrors.map(err => {
+			err.handler.emailMsgOpts = msgOptions;
+			err.handler.emailServiceOpts = emailServiceOptions;
+			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler))
+		});
+		return HttpError.allErrors;
+	}
+
 	public static isHttpError(err: HttpError | Error) {
 		return err && err instanceof HttpError;
 	}
@@ -379,16 +379,12 @@ export class HttpError extends Error {
 		super();
 		this.code = code;
 		this.message = message;
-
 		if (handler) {
 			this.handler = handler;
 		} else {
 			let errHandler: HttpErrorHandler | null = HttpError._getErrorHandler(this);
 			if (errHandler !== null) {
 				this.handler = errHandler;
-				if(){
-
-				}
 			}
 		}
 	}

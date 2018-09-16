@@ -15,18 +15,8 @@ class HttpError extends Error {
             let errHandler = HttpError._getErrorHandler(this);
             if (errHandler !== null) {
                 this.handler = errHandler;
-                if () {
-                }
             }
         }
-    }
-    static init(msgOptions, emailServiceOptions) {
-        HttpError.allErrors = HttpError.httpErrors.map(err => {
-            err.handler.emailMsgOpts = msgOptions;
-            err.handler.emailServiceOpts = emailServiceOptions;
-            return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
-        });
-        return HttpError.allErrors;
     }
     static GetTimeoutFromIPBannedMsg(err) {
         let strFloat;
@@ -72,8 +62,7 @@ class HttpError extends Error {
         let code = parseInt(err.code.toString());
         let type = HttpError._getErrorType(err);
         let message = (type === EErrorType_1.EErrorType.Binance) ? err['msg'] : err['message'];
-        let _;
-        exports.HttpError = HttpError = new HttpError(code, message);
+        let _httpError = new HttpError(code, message);
         if (type === EErrorType_1.EErrorType.Binance && typeof err['handler'] === "object") {
             _httpError.handler = err['handler'];
         }
@@ -90,6 +79,14 @@ class HttpError extends Error {
             }
         }
         return result;
+    }
+    static init(msgOptions, emailServiceOptions) {
+        HttpError.allErrors = HttpError.httpErrors.map(err => {
+            err.handler.emailMsgOpts = msgOptions;
+            err.handler.emailServiceOpts = emailServiceOptions;
+            return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
+        });
+        return HttpError.allErrors;
     }
     static isHttpError(err) {
         return err && err instanceof HttpError;
