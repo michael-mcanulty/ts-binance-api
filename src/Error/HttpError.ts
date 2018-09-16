@@ -220,7 +220,7 @@ export class HttpError extends Error {
 
 	private static _getErrorHandler(error: HttpError): HttpErrorHandler | null{
 		let match: HttpError[] = HttpError.allErrors.filter(err=>err.code===error.code);
-		if(Array.isArray(match) && typeof match[0] === "object" && match[0].handler instanceof HttpErrorHandler){
+		if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler) {
 			return match[0].handler;
 		}else{
 			return null;

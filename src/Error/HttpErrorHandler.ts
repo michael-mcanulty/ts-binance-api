@@ -27,64 +27,63 @@ export class HttpErrorHandler {
 		return (err && HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
 	}
 
-	execute(err: HttpError, port: number, workerId?: number): Promise<any> {
+	execute(err: HttpError, port: number): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			try{
-				let errHasHandler: boolean = HttpErrorHandler.hasHandler(err);
-				if(errHasHandler){
-					if(!err.handler.emailMsgOpts){
-						err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
-					}
-					if(!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth){
-						err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
-					}
-					let opts: IHandleExceptionOptions = <IHandleExceptionOptions>{};
-					opts.code = err.code;
-					opts.message = err.message;
-					opts.killWorker = err.handler.killWorkerOnError;
-					opts.workerId = workerId;
-					opts.originAddress = `http://localhost:${port}`;
-					let remoteEndpoints: string[]=[];
-					let _endpoint: string[];
+				if (err && HttpErrorHandler.hasHandler(err)) {
+					if (typeof err.handler === "object") {
 
-					if ( (this.method != undefined && this.method !== null) && this.endpoint) {
-						_endpoint = (Array.isArray(this.endpoint))?<string[]>this.endpoint:<string[]>new Array(this.endpoint);
-						remoteEndpoints = _endpoint;
-						if(opts.originAddress && _endpoint.length > 1){
-							remoteEndpoints = _endpoint.filter(e=>e!==opts.originAddress);
-						}
-					}
-					let reqOpts: RequestInit = <RequestInit>{};
-					reqOpts.method = EMethod[this.method];
-					reqOpts.headers = new Headers();
-					reqOpts.headers.set("Content-Type", "application/json");
-					reqOpts.body = this.payload || null;
-					if(!this.killAppOnError && this.payload || (this.killWorkerOnError && workerId)){
-						reqOpts.body = (this.payload)?JSON.stringify(this.payload): JSON.stringify({"workerId":workerId});
-					}
-
-					//Send an email
-					if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-						HttpErrorHandler.mailService = new NodeMailer();
-						this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0 )? `${opts.message} ${this.type || "Unknown"} Error Received`: this.emailMsgOpts.subject;
-						this.emailMsgOpts.text =(!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0 )?`Error code: ${opts.code} \n Message: ${opts.message}`: this.emailMsgOpts.text;
-						let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
-
-						await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
-
-						//Kamikaze style. Destroy endpoints with suicide on last post.
-						for(let endpoint of remoteEndpoints){
-							await postToEndpoint(endpoint, reqOpts, reject);
+						if (err.handler.emailMsgOpts) {
+							err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
 						}
 
-						//Suicidal final post.
-						if(opts.originAddress && _endpoint.length > remoteEndpoints.length){
-							await postToEndpoint(opts.originAddress, reqOpts, reject);
+						if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
+							err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
+						}
+						let opts: IHandleExceptionOptions = <IHandleExceptionOptions>{};
+						opts.code = err.code;
+						opts.message = err.message;
+						opts.killWorker = err.handler.killWorkerOnError;
+						opts.originAddress = `http://localhost:${port}`;
+						let remoteEndpoints: string[] = [];
+						let _endpoint: string[];
+
+						if ((this.method != undefined && this.method !== null) && this.endpoint) {
+							_endpoint = (Array.isArray(this.endpoint)) ? <string[]>this.endpoint : <string[]>new Array(this.endpoint);
+							remoteEndpoints = _endpoint;
+							if (opts.originAddress && _endpoint.length > 1) {
+								remoteEndpoints = _endpoint.filter(e => e !== opts.originAddress);
+							}
+						}
+
+						let reqOpts: RequestInit = <RequestInit>{};
+						reqOpts.method = EMethod[this.method];
+						reqOpts.headers = new Headers();
+						reqOpts.headers.set("Content-Type", "application/json");
+						reqOpts.body = this.payload || null;
+
+						//Send an email
+						if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
+							HttpErrorHandler.mailService = new NodeMailer();
+							this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${opts.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
+							this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
+							let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
+
+							await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+
+							//Kamikaze style. Destroy endpoints with suicide on last post.
+							for (let endpoint of remoteEndpoints) {
+								await postToEndpoint(endpoint, reqOpts, reject);
+							}
+
+							//Suicidal final post.
+							if (opts.originAddress && _endpoint.length > remoteEndpoints.length) {
+								await postToEndpoint(opts.originAddress, reqOpts, reject);
+							}
 						}
 					}
-					resolve();
 				}
-
+				resolve();
 
 			}catch(err){
 				await BBLogger.error(err);

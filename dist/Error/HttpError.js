@@ -30,7 +30,7 @@ class HttpError extends Error {
     }
     static _getErrorHandler(error) {
         let match = HttpError.allErrors.filter(err => err.code === error.code);
-        if (Array.isArray(match) && typeof match[0] === "object" && match[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler) {
+        if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler) {
             return match[0].handler;
         }
         else {
