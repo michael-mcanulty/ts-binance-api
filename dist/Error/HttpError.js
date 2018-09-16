@@ -86,7 +86,7 @@ HttpError.allErrors = [
     new HttpError(3001, "DATASERVER_ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
         sendEmail: true,
-        endpoint: ["http://localhost:3001", "http://localhost:3002"]
+        endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
     })),
     new HttpError(127, "ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
@@ -95,8 +95,7 @@ HttpError.allErrors = [
     new HttpError(401, "UNAUTHORIZED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
         sendEmail: true,
-        killAppOnError: true,
-        endpoint: ["http://localhost:3002/kill", "http://localhost:3001/kill"],
+        endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
         method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1000, "UNKNOWN", new HttpErrorHandler_1.HttpErrorHandler({
@@ -105,8 +104,7 @@ HttpError.allErrors = [
     })),
     new HttpError(-1001, "DISCONNECTED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
-        sendEmail: true,
-        killWorkerOnError: true,
+        sendEmail: true
     })),
     new HttpError(-1002, "UNAUTHORIZED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
@@ -135,15 +133,13 @@ HttpError.allErrors = [
     new HttpError(-1015, "TOO_MANY_ORDERS", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        killAppOnError: true,
-        endpoint: ["http://localhost:3001", "http://localhost:3002"],
+        endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
         method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1016, "SERVICE_SHUTTING_DOWN", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        killAppOnError: true,
-        endpoint: ["http://localhost:3001", "http://localhost:3002"],
+        endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
         method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1020, "UNSUPPORTED_OPERATION", new HttpErrorHandler_1.HttpErrorHandler({
@@ -193,7 +189,7 @@ HttpError.allErrors = [
     new HttpError(-2008, "BAD_API_ID", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        endpoint: ["http://localhost:3001", "http://localhost:3002"]
+        endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
     })),
     new HttpError(-2009, "DUPLICATE_API_KEY_DESC", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
@@ -214,7 +210,7 @@ HttpError.allErrors = [
     new HttpError(-2014, "BAD_API_KEY_FMT", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
         sendEmail: true,
-        endpoint: ["http://localhost:3001", "http://localhost:3002"]
+        endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
     })),
     new HttpError(-2015, "REJECTED_MBX_KEY", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,

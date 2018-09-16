@@ -1,11 +1,5 @@
-import { EMethod } from "../../../Rest/EMethod";
-export interface IHandleExceptionOptions {
-    endpoint?: string[] | string;
-    method?: EMethod;
-    payload?: any;
-    killWorker?: boolean;
-    workerId?: number;
+import { IBaseHandleException } from "./IBaseHandleException";
+export interface IHandleExceptionOptions extends IBaseHandleException {
     code: number;
     message: string;
-    originAddress: string;
 }

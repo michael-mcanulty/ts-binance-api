@@ -9,7 +9,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Node,
 				sendEmail: true,
-				endpoint: ["http://localhost:3001", "http://localhost:3002"]
+				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
 			})),
 		new HttpError(127, "ECONNREFUSED",
 			new HttpErrorHandler({
@@ -21,8 +21,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Node,
 				sendEmail: true,
-				killAppOnError: true,
-				endpoint: ["http://localhost:3002/kill", "http://localhost:3001/kill"],
+				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
 				method: EMethod.POST
 			})),
 
@@ -35,8 +34,7 @@ export class HttpError extends Error {
 		new HttpError(-1001, "DISCONNECTED",
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
-				sendEmail: true,
-				killWorkerOnError: true,
+				sendEmail: true
 			})),
 
 		new HttpError(-1002, "UNAUTHORIZED",
@@ -79,8 +77,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				killAppOnError: true,
-				endpoint: ["http://localhost:3001", "http://localhost:3002"],
+				endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
 				method: EMethod.POST
 			})),
 
@@ -88,8 +85,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				killAppOnError: true,
-				endpoint: ["http://localhost:3001", "http://localhost:3002"],
+				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
 				method: EMethod.POST
 			})),
 
@@ -163,7 +159,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				endpoint: ["http://localhost:3001", "http://localhost:3002"]
+				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
 			})),
 
 		new HttpError(-2009, "DUPLICATE_API_KEY_DESC",
@@ -194,7 +190,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
 				sendEmail: true,
-				endpoint: ["http://localhost:3001", "http://localhost:3002"]
+				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
 			})),
 
 		new HttpError(-2015, "REJECTED_MBX_KEY",

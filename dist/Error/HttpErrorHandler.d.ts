@@ -10,14 +10,12 @@ export declare class HttpErrorHandler {
     static emailServiceOptions: ISMTPOptions;
     type: string;
     sendEmail: boolean;
-    killAppOnError?: boolean;
     emailMsgOpts?: IMessageOptions;
     emailServiceOpts?: ISMTPOptions;
-    killWorkerOnError: boolean;
     endpoint?: string[] | string;
     method?: EMethod;
     payload?: any;
     static hasHandler(err: HttpError): boolean;
-    execute(err: HttpError, port: number, workerId?: number): Promise<any>;
+    execute(err: HttpError, hostServerUrl: string): Promise<any>;
     constructor(config: IHttpErrorHandlerOptions);
 }

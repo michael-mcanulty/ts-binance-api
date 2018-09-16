@@ -15,10 +15,8 @@ export class HttpErrorHandler {
 	public static emailServiceOptions: ISMTPOptions;
 	type: string;
 	sendEmail: boolean;
-	killAppOnError?: boolean;
 	emailMsgOpts?: IMessageOptions;
 	emailServiceOpts?: ISMTPOptions;
-	killWorkerOnError: boolean;
 	endpoint?: string[]|string;
 	method?: EMethod;
 	payload?: any;
@@ -27,9 +25,15 @@ export class HttpErrorHandler {
 		return (err && HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
 	}
 
-	execute(err: HttpError, port: number): Promise<any> {
+	execute(err: HttpError, hostServerUrl: string): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			try{
+				// http://localhost:3001/kill/app
+				let endpoint = new URL(hostServerUrl);
+
+				//"http://localhost:3001"
+				let origin = endpoint.origin;
+
 				if (err && HttpErrorHandler.hasHandler(err)) {
 					if (typeof err.handler === "object") {
 
@@ -43,16 +47,15 @@ export class HttpErrorHandler {
 						let opts: IHandleExceptionOptions = <IHandleExceptionOptions>{};
 						opts.code = err.code;
 						opts.message = err.message;
-						opts.killWorker = err.handler.killWorkerOnError;
-						opts.originAddress = `http://localhost:${port}`;
+
 						let remoteEndpoints: string[] = [];
 						let _endpoint: string[];
 
 						if ((this.method != undefined && this.method !== null) && this.endpoint) {
 							_endpoint = (Array.isArray(this.endpoint)) ? <string[]>this.endpoint : <string[]>new Array(this.endpoint);
 							remoteEndpoints = _endpoint;
-							if (opts.originAddress && _endpoint.length > 1) {
-								remoteEndpoints = _endpoint.filter(e => e !== opts.originAddress);
+							if (origin && _endpoint.length > 1) {
+								remoteEndpoints = _endpoint.filter(e => new URL(e).origin !== origin);
 							}
 						}
 
@@ -77,8 +80,8 @@ export class HttpErrorHandler {
 							}
 
 							//Suicidal final post.
-							if (opts.originAddress && _endpoint.length > remoteEndpoints.length) {
-								await postToEndpoint(opts.originAddress, reqOpts, reject);
+							if (origin && _endpoint.length > remoteEndpoints.length) {
+								await postToEndpoint(hostServerUrl, reqOpts, reject);
 							}
 						}
 					}
@@ -117,8 +120,6 @@ export class HttpErrorHandler {
 			this.type = EErrorType[config.type] || EErrorType[EErrorType.Binance];
 			this.sendEmail = config.sendEmail;
 			this.payload = config.payload;
-			this.killAppOnError = config.killAppOnError;
-			this.killWorkerOnError = config.killWorkerOnError;
 
 			if(config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object"){
 				this.emailServiceOpts = config.emailServiceOpts;
