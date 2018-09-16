@@ -30,7 +30,7 @@ export class HttpErrorHandler {
 		return new Promise(async (resolve, reject) => {
 			try{
 				// http://localhost:3001/kill/app
-				let endpoint =  srcUrl.toString();
+				let endpoint =  srcUrl.href;
 
 				//"http://localhost:3001"
 				let origin = srcUrl.origin;

@@ -22,7 +22,7 @@ class HttpErrorHandler {
     execute(err, srcUrl) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let endpoint = srcUrl.toString();
+                let endpoint = srcUrl.href;
                 let origin = srcUrl.origin;
                 if (err && HttpErrorHandler.hasHandler(err)) {
                     if (typeof err.handler === "object") {
