@@ -24,44 +24,42 @@ class HttpErrorHandler {
             try {
                 let origin = srcUrl.origin;
                 if (err && HttpErrorHandler.hasHandler(err)) {
-                    if (typeof err.handler === "object") {
-                        if (err.handler.emailMsgOpts) {
-                            err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
+                    if (err.handler.emailMsgOpts) {
+                        err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
+                    }
+                    if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
+                        err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
+                    }
+                    let opts = {};
+                    opts.code = err.code;
+                    opts.message = err.message;
+                    let remoteEndpoints = [];
+                    let _endpoint;
+                    if ((this.method != undefined && this.method !== null) && this.endpoint) {
+                        _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
+                        remoteEndpoints = _endpoint;
+                        if (origin && _endpoint.length > 1) {
+                            remoteEndpoints = _endpoint.filter(e => new url_1.URL(e).origin !== origin);
                         }
-                        if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
-                            err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
+                    }
+                    let reqOpts = {};
+                    reqOpts.method = EMethod_1.EMethod[this.method];
+                    reqOpts.headers = new Headers();
+                    reqOpts.headers.set("Content-Type", "application/json");
+                    reqOpts.body = this.payload || null;
+                    if (this.sendEmail && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
+                        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
+                        this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${opts.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
+                        this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
+                        let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
+                        yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+                        for (let ePoint of remoteEndpoints) {
+                            yield postToEndpoint(ePoint, reqOpts, reject);
                         }
-                        let opts = {};
-                        opts.code = err.code;
-                        opts.message = err.message;
-                        let remoteEndpoints = [];
-                        let _endpoint;
-                        if ((this.method != undefined && this.method !== null) && this.endpoint) {
-                            _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
-                            remoteEndpoints = _endpoint;
-                            if (origin && _endpoint.length > 1) {
-                                remoteEndpoints = _endpoint.filter(e => new url_1.URL(e).origin !== origin);
-                            }
-                        }
-                        let reqOpts = {};
-                        reqOpts.method = EMethod_1.EMethod[this.method];
-                        reqOpts.headers = new Headers();
-                        reqOpts.headers.set("Content-Type", "application/json");
-                        reqOpts.body = this.payload || null;
-                        if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-                            HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
-                            this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${opts.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
-                            this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
-                            let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                            yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
-                            for (let ePoint of remoteEndpoints) {
-                                yield postToEndpoint(ePoint, reqOpts, reject);
-                            }
-                            if (origin && _endpoint.length > remoteEndpoints.length) {
-                                let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
-                                if (lastPoint && lastPoint.length > 0) {
-                                    yield postToEndpoint(lastPoint[0], reqOpts, reject);
-                                }
+                        if (origin && _endpoint.length > remoteEndpoints.length) {
+                            let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
+                            if (lastPoint && lastPoint.length > 0) {
+                                yield postToEndpoint(lastPoint[0], reqOpts, reject);
                             }
                         }
                     }

@@ -86,7 +86,7 @@ HttpError.allErrors = [
     new HttpError(3001, "DATASERVER_ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
         sendEmail: true,
-        endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
+        endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
     })),
     new HttpError(127, "ECONNREFUSED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Node,
@@ -100,7 +100,7 @@ HttpError.allErrors = [
     })),
     new HttpError(-1000, "UNKNOWN", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
-        sendEmail: true,
+        sendEmail: true
     })),
     new HttpError(-1001, "DISCONNECTED", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,

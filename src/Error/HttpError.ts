@@ -9,7 +9,7 @@ export class HttpError extends Error {
 			new HttpErrorHandler({
 				type: EErrorType.Node,
 				sendEmail: true,
-				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
+				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
 			})),
 		new HttpError(127, "ECONNREFUSED",
 			new HttpErrorHandler({
@@ -28,7 +28,7 @@ export class HttpError extends Error {
 		new HttpError(-1000, "UNKNOWN",
 			new HttpErrorHandler({
 				type: EErrorType.Binance,
-				sendEmail: true,
+				sendEmail: true
 			})),
 
 		new HttpError(-1001, "DISCONNECTED",
