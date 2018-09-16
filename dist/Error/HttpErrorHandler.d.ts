@@ -16,6 +16,6 @@ export declare class HttpErrorHandler {
     method?: EMethod;
     payload?: any;
     static hasHandler(err: HttpError): boolean;
-    execute(err: HttpError, hostServerUrl: string): Promise<any>;
+    execute(err: HttpError, srcUrl: URL): Promise<any>;
     constructor(config: IHttpErrorHandlerOptions);
 }

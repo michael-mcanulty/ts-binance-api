@@ -18,11 +18,11 @@ class HttpErrorHandler {
     static hasHandler(err) {
         return (err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
     }
-    execute(err, hostServerUrl) {
+    execute(err, srcUrl) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let endpoint = new URL(hostServerUrl);
-                let origin = endpoint.origin;
+                let endpoint = srcUrl.toString();
+                let origin = srcUrl.origin;
                 if (err && HttpErrorHandler.hasHandler(err)) {
                     if (typeof err.handler === "object") {
                         if (err.handler.emailMsgOpts) {
@@ -54,11 +54,11 @@ class HttpErrorHandler {
                             this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
                             let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
                             yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
-                            for (let endpoint of remoteEndpoints) {
-                                yield postToEndpoint(endpoint, reqOpts, reject);
+                            for (let ePoint of remoteEndpoints) {
+                                yield postToEndpoint(ePoint, reqOpts, reject);
                             }
                             if (origin && _endpoint.length > remoteEndpoints.length) {
-                                yield postToEndpoint(hostServerUrl, reqOpts, reject);
+                                yield postToEndpoint(endpoint, reqOpts, reject);
                             }
                         }
                     }

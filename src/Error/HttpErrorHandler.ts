@@ -25,14 +25,14 @@ export class HttpErrorHandler {
 		return (err && HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
 	}
 
-	execute(err: HttpError, hostServerUrl: string): Promise<any> {
+	execute(err: HttpError, srcUrl: URL): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			try{
 				// http://localhost:3001/kill/app
-				let endpoint = new URL(hostServerUrl);
+				let endpoint =  srcUrl.toString();
 
 				//"http://localhost:3001"
-				let origin = endpoint.origin;
+				let origin = srcUrl.origin;
 
 				if (err && HttpErrorHandler.hasHandler(err)) {
 					if (typeof err.handler === "object") {
@@ -75,13 +75,13 @@ export class HttpErrorHandler {
 							await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
 
 							//Kamikaze style. Destroy endpoints with suicide on last post.
-							for (let endpoint of remoteEndpoints) {
-								await postToEndpoint(endpoint, reqOpts, reject);
+							for (let ePoint of remoteEndpoints) {
+								await postToEndpoint(ePoint, reqOpts, reject);
 							}
 
 							//Suicidal final post.
 							if (origin && _endpoint.length > remoteEndpoints.length) {
-								await postToEndpoint(hostServerUrl, reqOpts, reject);
+								await postToEndpoint(endpoint, reqOpts, reject);
 							}
 						}
 					}
