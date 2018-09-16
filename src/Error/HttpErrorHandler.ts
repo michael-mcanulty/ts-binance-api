@@ -48,8 +48,8 @@ export class HttpErrorHandler {
 					let remoteEndpoints: string[] = [];
 					let _endpoint: string[];
 
-					if ((this.method != undefined && this.method !== null) && this.endpoint) {
-						_endpoint = (Array.isArray(this.endpoint)) ? <string[]>this.endpoint : <string[]>new Array(this.endpoint);
+					if ((err.handler.method != undefined && err.handler.method !== null) && err.handler.endpoint) {
+						_endpoint = (Array.isArray(err.handler.endpoint)) ? <string[]>err.handler.endpoint : <string[]>new Array(err.handler.endpoint);
 						remoteEndpoints = _endpoint;
 						if (origin && _endpoint.length > 1) {
 							remoteEndpoints = _endpoint.filter(e => new URL(e).origin !== origin);
@@ -57,19 +57,19 @@ export class HttpErrorHandler {
 					}
 
 					let reqOpts: RequestInit = <RequestInit>{};
-					reqOpts.method = EMethod[this.method];
+					reqOpts.method = EMethod[err.handler.method];
 					reqOpts.headers = new Headers();
 					reqOpts.headers.set("Content-Type", "application/json");
 					reqOpts.body = this.payload || null;
 
 					//Send an email
-					if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
+					if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
 						HttpErrorHandler.mailService = new NodeMailer();
-						this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${opts.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
-						this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
+						err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
+						err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : err.handler.emailMsgOpts.text;
 						let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
 
-						await HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+						await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
 
 						//Kamikaze style. Destroy endpoints with suicide on last post.
 						for (let ePoint of remoteEndpoints) {
