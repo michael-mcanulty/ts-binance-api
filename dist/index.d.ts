@@ -1,3 +1,4 @@
+export { IHttpErrorHandler } from "./Error/Email/Interfaces/IHttpErrorHandler";
 export { ISMTPOptions } from "./Error/Email/Interfaces/ISMTPOptions";
 export { IHandleExceptionOptions } from "./Error/Email/Interfaces/IHandleExceptionOptions";
 export { IHttpErrorHandlerOptions } from "./Error/Email/Interfaces/IHttpErrorHandlerOptions";

@@ -6,259 +6,6 @@ const EMethod_1 = require("../Rest/EMethod");
 class HttpError extends Error {
     constructor(code, message, handler) {
         super();
-        this.httpErrors = [
-            {
-                code: 3001, message: "DATASERVER_ECONNREFUSED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Node,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
-                }
-            },
-            {
-                code: 127, message: "ECONNREFUSED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Node,
-                    sendEmail: false,
-                    endpoint: []
-                }
-            },
-            {
-                code: 401, message: "UNAUTHORIZED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
-                    method: EMethod_1.EMethod.POST
-                }
-            },
-            {
-                code: -1000, message: "UNKNOWN",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                }
-            },
-            {
-                code: -1001, message: "DISCONNECTED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
-                }
-            },
-            {
-                code: -1002, message: "UNAUTHORIZED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
-                    method: EMethod_1.EMethod.POST
-                }
-            },
-            {
-                code: -1003, message: "TOO_MANY_REQUESTS",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1006, message: "UNEXPECTED_RESP",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1007, message: "TIMEOUT",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
-                }
-            },
-            {
-                code: -1013, message: "INVALID_MESSAGE",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: false,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: false,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1015, message: "TOO_MANY_ORDERS",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
-                    method: EMethod_1.EMethod.POST
-                }
-            },
-            {
-                code: -1016, message: "SERVICE_SHUTTING_DOWN",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
-                    method: EMethod_1.EMethod.POST
-                }
-            },
-            {
-                code: -1020, message: "UNSUPPORTED_OPERATION",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1021, message: "INVALID_TIMESTAMP",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1022, message: "INVALID_SIGNATURE",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1100, message: "ILLEGAL_CHARS",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1101, message: "TOO_MANY_PARAMETERS",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1102, message: "MANDATORY_PARAM_EMPTY_OR_MALFORMED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1103, message: "UNKNOWN_PARAM",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1104, message: "UNREAD_PARAMETERS",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1105, message: "PARAM_EMPTY",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1106, message: "PARAM_NOT_REQUIRED",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -1130, message: "INVALID_PARAMETER",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -2008, message: "BAD_API_ID",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
-                }
-            },
-            {
-                code: -2009, message: "DUPLICATE_API_KEY_DESC",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
-                }
-            },
-            {
-                code: -2010, message: "INSUFFICIENT_BALANCE",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -2012, message: "CANCEL_ALL_FAIL",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -2013, message: "NO_SUCH_ORDER",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-            {
-                code: -2014, message: "BAD_API_KEY_FMT",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
-                }
-            },
-            {
-                code: -2015, message: "REJECTED_MBX_KEY",
-                handler: {
-                    type: EErrorType_1.EErrorType.Binance,
-                    sendEmail: true,
-                    endpoint: []
-                }
-            },
-        ];
         this.code = code;
         this.message = message;
         if (handler) {
@@ -268,8 +15,18 @@ class HttpError extends Error {
             let errHandler = HttpError._getErrorHandler(this);
             if (errHandler !== null) {
                 this.handler = errHandler;
+                if () {
+                }
             }
         }
+    }
+    static init(msgOptions, emailServiceOptions) {
+        HttpError.allErrors = HttpError.httpErrors.map(err => {
+            err.handler.emailMsgOpts = msgOptions;
+            err.handler.emailServiceOpts = emailServiceOptions;
+            return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
+        });
+        return HttpError.allErrors;
     }
     static GetTimeoutFromIPBannedMsg(err) {
         let strFloat;
@@ -338,6 +95,258 @@ class HttpError extends Error {
         return err && err instanceof HttpError;
     }
 }
-HttpError.allErrors = [];
+HttpError.httpErrors = [
+    {
+        code: 3001, message: "DATASERVER_ECONNREFUSED",
+        handler: {
+            type: EErrorType_1.EErrorType.Node,
+            sendEmail: true,
+            endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
+        }
+    },
+    {
+        code: 127, message: "ECONNREFUSED",
+        handler: {
+            type: EErrorType_1.EErrorType.Node,
+            sendEmail: false,
+            endpoint: []
+        }
+    },
+    {
+        code: 401, message: "UNAUTHORIZED",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
+            method: EMethod_1.EMethod.POST
+        }
+    },
+    {
+        code: -1000, message: "UNKNOWN",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1001, message: "DISCONNECTED",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
+        }
+    },
+    {
+        code: -1002, message: "UNAUTHORIZED",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
+            method: EMethod_1.EMethod.POST
+        }
+    },
+    {
+        code: -1003, message: "TOO_MANY_REQUESTS",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1006, message: "UNEXPECTED_RESP",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1007, message: "TIMEOUT",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
+        }
+    },
+    {
+        code: -1013, message: "INVALID_MESSAGE",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: false,
+            endpoint: []
+        }
+    },
+    {
+        code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: false,
+            endpoint: []
+        }
+    },
+    {
+        code: -1015, message: "TOO_MANY_ORDERS",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
+            method: EMethod_1.EMethod.POST
+        }
+    },
+    {
+        code: -1016, message: "SERVICE_SHUTTING_DOWN",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: EMethod_1.EMethod.POST
+        }
+    },
+    {
+        code: -1020, message: "UNSUPPORTED_OPERATION",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1021, message: "INVALID_TIMESTAMP",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1022, message: "INVALID_SIGNATURE",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1100, message: "ILLEGAL_CHARS",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1101, message: "TOO_MANY_PARAMETERS",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1102, message: "MANDATORY_PARAM_EMPTY_OR_MALFORMED",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1103, message: "UNKNOWN_PARAM",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1104, message: "UNREAD_PARAMETERS",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1105, message: "PARAM_EMPTY",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1106, message: "PARAM_NOT_REQUIRED",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -1130, message: "INVALID_PARAMETER",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -2008, message: "BAD_API_ID",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+        }
+    },
+    {
+        code: -2009, message: "DUPLICATE_API_KEY_DESC",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+        }
+    },
+    {
+        code: -2010, message: "INSUFFICIENT_BALANCE",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -2012, message: "CANCEL_ALL_FAIL",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -2013, message: "NO_SUCH_ORDER",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+    {
+        code: -2014, message: "BAD_API_KEY_FMT",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+        }
+    },
+    {
+        code: -2015, message: "REJECTED_MBX_KEY",
+        handler: {
+            type: EErrorType_1.EErrorType.Binance,
+            sendEmail: true,
+            endpoint: []
+        }
+    },
+];
 exports.HttpError = HttpError;
 //# sourceMappingURL=HttpError.js.map

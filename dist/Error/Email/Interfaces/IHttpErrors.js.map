@@ -1,1 +1,0 @@
-{"version":3,"file":"IHttpErrors.js","sourceRoot":"","sources":["../../../../src/Error/Email/Interfaces/IHttpErrors.ts"],"names":[],"mappings":"","sourcesContent":["import {IHttpError} from \"./IHttpError\";\n\nexport interface IHttpErrors{\n\thttpError: IHttpError;\n\thttpErrorHandler: IHttpErrorHandler\n}"]}
