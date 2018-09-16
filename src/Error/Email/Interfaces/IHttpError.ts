@@ -1,7 +1,7 @@
-import {HttpErrorHandler} from "../../HttpErrorHandler";
+import {IHttpErrorHandler} from "./IHttpErrorHandler";
 
-export class IHttpError{
+export interface IHttpError{
 	code: number;
 	message: string;
-	handler?: HttpErrorHandler;
+	handler?: IHttpErrorHandler;
 }
