@@ -29,8 +29,6 @@ export class HttpErrorHandler {
 	execute(err: HttpError, srcUrl: URL): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			try{
-				// http://localhost:3001/kill/app
-				let endpoint =  srcUrl.href;
 
 				//"http://localhost:3001"
 				let origin = srcUrl.origin;
@@ -82,7 +80,10 @@ export class HttpErrorHandler {
 
 							//Suicidal final post.
 							if (origin && _endpoint.length > remoteEndpoints.length) {
-								await postToEndpoint(endpoint, reqOpts, reject);
+								let lastPoint: string[] = _endpoint.filter(e => new URL(e).origin === origin);
+								if(lastPoint && lastPoint.length > 0){
+									await postToEndpoint(lastPoint[0], reqOpts, reject);
+								}
 							}
 						}
 					}

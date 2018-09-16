@@ -22,7 +22,6 @@ class HttpErrorHandler {
     execute(err, srcUrl) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let endpoint = srcUrl.href;
                 let origin = srcUrl.origin;
                 if (err && HttpErrorHandler.hasHandler(err)) {
                     if (typeof err.handler === "object") {
@@ -59,7 +58,10 @@ class HttpErrorHandler {
                                 yield postToEndpoint(ePoint, reqOpts, reject);
                             }
                             if (origin && _endpoint.length > remoteEndpoints.length) {
-                                yield postToEndpoint(endpoint, reqOpts, reject);
+                                let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
+                                if (lastPoint && lastPoint.length > 0) {
+                                    yield postToEndpoint(lastPoint[0], reqOpts, reject);
+                                }
                             }
                         }
                     }
