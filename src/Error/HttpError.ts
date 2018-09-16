@@ -23,7 +23,7 @@ export class HttpError extends Error {
 				sendEmail: true,
 				killAppOnError: true,
 				endpoint: ["http://localhost:3002/kill", "http://localhost:3001/kill"],
-				method: EMethod.POST,
+				method: EMethod.POST
 			})),
 
 		new HttpError(-1000, "UNKNOWN",

@@ -18,40 +18,55 @@ class HttpErrorHandler {
     static hasHandler(err) {
         return (err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
     }
-    execute(options) {
+    execute(err, port, workerId) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let remoteEndpoints = [];
-                let _endpoint;
-                if ((this.method != undefined && this.method !== null) && this.endpoint) {
-                    _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
-                    remoteEndpoints = _endpoint;
-                    if (options.originAddress && _endpoint.length > 1) {
-                        remoteEndpoints = _endpoint.filter(e => e !== options.originAddress);
+                let errHasHandler = HttpErrorHandler.hasHandler(err);
+                if (errHasHandler) {
+                    if (!err.handler.emailMsgOpts) {
+                        err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
                     }
-                }
-                let reqOpts = {};
-                reqOpts.method = EMethod_1.EMethod[this.method];
-                reqOpts.headers = new Headers();
-                reqOpts.headers.set("Content-Type", "application/json");
-                reqOpts.body = this.payload || null;
-                if (!this.killAppOnError && this.payload || (this.killWorkerOnError && options.workerId)) {
-                    reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": options.workerId });
-                }
-                if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-                    HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
-                    this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${options.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
-                    this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${options.code} \n Message: ${options.message}` : this.emailMsgOpts.text;
-                    let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                    yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
-                    for (let endpoint of remoteEndpoints) {
-                        yield postToEndpoint(endpoint, reqOpts, reject);
+                    if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
+                        err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
                     }
-                    if (options.originAddress && _endpoint.length > remoteEndpoints.length) {
-                        yield postToEndpoint(options.originAddress, reqOpts, reject);
+                    let opts = {};
+                    opts.code = err.code;
+                    opts.message = err.message;
+                    opts.killWorker = err.handler.killWorkerOnError;
+                    opts.workerId = workerId;
+                    opts.originAddress = `http://localhost:${port}`;
+                    let remoteEndpoints = [];
+                    let _endpoint;
+                    if ((this.method != undefined && this.method !== null) && this.endpoint) {
+                        _endpoint = (Array.isArray(this.endpoint)) ? this.endpoint : new Array(this.endpoint);
+                        remoteEndpoints = _endpoint;
+                        if (opts.originAddress && _endpoint.length > 1) {
+                            remoteEndpoints = _endpoint.filter(e => e !== opts.originAddress);
+                        }
                     }
+                    let reqOpts = {};
+                    reqOpts.method = EMethod_1.EMethod[this.method];
+                    reqOpts.headers = new Headers();
+                    reqOpts.headers.set("Content-Type", "application/json");
+                    reqOpts.body = this.payload || null;
+                    if (!this.killAppOnError && this.payload || (this.killWorkerOnError && workerId)) {
+                        reqOpts.body = (this.payload) ? JSON.stringify(this.payload) : JSON.stringify({ "workerId": workerId });
+                    }
+                    if (this.sendEmail && this.emailMsgOpts && (this.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
+                        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
+                        this.emailMsgOpts.subject = (!this.emailMsgOpts.subject || this.emailMsgOpts.subject.length === 0) ? `${opts.message} ${this.type || "Unknown"} Error Received` : this.emailMsgOpts.subject;
+                        this.emailMsgOpts.text = (!this.emailMsgOpts.text || this.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : this.emailMsgOpts.text;
+                        let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
+                        yield HttpErrorHandler.mailService.sendEmail(this.emailMsgOpts, this.emailServiceOpts || defaultServiceOpts);
+                        for (let endpoint of remoteEndpoints) {
+                            yield postToEndpoint(endpoint, reqOpts, reject);
+                        }
+                        if (opts.originAddress && _endpoint.length > remoteEndpoints.length) {
+                            yield postToEndpoint(opts.originAddress, reqOpts, reject);
+                        }
+                    }
+                    resolve();
                 }
-                resolve();
             }
             catch (err) {
                 yield BBLogger_1.BBLogger.error(err);

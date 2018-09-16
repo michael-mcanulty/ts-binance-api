@@ -97,7 +97,7 @@ HttpError.allErrors = [
         sendEmail: true,
         killAppOnError: true,
         endpoint: ["http://localhost:3002/kill", "http://localhost:3001/kill"],
-        method: EMethod_1.EMethod.POST,
+        method: EMethod_1.EMethod.POST
     })),
     new HttpError(-1000, "UNKNOWN", new HttpErrorHandler_1.HttpErrorHandler({
         type: EErrorType_1.EErrorType.Binance,
