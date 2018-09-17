@@ -10,4 +10,5 @@ export interface IHttpErrorHandler {
     endpoint?: string[] | string;
     method?: EMethod;
     payload?: any;
+    restartSingleWorker?: boolean;
 }

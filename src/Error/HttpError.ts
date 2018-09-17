@@ -8,6 +8,25 @@ import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 
 export class HttpError extends Error {
+	public static fromJSON(err: IHttpError){
+		let handler: HttpErrorHandler = new HttpErrorHandler(err.handler);
+		return new HttpError(err.code, err.message, handler);
+	}
+	public static toJSON(err: HttpError){
+		let error: IHttpError = <IHttpError>{};
+		error.code = err.code;
+		error.message = err.message;
+		error.handler = <IHttpErrorHandler>{};
+		error.handler.emailServiceOpts = err.handler.emailServiceOpts;
+		error.handler.emailMsgOpts = err.handler.emailMsgOpts;
+		error.handler.endpoint = err.handler.endpoint;
+		error.handler.method = EMethod[err.handler.method];
+		error.handler.type = EErrorType[err.handler.type];
+		error.handler.payload = err.handler.payload;
+		error.handler.restartSingleWorker = err.handler.restartSingleWorker;
+		error.handler.sendEmail = err.handler.sendEmail;
+		return error;
+	}
 	public static allErrors: HttpError[];
 	public static _jsonErrors: IHttpError[] = [
 		{

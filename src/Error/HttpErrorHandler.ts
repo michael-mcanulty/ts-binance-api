@@ -36,7 +36,7 @@ export class HttpErrorHandler {
 				let origin = srcUrl.origin;
 
 				if (err && HttpErrorHandler.hasHandler(err)) {
-					this.payload = {error: err, handler: this};
+
 					if(this.restartSingleWorker){
 						this.payload.id = worker.id;
 					}
@@ -56,6 +56,7 @@ export class HttpErrorHandler {
 					let _endpoint: string[];
 
 					if ((err.handler.method != undefined && err.handler.method !== null) && err.handler.endpoint) {
+						this.payload = {error: HttpError.toJSON(err)};
 						_endpoint = (Array.isArray(err.handler.endpoint)) ? <string[]>err.handler.endpoint : <string[]>new Array(err.handler.endpoint);
 						remoteEndpoints = _endpoint;
 						if (origin && _endpoint.length > 1) {

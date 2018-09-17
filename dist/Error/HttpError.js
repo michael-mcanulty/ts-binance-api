@@ -18,6 +18,25 @@ class HttpError extends Error {
             }
         }
     }
+    static fromJSON(err) {
+        let handler = new HttpErrorHandler_1.HttpErrorHandler(err.handler);
+        return new HttpError(err.code, err.message, handler);
+    }
+    static toJSON(err) {
+        let error = {};
+        error.code = err.code;
+        error.message = err.message;
+        error.handler = {};
+        error.handler.emailServiceOpts = err.handler.emailServiceOpts;
+        error.handler.emailMsgOpts = err.handler.emailMsgOpts;
+        error.handler.endpoint = err.handler.endpoint;
+        error.handler.method = EMethod_1.EMethod[err.handler.method];
+        error.handler.type = EErrorType_1.EErrorType[err.handler.type];
+        error.handler.payload = err.handler.payload;
+        error.handler.restartSingleWorker = err.handler.restartSingleWorker;
+        error.handler.sendEmail = err.handler.sendEmail;
+        return error;
+    }
     static GetTimeoutFromIPBannedMsg(err) {
         let strFloat;
         let result = 0;
