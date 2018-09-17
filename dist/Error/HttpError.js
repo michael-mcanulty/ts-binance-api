@@ -93,7 +93,6 @@ class HttpError extends Error {
         HttpError.allErrors = HttpError._jsonErrors.map(err => {
             err.handler.emailMsgOpts = msgOptions;
             err.handler.emailServiceOpts = emailServiceOptions;
-            let handler = err.handler;
             return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
         });
         return HttpError.allErrors;

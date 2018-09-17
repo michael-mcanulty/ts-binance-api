@@ -376,7 +376,6 @@ export class HttpError extends Error {
 		HttpError.allErrors = HttpError._jsonErrors.map(err => {
 			err.handler.emailMsgOpts = msgOptions;
 			err.handler.emailServiceOpts = emailServiceOptions;
-			let handler: IHttpErrorHandler = err.handler;
 			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler))
 		});
 		return HttpError.allErrors;
