@@ -1,16 +1,14 @@
-import {EErrorType} from "./Email/Enums/EErrorType";
+import {EErrorType} from "./Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
 import {EMethod} from "../Rest/EMethod";
-import {IHttpError} from "./Email/Interfaces/IHttpError";
-import {IHttpErrorHandler} from "./Email/Interfaces/IHttpErrorHandler";
-import {ISMTPOptions} from "./Email/Interfaces/ISMTPOptions";
-import {IMessageOptions} from "../Error/Email/Interfaces/IMessageOptions";
+import {IHttpError} from "./Interfaces/IHttpError";
+import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
+import {ISMTPOptions} from "./Interfaces/ISMTPOptions";
+import {IMessageOptions} from "./Interfaces/IMessageOptions";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[];
-	code: number;
-	handler?: HttpErrorHandler;
 	private static httpErrors: IHttpError[] = [
 		{
 			code: 3001, message: "DATASERVER_ECONNREFUSED",
@@ -293,6 +291,8 @@ export class HttpError extends Error {
 			}
 		},
 	];
+	code: number;
+	handler?: HttpErrorHandler;
 	message: string;
 
 	public static GetTimeoutFromIPBannedMsg(err: BinanceError): number {
@@ -366,6 +366,7 @@ export class HttpError extends Error {
 		HttpError.allErrors = HttpError.httpErrors.map(err => {
 			err.handler.emailMsgOpts = msgOptions;
 			err.handler.emailServiceOpts = emailServiceOptions;
+			let handler: IHttpErrorHandler = err.handler;
 			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler))
 		});
 		return HttpError.allErrors;

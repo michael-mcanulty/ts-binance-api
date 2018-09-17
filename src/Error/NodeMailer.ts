@@ -1,12 +1,12 @@
-import * as nodeMailer from "nodemailer";
+import * as nodeMailer from "Error/NodeMailer";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {NodeMailerService} from "./Types/Types";
-import {ISMTPOptions} from "./Interfaces/ISMTPOptions";
+import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 
 export class NodeMailer {
 	public static Service: NodeMailerService = nodeMailer;
 
-	public sendEmail(msgOpts: IMessageOptions, serviceOptions: ISMTPOptions): Promise<any> {
+	public sendEmail(msgOpts: IMessageOptions, serviceOptions: ISmtpOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (!serviceOptions || !msgOpts) {
 				reject("Service Options must be provided");

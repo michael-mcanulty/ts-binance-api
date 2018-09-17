@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EErrorType_1 = require("./Email/Enums/EErrorType");
+const EErrorType_1 = require("./Enums/EErrorType");
 const HttpErrorHandler_1 = require("./HttpErrorHandler");
 const EMethod_1 = require("../Rest/EMethod");
 class HttpError extends Error {
@@ -84,6 +84,7 @@ class HttpError extends Error {
         HttpError.allErrors = HttpError.httpErrors.map(err => {
             err.handler.emailMsgOpts = msgOptions;
             err.handler.emailServiceOpts = emailServiceOptions;
+            let handler = err.handler;
             return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
         });
         return HttpError.allErrors;

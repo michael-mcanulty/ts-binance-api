@@ -1,25 +1,25 @@
 import {EMethod} from "../Rest/EMethod";
 import {BotHttp} from "../Rest/BotHttp";
-import {NodeMailer} from "./Email/NodeMailer";
-import {IMessageOptions} from "./Email/Interfaces/IMessageOptions";
+import {NodeMailer} from "./NodeMailer";
+import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {BBLogger} from "../Logger/BBLogger";
-import {EErrorType} from "../Error/Email/Enums/EErrorType";
+import {EErrorType} from "./Enums/EErrorType";
 import {HttpError} from "./HttpError";
-import {IHttpErrorHandlerOptions} from "./Email/Interfaces/IHttpErrorHandlerOptions";
-import {IHandleExceptionOptions} from "./Email/Interfaces/IHandleExceptionOptions";
-import {ISMTPOptions} from "./Email/Interfaces/ISMTPOptions";
+import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 import {URL} from "url";
+import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
+import {IHttpError} from "./Interfaces/IHttpError";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
 	public static emailMsgOptions: IMessageOptions;
-	public static emailServiceOptions: ISMTPOptions;
+	public static emailServiceOptions: ISmtpOptions;
 	type: string;
 	sendEmail: boolean;
 	emailMsgOpts?: IMessageOptions;
-	emailServiceOpts?: ISMTPOptions;
+	emailServiceOpts?: ISmtpOptions;
 	endpoint?: string[]|string;
-	method?: EMethod;
+	method?: string;
 	payload?: any;
 
 	public static hasHandler(err: HttpError){
@@ -41,7 +41,7 @@ export class HttpErrorHandler {
 					if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
 						err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
 					}
-					let opts: IHandleExceptionOptions = <IHandleExceptionOptions>{};
+					let opts: IHttpError = <IHttpError>{};
 					opts.code = err.code;
 					opts.message = err.message;
 
@@ -67,7 +67,7 @@ export class HttpErrorHandler {
 						HttpErrorHandler.mailService = new NodeMailer();
 						err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
 						err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : err.handler.emailMsgOpts.text;
-						let defaultServiceOpts: ISMTPOptions = HttpErrorHandler.emailServiceOptions;
+						let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
 
 						await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
 
@@ -107,7 +107,7 @@ export class HttpErrorHandler {
 		}
 	}
 
-	constructor(config: IHttpErrorHandlerOptions) {
+	constructor(config: IHttpErrorHandler) {
 		this.emailServiceOpts	= HttpErrorHandler.emailServiceOptions;
 		this.emailMsgOpts	= (HttpErrorHandler.emailMsgOptions)? HttpErrorHandler.emailMsgOptions: <IMessageOptions>{};
 
@@ -115,7 +115,7 @@ export class HttpErrorHandler {
 			if(config.endpoint){
 				this.endpoint = (Array.isArray(config.endpoint))?<string[]>config.endpoint:<string[]>new Array(config.endpoint);
 			}
-			this.method = config.method;
+			this.method =  EMethod[config.method];
 			this.type = EErrorType[config.type] || EErrorType[EErrorType.Binance];
 			this.sendEmail = config.sendEmail;
 			this.payload = config.payload;
