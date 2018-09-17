@@ -9,6 +9,7 @@ import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 import {URL} from "url";
 import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
 import {IHttpError} from "./Interfaces/IHttpError";
+import {worker} from "cluster";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
@@ -20,6 +21,7 @@ export class HttpErrorHandler {
 	emailServiceOpts?: ISmtpOptions;
 	endpoint?: string[]|string;
 	method?: string;
+	restartSingleWorker: boolean = false;
 	payload?: any;
 
 	public static hasHandler(err: HttpError){
@@ -34,9 +36,13 @@ export class HttpErrorHandler {
 				let origin = srcUrl.origin;
 
 				if (err && HttpErrorHandler.hasHandler(err)) {
+					this.payload = {error: err, handler: this};
+					if(this.restartSingleWorker){
+						this.payload.id = worker.id;
+					}
+
 					if (err.handler.emailMsgOpts) {
 						err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
-						this.payload = {error: err};
 					}
 
 					if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {

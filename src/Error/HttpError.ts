@@ -39,7 +39,7 @@ export class HttpError extends Error {
 			code: -1000, message: "UNKNOWN",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true
+				sendEmail: true,
 			}
 		},
 		{
@@ -105,6 +105,7 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
 				sendEmail: true,
+				restartSingleWorker: true,
 				endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
 				method: EMethod.POST
 			}

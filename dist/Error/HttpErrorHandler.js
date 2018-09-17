@@ -15,7 +15,26 @@ const BBLogger_1 = require("../Logger/BBLogger");
 const EErrorType_1 = require("./Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
 const url_1 = require("url");
+const cluster_1 = require("cluster");
 class HttpErrorHandler {
+    constructor(config) {
+        this.restartSingleWorker = false;
+        this.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
+        this.emailMsgOpts = (HttpErrorHandler.emailMsgOptions) ? HttpErrorHandler.emailMsgOptions : {};
+        if (config) {
+            if (config.endpoint) {
+                this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
+            }
+            this.method = EMethod_1.EMethod[config.method];
+            this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
+            this.sendEmail = config.sendEmail;
+            this.payload = config.payload;
+            if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
+                this.emailServiceOpts = config.emailServiceOpts;
+            }
+            this.emailMsgOpts = config.emailMsgOpts;
+        }
+    }
     static hasHandler(err) {
         return (err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
     }
@@ -24,9 +43,12 @@ class HttpErrorHandler {
             try {
                 let origin = srcUrl.origin;
                 if (err && HttpErrorHandler.hasHandler(err)) {
+                    this.payload = { error: err, handler: this };
+                    if (this.restartSingleWorker) {
+                        this.payload.id = cluster_1.worker.id;
+                    }
                     if (err.handler.emailMsgOpts) {
                         err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
-                        this.payload = { error: err };
                     }
                     if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
                         err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
@@ -88,23 +110,6 @@ class HttpErrorHandler {
                     }
                 }
             });
-        }
-    }
-    constructor(config) {
-        this.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
-        this.emailMsgOpts = (HttpErrorHandler.emailMsgOptions) ? HttpErrorHandler.emailMsgOptions : {};
-        if (config) {
-            if (config.endpoint) {
-                this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
-            }
-            this.method = EMethod_1.EMethod[config.method];
-            this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
-            this.sendEmail = config.sendEmail;
-            this.payload = config.payload;
-            if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
-                this.emailServiceOpts = config.emailServiceOpts;
-            }
-            this.emailMsgOpts = config.emailMsgOpts;
         }
     }
 }

@@ -15,6 +15,7 @@ export declare class HttpErrorHandler {
     emailServiceOpts?: ISmtpOptions;
     endpoint?: string[] | string;
     method?: string;
+    restartSingleWorker: boolean;
     payload?: any;
     static hasHandler(err: HttpError): boolean;
     execute(err: HttpError, srcUrl: URL): Promise<any>;

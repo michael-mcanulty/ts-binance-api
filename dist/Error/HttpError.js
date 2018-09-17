@@ -131,7 +131,7 @@ HttpError._jsonErrors = [
         code: -1000, message: "UNKNOWN",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true
+            sendEmail: true,
         }
     },
     {
@@ -196,6 +196,7 @@ HttpError._jsonErrors = [
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            restartSingleWorker: true,
             endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
             method: EMethod_1.EMethod.POST
         }
