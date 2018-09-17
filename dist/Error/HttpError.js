@@ -126,6 +126,14 @@ class HttpError extends Error {
 }
 HttpError._jsonErrors = [
     {
+        code: 88880, message: "MongoNetworkError",
+        handler: {
+            type: EErrorType_1.EErrorType.MongoDB,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill"],
+        }
+    },
+    {
         code: 127, message: "ECONNREFUSED",
         handler: {
             type: EErrorType_1.EErrorType.Node,
@@ -207,7 +215,7 @@ HttpError._jsonErrors = [
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
             restartSingleWorker: true,
-            endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
+            endpoint: ["http://localhost:3001/kill", "http://localhost:3002/kill"],
             method: EMethod_1.EMethod.POST
         }
     },

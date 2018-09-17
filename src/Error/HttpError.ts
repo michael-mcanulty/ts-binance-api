@@ -32,6 +32,14 @@ export class HttpError extends Error {
 	public static allErrors: HttpError[];
 	public static _jsonErrors: IHttpError[] = [
 		{
+			code: 88880, message: "MongoNetworkError",
+			handler: <IHttpErrorHandler> {
+				type: EErrorType.MongoDB,
+				sendEmail: true,
+				endpoint: ["http://localhost:3001/kill"],
+			}
+		},
+		{
 			code: 127, message: "ECONNREFUSED",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Node,
@@ -114,7 +122,7 @@ export class HttpError extends Error {
 				type: EErrorType.Binance,
 				sendEmail: true,
 				restartSingleWorker: true,
-				endpoint: ["http://localhost:3001/kill/worker", "http://localhost:3002/kill/worker"],
+				endpoint: ["http://localhost:3001/kill", "http://localhost:3002/kill"],
 				method: EMethod.POST
 			}
 		},

@@ -1,4 +1,5 @@
 export enum EErrorType {
 	Binance,
-	Node
+	Node,
+	MongoDB
 }
