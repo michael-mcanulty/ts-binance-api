@@ -69,7 +69,9 @@ class HttpErrorHandler {
                     reqOpts.method = err.handler.method;
                     reqOpts.headers = new Headers();
                     reqOpts.headers.set("Content-Type", "application/json");
-                    reqOpts.body = this.payload || null;
+                    if (this.payload) {
+                        reqOpts.body = JSON.stringify(this.payload);
+                    }
                     if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
                         HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
                         err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
@@ -97,8 +99,12 @@ class HttpErrorHandler {
         function postToEndpoint(endpoint, reqOpts, errorCallback) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    let fetch = {};
-                    fetch = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
+                    let res = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
+                    let json = yield res.json();
+                    if (res.ok === false) {
+                        let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
+                        errorCallback(error);
+                    }
                 }
                 catch (err) {
                     if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {

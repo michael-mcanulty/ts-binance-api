@@ -68,7 +68,9 @@ export class HttpErrorHandler {
 					reqOpts.method = err.handler.method;
 					reqOpts.headers = new Headers();
 					reqOpts.headers.set("Content-Type", "application/json");
-					reqOpts.body = this.payload || null;
+					if(this.payload){
+						reqOpts.body = JSON.stringify(this.payload);
+					}
 
 					//Send an email
 					if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
@@ -102,8 +104,13 @@ export class HttpErrorHandler {
 		});
 		async function postToEndpoint(endpoint: string, reqOpts: RequestInit, errorCallback: Function){
 			try {
-				let fetch: any = {};
-				fetch = await BotHttp.fetch(endpoint, reqOpts);
+				let res = await BotHttp.fetch(endpoint, reqOpts);
+				let json = await res.json();
+
+				if (res.ok === false) {
+					let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
+					errorCallback(error);
+				}
 			} catch (err) {
 				if(err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED"){
 					await BBLogger.error(err.message);
