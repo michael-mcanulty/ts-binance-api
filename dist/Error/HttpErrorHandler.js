@@ -26,6 +26,7 @@ class HttpErrorHandler {
                 if (err && HttpErrorHandler.hasHandler(err)) {
                     if (err.handler.emailMsgOpts) {
                         err.handler.emailMsgOpts = HttpErrorHandler.emailMsgOptions;
+                        this.payload = { error: err };
                     }
                     if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
                         err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
