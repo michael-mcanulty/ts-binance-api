@@ -1,0 +1,1 @@
+{"version":3,"file":"EErrorType.js","sourceRoot":"","sources":["../../../src/Error/Enums/EErrorType.ts"],"names":[],"mappings":";;AAAA,IAAY,UAGX;AAHD,WAAY,UAAU;IACrB,iDAAO,CAAA;IACP,2CAAI,CAAA;AACL,CAAC,EAHW,UAAU,GAAV,kBAAU,KAAV,kBAAU,QAGrB","sourcesContent":["export enum EErrorType {\n\tBinance,\n\tNode\n}"]}

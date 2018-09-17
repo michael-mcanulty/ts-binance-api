@@ -1,0 +1,1 @@
+{"version":3,"file":"ISMTPOptions.js","sourceRoot":"","sources":["../../../src/Error/Interfaces/ISMTPOptions.ts"],"names":[],"mappings":"","sourcesContent":["import {IEmailAuth} from \"./IEmailAuth\";\n\nexport interface ISmtpOptions {\n\thost: string;\n\tport: number;\n\tsecure: boolean;\n\tauth: IEmailAuth\n}"]}
