@@ -43,7 +43,7 @@ class HttpErrorHandler {
                         }
                     }
                     let reqOpts = {};
-                    reqOpts.method = EMethod_1.EMethod[err.handler.method];
+                    reqOpts.method = err.handler.method;
                     reqOpts.headers = new Headers();
                     reqOpts.headers.set("Content-Type", "application/json");
                     reqOpts.body = this.payload || null;
