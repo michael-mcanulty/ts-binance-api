@@ -8,11 +8,13 @@ import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 
 export class HttpError extends Error {
-	public static fromJSON(err: IHttpError){
+	public static fromObjLiteral(err: IHttpError){
+		if(!err)return;
 		let handler: HttpErrorHandler = new HttpErrorHandler(err.handler);
 		return new HttpError(err.code, err.message, handler);
 	}
-	public static toJSON(err: HttpError){
+	public static toObjLiteral(err: HttpError){
+		if(!err)return;
 		let error: IHttpError = <IHttpError>{};
 		error.code = err.code;
 		error.message = err.message;

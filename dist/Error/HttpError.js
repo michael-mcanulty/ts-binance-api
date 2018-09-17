@@ -18,11 +18,15 @@ class HttpError extends Error {
             }
         }
     }
-    static fromJSON(err) {
+    static fromObjLiteral(err) {
+        if (!err)
+            return;
         let handler = new HttpErrorHandler_1.HttpErrorHandler(err.handler);
         return new HttpError(err.code, err.message, handler);
     }
-    static toJSON(err) {
+    static toObjLiteral(err) {
+        if (!err)
+            return;
         let error = {};
         error.code = err.code;
         error.message = err.message;

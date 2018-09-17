@@ -56,7 +56,7 @@ export class HttpErrorHandler {
 					let _endpoint: string[];
 
 					if ((err.handler.method != undefined && err.handler.method !== null) && err.handler.endpoint) {
-						this.payload = {error: HttpError.toJSON(err)};
+						this.payload = {error: HttpError.toObjLiteral(err)};
 						_endpoint = (Array.isArray(err.handler.endpoint)) ? <string[]>err.handler.endpoint : <string[]>new Array(err.handler.endpoint);
 						remoteEndpoints = _endpoint;
 						if (origin && _endpoint.length > 1) {

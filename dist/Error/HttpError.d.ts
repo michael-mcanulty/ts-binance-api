@@ -4,8 +4,8 @@ import { IHttpError } from "./Interfaces/IHttpError";
 import { IMessageOptions } from "./Interfaces/IMessageOptions";
 import { ISmtpOptions } from "./Interfaces/ISmtpOptions";
 export declare class HttpError extends Error {
-    static fromJSON(err: IHttpError): HttpError;
-    static toJSON(err: HttpError): IHttpError;
+    static fromObjLiteral(err: IHttpError): HttpError;
+    static toObjLiteral(err: HttpError): IHttpError;
     static allErrors: HttpError[];
     static _jsonErrors: IHttpError[];
     code: number;
