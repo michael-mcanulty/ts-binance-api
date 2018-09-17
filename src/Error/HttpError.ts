@@ -311,6 +311,9 @@ export class HttpError extends Error {
 	}
 
 	private static _getErrorHandler(error: HttpError): HttpErrorHandler | null {
+		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
+			throw new Error("Please initialize the HttpError class by running HttpError.init(). This is used to pass in the email options. It is needed regardless.");
+		}
 		let match: HttpError[] = HttpError.allErrors.filter(err => err.code === error.code);
 		if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler) {
 			return match[0].handler;
@@ -350,6 +353,9 @@ export class HttpError extends Error {
 	}
 
 	public static getErrorByCode(code: number): HttpError {
+		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
+			throw new Error("Please initialize the HttpError class by running HttpError.init(). This is used to pass in the email options. It is needed regardless.");
+		}
 		let result: HttpError;
 		if (HttpError.allErrors.length > 0) {
 			let filtered: HttpError[] = HttpError.allErrors.filter(handler => {
