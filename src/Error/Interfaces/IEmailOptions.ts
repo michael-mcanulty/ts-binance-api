@@ -3,5 +3,5 @@ import {IMessageOptions} from "./IMessageOptions";
 
 export interface IEmailOptions{
 	message: IMessageOptions;
-	smtpService: ISmtpOptions;
+	smtp: ISmtpOptions;
 }

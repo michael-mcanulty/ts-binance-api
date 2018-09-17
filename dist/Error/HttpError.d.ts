@@ -1,10 +1,11 @@
 import { BinanceError } from "./BinanceError";
 import { HttpErrorHandler } from "./HttpErrorHandler";
-import { ISMTPOptions } from "./Interfaces/ISMTPOptions";
+import { IHttpError } from "./Interfaces/IHttpError";
 import { IMessageOptions } from "./Interfaces/IMessageOptions";
+import { ISmtpOptions } from "./Interfaces/ISmtpOptions";
 export declare class HttpError extends Error {
     static allErrors: HttpError[];
-    private static httpErrors;
+    static _jsonErrors: IHttpError[];
     code: number;
     handler?: HttpErrorHandler;
     message: string;
@@ -14,7 +15,7 @@ export declare class HttpError extends Error {
     private static _getErrorType(err);
     static fromError(err: HttpError | BinanceError): HttpError;
     static getErrorByCode(code: number): HttpError;
-    static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISMTPOptions): HttpError[];
+    static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISmtpOptions, _jsonErrs?: IHttpError[]): HttpError[];
     static isHttpError(err: HttpError | Error): boolean;
     constructor(code: number, message: string, handler?: HttpErrorHandler);
 }

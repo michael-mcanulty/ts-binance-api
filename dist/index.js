@@ -1,7 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ISMTPOptions_1 = require("./Error/Interfaces/ISMTPOptions");
-exports.ISMTPOptions = ISMTPOptions_1.ISMTPOptions;
 var AccountInfoOptions_1 = require("./Account/AccountInfoOptions");
 exports.AccountInfoOptions = AccountInfoOptions_1.AccountInfoOptions;
 var Balance_1 = require("./Balances/Balance");

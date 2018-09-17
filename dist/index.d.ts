@@ -1,5 +1,5 @@
 export { IHttpErrorHandler } from "./Error/Interfaces/IHttpErrorHandler";
-export { ISMTPOptions } from "./Error/Interfaces/ISMTPOptions";
+export { ISmtpOptions } from "./Error/Interfaces/ISmtpOptions";
 export { ILimits } from "./ExchangeInfo/Interfaces/ILimits";
 export { IAvailBalance } from "./Balances/Interfaces/IAvailBalance";
 export { ITotalBalance } from "./Balances/Interfaces/ITotalBalance";

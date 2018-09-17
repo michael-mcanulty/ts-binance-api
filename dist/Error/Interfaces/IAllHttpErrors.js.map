@@ -1,1 +1,0 @@
-{"version":3,"file":"IAllHttpErrors.js","sourceRoot":"","sources":["../../../src/Error/Interfaces/IAllHttpErrors.ts"],"names":[],"mappings":"","sourcesContent":["import {IHttpError} from \"./IHttpError\";\r\nimport {IEmailOptions} from \"./IEmailOptions\";\r\n\r\nexport interface IAllHttpErrors{\r\n\temailOptions: IEmailOptions;\r\n\tallErrors: IHttpError[];\r\n}"]}

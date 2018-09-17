@@ -80,8 +80,11 @@ class HttpError extends Error {
         }
         return result;
     }
-    static init(msgOptions, emailServiceOptions) {
-        HttpError.allErrors = HttpError.httpErrors.map(err => {
+    static init(msgOptions, emailServiceOptions, _jsonErrs) {
+        if (_jsonErrs && _jsonErrs.length > 0) {
+            HttpError._jsonErrors = _jsonErrs;
+        }
+        HttpError.allErrors = HttpError._jsonErrors.map(err => {
             err.handler.emailMsgOpts = msgOptions;
             err.handler.emailServiceOpts = emailServiceOptions;
             let handler = err.handler;
@@ -93,7 +96,7 @@ class HttpError extends Error {
         return err && err instanceof HttpError;
     }
 }
-HttpError.httpErrors = [
+HttpError._jsonErrors = [
     {
         code: 3001, message: "DATASERVER_ECONNREFUSED",
         handler: {

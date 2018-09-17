@@ -4,12 +4,12 @@ import {HttpErrorHandler} from "./HttpErrorHandler";
 import {EMethod} from "../Rest/EMethod";
 import {IHttpError} from "./Interfaces/IHttpError";
 import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
-import {ISMTPOptions} from "./Interfaces/ISMTPOptions";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
+import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 
 export class HttpError extends Error {
 	public static allErrors: HttpError[];
-	private static httpErrors: IHttpError[] = [
+	public static _jsonErrors: IHttpError[] = [
 		{
 			code: 3001, message: "DATASERVER_ECONNREFUSED",
 			handler: <IHttpErrorHandler> {
@@ -362,8 +362,12 @@ export class HttpError extends Error {
 		return result;
 	}
 
-	public static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISMTPOptions) {
-		HttpError.allErrors = HttpError.httpErrors.map(err => {
+	public static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISmtpOptions, _jsonErrs?: IHttpError[]) {
+		if(_jsonErrs && _jsonErrs.length > 0){
+			// This is if you want to set the errors from a DB or sonewhere else
+			HttpError._jsonErrors = _jsonErrs
+		}
+		HttpError.allErrors = HttpError._jsonErrors.map(err => {
 			err.handler.emailMsgOpts = msgOptions;
 			err.handler.emailServiceOpts = emailServiceOptions;
 			let handler: IHttpErrorHandler = err.handler;
