@@ -1,12 +1,12 @@
 import { BinanceError } from "./BinanceError";
 import { HttpErrorHandler } from "./HttpErrorHandler";
-import { ISMTPOptions } from "./Email/Interfaces/ISMTPOptions";
-import { IMessageOptions } from "../Error/Email/Interfaces/IMessageOptions";
+import { ISMTPOptions } from "./Interfaces/ISMTPOptions";
+import { IMessageOptions } from "./Interfaces/IMessageOptions";
 export declare class HttpError extends Error {
     static allErrors: HttpError[];
+    private static httpErrors;
     code: number;
     handler?: HttpErrorHandler;
-    private static httpErrors;
     message: string;
     static GetTimeoutFromIPBannedMsg(err: BinanceError): number;
     private static _getErrorHandler(error);

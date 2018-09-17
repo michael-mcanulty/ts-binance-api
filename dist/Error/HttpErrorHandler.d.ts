@@ -1,23 +1,22 @@
 /// <reference types="node" />
-import { EMethod } from "../Rest/EMethod";
-import { NodeMailer } from "./Email/NodeMailer";
-import { IMessageOptions } from "./Email/Interfaces/IMessageOptions";
+import { NodeMailer } from "./NodeMailer";
+import { IMessageOptions } from "./Interfaces/IMessageOptions";
 import { HttpError } from "./HttpError";
-import { IHttpErrorHandlerOptions } from "./Email/Interfaces/IHttpErrorHandlerOptions";
-import { ISMTPOptions } from "./Email/Interfaces/ISMTPOptions";
+import { ISmtpOptions } from "./Interfaces/ISmtpOptions";
 import { URL } from "url";
+import { IHttpErrorHandler } from "./Interfaces/IHttpErrorHandler";
 export declare class HttpErrorHandler {
     static mailService: NodeMailer;
     static emailMsgOptions: IMessageOptions;
-    static emailServiceOptions: ISMTPOptions;
+    static emailServiceOptions: ISmtpOptions;
     type: string;
     sendEmail: boolean;
     emailMsgOpts?: IMessageOptions;
-    emailServiceOpts?: ISMTPOptions;
+    emailServiceOpts?: ISmtpOptions;
     endpoint?: string[] | string;
-    method?: EMethod;
+    method?: string;
     payload?: any;
     static hasHandler(err: HttpError): boolean;
     execute(err: HttpError, srcUrl: URL): Promise<any>;
-    constructor(config: IHttpErrorHandlerOptions);
+    constructor(config: IHttpErrorHandler);
 }

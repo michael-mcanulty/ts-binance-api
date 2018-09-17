@@ -1,6 +1,6 @@
 import { ISMTPOptions } from "./ISMTPOptions";
 import { IMessageOptions } from "./IMessageOptions";
-import { EMethod } from "../../../Rest/EMethod";
+import { EMethod } from "../../Rest/EMethod";
 import { EErrorType } from "../Enums/EErrorType";
 export interface IHttpErrorHandler {
     type: EErrorType;

@@ -1,10 +1,10 @@
 import { IBinanceApiAuth } from "../../Account/Interfaces/IBinanceApiAuth";
-import { IMessageOptions } from "../../Error/Email/Interfaces/IMessageOptions";
-import { ISMTPOptions } from "../../Error/Email/Interfaces/ISMTPOptions";
+import { IMessageOptions } from "../../Error/Interfaces/IMessageOptions";
+import { ISmtpOptions } from "../../Error/Interfaces/ISmtpOptions";
 export interface IBinanceOptions {
     _id?: string;
     auth: IBinanceApiAuth;
-    emailServiceOpts: ISMTPOptions;
+    emailServiceOpts: ISmtpOptions;
     emailMsgOpts: IMessageOptions;
     test: boolean;
     useServerTime: boolean;

@@ -1,1 +1,0 @@
-{"version":3,"file":"IHandleExceptionOptions.js","sourceRoot":"","sources":["../../../../src/Error/Email/Interfaces/IHandleExceptionOptions.ts"],"names":[],"mappings":"","sourcesContent":["import {IBaseHandleException} from \"./IBaseHandleException\";\n\nexport interface IHandleExceptionOptions extends IBaseHandleException {\n\tcode: number;\n\tmessage: string;\n}\n"]}
