@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const nodeMailer = require("Error/NodeMailer");
+const nodeMailer = require("nodemailer");
 class NodeMailer {
     constructor() { }
     sendEmail(msgOpts, serviceOptions) {

@@ -1,4 +1,4 @@
-import * as nodeMailer from "Error/NodeMailer";
+import * as nodeMailer from "nodemailer";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {NodeMailerService} from "./Types/Types";
 import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
