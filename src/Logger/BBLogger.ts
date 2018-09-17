@@ -59,7 +59,7 @@ export class BBLogger {
 	private static _writeToFile(filename: string, msg: string): Promise<void>{
 		return new Promise(async (resolve, reject)=>{
 			try{
-				await BBLogger.limitedLines(filename);
+				BBLogger.limitedLines(filename);
 				fs.appendFile(filename, BBLogger._getMsg(msg), err=>{
 					if (err){
 						throw err;
@@ -78,7 +78,7 @@ export class BBLogger {
 			try{
 				let name: string = BBLogger.info.name;
 				let filename: string = BBLogger._getFilename(name);
-				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+				BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
 				resolve();
 			}catch(err){
 				reject(err);
@@ -100,7 +100,7 @@ export class BBLogger {
 			try{
 				let name: string = BBLogger.error.name;
 				let filename: string = BBLogger._getFilename(name);
-				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+				BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
 				resolve();
 			}catch(err){
 				reject(err);
@@ -118,7 +118,7 @@ export class BBLogger {
 			try{
 				let name: string = BBLogger.warning.name;
 				let filename: string = BBLogger._getFilename(name);
-				await BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+				BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
 				resolve();
 			}catch(err){
 				reject(err);

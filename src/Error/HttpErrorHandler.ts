@@ -98,14 +98,13 @@ export class HttpErrorHandler {
 				resolve();
 
 			}catch(err){
-				await BBLogger.error(err);
+				BBLogger.error(err);
 				reject(err);
 			}
 		});
 		async function postToEndpoint(endpoint: string, reqOpts: RequestInit, errorCallback: Function){
 			try {
 				let res = await BotHttp.fetch(endpoint, reqOpts);
-				let json = await res.json();
 
 				if (res.ok === false) {
 					let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
@@ -113,10 +112,10 @@ export class HttpErrorHandler {
 				}
 			} catch (err) {
 				if(err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED"){
-					await BBLogger.error(err.message);
+					BBLogger.error(err.message);
 					errorCallback(err);
 				}else{
-					await BBLogger.warning("Tried to kill a dead server.");
+					BBLogger.warning("Tried to kill a dead server.");
 				}
 			}
 		}

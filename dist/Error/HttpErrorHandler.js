@@ -92,7 +92,7 @@ class HttpErrorHandler {
                 resolve();
             }
             catch (err) {
-                yield BBLogger_1.BBLogger.error(err);
+                BBLogger_1.BBLogger.error(err);
                 reject(err);
             }
         }));
@@ -100,7 +100,6 @@ class HttpErrorHandler {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
                     let res = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
-                    let json = yield res.json();
                     if (res.ok === false) {
                         let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
                         errorCallback(error);
@@ -108,11 +107,11 @@ class HttpErrorHandler {
                 }
                 catch (err) {
                     if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
-                        yield BBLogger_1.BBLogger.error(err.message);
+                        BBLogger_1.BBLogger.error(err.message);
                         errorCallback(err);
                     }
                     else {
-                        yield BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
+                        BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
                     }
                 }
             });

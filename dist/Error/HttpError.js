@@ -126,25 +126,16 @@ class HttpError extends Error {
 }
 HttpError._jsonErrors = [
     {
-        code: 3001, message: "DATASERVER_ECONNREFUSED",
-        handler: {
-            type: EErrorType_1.EErrorType.Node,
-            sendEmail: true,
-            endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
-        }
-    },
-    {
         code: 127, message: "ECONNREFUSED",
         handler: {
             type: EErrorType_1.EErrorType.Node,
-            sendEmail: false,
-            endpoint: []
+            sendEmail: false
         }
     },
     {
         code: 401, message: "UNAUTHORIZED",
         handler: {
-            type: EErrorType_1.EErrorType.Binance,
+            type: EErrorType_1.EErrorType.Node,
             sendEmail: true,
             endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
             method: EMethod_1.EMethod.POST
@@ -178,16 +169,14 @@ HttpError._jsonErrors = [
         code: -1003, message: "TOO_MANY_REQUESTS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1006, message: "UNEXPECTED_RESP",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -202,16 +191,14 @@ HttpError._jsonErrors = [
         code: -1013, message: "INVALID_MESSAGE",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: false,
-            endpoint: []
+            sendEmail: false
         }
     },
     {
         code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: false,
-            endpoint: []
+            sendEmail: false
         }
     },
     {
@@ -237,32 +224,28 @@ HttpError._jsonErrors = [
         code: -1020, message: "UNSUPPORTED_OPERATION",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1021, message: "INVALID_TIMESTAMP",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1022, message: "INVALID_SIGNATURE",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1100, message: "ILLEGAL_CHARS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -285,40 +268,35 @@ HttpError._jsonErrors = [
         code: -1103, message: "UNKNOWN_PARAM",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1104, message: "UNREAD_PARAMETERS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1105, message: "PARAM_EMPTY",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1106, message: "PARAM_NOT_REQUIRED",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
         code: -1130, message: "INVALID_PARAMETER",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -341,8 +319,7 @@ HttpError._jsonErrors = [
         code: -2010, message: "INSUFFICIENT_BALANCE",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -357,8 +334,7 @@ HttpError._jsonErrors = [
         code: -2013, message: "NO_SUCH_ORDER",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -373,8 +349,7 @@ HttpError._jsonErrors = [
         code: -2015, message: "REJECTED_MBX_KEY",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
 ];

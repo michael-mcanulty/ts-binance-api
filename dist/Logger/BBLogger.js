@@ -65,7 +65,7 @@ class BBLogger {
     static _writeToFile(filename, msg) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                yield BBLogger.limitedLines(filename);
+                BBLogger.limitedLines(filename);
                 fs.appendFile(filename, BBLogger._getMsg(msg), err => {
                     if (err) {
                         throw err;
@@ -85,7 +85,7 @@ class BBLogger {
             try {
                 let name = BBLogger.info.name;
                 let filename = BBLogger._getFilename(name);
-                yield BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
                 resolve();
             }
             catch (err) {
@@ -106,7 +106,7 @@ class BBLogger {
             try {
                 let name = BBLogger.error.name;
                 let filename = BBLogger._getFilename(name);
-                yield BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
                 resolve();
             }
             catch (err) {
@@ -123,7 +123,7 @@ class BBLogger {
             try {
                 let name = BBLogger.warning.name;
                 let filename = BBLogger._getFilename(name);
-                yield BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
                 resolve();
             }
             catch (err) {

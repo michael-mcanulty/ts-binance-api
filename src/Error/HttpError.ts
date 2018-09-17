@@ -32,25 +32,16 @@ export class HttpError extends Error {
 	public static allErrors: HttpError[];
 	public static _jsonErrors: IHttpError[] = [
 		{
-			code: 3001, message: "DATASERVER_ECONNREFUSED",
-			handler: <IHttpErrorHandler> {
-				type: EErrorType.Node,
-				sendEmail: true,
-				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"]
-			}
-		},
-		{
 			code: 127, message: "ECONNREFUSED",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Node,
-				sendEmail: false,
-				endpoint: []
+				sendEmail: false
 			}
 		},
 		{
 			code: 401, message: "UNAUTHORIZED",
 			handler: <IHttpErrorHandler> {
-				type: EErrorType.Binance,
+				type: EErrorType.Node,
 				sendEmail: true,
 				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
 				method: EMethod.POST
@@ -84,8 +75,7 @@ export class HttpError extends Error {
 			code: -1003, message: "TOO_MANY_REQUESTS",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -93,8 +83,7 @@ export class HttpError extends Error {
 			code: -1006, message: "UNEXPECTED_RESP",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -109,16 +98,14 @@ export class HttpError extends Error {
 			code: -1013, message: "INVALID_MESSAGE",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: false,
-				endpoint: []
+				sendEmail: false
 			}
 		},
 		{
 			code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: false,
-				endpoint: []
+				sendEmail: false
 			}
 		},
 		{
@@ -144,16 +131,14 @@ export class HttpError extends Error {
 			code: -1020, message: "UNSUPPORTED_OPERATION",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
 			code: -1021, message: "INVALID_TIMESTAMP",
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -161,8 +146,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -171,8 +155,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -201,8 +184,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -211,8 +193,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -221,8 +202,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -231,8 +211,7 @@ export class HttpError extends Error {
 			,
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -241,8 +220,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -271,8 +249,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -289,8 +266,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -308,8 +284,7 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.Binance,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 	];
