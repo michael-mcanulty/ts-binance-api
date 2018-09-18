@@ -36,6 +36,7 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: EErrorType.MongoDB,
 				sendEmail: true,
+				//Only kill the worker. The DB is accessed using a worker and only on the data server.
 				endpoint: ["http://localhost:3001/kill"],
 			}
 		},
@@ -317,13 +318,17 @@ export class HttpError extends Error {
 
 	private static _getErrorHandler(error: HttpError): HttpErrorHandler | null {
 		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
-			throw new Error("Please initialize the HttpError class by running HttpError.init(). This is used to pass in the email options. It is needed regardless.");
-		}
-		let match: HttpError[] = HttpError.allErrors.filter(err => err.code === error.code);
-		if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler) {
-			return match[0].handler;
-		} else {
-			return null;
+			let match: IHttpError[] = HttpError._jsonErrors.filter(err => err.code === error.code);
+			if (Array.isArray(match) && typeof match[0] === "object") {
+				return null;
+			}
+		}else{
+			let match: HttpError[] = HttpError.allErrors.filter(err => err.code === error.code);
+			if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler) {
+				return match[0].handler;
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -359,18 +364,22 @@ export class HttpError extends Error {
 
 	public static getErrorByCode(code: number): HttpError {
 		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
-			throw new Error("Please initialize the HttpError class by running HttpError.init(). This is used to pass in the email options. It is needed regardless.");
-		}
-		let result: HttpError;
-		if (HttpError.allErrors.length > 0) {
-			let filtered: HttpError[] = HttpError.allErrors.filter(handler => {
-				return (typeof code === "number" && handler.code === code)
-			});
-			if (filtered && filtered.length > 0) {
-				result = filtered[0];
+			let match: IHttpError[] = HttpError._jsonErrors.filter(err => err.code === error.code);
+			if (Array.isArray(match) && typeof match[0] === "object") {
+				return HttpError.fromObjLiteral(match[0]);
 			}
+		}else{
+			let result: HttpError;
+			if (HttpError.allErrors.length > 0) {
+				let filtered: HttpError[] = HttpError.allErrors.filter(handler => {
+					return (typeof code === "number" && handler.code === code)
+				});
+				if (filtered && filtered.length > 0) {
+					result = filtered[0];
+				}
+			}
+			return result;
 		}
-		return result;
 	}
 
 	public static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISmtpOptions, _jsonErrs?: IHttpError[]) {

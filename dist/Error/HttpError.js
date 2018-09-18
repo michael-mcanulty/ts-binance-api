@@ -57,14 +57,19 @@ class HttpError extends Error {
     }
     static _getErrorHandler(error) {
         if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
-            throw new Error("Please initialize the HttpError class by running HttpError.init(). This is used to pass in the email options. It is needed regardless.");
-        }
-        let match = HttpError.allErrors.filter(err => err.code === error.code);
-        if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler) {
-            return match[0].handler;
+            let match = HttpError._jsonErrors.filter(err => err.code === error.code);
+            if (Array.isArray(match) && typeof match[0] === "object") {
+                return null;
+            }
         }
         else {
-            return null;
+            let match = HttpError.allErrors.filter(err => err.code === error.code);
+            if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler) {
+                return match[0].handler;
+            }
+            else {
+                return null;
+            }
         }
     }
     static _getErrorParameters(err) {
@@ -96,18 +101,23 @@ class HttpError extends Error {
     }
     static getErrorByCode(code) {
         if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
-            throw new Error("Please initialize the HttpError class by running HttpError.init(). This is used to pass in the email options. It is needed regardless.");
-        }
-        let result;
-        if (HttpError.allErrors.length > 0) {
-            let filtered = HttpError.allErrors.filter(handler => {
-                return (typeof code === "number" && handler.code === code);
-            });
-            if (filtered && filtered.length > 0) {
-                result = filtered[0];
+            let match = HttpError._jsonErrors.filter(err => err.code === error.code);
+            if (Array.isArray(match) && typeof match[0] === "object") {
+                return HttpError.fromObjLiteral(match[0]);
             }
         }
-        return result;
+        else {
+            let result;
+            if (HttpError.allErrors.length > 0) {
+                let filtered = HttpError.allErrors.filter(handler => {
+                    return (typeof code === "number" && handler.code === code);
+                });
+                if (filtered && filtered.length > 0) {
+                    result = filtered[0];
+                }
+            }
+            return result;
+        }
     }
     static init(msgOptions, emailServiceOptions, _jsonErrs) {
         if (_jsonErrs && _jsonErrs.length > 0) {
