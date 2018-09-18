@@ -101,7 +101,7 @@ class HttpError extends Error {
     }
     static getErrorByCode(code) {
         if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
-            let match = HttpError._jsonErrors.filter(err => err.code === error.code);
+            let match = HttpError._jsonErrors.filter(err => err.code === code);
             if (Array.isArray(match) && typeof match[0] === "object") {
                 return HttpError.fromObjLiteral(match[0]);
             }

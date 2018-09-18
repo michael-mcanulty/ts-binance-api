@@ -364,7 +364,7 @@ export class HttpError extends Error {
 
 	public static getErrorByCode(code: number): HttpError {
 		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
-			let match: IHttpError[] = HttpError._jsonErrors.filter(err => err.code === error.code);
+			let match: IHttpError[] = HttpError._jsonErrors.filter(err => err.code === code);
 			if (Array.isArray(match) && typeof match[0] === "object") {
 				return HttpError.fromObjLiteral(match[0]);
 			}
@@ -372,7 +372,7 @@ export class HttpError extends Error {
 			let result: HttpError;
 			if (HttpError.allErrors.length > 0) {
 				let filtered: HttpError[] = HttpError.allErrors.filter(handler => {
-					return (typeof code === "number" && handler.code === code)
+					return (typeof code === "number" && handler.code === code);
 				});
 				if (filtered && filtered.length > 0) {
 					result = filtered[0];
