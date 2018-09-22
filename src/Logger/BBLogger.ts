@@ -59,14 +59,18 @@ export class BBLogger {
 	private static _writeToFile(filename: string, msg: string): Promise<void>{
 		return new Promise(async (resolve, reject)=>{
 			try{
-				BBLogger.limitedLines(filename);
-				fs.appendFile(filename, BBLogger._getMsg(msg), err=>{
-					if (err){
-						throw err;
-					}else{
-						resolve();
-					}
-				});
+				if(msg){
+					await BBLogger.limitedLines(filename);
+					fs.appendFile(filename, BBLogger._getMsg(msg), err=>{
+						if (err){
+							throw err;
+						}else{
+							resolve();
+						}
+					});
+				}else{
+					resolve();
+				}
 			}catch(err){
 				reject(err);
 			}

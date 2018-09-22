@@ -65,15 +65,20 @@ class BBLogger {
     static _writeToFile(filename, msg) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
-                BBLogger.limitedLines(filename);
-                fs.appendFile(filename, BBLogger._getMsg(msg), err => {
-                    if (err) {
-                        throw err;
-                    }
-                    else {
-                        resolve();
-                    }
-                });
+                if (msg) {
+                    yield BBLogger.limitedLines(filename);
+                    fs.appendFile(filename, BBLogger._getMsg(msg), err => {
+                        if (err) {
+                            throw err;
+                        }
+                        else {
+                            resolve();
+                        }
+                    });
+                }
+                else {
+                    resolve();
+                }
             }
             catch (err) {
                 reject(err);
