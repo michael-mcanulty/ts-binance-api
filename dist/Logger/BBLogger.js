@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
@@ -63,10 +55,10 @@ class BBLogger {
         });
     }
     static _writeToFile(filename, msg) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 if (msg) {
-                    yield BBLogger.limitedLines(filename);
+                    await BBLogger.limitedLines(filename);
                     fs.appendFile(filename, BBLogger._getMsg(msg), err => {
                         if (err) {
                             throw err;
@@ -83,10 +75,10 @@ class BBLogger {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     static info(msg) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let name = BBLogger.info.name;
                 let filename = BBLogger._getFilename(name);
@@ -96,7 +88,7 @@ class BBLogger {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     static indexContains(arr, strContains) {
         let idx = -1;
@@ -107,7 +99,7 @@ class BBLogger {
         return idx;
     }
     static error(msg) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let name = BBLogger.error.name;
                 let filename = BBLogger._getFilename(name);
@@ -117,14 +109,14 @@ class BBLogger {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     static utcToPST(date) {
         let _date = (date) ? date : new Date();
         return new Date(_date.getTime() - new Date().getTimezoneOffset() * 60000);
     }
     static warning(msg) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let name = BBLogger.warning.name;
                 let filename = BBLogger._getFilename(name);
@@ -134,7 +126,7 @@ class BBLogger {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
 }
 BBLogger.lineLimit = 100;

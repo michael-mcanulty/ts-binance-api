@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const BotHttp_1 = require("./BotHttp");
 const EMethod_1 = require("./EMethod");
@@ -32,14 +24,14 @@ const TestOrder_1 = require("../Transaction/TestOrder");
 const __1 = require("..");
 class Rest extends BotHttp_1.BotHttp {
     _cancelOrder(cancelOrder) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let orderResRaw;
                 let response;
                 let privateOrder;
                 let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.DELETE, true, false, false);
-                privateOrder = yield this.privateCall(url, callOpts, cancelOrder);
+                privateOrder = await this.privateCall(url, callOpts, cancelOrder);
                 if (privateOrder instanceof HttpError_1.HttpError) {
                     reject(privateOrder);
                 }
@@ -52,17 +44,17 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     _getCandlesInterval(symbol, interval, limit) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let candleOpts = {};
                 candleOpts.symbol = symbol;
                 candleOpts.interval = interval;
                 candleOpts.limit = limit;
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET);
-                let raw = yield this.call('/v1/klines', callOpts, candleOpts);
+                let raw = await this.call('/v1/klines', callOpts, candleOpts);
                 let candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
                 candles.forEach((candle) => {
                     candle.quoteAsset = Rest.getQuoteAssetName(symbol);
@@ -72,17 +64,17 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     ;
     _newOrder(order) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let orderRes;
                 let privateOrder;
                 let url = (Binance_1.Binance.options.test) ? "/v3/order/test" : "/v3/order";
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.POST, true, false, false);
-                privateOrder = yield this.privateCall(url, callOpts, NewOrder_1.NewOrder.toBinance(order));
+                privateOrder = await this.privateCall(url, callOpts, NewOrder_1.NewOrder.toBinance(order));
                 if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
                     resolve(new TestOrder_1.TestOrder());
                 }
@@ -100,30 +92,30 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     cancelOrder(symbol, orderId) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let result;
                 let cancelOrder = new CancelOrder_1.CancelOrder(symbol, orderId);
-                let cancelResult = yield this._cancelOrder(cancelOrder);
+                let cancelResult = await this._cancelOrder(cancelOrder);
                 result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
                 resolve(result);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     cancelOrdersBySymbol(symbol) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let results = [];
-                let openOrders = yield this.getOpenOrders(symbol);
+                let openOrders = await this.getOpenOrders(symbol);
                 let symbolOrders = openOrders.filter(order => order.symbol === symbol);
                 for (let order of symbolOrders) {
-                    let cancelResp = yield this.cancelOrder(order.symbol, order.orderId);
+                    let cancelResp = await this.cancelOrder(order.symbol, order.orderId);
                     results.push(cancelResp);
                 }
                 resolve(results);
@@ -131,44 +123,44 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     closeDataStream() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             let result;
             try {
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.DELETE, true, false, true);
                 let dStream = new DataStream_1.DataStream(Rest.listenKey);
-                result = yield this.privateCall('/v1/userDataStream', callOpts, dStream);
+                result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
                 resolve(result);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getAccountInfo(recvWindow) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let url = "/v3/account";
                 let opts = new AccountInfoOptions_1.AccountInfoOptions(recvWindow);
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let accountInfoRest = yield this.privateCall(url, callOpts, opts);
+                let accountInfoRest = await this.privateCall(url, callOpts, opts);
                 let info = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceRest(accountInfoRest);
                 resolve(info);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getAllOrders(symbol, limit = 500, orderId, recvWindow) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let query = new AllOrders_1.AllOrders(symbol, orderId, limit, recvWindow);
                 let url = '/v3/allOrders';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let privateCall = yield this.privateCall(url, callOpts, query);
+                let privateCall = await this.privateCall(url, callOpts, query);
                 let results = [];
                 if (Array.isArray(privateCall) && privateCall.length > 0) {
                     results = privateCall.map(pCall => {
@@ -180,13 +172,13 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getAvailableTotalBalance(quoteAsset, dollarBaseAsset = "USDT", primaryBaseAsset = "BTC") {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
-                let balances = yield this.getBalances();
-                let prices = yield this.getPrices();
+                let balances = await this.getBalances();
+                let prices = await this.getPrices();
                 if (balances.length === 0) {
                     reject("Error: Balances not working");
                 }
@@ -240,13 +232,13 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getBalances(recvWindow, gtZeroOnly = false) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let balances;
-                let accountInfo = yield this.getAccountInfo(recvWindow);
+                let accountInfo = await this.getAccountInfo(recvWindow);
                 balances = accountInfo.balances;
                 if (gtZeroOnly) {
                     balances = accountInfo.balances.filter(bal => bal.available > 0);
@@ -259,15 +251,15 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getCandles(symbols, intervals, limit) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let candleIntervals = [];
                 for (let symbol of symbols) {
                     for (let interval of intervals) {
-                        let candles = yield this._getCandlesInterval(symbol, interval, limit);
+                        let candles = await this._getCandlesInterval(symbol, interval, limit);
                         let ci = new CandleInterval_1.CandleInterval(candles);
                         candleIntervals.push(ci);
                     }
@@ -277,65 +269,65 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     ;
     getDataStream() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.POST, true, true, false);
                 let signed = new Signed_1.Signed();
-                Rest.listenKey = (yield this.privateCall('/v1/userDataStream', callOpts, signed));
+                Rest.listenKey = await this.privateCall('/v1/userDataStream', callOpts, signed);
                 resolve(Rest.listenKey);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getDepositAddress(request) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let url = '/wapi/v3/depositAddress.html';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let depositAddress = yield this.privateCall(url, callOpts, request);
+                let depositAddress = await this.privateCall(url, callOpts, request);
                 resolve(depositAddress);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getDepositHisory(request) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let url = '/wapi/v3/depositHistory.html';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let depositHistory = yield this.privateCall(url, callOpts, request);
+                let depositHistory = await this.privateCall(url, callOpts, request);
                 resolve(depositHistory);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getExchangeInfo() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-                let info = yield this.call('/v1/exchangeInfo', callOpts);
+                let info = await this.call('/v1/exchangeInfo', callOpts);
                 resolve(info);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     ;
     getMarkets(quoteAsset) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
-                let info = yield this.getExchangeInfo();
+                let info = await this.getExchangeInfo();
                 let symbols = info.symbols;
                 let markets = symbols.map(symbol => {
                     return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
@@ -346,15 +338,15 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getOpenOrders(symbol, orderId, recvWindow, origClientOrderId) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let url = "/v3/openOrders";
                 let nOpen = new QueryOrder_1.QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let privateCall = yield this.privateCall(url, callOpts, nOpen);
+                let privateCall = await this.privateCall(url, callOpts, nOpen);
                 let openOrders = [];
                 if (Array.isArray(privateCall) && privateCall.length > 0) {
                     openOrders = privateCall.map(o => {
@@ -366,15 +358,15 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getOrder(symbol, orderId, recvWindow, origClientOrderId) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let query = new QueryOrder_1.QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
                 let url = '/v3/order';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let privateCall = yield this.privateCall(url, callOpts, query);
+                let privateCall = await this.privateCall(url, callOpts, query);
                 let result;
                 if (privateCall && privateCall.hasOwnProperty("symbol")) {
                     result = new Order_1.Order(privateCall.symbol, privateCall.price, privateCall.side, privateCall.executedQty, privateCall.orderId, privateCall.origQty, privateCall.status, privateCall.timeInForce, privateCall.type, privateCall.clientOrderId, privateCall.time);
@@ -384,14 +376,14 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getPrices() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
             let url = '/v1/ticker/allPrices';
             try {
-                let rawPrices = yield this.call(url, callOpts);
+                let rawPrices = await this.call(url, callOpts);
                 if (Array.isArray(rawPrices) && rawPrices.length > 0) {
                     let prices = __1.Price.toPrices(rawPrices);
                     resolve(prices);
@@ -400,7 +392,7 @@ class Rest extends BotHttp_1.BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     static getQuoteAssetName(symbol) {
         let qa;
@@ -413,99 +405,99 @@ class Rest extends BotHttp_1.BotHttp {
         return qa;
     }
     getStatus() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-                let status = yield this.call('/wapi/v3/systemStatus.html', opts);
+                let status = await this.call('/wapi/v3/systemStatus.html', opts);
                 resolve(status);
             }
             catch (err) {
                 reject(`Error retrieving the system status. Message: ${err}`);
             }
-        }));
+        });
     }
     getWithdrawHisory(request) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let url = '/wapi/v3/withdrawHistory.html';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let withdrawHistory = yield this.privateCall(url, callOpts, request);
+                let withdrawHistory = await this.privateCall(url, callOpts, request);
                 resolve(withdrawHistory);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     keepDataStream() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             let result;
             try {
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.PUT, true, false, true);
                 let dStream = new DataStream_1.DataStream(Rest.listenKey);
-                result = yield this.privateCall('/v1/userDataStream', callOpts, dStream);
+                result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
                 resolve(result);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     limitBuy(symbol, quantity, price, recvWindow, iceburgQty, timeInForce, stopPrice, newClientOrderId, newOrderRespType) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let type = EOrderEnums_1.EOrderType.LIMIT;
                 let side = EOrderEnums_1.EOrderSide.BUY;
                 let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
-                let orderRes = yield this._newOrder(order);
+                let orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     limitSell(symbol, quantity, price, recvWindow, iceburgQty, timeInForce, stopPrice, newClientOrderId, newOrderRespType) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let type = EOrderEnums_1.EOrderType.LIMIT;
                 let side = EOrderEnums_1.EOrderSide.SELL;
                 let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
-                let orderRes = yield this._newOrder(order);
+                let orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     marketBuy(symbol, quantity, recvWindow) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let type = EOrderEnums_1.EOrderType.MARKET;
                 let side = EOrderEnums_1.EOrderSide.BUY;
                 let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
-                let orderRes = yield this._newOrder(order);
+                let orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     marketSell(symbol, quantity, recvWindow) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let type = EOrderEnums_1.EOrderType.MARKET;
                 let side = EOrderEnums_1.EOrderSide.SELL;
                 let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
-                let orderRes = yield this._newOrder(order);
+                let orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     constructor(options) {
         super(options);

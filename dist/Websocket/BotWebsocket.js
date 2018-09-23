@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Html5WebSocket = require("html5-websocket");
 const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWebSocket");
@@ -58,8 +50,8 @@ class BotWebsocket extends Rest_1.Rest {
     }
     balances(callback) {
         const self = this;
-        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
-        self.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+        const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, { listenKey });
+        self.getDataStream().then(async (lk) => {
             const listenKey = lk.listenKey;
             const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
             w.onmessage = (msg) => {
@@ -73,12 +65,12 @@ class BotWebsocket extends Rest_1.Rest {
             };
             const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
             keepStreamAlive(self.keepDataStream, listenKey)();
-            return () => __awaiter(this, void 0, void 0, function* () {
+            return async () => {
                 clearInterval(int);
-                yield self.closeDataStream();
+                await self.closeDataStream();
                 w.close(1000, 'Close handle was called');
-            });
-        }));
+            };
+        });
     }
     candles(symbols, intervals, callback) {
         const symbolCache = symbols.map(symbol => {
@@ -101,15 +93,15 @@ class BotWebsocket extends Rest_1.Rest {
     }
     heartbeat() {
         const self = this;
-        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+        setInterval(async () => {
             try {
-                BotWebsocket.isAlive = yield self.ping();
+                BotWebsocket.isAlive = await self.ping();
             }
             catch (err) {
                 let error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
                 BotWebsocket._ws.close(error.code, error.message);
             }
-        }), 3000);
+        }, 3000);
     }
     openWebSocket(url) {
         if (url) {
@@ -120,8 +112,8 @@ class BotWebsocket extends Rest_1.Rest {
     }
     orders(callback) {
         const self = this;
-        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.apply(this, { listenKey }); });
-        self.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+        const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, { listenKey });
+        self.getDataStream().then(async (lk) => {
             const listenKey = lk.listenKey;
             const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
             w.onmessage = (msg) => {
@@ -135,12 +127,12 @@ class BotWebsocket extends Rest_1.Rest {
             };
             const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
             keepStreamAlive(self.keepDataStream, listenKey)();
-            return () => __awaiter(this, void 0, void 0, function* () {
+            return async () => {
                 clearInterval(int);
-                yield self.closeDataStream();
+                await self.closeDataStream();
                 w.close(1000, 'Close handle was called');
-            });
-        }));
+            };
+        });
     }
     prices(callback) {
         let ticksToPrices = (tickers) => {
@@ -153,8 +145,8 @@ class BotWebsocket extends Rest_1.Rest {
     }
     user(callback) {
         const self = this;
-        const keepStreamAlive = (method, listenKey) => () => __awaiter(this, void 0, void 0, function* () { return yield method.call(this, { listenKey }); });
-        self.getDataStream().then((lk) => __awaiter(this, void 0, void 0, function* () {
+        const keepStreamAlive = (method, listenKey) => async () => await method.call(this, { listenKey });
+        self.getDataStream().then(async (lk) => {
             const listenKey = lk.listenKey;
             const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
             w.onmessage = (msg) => {
@@ -174,12 +166,12 @@ class BotWebsocket extends Rest_1.Rest {
             };
             const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
             keepStreamAlive(self.keepDataStream, listenKey)();
-            return () => __awaiter(this, void 0, void 0, function* () {
+            return async () => {
                 clearInterval(int);
-                yield self.closeDataStream();
+                await self.closeDataStream();
                 w.close(1000, 'Close handle was called');
-            });
-        }));
+            };
+        });
     }
 }
 BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';

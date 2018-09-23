@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const EMethod_1 = require("../Rest/EMethod");
 const BotHttp_1 = require("../Rest/BotHttp");
@@ -39,7 +31,7 @@ class HttpErrorHandler {
         return (err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
     }
     execute(err, srcUrl) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let origin = srcUrl.origin;
                 if (err && HttpErrorHandler.hasHandler(err)) {
@@ -77,14 +69,14 @@ class HttpErrorHandler {
                         err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
                         err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message}` : err.handler.emailMsgOpts.text;
                         let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                        yield HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+                        await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
                         for (let ePoint of remoteEndpoints) {
-                            yield postToEndpoint(ePoint, reqOpts, reject);
+                            await postToEndpoint(ePoint, reqOpts, reject);
                         }
                         if (origin && _endpoint.length > remoteEndpoints.length) {
                             let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
                             if (lastPoint && lastPoint.length > 0) {
-                                yield postToEndpoint(lastPoint[0], reqOpts, reject);
+                                await postToEndpoint(lastPoint[0], reqOpts, reject);
                             }
                         }
                     }
@@ -95,26 +87,24 @@ class HttpErrorHandler {
                 BBLogger_1.BBLogger.error(err);
                 reject(err);
             }
-        }));
-        function postToEndpoint(endpoint, reqOpts, errorCallback) {
-            return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    let res = yield BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
-                    if (res.ok === false) {
-                        let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
-                        errorCallback(error);
-                    }
+        });
+        async function postToEndpoint(endpoint, reqOpts, errorCallback) {
+            try {
+                let res = await BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
+                if (res.ok === false) {
+                    let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
+                    errorCallback(error);
                 }
-                catch (err) {
-                    if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
-                        BBLogger_1.BBLogger.error(err.message);
-                        errorCallback(err);
-                    }
-                    else {
-                        BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
-                    }
+            }
+            catch (err) {
+                if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
+                    BBLogger_1.BBLogger.error(err.message);
+                    errorCallback(err);
                 }
-            });
+                else {
+                    BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
+                }
+            }
         }
     }
 }

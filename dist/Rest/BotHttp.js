@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fetch = require("isomorphic-fetch");
 const crypto = require("crypto");
@@ -23,23 +15,23 @@ class BotHttp {
         return `${BotHttp.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BotHttp.makeQueryString(data)}`;
     }
     call(path, callOptions, payload) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             let result;
             try {
-                result = yield this.fetch(path, callOptions, payload);
+                result = await this.fetch(path, callOptions, payload);
                 resolve(result);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     fetch(path, callOptions, payload) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let url = BotHttp.buildUrl(path, callOptions.noData, payload);
-                let res = yield BotHttp.fetch(url, callOptions);
-                let json = yield res.json();
+                let res = await BotHttp.fetch(url, callOptions);
+                let json = await res.json();
                 if (res.ok === false) {
                     let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
                     reject(error);
@@ -51,18 +43,18 @@ class BotHttp {
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     getSignature(payload, timestamp) {
         let signature = crypto.createHmac('sha256', this.options.auth.secret).update(BotHttp.makeQueryString(Object.assign(payload, timestamp)).substr(1)).digest('hex');
         return signature;
     }
     getTimestamp() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             let time = {};
             if (this.options.useServerTime) {
                 try {
-                    time.timestamp = yield this.timestamp();
+                    time.timestamp = await this.timestamp();
                     resolve(time);
                 }
                 catch (err) {
@@ -73,7 +65,7 @@ class BotHttp {
                 time.timestamp = Date.now();
                 resolve(time);
             }
-        }));
+        });
     }
     static makeQueryString(params) {
         let result;
@@ -88,28 +80,28 @@ class BotHttp {
         return result;
     }
     ping() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-                yield this.call('/v1/ping', opts);
+                await this.call('/v1/ping', opts);
                 resolve(true);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     privateCall(path, callOptions, payload) {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             let result;
             let signature;
             if (!payload) {
                 payload = new Signed_1.Signed();
             }
             try {
-                let tStamp = yield this.getTimestamp();
+                let tStamp = await this.getTimestamp();
                 callOptions.headers = new ApiHeader_1.ApiHeader(this.options.auth.key);
-                signature = yield this.getSignature(payload, tStamp);
+                signature = await this.getSignature(payload, tStamp);
                 if (!callOptions.noExtra) {
                     payload.timestamp = tStamp.timestamp;
                     payload.signature = signature;
@@ -117,36 +109,36 @@ class BotHttp {
                 else {
                     delete payload.timestamp;
                 }
-                result = yield this.fetch(path, callOptions, payload);
+                result = await this.fetch(path, callOptions, payload);
                 resolve(result);
             }
             catch (err) {
                 reject(err);
             }
-        }));
+        });
     }
     time() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
                 let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-                let server = yield this.call('/v1/time', opts);
+                let server = await this.call('/v1/time', opts);
                 resolve(server);
             }
             catch (err) {
                 reject(`Error in server time sync. Message: ${err}`);
             }
-        }));
+        });
     }
     timestamp() {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return new Promise(async (resolve, reject) => {
             try {
-                let time = yield this.time();
+                let time = await this.time();
                 resolve(time.serverTime);
             }
             catch (err) {
                 reject(`Error in server time sync. Message: ${err}`);
             }
-        }));
+        });
     }
 }
 BotHttp.BASE = 'https://api.binance.com';
