@@ -16,7 +16,7 @@ export declare class HttpError extends Error {
     private static _getErrorParameters(err);
     private static _getErrorType(err);
     static fromError(err: HttpError | BinanceError): HttpError;
-    static getErrorByCode(code: number): HttpError;
+    static getErrorByCode(code: number): HttpError | null;
     static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISmtpOptions, _jsonErrs?: IHttpError[]): HttpError[];
     static isHttpError(err: HttpError | Error): boolean;
     constructor(code: number, message: string, handler?: HttpErrorHandler);

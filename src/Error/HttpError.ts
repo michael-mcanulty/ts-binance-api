@@ -362,7 +362,10 @@ export class HttpError extends Error {
 		return _httpError;
 	}
 
-	public static getErrorByCode(code: number): HttpError {
+	public static getErrorByCode(code: number): HttpError | null {
+		if(!code){
+			return null;
+		}
 		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
 			let match: IHttpError[] = HttpError._jsonErrors.filter(err => err.code === code);
 			if (Array.isArray(match) && typeof match[0] === "object") {
