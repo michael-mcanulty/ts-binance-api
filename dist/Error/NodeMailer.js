@@ -14,7 +14,7 @@ class NodeMailer {
                         reject(error);
                     }
                     else {
-                        resolve(`Email Sen: ${info.response}`);
+                        resolve(`Email Sent: ${info.response}`);
                     }
                 });
             }
