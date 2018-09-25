@@ -76,16 +76,8 @@ class HttpErrorHandler {
                         await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
                     }
                     if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-                        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
-                        let msgConfig = {};
-                        let isFatal = err.isFatal;
-                        let isKnownErr = !!(err.handler.type);
-                        msgConfig.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType_1.EErrorType[err.handler.type] : "Unknown"} Error Received`;
-                        msgConfig.text = `${opts.message}. \nSource: ${srcUrl.origin}`;
-                        msgConfig.from = err.handler.textMsgOpts.from || HttpErrorHandler.textMsgOptions.from || HttpErrorHandler.emailMsgOptions.from;
-                        msgConfig.to = TextMessage_1.TextMessage.GetEmailAddress;
-                        let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                        await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+                        let textMsg = new TextMessage_1.TextMessage();
+                        await textMsg.send(err, srcUrl.origin);
                     }
                     for (let ePoint of remoteEndpoints) {
                         await postToEndpoint(ePoint, reqOpts, reject);

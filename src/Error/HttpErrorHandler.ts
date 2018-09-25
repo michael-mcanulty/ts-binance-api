@@ -90,18 +90,8 @@ export class HttpErrorHandler {
 
 					//Send text message
 					if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-						HttpErrorHandler.mailService = new NodeMailer();
-						let msgConfig: IMessageOptions = <IMessageOptions>{};
-						let isFatal: boolean = err.isFatal;
-						let isKnownErr: boolean = !!(err.handler.type);
-						msgConfig.subject = `${(isFatal)?"Fatal":""}${(isKnownErr)?EErrorType[err.handler.type]:"Unknown"} Error Received`;
-						msgConfig.text = `${opts.message}. \nSource: ${srcUrl.origin}`;
-						msgConfig.from = err.handler.textMsgOpts.from || HttpErrorHandler.textMsgOptions.from || HttpErrorHandler.emailMsgOptions.from;
-						msgConfig.to = TextMessage.GetEmailAddress
-
-						let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
-
-						await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+						let textMsg = new TextMessage();
+						await textMsg.send(err, srcUrl.origin);
 					}
 
 					//Kamikaze style. Destroy endpoints with suicide on last post.
