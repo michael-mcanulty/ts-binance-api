@@ -31,8 +31,9 @@ export class BBLogger {
 	private static limitedLines(filename: string): Promise<void>{
 		return new Promise((resolve, reject)=> {
 			try {
-				fs.readFile(filename, 'utf8', (err, data)=>{if (err){
-					throw err;
+				fs.readFile(filename, 'utf8', (err, data)=>{
+					if (err){
+					reject(err);
 				}else{
 					let lines: string[] = data.split('\n');
 					if(lines.length > BBLogger.lineLimit){

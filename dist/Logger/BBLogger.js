@@ -28,7 +28,7 @@ class BBLogger {
             try {
                 fs.readFile(filename, 'utf8', (err, data) => {
                     if (err) {
-                        throw err;
+                        reject(err);
                     }
                     else {
                         let lines = data.split('\n');

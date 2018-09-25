@@ -10,15 +10,21 @@ import {URL} from "url";
 import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
 import {IHttpError} from "./Interfaces/IHttpError";
 import {worker} from "cluster";
+import {ITextMsgOpts} from "../TextMessage/ITextMsgOpts";
+import {TextMessage} from "../TextMessage/TextMessage";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
 	public static emailMsgOptions: IMessageOptions;
 	public static emailServiceOptions: ISmtpOptions;
+	public static textMsgOptions: ITextMsgOpts;
+
 	type: string;
 	sendEmail: boolean;
+	sendText: boolean;
 	emailMsgOpts?: IMessageOptions;
 	emailServiceOpts?: ISmtpOptions;
+	textMsgOpts?: ITextMsgOpts;
 	endpoint?: string[]|string;
 	method?: string;
 	restartSingleWorker: boolean = false;
@@ -80,20 +86,37 @@ export class HttpErrorHandler {
 						let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
 
 						await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+					}
 
-						//Kamikaze style. Destroy endpoints with suicide on last post.
-						for (let ePoint of remoteEndpoints) {
-							await postToEndpoint(ePoint, reqOpts, reject);
-						}
+					//Send text message
+					if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
+						HttpErrorHandler.mailService = new NodeMailer();
+						let msgConfig: IMessageOptions = <IMessageOptions>{};
+						let isFatal: boolean = err.isFatal;
+						let isKnownErr: boolean = !!(err.handler.type);
+						msgConfig.subject = `${(isFatal)?"Fatal":""}${(isKnownErr)?EErrorType[err.handler.type]:"Unknown"} Error Received`;
+						msgConfig.text = `${opts.message}. \nSource: ${srcUrl.origin}`;
+						msgConfig.from = err.handler.textMsgOpts.from || HttpErrorHandler.textMsgOptions.from || HttpErrorHandler.emailMsgOptions.from;
+						msgConfig.to = TextMessage.GetEmailAddress
 
-						//Suicidal final post.
-						if (origin && _endpoint.length > remoteEndpoints.length) {
-							let lastPoint: string[] = _endpoint.filter(e => new URL(e).origin === origin);
-							if(lastPoint && lastPoint.length > 0){
-								await postToEndpoint(lastPoint[0], reqOpts, reject);
-							}
+						let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
+
+						await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+					}
+
+					//Kamikaze style. Destroy endpoints with suicide on last post.
+					for (let ePoint of remoteEndpoints) {
+						await postToEndpoint(ePoint, reqOpts, reject);
+					}
+
+					//Suicidal final post.
+					if (origin && _endpoint.length > remoteEndpoints.length) {
+						let lastPoint: string[] = _endpoint.filter(e => new URL(e).origin === origin);
+						if(lastPoint && lastPoint.length > 0){
+							await postToEndpoint(lastPoint[0], reqOpts, reject);
 						}
 					}
+
 				}
 				resolve();
 
@@ -124,7 +147,7 @@ export class HttpErrorHandler {
 	constructor(config: IHttpErrorHandler) {
 		this.emailServiceOpts	= HttpErrorHandler.emailServiceOptions;
 		this.emailMsgOpts	= (HttpErrorHandler.emailMsgOptions)? HttpErrorHandler.emailMsgOptions: <IMessageOptions>{};
-
+		this.textMsgOpts = (HttpErrorHandler.textMsgOptions)?HttpErrorHandler.textMsgOptions:<ITextMsgOpts>{};
 		if(config){
 			if(config.endpoint){
 				this.endpoint = (Array.isArray(config.endpoint))?<string[]>config.endpoint:<string[]>new Array(config.endpoint);
@@ -132,12 +155,13 @@ export class HttpErrorHandler {
 			this.method =  EMethod[config.method];
 			this.type = EErrorType[config.type] || EErrorType[EErrorType.Binance];
 			this.sendEmail = config.sendEmail;
+			this.sendText = config.sendText;
 			this.payload = config.payload;
 
 			if(config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object"){
 				this.emailServiceOpts = config.emailServiceOpts;
 			}
-
+			this.textMsgOpts = config.textMsgOpts;
 			this.emailMsgOpts = config.emailMsgOpts;
 		}
 	}

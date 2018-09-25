@@ -4,10 +4,11 @@ const EErrorType_1 = require("./Enums/EErrorType");
 const HttpErrorHandler_1 = require("./HttpErrorHandler");
 const EMethod_1 = require("../Rest/EMethod");
 class HttpError extends Error {
-    constructor(code, message, handler) {
+    constructor(code, message, handler, isFatal) {
         super();
         this.code = code;
         this.message = message;
+        this.isFatal = isFatal;
         if (handler) {
             this.handler = handler;
         }
@@ -57,7 +58,7 @@ class HttpError extends Error {
     }
     static _getErrorHandler(error) {
         if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
-            let match = HttpError._jsonErrors.filter(err => err.code === error.code);
+            let match = HttpError._objErrors.filter(err => err.code === error.code);
             if (Array.isArray(match) && typeof match[0] === "object") {
                 return null;
             }
@@ -104,7 +105,7 @@ class HttpError extends Error {
             return null;
         }
         if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
-            let match = HttpError._jsonErrors.filter(err => err.code === code);
+            let match = HttpError._objErrors.filter(err => err.code === code);
             if (Array.isArray(match) && typeof match[0] === "object") {
                 return HttpError.fromObjLiteral(match[0]);
             }
@@ -124,9 +125,9 @@ class HttpError extends Error {
     }
     static init(msgOptions, emailServiceOptions, _jsonErrs) {
         if (_jsonErrs && _jsonErrs.length > 0) {
-            HttpError._jsonErrors = _jsonErrs;
+            HttpError._objErrors = _jsonErrs;
         }
-        HttpError.allErrors = HttpError._jsonErrors.map(err => {
+        HttpError.allErrors = HttpError._objErrors.map(err => {
             err.handler.emailMsgOpts = msgOptions;
             err.handler.emailServiceOpts = emailServiceOptions;
             return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
@@ -137,12 +138,13 @@ class HttpError extends Error {
         return err && err instanceof HttpError;
     }
 }
-HttpError._jsonErrors = [
+HttpError._objErrors = [
     {
         code: 88880, message: "MongoNetworkError",
         handler: {
             type: EErrorType_1.EErrorType.MongoDB,
             sendEmail: true,
+            sendText: true,
             endpoint: ["http://localhost:3001/kill"],
         }
     },
@@ -150,7 +152,8 @@ HttpError._jsonErrors = [
         code: 127, message: "ECONNREFUSED",
         handler: {
             type: EErrorType_1.EErrorType.Node,
-            sendEmail: false
+            sendEmail: false,
+            sendText: false
         }
     },
     {
@@ -158,6 +161,7 @@ HttpError._jsonErrors = [
         handler: {
             type: EErrorType_1.EErrorType.Node,
             sendEmail: true,
+            sendText: true,
             endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
             method: EMethod_1.EMethod.POST
         }
@@ -167,6 +171,7 @@ HttpError._jsonErrors = [
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            sendText: true
         }
     },
     {
@@ -174,14 +179,16 @@ HttpError._jsonErrors = [
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            sendText: true,
             endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
         }
     },
     {
-        code: -1002, message: "UNAUTHORIZED",
+        code: -1002, message: "UNAUTHORIZED", isFatal: true,
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            sendText: true,
             endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
             method: EMethod_1.EMethod.POST
         }
@@ -190,14 +197,16 @@ HttpError._jsonErrors = [
         code: -1003, message: "TOO_MANY_REQUESTS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true
+            sendEmail: true,
+            sendText: true
         }
     },
     {
         code: -1006, message: "UNEXPECTED_RESP",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: true
+            sendEmail: true,
+            sendText: true
         }
     },
     {
@@ -205,6 +214,7 @@ HttpError._jsonErrors = [
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            sendText: true,
             endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
         }
     },
@@ -212,14 +222,16 @@ HttpError._jsonErrors = [
         code: -1013, message: "INVALID_MESSAGE",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: false
+            sendEmail: false,
+            sendText: false
         }
     },
     {
         code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
-            sendEmail: false
+            sendEmail: false,
+            sendText: false
         }
     },
     {
@@ -227,16 +239,18 @@ HttpError._jsonErrors = [
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            sendText: true,
             restartSingleWorker: true,
             endpoint: ["http://localhost:3001/kill", "http://localhost:3002/kill"],
             method: EMethod_1.EMethod.POST
         }
     },
     {
-        code: -1016, message: "SERVICE_SHUTTING_DOWN",
+        code: -1016, message: "SERVICE_SHUTTING_DOWN", isFatal: true,
         handler: {
             type: EErrorType_1.EErrorType.Binance,
             sendEmail: true,
+            sendText: true,
             endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
             method: EMethod_1.EMethod.POST
         }
@@ -245,6 +259,7 @@ HttpError._jsonErrors = [
         code: -1020, message: "UNSUPPORTED_OPERATION",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -252,6 +267,7 @@ HttpError._jsonErrors = [
         code: -1021, message: "INVALID_TIMESTAMP",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -259,6 +275,7 @@ HttpError._jsonErrors = [
         code: -1022, message: "INVALID_SIGNATURE",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -266,6 +283,7 @@ HttpError._jsonErrors = [
         code: -1100, message: "ILLEGAL_CHARS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -273,6 +291,7 @@ HttpError._jsonErrors = [
         code: -1101, message: "TOO_MANY_PARAMETERS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true,
             endpoint: []
         }
@@ -281,6 +300,7 @@ HttpError._jsonErrors = [
         code: -1102, message: "MANDATORY_PARAM_EMPTY_OR_MALFORMED",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true,
             endpoint: []
         }
@@ -289,6 +309,7 @@ HttpError._jsonErrors = [
         code: -1103, message: "UNKNOWN_PARAM",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -296,6 +317,7 @@ HttpError._jsonErrors = [
         code: -1104, message: "UNREAD_PARAMETERS",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -303,6 +325,7 @@ HttpError._jsonErrors = [
         code: -1105, message: "PARAM_EMPTY",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -310,6 +333,7 @@ HttpError._jsonErrors = [
         code: -1106, message: "PARAM_NOT_REQUIRED",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -317,6 +341,7 @@ HttpError._jsonErrors = [
         code: -1130, message: "INVALID_PARAMETER",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -324,14 +349,16 @@ HttpError._jsonErrors = [
         code: -2008, message: "BAD_API_ID",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true,
             endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
         }
     },
     {
-        code: -2009, message: "DUPLICATE_API_KEY_DESC",
+        code: -2009, message: "DUPLICATE_API_KEY_DESC", isFatal: true,
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true,
             endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
         }
@@ -340,6 +367,7 @@ HttpError._jsonErrors = [
         code: -2010, message: "INSUFFICIENT_BALANCE",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
@@ -347,6 +375,7 @@ HttpError._jsonErrors = [
         code: -2012, message: "CANCEL_ALL_FAIL",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true,
             endpoint: []
         }
@@ -355,13 +384,15 @@ HttpError._jsonErrors = [
         code: -2013, message: "NO_SUCH_ORDER",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },
     {
-        code: -2014, message: "BAD_API_KEY_FMT",
+        code: -2014, message: "BAD_API_KEY_FMT", isFatal: true,
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true,
             endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
         }
@@ -370,6 +401,7 @@ HttpError._jsonErrors = [
         code: -2015, message: "REJECTED_MBX_KEY",
         handler: {
             type: EErrorType_1.EErrorType.Binance,
+            sendText: true,
             sendEmail: true
         }
     },

@@ -8,11 +8,13 @@ const EErrorType_1 = require("./Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
 const url_1 = require("url");
 const cluster_1 = require("cluster");
+const TextMessage_1 = require("../TextMessage/TextMessage");
 class HttpErrorHandler {
     constructor(config) {
         this.restartSingleWorker = false;
         this.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
         this.emailMsgOpts = (HttpErrorHandler.emailMsgOptions) ? HttpErrorHandler.emailMsgOptions : {};
+        this.textMsgOpts = (HttpErrorHandler.textMsgOptions) ? HttpErrorHandler.textMsgOptions : {};
         if (config) {
             if (config.endpoint) {
                 this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
@@ -20,10 +22,12 @@ class HttpErrorHandler {
             this.method = EMethod_1.EMethod[config.method];
             this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
             this.sendEmail = config.sendEmail;
+            this.sendText = config.sendText;
             this.payload = config.payload;
             if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
                 this.emailServiceOpts = config.emailServiceOpts;
             }
+            this.textMsgOpts = config.textMsgOpts;
             this.emailMsgOpts = config.emailMsgOpts;
         }
     }
@@ -70,14 +74,26 @@ class HttpErrorHandler {
                         err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
                         let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
                         await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
-                        for (let ePoint of remoteEndpoints) {
-                            await postToEndpoint(ePoint, reqOpts, reject);
-                        }
-                        if (origin && _endpoint.length > remoteEndpoints.length) {
-                            let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
-                            if (lastPoint && lastPoint.length > 0) {
-                                await postToEndpoint(lastPoint[0], reqOpts, reject);
-                            }
+                    }
+                    if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
+                        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
+                        let msgConfig = {};
+                        let isFatal = err.isFatal;
+                        let isKnownErr = !!(err.handler.type);
+                        msgConfig.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType_1.EErrorType[err.handler.type] : "Unknown"} Error Received`;
+                        msgConfig.text = `${opts.message}. \nSource: ${srcUrl.origin}`;
+                        msgConfig.from = err.handler.textMsgOpts.from || HttpErrorHandler.textMsgOptions.from || HttpErrorHandler.emailMsgOptions.from;
+                        msgConfig.to = TextMessage_1.TextMessage.GetEmailAddress;
+                        let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
+                        await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+                    }
+                    for (let ePoint of remoteEndpoints) {
+                        await postToEndpoint(ePoint, reqOpts, reject);
+                    }
+                    if (origin && _endpoint.length > remoteEndpoints.length) {
+                        let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
+                        if (lastPoint && lastPoint.length > 0) {
+                            await postToEndpoint(lastPoint[0], reqOpts, reject);
                         }
                     }
                 }
