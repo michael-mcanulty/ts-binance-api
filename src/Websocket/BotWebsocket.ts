@@ -16,8 +16,9 @@ import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
-	private static _ws: ReconnectingWebSocket;
-	private static isAlive: boolean = false;
+	private _ws: ReconnectingWebSocket;
+	private isAlive: boolean = false;
+	private missedHeartbeats: number = 0;
 
 	private _url: string;
 
@@ -102,21 +103,30 @@ export class BotWebsocket extends Rest{
 
 	private heartbeat(): void {
 		const self = this;
+		let error: HttpError;
 		setInterval(async () => {
 			try {
-				BotWebsocket.isAlive = await self.ping();
+				this.isAlive = await self.ping();
+				if(this.isAlive && this.missedHeartbeats > 0){
+					this.missedHeartbeats--;
+				}
 			} catch (err) {
-				let error: HttpError = new HttpError(-1001, 'DISCONNECTED');
-				BotWebsocket._ws.close(error.code, error.message);
+				this.missedHeartbeats++;
+				if(this.missedHeartbeats > 3){
+					error = new HttpError(-1001, 'DISCONNECTED');
+					if(typeof this._ws.close === "function"){
+						this._ws.close(error.code, error.message);
+					}
+				}
 			}
-		}, 3000);
+		}, 5000);
 	}
 
 	public openWebSocket(url): ReconnectingWebSocket {
 		if (url) {
 			this.url = url;
-			BotWebsocket._ws = new ReconnectingWebSocket(this.url, this._reconOptions);
-			return BotWebsocket._ws;
+			this._ws = new ReconnectingWebSocket(this.url, this._reconOptions);
+			return this._ws;
 		}
 	}
 

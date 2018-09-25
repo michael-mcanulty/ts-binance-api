@@ -4,8 +4,9 @@ import { Rest } from "../Rest/Rest";
 export declare class BotWebsocket extends Rest {
     static BASE: string;
     private readonly _reconOptions;
-    private static _ws;
-    private static isAlive;
+    private _ws;
+    private isAlive;
+    private missedHeartbeats;
     private _url;
     url: string;
     _getTickerUrl(symbol?: string | null): string;

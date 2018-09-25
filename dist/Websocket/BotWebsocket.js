@@ -12,6 +12,8 @@ class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
+        this.isAlive = false;
+        this.missedHeartbeats = 0;
         this.heartbeat();
         this._reconOptions = {};
         this._reconOptions.connectionTimeout = 4E3;
@@ -93,21 +95,30 @@ class BotWebsocket extends Rest_1.Rest {
     }
     heartbeat() {
         const self = this;
+        let error;
         setInterval(async () => {
             try {
-                BotWebsocket.isAlive = await self.ping();
+                this.isAlive = await self.ping();
+                if (this.isAlive && this.missedHeartbeats > 0) {
+                    this.missedHeartbeats--;
+                }
             }
             catch (err) {
-                let error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
-                BotWebsocket._ws.close(error.code, error.message);
+                this.missedHeartbeats++;
+                if (this.missedHeartbeats > 3) {
+                    error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
+                    if (typeof this._ws.close === "function") {
+                        this._ws.close(error.code, error.message);
+                    }
+                }
             }
-        }, 3000);
+        }, 5000);
     }
     openWebSocket(url) {
         if (url) {
             this.url = url;
-            BotWebsocket._ws = new ReconnectingWebSocket_1.default(this.url, this._reconOptions);
-            return BotWebsocket._ws;
+            this._ws = new ReconnectingWebSocket_1.default(this.url, this._reconOptions);
+            return this._ws;
         }
     }
     orders(callback) {
@@ -175,6 +186,5 @@ class BotWebsocket extends Rest_1.Rest {
     }
 }
 BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';
-BotWebsocket.isAlive = false;
 exports.BotWebsocket = BotWebsocket;
 //# sourceMappingURL=BotWebsocket.js.map
