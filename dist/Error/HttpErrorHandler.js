@@ -39,6 +39,7 @@ class HttpErrorHandler {
         return new Promise(async (resolve, reject) => {
             try {
                 let origin = srcUrl.origin;
+                let srcServer = (srcUrl.port.charAt(-1) == "1") ? "Data Server" : "Analysis Server";
                 if (err && HttpErrorHandler.hasHandler(err)) {
                     if (this.restartSingleWorker) {
                         this.payload.id = cluster_1.worker.id;
@@ -70,14 +71,14 @@ class HttpErrorHandler {
                         reqOpts.body = JSON.stringify(this.payload);
                     }
                     if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-                        err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
+                        err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;
                         err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
                         let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
                         await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
                     }
                     if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
                         let textMsg = new TextMessage_1.TextMessage();
-                        await textMsg.send(err, srcUrl.origin);
+                        await textMsg.send(err, srcServer);
                     }
                     for (let ePoint of remoteEndpoints) {
                         await postToEndpoint(ePoint, reqOpts, reject);

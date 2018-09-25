@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const NodeMailer_1 = require("../Error/NodeMailer");
 const HttpErrorHandler_1 = require("../Error/HttpErrorHandler");
 const EErrorType_1 = require("../Error/Enums/EErrorType");
-const __1 = require("..");
+const Binance_1 = require("../Binance/Binance");
 class TextMessage {
     constructor(carrierName, msgOptions, smtpOptions) {
-        this.smtpOptions = smtpOptions || __1.Binance.options.emailServiceOpts;
-        this.msgOptions = msgOptions || __1.Binance.options.emailMsgOpts;
+        this.smtpOptions = smtpOptions || Binance_1.Binance.options.emailServiceOpts;
+        this.msgOptions = msgOptions || Binance_1.Binance.options.emailMsgOpts;
         let carrier = (carrierName) ? carrierName.toLowerCase() : TextMessage.txtMsgOpts.carrier;
         let matchedCarrier = TextMessage.USCarriers.filter(d => {
             return (d.name === carrier);

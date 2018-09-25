@@ -4,8 +4,9 @@ import {HttpErrorHandler} from "../Error/HttpErrorHandler";
 import {ITextMsgOptions} from "./ITextMsgOptions";
 import {IMessageOptions} from "../Error/Interfaces/IMessageOptions";
 import {EErrorType} from "../Error/Enums/EErrorType";
-import {Binance, HttpError} from "..";
-import {ISmtpOptions} from "Error/Interfaces/ISmtpOptions";
+import {Binance} from "../Binance/Binance";
+import {HttpError} from "../Error/HttpError";
+import {ISmtpOptions} from "../Error/Interfaces/ISmtpOptions";
 import {TCarrier} from "./TCarrier";
 
 export class TextMessage {

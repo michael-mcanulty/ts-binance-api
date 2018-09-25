@@ -2,8 +2,8 @@ import { ICarrier } from "./ICarrier";
 import { NodeMailer } from "../Error/NodeMailer";
 import { ITextMsgOptions } from "./ITextMsgOptions";
 import { IMessageOptions } from "../Error/Interfaces/IMessageOptions";
-import { HttpError } from "..";
-import { ISmtpOptions } from "Error/Interfaces/ISmtpOptions";
+import { HttpError } from "../Error/HttpError";
+import { ISmtpOptions } from "../Error/Interfaces/ISmtpOptions";
 import { TCarrier } from "./TCarrier";
 export declare class TextMessage {
     static USCarriers: ICarrier[];

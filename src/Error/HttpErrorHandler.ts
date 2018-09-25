@@ -41,6 +41,8 @@ export class HttpErrorHandler {
 				//"http://localhost:3001"
 				let origin = srcUrl.origin;
 
+				let srcServer: string = (srcUrl.port.charAt(-1)=="1")?"Data Server":"Analysis Server";
+
 				if (err && HttpErrorHandler.hasHandler(err)) {
 
 					if(this.restartSingleWorker){
@@ -80,7 +82,7 @@ export class HttpErrorHandler {
 
 					//Send an email
 					if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-						err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
+						err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;
 						err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
 						let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
 
@@ -90,7 +92,7 @@ export class HttpErrorHandler {
 					//Send text message
 					if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
 						let textMsg = new TextMessage();
-						await textMsg.send(err, srcUrl.origin);
+						await textMsg.send(err, srcServer);
 					}
 
 					//Kamikaze style. Destroy endpoints with suicide on last post.
