@@ -1,6 +1,6 @@
 import {TCarrier} from "./TCarrier";
 
-export interface ITextMsgOpts{
+export interface ITextMsgOptions{
 	carrier: TCarrier;
 	phoneNum: number;
 }

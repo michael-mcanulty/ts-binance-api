@@ -123,13 +123,17 @@ class HttpError extends Error {
             return result;
         }
     }
-    static init(msgOptions, emailServiceOptions, _jsonErrs) {
+    static init(options, _jsonErrs) {
+        HttpErrorHandler_1.HttpErrorHandler.emailServiceOptions = options.emailServiceOpts;
+        HttpErrorHandler_1.HttpErrorHandler.emailMsgOptions = options.emailMsgOpts;
+        HttpErrorHandler_1.HttpErrorHandler.textMsgOptions = options.txtMsgOpts;
         if (_jsonErrs && _jsonErrs.length > 0) {
             HttpError._objErrors = _jsonErrs;
         }
         HttpError.allErrors = HttpError._objErrors.map(err => {
-            err.handler.emailMsgOpts = msgOptions;
-            err.handler.emailServiceOpts = emailServiceOptions;
+            err.handler.emailMsgOpts = options.emailMsgOpts;
+            err.handler.emailServiceOpts = options.emailServiceOpts;
+            err.handler.textMsgOpts = options.txtMsgOpts;
             return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
         });
         return HttpError.allErrors;

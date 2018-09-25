@@ -8,7 +8,7 @@ class TextMessage {
     constructor(carrierName, msgOptions, smtpOptions) {
         this.smtpOptions = smtpOptions || __1.Binance.options.emailServiceOpts;
         this.msgOptions = msgOptions || __1.Binance.options.emailMsgOpts;
-        let carrier = (carrierName) ? carrierName.toLowerCase() : TextMessage.options.carrier;
+        let carrier = (carrierName) ? carrierName.toLowerCase() : TextMessage.txtMsgOpts.carrier;
         let matchedCarrier = TextMessage.USCarriers.filter(d => {
             return (d.name === carrier);
         });
@@ -31,7 +31,7 @@ class TextMessage {
                 let isKnownErr = false;
                 let isFatal = false;
                 let msg;
-                if (typeof TextMessage.options !== "object") {
+                if (typeof TextMessage.txtMsgOpts !== "object") {
                     return reject(new Error("Static Options are missing from TextMessage class"));
                 }
                 msg = error.message;
@@ -39,10 +39,10 @@ class TextMessage {
                     isFatal = error['isFatal'];
                     isKnownErr = !!(error['handler'].type);
                 }
-                if (!TextMessage.options.phoneNum) {
+                if (!TextMessage.txtMsgOpts.phoneNum) {
                     return reject(new Error("A recipient's phone number is required phoneNum send a text message."));
                 }
-                this.msgOptions.to = this.getEmailAddress(TextMessage.options.phoneNum);
+                this.msgOptions.to = this.getEmailAddress(TextMessage.txtMsgOpts.phoneNum);
                 this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType_1.EErrorType[error['handler'].type] : "Unknown"} Error Received`;
                 this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
                 await HttpErrorHandler_1.HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);

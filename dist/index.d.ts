@@ -1,3 +1,7 @@
+export { TCarrier } from "./TextMessage/TCarrier";
+export { TextMessage } from "./TextMessage/TextMessage";
+export { ICarrier } from "./TextMessage/ICarrier";
+export { ITextMsgOptions } from "./TextMessage/ITextMsgOptions";
 export { IHttpErrorHandler } from "./Error/Interfaces/IHttpErrorHandler";
 export { ISmtpOptions } from "./Error/Interfaces/ISmtpOptions";
 export { ILimits } from "./ExchangeInfo/Interfaces/ILimits";

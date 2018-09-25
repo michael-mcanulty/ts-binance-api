@@ -1,6 +1,6 @@
 import { ICarrier } from "./ICarrier";
 import { NodeMailer } from "../Error/NodeMailer";
-import { ITextMsgOpts } from "./ITextMsgOpts";
+import { ITextMsgOptions } from "./ITextMsgOptions";
 import { IMessageOptions } from "../Error/Interfaces/IMessageOptions";
 import { HttpError } from "..";
 import { ISmtpOptions } from "Error/Interfaces/ISmtpOptions";
@@ -11,7 +11,7 @@ export declare class TextMessage {
     domain: string;
     static mailService: NodeMailer;
     msgOptions?: IMessageOptions;
-    static options: ITextMsgOpts;
+    static txtMsgOpts: ITextMsgOptions;
     smtpOptions?: ISmtpOptions;
     getEmailAddress(phoneNumber?: number): string;
     send(error: HttpError | Error, srcUrl?: string): Promise<void>;

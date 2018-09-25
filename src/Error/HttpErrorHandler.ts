@@ -10,21 +10,21 @@ import {URL} from "url";
 import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
 import {IHttpError} from "./Interfaces/IHttpError";
 import {worker} from "cluster";
-import {ITextMsgOpts} from "../TextMessage/ITextMsgOpts";
+import {ITextMsgOptions} from "../TextMessage/ITextMsgOptions";
 import {TextMessage} from "../TextMessage/TextMessage";
 
 export class HttpErrorHandler {
 	public static mailService: NodeMailer;
 	public static emailMsgOptions: IMessageOptions;
 	public static emailServiceOptions: ISmtpOptions;
-	public static textMsgOptions: ITextMsgOpts;
+	public static textMsgOptions: ITextMsgOptions;
 
 	type: string;
 	sendEmail: boolean;
 	sendText: boolean;
 	emailMsgOpts?: IMessageOptions;
 	emailServiceOpts?: ISmtpOptions;
-	textMsgOpts?: ITextMsgOpts;
+	textMsgOpts?: ITextMsgOptions;
 	endpoint?: string[]|string;
 	method?: string;
 	restartSingleWorker: boolean = false;
@@ -80,7 +80,6 @@ export class HttpErrorHandler {
 
 					//Send an email
 					if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-						HttpErrorHandler.mailService = new NodeMailer();
 						err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
 						err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
 						let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
@@ -137,7 +136,7 @@ export class HttpErrorHandler {
 	constructor(config: IHttpErrorHandler) {
 		this.emailServiceOpts	= HttpErrorHandler.emailServiceOptions;
 		this.emailMsgOpts	= (HttpErrorHandler.emailMsgOptions)? HttpErrorHandler.emailMsgOptions: <IMessageOptions>{};
-		this.textMsgOpts = (HttpErrorHandler.textMsgOptions)?HttpErrorHandler.textMsgOptions:<ITextMsgOpts>{};
+		this.textMsgOpts = (HttpErrorHandler.textMsgOptions)?HttpErrorHandler.textMsgOptions:<ITextMsgOptions>{};
 		if(config){
 			if(config.endpoint){
 				this.endpoint = (Array.isArray(config.endpoint))?<string[]>config.endpoint:<string[]>new Array(config.endpoint);
@@ -154,5 +153,6 @@ export class HttpErrorHandler {
 			this.textMsgOpts = config.textMsgOpts;
 			this.emailMsgOpts = config.emailMsgOpts;
 		}
+		HttpErrorHandler.mailService = new NodeMailer();
 	}
 }

@@ -30,6 +30,7 @@ class HttpErrorHandler {
             this.textMsgOpts = config.textMsgOpts;
             this.emailMsgOpts = config.emailMsgOpts;
         }
+        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
     }
     static hasHandler(err) {
         return (err && HttpError_1.HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
@@ -69,7 +70,6 @@ class HttpErrorHandler {
                         reqOpts.body = JSON.stringify(this.payload);
                     }
                     if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-                        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
                         err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error Received` : err.handler.emailMsgOpts.subject;
                         err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
                         let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;

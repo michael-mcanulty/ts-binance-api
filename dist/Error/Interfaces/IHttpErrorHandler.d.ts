@@ -2,7 +2,7 @@ import { ISmtpOptions } from "./ISmtpOptions";
 import { IMessageOptions } from "./IMessageOptions";
 import { EMethod } from "../../Rest/EMethod";
 import { EErrorType } from "../Enums/EErrorType";
-import { ITextMsgOpts } from "../../TextMessage/ITextMsgOpts";
+import { ITextMsgOptions } from "../../TextMessage/ITextMsgOptions";
 export interface IHttpErrorHandler {
     emailMsgOpts?: IMessageOptions;
     emailServiceOpts?: ISmtpOptions;
@@ -12,6 +12,6 @@ export interface IHttpErrorHandler {
     restartSingleWorker?: boolean;
     sendEmail: boolean;
     sendText: boolean;
-    textMsgOpts?: ITextMsgOpts;
+    textMsgOpts?: ITextMsgOptions;
     type: EErrorType;
 }

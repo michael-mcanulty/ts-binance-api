@@ -1,7 +1,7 @@
 import {ICarrier} from "./ICarrier";
 import {NodeMailer} from "../Error/NodeMailer";
 import {HttpErrorHandler} from "../Error/HttpErrorHandler";
-import {ITextMsgOpts} from "./ITextMsgOpts";
+import {ITextMsgOptions} from "./ITextMsgOptions";
 import {IMessageOptions} from "../Error/Interfaces/IMessageOptions";
 import {EErrorType} from "../Error/Enums/EErrorType";
 import {Binance, HttpError} from "..";
@@ -48,7 +48,7 @@ export class TextMessage {
 	domain: string;
 	public static mailService: NodeMailer;
 	msgOptions?: IMessageOptions;
-	public static options: ITextMsgOpts;
+	public static txtMsgOpts: ITextMsgOptions;
 	smtpOptions?: ISmtpOptions;
 
 	public getEmailAddress(phoneNumber?: number): string {
@@ -62,7 +62,7 @@ export class TextMessage {
 				let isFatal: boolean = false;
 				let msg: string;
 
-				if (typeof TextMessage.options !== "object") {
+				if (typeof TextMessage.txtMsgOpts !== "object") {
 					return reject(new Error("Static Options are missing from TextMessage class"));
 				}
 
@@ -72,11 +72,11 @@ export class TextMessage {
 					isFatal = error['isFatal'];
 					isKnownErr = !!(error['handler'].type);
 				}
-				if (!TextMessage.options.phoneNum) {
+				if (!TextMessage.txtMsgOpts.phoneNum) {
 					return reject(new Error("A recipient's phone number is required phoneNum send a text message."));
 				}
 
-				this.msgOptions.to = this.getEmailAddress(TextMessage.options.phoneNum);
+				this.msgOptions.to = this.getEmailAddress(TextMessage.txtMsgOpts.phoneNum);
 				this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType[error['handler'].type] : "Unknown"} Error Received`;
 				this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
 				await HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
@@ -90,7 +90,7 @@ export class TextMessage {
 	constructor(carrierName?: TCarrier, msgOptions?: IMessageOptions, smtpOptions?: ISmtpOptions) {
 		this.smtpOptions = smtpOptions || Binance.options.emailServiceOpts;
 		this.msgOptions = msgOptions || Binance.options.emailMsgOpts;
-		let carrier: TCarrier = (carrierName) ? <TCarrier>carrierName.toLowerCase() : <TCarrier>TextMessage.options.carrier;
+		let carrier: TCarrier = (carrierName) ? <TCarrier>carrierName.toLowerCase() : <TCarrier>TextMessage.txtMsgOpts.carrier;
 		let matchedCarrier: ICarrier[] = TextMessage.USCarriers.filter(d => {
 			return (d.name === carrier);
 		});
