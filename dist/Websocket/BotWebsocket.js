@@ -96,7 +96,7 @@ class BotWebsocket extends Rest_1.Rest {
     heartbeat() {
         const self = this;
         let error;
-        setInterval(async () => {
+        let interval = setInterval(async () => {
             try {
                 this.isAlive = await self.ping();
                 if (this.isAlive && this.missedHeartbeats > 0) {
@@ -109,6 +109,7 @@ class BotWebsocket extends Rest_1.Rest {
                     error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
                     if (typeof this._ws.close === "function") {
                         this._ws.close(error.code, error.message);
+                        clearInterval(interval);
                     }
                 }
             }

@@ -12,6 +12,7 @@ import {IOutboundAccountInfoStream} from "../Account/Interfaces/IOutboundAccount
 import {IExecutionReportRaw} from "../Account/Interfaces/IExecutionReportRaw";
 import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
+import Timer = NodeJS.Timer;
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
@@ -104,7 +105,7 @@ export class BotWebsocket extends Rest{
 	private heartbeat(): void {
 		const self = this;
 		let error: HttpError;
-		setInterval(async () => {
+		let interval: Timer = setInterval(async () => {
 			try {
 				this.isAlive = await self.ping();
 				if(this.isAlive && this.missedHeartbeats > 0){
@@ -116,6 +117,7 @@ export class BotWebsocket extends Rest{
 					error = new HttpError(-1001, 'DISCONNECTED');
 					if(typeof this._ws.close === "function"){
 						this._ws.close(error.code, error.message);
+						clearInterval(interval);
 					}
 				}
 			}
