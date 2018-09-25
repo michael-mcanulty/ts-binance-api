@@ -1,0 +1,1 @@
+{"version":3,"file":"ITextMsgOpts.js","sourceRoot":"","sources":["../../src/TextMessage/ITextMsgOpts.ts"],"names":[],"mappings":"","sourcesContent":["import {TCarrier} from \"./TCarrier\";\n\nexport interface ITextMsgOpts{\n\tcarrier: TCarrier;\n\tto: number;\n}"]}

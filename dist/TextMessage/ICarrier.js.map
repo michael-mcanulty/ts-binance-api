@@ -1,0 +1,1 @@
+{"version":3,"file":"ICarrier.js","sourceRoot":"","sources":["../../src/TextMessage/ICarrier.ts"],"names":[],"mappings":"","sourcesContent":["import {TCarrier} from \"./TCarrier\";\n\nexport interface ICarrier{\n\tname: TCarrier;\n\tdomain: string;\n}"]}
