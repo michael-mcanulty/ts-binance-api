@@ -7,9 +7,10 @@ export declare class HttpError extends Error {
     static fromObjLiteral(err: IHttpError): HttpError;
     static toObjLiteral(err: HttpError): IHttpError;
     static allErrors: HttpError[];
-    static _jsonErrors: IHttpError[];
+    static _objErrors: IHttpError[];
     code: number;
     handler?: HttpErrorHandler;
+    isFatal?: boolean;
     message: string;
     static GetTimeoutFromIPBannedMsg(err: BinanceError): number;
     private static _getErrorHandler(error);
@@ -19,5 +20,5 @@ export declare class HttpError extends Error {
     static getErrorByCode(code: number): HttpError | null;
     static init(msgOptions?: IMessageOptions, emailServiceOptions?: ISmtpOptions, _jsonErrs?: IHttpError[]): HttpError[];
     static isHttpError(err: HttpError | Error): boolean;
-    constructor(code: number, message: string, handler?: HttpErrorHandler);
+    constructor(code: number, message: string, handler?: HttpErrorHandler, isFatal?: boolean);
 }

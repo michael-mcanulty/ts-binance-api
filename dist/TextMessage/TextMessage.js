@@ -39,10 +39,10 @@ class TextMessage {
                     isFatal = error['isFatal'];
                     isKnownErr = !!(error['handler'].type);
                 }
-                if (!TextMessage.options.to) {
-                    return reject(new Error("A recipient's phone number is required to send a text message."));
+                if (!TextMessage.options.phoneNum) {
+                    return reject(new Error("A recipient's phone number is required phoneNum send a text message."));
                 }
-                this.msgOptions.to = this.getEmailAddress(TextMessage.options.to);
+                this.msgOptions.to = this.getEmailAddress(TextMessage.options.phoneNum);
                 this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType_1.EErrorType[error['handler'].type] : "Unknown"} Error Received`;
                 this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
                 await HttpErrorHandler_1.HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);

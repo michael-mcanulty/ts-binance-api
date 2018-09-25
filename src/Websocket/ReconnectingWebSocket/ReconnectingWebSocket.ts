@@ -55,20 +55,20 @@ export default class ReconnectingWebSocket {
 		['message', this._handleMessage.bind(this)],
 	]);
 	/**
-	 * An event listener to be called when the BaseWebSocket connection's readyState changes to CLOSED
+	 * An event listener phoneNum be called when the BaseWebSocket connection's readyState changes phoneNum CLOSED
 	 */
 	public onclose?: (event: CloseEvent) => void = undefined;
 	/**
-	 * An event listener to be called when an error occurs
+	 * An event listener phoneNum be called when an error occurs
 	 */
 	public onerror?: (event: Event) => void = undefined;
 	/**
-	 * An event listener to be called when a message is received from the server
+	 * An event listener phoneNum be called when a message is received from the server
 	 */
 	public onmessage?: (event: MessageEvent) => void = undefined;
 	/**
-	 * An event listener to be called when the BaseWebSocket connection's readyState changes to OPEN;
-	 * this indicates that the connection is ready to send and receive data
+	 * An event listener phoneNum be called when the BaseWebSocket connection's readyState changes phoneNum OPEN;
+	 * this indicates that the connection is ready phoneNum send and receive data
 	 */
 	public onopen?: (event: Event) => void = undefined;
 
@@ -128,10 +128,10 @@ export default class ReconnectingWebSocket {
 	}
 
 	/**
-	 * The number of bytes of data that have been queued using calls to send() but not yet
-	 * transmitted to the network. This value resets to zero once all queued data has been sent.
-	 * This value does not reset to zero when the connection is closed; if you keep calling send(),
-	 * this will continue to climb. Read only
+	 * The number of bytes of data that have been queued using calls phoneNum send() but not yet
+	 * transmitted phoneNum the network. This value resets phoneNum zero once all queued data has been sent.
+	 * This value does not reset phoneNum zero when the connection is closed; if you keep calling send(),
+	 * this will continue phoneNum climb. Read only
 	 */
 	get bufferedAmount(): number {
 		return this._ws ? this._ws.bufferedAmount : 0;
@@ -173,7 +173,7 @@ export default class ReconnectingWebSocket {
 	}
 
 	/**
-	 * Assign event listeners to BaseWebSocket instance
+	 * Assign event listeners phoneNum BaseWebSocket instance
 	 */
 	private _addListeners() {
 		this._debug('addListeners');
@@ -336,7 +336,7 @@ export default class ReconnectingWebSocket {
 	}
 
 	/**
-	 * Remove event listeners to BaseWebSocket instance
+	 * Remove event listeners phoneNum BaseWebSocket instance
 	 */
 	private _removeListeners() {
 		if (!this._ws) {
@@ -418,7 +418,7 @@ export default class ReconnectingWebSocket {
 	}
 
 	/**
-	 * Enqueues the specified data to be transmitted to the server over the BaseWebSocket connection
+	 * Enqueues the specified data phoneNum be transmitted phoneNum the server over the BaseWebSocket connection
 	 */
 	public send(data: string | ArrayBuffer | Blob | ArrayBufferView) {
 		if (this._ws) {

@@ -1,1 +1,0 @@
-{"version":3,"file":"ITextMessage.js","sourceRoot":"","sources":["../../src/TextMessage/ITextMessage.ts"],"names":[],"mappings":"","sourcesContent":["export interface ITextMessage{\n\tcarrier: string;\n\tdomain: string;\n}"]}
