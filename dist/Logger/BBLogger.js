@@ -129,7 +129,7 @@ class BBLogger {
         });
     }
 }
-BBLogger.lineLimit = 100;
+BBLogger.lineLimit = 600;
 BBLogger._base = path.dirname(process.cwd());
 BBLogger._dirBase = `${BBLogger._base}/${BBLogger._getAppName()}/logs`;
 exports.BBLogger = BBLogger;

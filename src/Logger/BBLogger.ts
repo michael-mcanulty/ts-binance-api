@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 export class BBLogger {
-	public static lineLimit: number= 100;
+	public static lineLimit: number= 600;
 	private static _INSTANCE: BBLogger;
 	private static _base: string = path.dirname(process.cwd());
 	private static _dirBase: string = `${BBLogger._base}/${BBLogger._getAppName()}/logs`;
