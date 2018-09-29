@@ -58,7 +58,6 @@ class BBLogger {
         return new Promise(async (resolve, reject) => {
             try {
                 if (msg) {
-                    await BBLogger.limitedLines(filename);
                     fs.appendFile(filename, BBLogger._getMsg(msg), err => {
                         if (err) {
                             throw err;
