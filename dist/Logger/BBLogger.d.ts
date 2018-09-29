@@ -9,10 +9,10 @@ export declare class BBLogger {
     private static _getMsg(msg);
     private static limitedLines(filename);
     private static _writeToFile(filename, msg);
-    static info(msg: string): Promise<void>;
+    static info(msg: string, plain?: boolean): Promise<void>;
     static indexContains(arr: string[], strContains: string): number;
-    static error(msg: string): Promise<void>;
+    static error(msg: string, plain?: boolean): Promise<void>;
     private static utcToPST(date?);
-    static warning(msg: string): Promise<void>;
+    static warning(msg: string, plain?: boolean): Promise<void>;
     private constructor();
 }

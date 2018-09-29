@@ -77,12 +77,13 @@ class BBLogger {
             }
         });
     }
-    static info(msg) {
+    static info(msg, plain = false) {
         return new Promise(async (resolve, reject) => {
             try {
                 let name = BBLogger.info.name;
                 let filename = BBLogger._getFilename(name);
-                BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                let message = (plain) ? msg : BBLogger._getMsg(msg);
+                BBLogger._writeToFile(filename, message);
                 resolve();
             }
             catch (err) {
@@ -98,12 +99,13 @@ class BBLogger {
         });
         return idx;
     }
-    static error(msg) {
+    static error(msg, plain = false) {
         return new Promise(async (resolve, reject) => {
             try {
                 let name = BBLogger.error.name;
                 let filename = BBLogger._getFilename(name);
-                BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                let message = (plain) ? msg : BBLogger._getMsg(msg);
+                BBLogger._writeToFile(filename, message);
                 resolve();
             }
             catch (err) {
@@ -115,12 +117,13 @@ class BBLogger {
         let _date = (date) ? date : new Date();
         return new Date(_date.getTime() - new Date().getTimezoneOffset() * 60000);
     }
-    static warning(msg) {
+    static warning(msg, plain = false) {
         return new Promise(async (resolve, reject) => {
             try {
                 let name = BBLogger.warning.name;
                 let filename = BBLogger._getFilename(name);
-                BBLogger._writeToFile(filename, BBLogger._getMsg(msg));
+                let message = (plain) ? msg : BBLogger._getMsg(msg);
+                BBLogger._writeToFile(filename, message);
                 resolve();
             }
             catch (err) {
