@@ -1,3 +1,4 @@
+export { IGetAllOrdersOpts } from "./Transaction/Interfaces/IGetAllOrdersOpts";
 export { ICancelOrderOpts } from "./Transaction/Interfaces/ICancelOrderOpts";
 export { IQueryOrderOpts } from "./Transaction/Interfaces/IQueryOrderOpts";
 export { IGetOrderOpts } from "./Transaction/Interfaces/IGetOrderOpts";

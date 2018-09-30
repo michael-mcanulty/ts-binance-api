@@ -94,17 +94,20 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    cancelOrder(symbol, orderId) {
+    cancelOrder(options) {
         return new Promise(async (resolve, reject) => {
             try {
+                let cancelResult;
                 let result;
-                let cOpts = {};
-                cOpts.symbol = symbol;
-                cOpts.orderId = orderId;
-                let cancelOrder = new CancelOrder_1.CancelOrder(cOpts);
-                let cancelResult = await this._cancelOrder(cancelOrder);
-                result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
-                resolve(result);
+                let cancelOrder = new CancelOrder_1.CancelOrder(options);
+                if (cancelResult) {
+                    cancelResult = await this._cancelOrder(cancelOrder);
+                    result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
+                    resolve(result);
+                }
+                else {
+                    reject();
+                }
             }
             catch (err) {
                 reject(err);
@@ -114,13 +117,23 @@ class Rest extends BotHttp_1.BotHttp {
     cancelOrdersBySymbol(options) {
         return new Promise(async (resolve, reject) => {
             try {
+                let cancelResp;
                 let results = [];
                 let config = {};
                 config.symbol = options.symbol;
+                config.origClientOrderId = options.origClientOrderId;
+                config.orderId = options.orderId;
+                config.recvWindow = options.recvWindow;
                 let openOrders = await this.getOpenOrders(config);
                 let symbolOrders = openOrders.filter(order => order.symbol === config.symbol);
                 for (let order of symbolOrders) {
-                    let cancelResp = await this.cancelOrder(order.symbol, order.orderId);
+                    let cOpts = {};
+                    cOpts.orderId = order.orderId;
+                    cOpts.recvWindow = options.recvWindow;
+                    cOpts.origClientOrderId = order.clientOrderId;
+                    cOpts.symbol = order.symbol;
+                    cOpts.newClientOrderId = options.newClientOrderId;
+                    cancelResp = await this.cancelOrder(cOpts);
                     results.push(cancelResp);
                 }
                 resolve(results);
@@ -159,10 +172,10 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    getAllOrders(symbol, limit = 500, orderId, recvWindow) {
+    getAllOrders(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                let query = new AllOrders_1.AllOrders(symbol, orderId, limit, recvWindow);
+                let query = new AllOrders_1.AllOrders(options);
                 let url = '/v3/allOrders';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
                 let privateCall = await this.privateCall(url, callOpts, query);

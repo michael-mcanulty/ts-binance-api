@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseQueryOrder_1 = require("./BaseQueryOrder");
 class AllOrders extends BaseQueryOrder_1.BaseQueryOrder {
-    constructor(symbol, orderId, limit, recvWindow) {
-        super(symbol, orderId, recvWindow);
+    constructor(config) {
+        super(config.symbol, config.orderId, config.recvWindow);
+        this.limit = config.limit || 500;
     }
 }
 exports.AllOrders = AllOrders;

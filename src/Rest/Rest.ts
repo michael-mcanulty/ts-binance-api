@@ -44,6 +44,7 @@ import {ILimitOrderOpts} from "../Transaction/Interfaces/ILimitOrderOpts";
 import {IGetOrderOpts} from "../Transaction/Interfaces/IGetOrderOpts";
 import {IQueryOrderOpts} from "../Transaction/Interfaces/IQueryOrderOpts";
 import {IMarketOrderOpts} from "../Transaction/Interfaces/IMarketOrderOpts";
+import {IGetAllOrdersOpts} from "../Transaction/Interfaces/IGetAllOrdersOpts";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -116,34 +117,46 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public cancelOrder(symbol: string, orderId: number): Promise<CancelOrderResponse> {
+	public cancelOrder(options: ICancelOrderOpts): Promise<CancelOrderResponse> {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let cancelResult: ICancelOrderResponse
 				let result: CancelOrderResponse;
-				let cOpts: ICancelOrderOpts = <ICancelOrderOpts>{};
-				cOpts.symbol = symbol;
-				cOpts.orderId = orderId;
-				let cancelOrder: CancelOrder = new CancelOrder(cOpts);
-				let cancelResult: ICancelOrderResponse = await this._cancelOrder(cancelOrder);
-				result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
-				resolve(result);
+				let cancelOrder: CancelOrder = new CancelOrder(options);
+				if(cancelResult){
+					cancelResult = await this._cancelOrder(cancelOrder);
+					result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
+					resolve(result);
+				}else{
+					reject();
+				}
 			} catch (err) {
 				reject(err);
 			}
 		});
 	}
 
-	public cancelOrdersBySymbol(options: IGetOrderOpts): Promise<CancelOrderResponse[]> {
+	public cancelOrdersBySymbol(options: ICancelOrderOpts): Promise<CancelOrderResponse[]> {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let cancelResp: CancelOrderResponse;
 				let results: CancelOrderResponse[] = [];
 				let config: IGetOrderOpts = <IGetOrderOpts>{};
 				config.symbol = options.symbol;
+				config.origClientOrderId = options.origClientOrderId;
+				config.orderId = options.orderId;
+				config.recvWindow = options.recvWindow;
 				let openOrders: OpenOrder[] = await this.getOpenOrders(config);
 				let symbolOrders: OpenOrder[] = openOrders.filter(order => order.symbol === config.symbol);
 
 				for (let order of symbolOrders) {
-					let cancelResp: CancelOrderResponse = await this.cancelOrder(order.symbol, order.orderId);
+					let cOpts: ICancelOrderOpts = <ICancelOrderOpts>{};
+					cOpts.orderId = order.orderId;
+					cOpts.recvWindow = options.recvWindow;
+					cOpts.origClientOrderId = order.clientOrderId;
+					cOpts.symbol = order.symbol;
+					cOpts.newClientOrderId = options.newClientOrderId;
+					cancelResp = await this.cancelOrder(cOpts);
 					results.push(cancelResp);
 				}
 				resolve(results);
@@ -182,10 +195,10 @@ export class Rest extends BotHttp {
 		});
 	}
 
-	public getAllOrders(symbol: string, limit: number = 500, orderId?: number, recvWindow?: number): Promise<Order[]> {
+	public getAllOrders(options: IGetAllOrdersOpts): Promise<Order[]> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let query: AllOrders = new AllOrders(symbol, orderId, limit, recvWindow);
+				let query: AllOrders = new AllOrders(options);
 				let url: string = '/v3/allOrders';
 				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
 				let privateCall: IQueryOrderResponse[] = await this.privateCall(url, callOpts, query);
@@ -211,6 +224,7 @@ export class Rest extends BotHttp {
 						return new Order(opts);
 					});
 				}
+
 				resolve(results);
 			} catch (err) {
 				reject(err);
