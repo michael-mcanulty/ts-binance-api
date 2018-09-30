@@ -98,7 +98,10 @@ class Rest extends BotHttp_1.BotHttp {
         return new Promise(async (resolve, reject) => {
             try {
                 let result;
-                let cancelOrder = new CancelOrder_1.CancelOrder(symbol, orderId);
+                let cOpts = {};
+                cOpts.symbol = symbol;
+                cOpts.orderId = orderId;
+                let cancelOrder = new CancelOrder_1.CancelOrder(cOpts);
                 let cancelResult = await this._cancelOrder(cancelOrder);
                 result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
                 resolve(result);

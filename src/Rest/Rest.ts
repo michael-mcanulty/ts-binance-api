@@ -32,7 +32,7 @@ import {CancelOrderResponse} from "../Transaction/CancelOrderResponse";
 import {TestOrder} from "../Transaction/TestOrder";
 import {IExchangeInfo} from "../ExchangeInfo/Interfaces/IExchangeInfo";
 import {ISymbol} from "../ExchangeInfo/Interfaces/ISymbol";
-import {IPrice, ITotalBalance, Price} from "..";
+import {ICancelOrderOpts, IPrice, ITotalBalance, Price} from "..";
 import {IDepositAddressResult} from "../Deposit/Interfaces/IDepositAddressResult";
 import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
 import {IDepositHistoryResult} from "../Deposit/Interfaces/IDepositHistoryResult";
@@ -120,7 +120,10 @@ export class Rest extends BotHttp {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let result: CancelOrderResponse;
-				let cancelOrder: CancelOrder = new CancelOrder(symbol, orderId);
+				let cOpts: ICancelOrderOpts = <ICancelOrderOpts>{};
+				cOpts.symbol = symbol;
+				cOpts.orderId = orderId;
+				let cancelOrder: CancelOrder = new CancelOrder(cOpts);
 				let cancelResult: ICancelOrderResponse = await this._cancelOrder(cancelOrder);
 				result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
 				resolve(result);

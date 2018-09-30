@@ -18,7 +18,7 @@ class Order extends BaseOrder_1.BaseOrder {
         return binance;
     }
     constructor(order) {
-        super(order.side, order.symbol, order.type, parseFloat(order.price), order.timeInForce);
+        super(order);
         this.executedQty = parseFloat(order.executedQty);
         this.orderId = order.orderId;
         this.origQty = parseFloat(order.origQty);

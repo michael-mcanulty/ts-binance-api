@@ -3,6 +3,6 @@ export interface IMarketOrderOpts {
 	quantity: number;
 	recvWindow?: number;
 	iceburgQty?: number;
-	newClientOrderId: string;
-	newOrderRespType: string;
+	newClientOrderId?: string;
+	newOrderRespType?: string;
 }

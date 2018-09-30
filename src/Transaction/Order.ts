@@ -10,7 +10,7 @@ export class Order extends BaseOrder {
 	origQty: number;
 	status: string;
 	transactTime: number;
-	price: number;
+	price: string;
 	side: string;
 	symbol: string;
 	timeInForce: string;
@@ -33,7 +33,7 @@ export class Order extends BaseOrder {
 	}
 
 	constructor(order: IOrder) {
-		super(order.side, order.symbol, order.type, parseFloat(order.price), order.timeInForce);
+		super(order);
 		this.executedQty = parseFloat(order.executedQty);
 		this.orderId = order.orderId;
 		this.origQty = parseFloat(order.origQty);

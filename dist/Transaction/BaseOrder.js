@@ -5,11 +5,10 @@ const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class BaseOrder extends Signed_1.Signed {
     constructor(base) {
         super();
-        this.price = parseFloat(base.price);
+        this.price = base.price;
         this.side = base.side;
         this.symbol = base.symbol;
         this.type = EOrderEnums_1.EOrderType[base.type];
-        this.price = parseFloat(base.price);
         let tForce;
         this.timeInForce = base.timeInForce;
         if (!base.timeInForce) {

@@ -13,11 +13,11 @@ export class NewOrder extends BaseOrder {
 
 	static toBinance(newOrder: NewOrder): INewOrder {
 		let binance: INewOrder = <INewOrder>{};
-		binance.quantity = (newOrder.quantity) ? newOrder.quantity.toString() : undefined;
-		binance.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty.toString() : undefined;
-		binance.price = (newOrder.price) ? newOrder.price.toString() : undefined;
+		binance.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;
+		binance.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty : undefined;
+		binance.price = (newOrder.price) ? newOrder.price : undefined;
 		binance.side = newOrder.side;
-		binance.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice.toString() : undefined;
+		binance.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice : undefined;
 		binance.symbol = newOrder.symbol;
 		binance.timeInForce = newOrder.timeInForce;
 		binance.type = newOrder.type;
@@ -25,12 +25,12 @@ export class NewOrder extends BaseOrder {
 	}
 
 	constructor(newOrder: INewOrder){
-		super(newOrder.side, newOrder.symbol, newOrder.type, parseFloat(newOrder.price), newOrder.timeInForce)
-		this.quantity = parseFloat(newOrder.quantity);
-		this.icebergQty = parseFloat(newOrder.icebergQty);
+		super(newOrder);
+		this.quantity = newOrder.quantity;
+		this.icebergQty = newOrder.icebergQty;
 		this.newOrderRespType = ENewOrderRespType[newOrder.newOrderRespType] || ENewOrderRespType[ENewOrderRespType.FULL];
 		this.newClientOrderId = newOrder.newClientOrderId;
-		this.stopPrice = parseFloat(newOrder.stopPrice);
+		this.stopPrice = newOrder.stopPrice;
 		this.recvWindow = newOrder.recvWindow || 5000;
 	}
 }

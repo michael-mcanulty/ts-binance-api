@@ -4,7 +4,7 @@ import {IBaseOrder} from "./Interfaces/IBaseOrder";
 
 export class BaseOrder extends Signed {
 
-	price?: number;
+	price?: string;
 	side: string;
 	symbol: string;
 	timeInForce?: string;
@@ -12,11 +12,10 @@ export class BaseOrder extends Signed {
 
 	constructor(base: IBaseOrder) {
 		super();
-		this.price = parseFloat(base.price);
+		this.price = base.price;
 		this.side = base.side;
 		this.symbol = base.symbol;
 		this.type = EOrderType[base.type];
-		this.price = parseFloat(base.price);
 		let tForce: ETimeInForce;
 		this.timeInForce = base.timeInForce;
 		if (!base.timeInForce) {
