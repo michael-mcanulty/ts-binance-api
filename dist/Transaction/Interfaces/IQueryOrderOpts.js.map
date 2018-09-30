@@ -1,1 +1,0 @@
-{"version":3,"file":"IQueryOrderOpts.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/IQueryOrderOpts.ts"],"names":[],"mappings":"","sourcesContent":["export interface IQueryOrderOpts{\r\n\tsymbol: string;\r\n\torderId: number;\r\n\trecvWindow?: number;\r\n\torigClientOrderId?: string;\r\n}"]}
