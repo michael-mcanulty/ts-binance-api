@@ -1,3 +1,8 @@
+export { IQueryOrderOpts } from "./Transaction/Interfaces/IQueryOrderOpts";
+export { IGetOrderOpts } from "./Transaction/Interfaces/IGetOrderOpts";
+export { Fill } from "./Transaction/Fill";
+export { ILimitOrderOpts } from "./Transaction/Interfaces/ILimitOrderOpts";
+export { IMarketOrderOpts } from "./Transaction/Interfaces/IMarketOrderOpts";
 export { TCarrier } from "./TextMessage/TCarrier";
 export { TextMessage } from "./TextMessage/TextMessage";
 export { ICarrier } from "./TextMessage/ICarrier";

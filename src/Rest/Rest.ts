@@ -386,22 +386,29 @@ export class Rest extends BotHttp {
 	public getOpenOrders(options: IGetOrderOpts): Promise<OpenOrder[]> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let url: string = "/v3/openOrders";
 				let opts: IQueryOrderOpts = <IQueryOrderOpts>{};
+				let url: string = "/v3/openOrders";
+				let query: QueryOrder;
+				let callOpts: CallOptions;
+				let privateCall: IOpenOrder[];
+				let openOrders: OpenOrder[];
+
 				opts.symbol = options.symbol;
 				opts.recvWindow = options.recvWindow;
 				opts.orderId = options.orderId;
 				opts.origClientOrderId = options.origClientOrderId;
-				let query: QueryOrder = new QueryOrder(opts);
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let privateCall: IOpenOrder[] = await this.privateCall(url, callOpts, query);
-				let openOrders: OpenOrder[] = [];
+				query = new QueryOrder(opts);
+				callOpts = new CallOptions(EMethod.GET, true, false, false);
+				privateCall = await this.privateCall(url, callOpts, query);
+				openOrders = [];
 				if (Array.isArray(privateCall) && privateCall.length > 0) {
 					openOrders = privateCall.map((o: IOpenOrder) => {
 						return new OpenOrder(o);
 					});
+					resolve(openOrders);
+				}else{
+					resolve();
 				}
-				resolve(openOrders);
 			} catch (err) {
 				reject(err);
 			}
@@ -411,16 +418,21 @@ export class Rest extends BotHttp {
 	public getOrder(options: IGetOrderOpts): Promise<Order> {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let query: QueryOrder;
+				let url: string = '/v3/order';
+				let callOpts: CallOptions;
+				let privateCall: IQueryOrderResponse;
+				let result: Order;
 				let opts: IQueryOrderOpts = <IQueryOrderOpts>{};
 				opts.symbol = options.symbol;
 				opts.recvWindow = options.recvWindow;
 				opts.orderId = options.orderId;
 				opts.origClientOrderId = options.origClientOrderId;
-				let query: QueryOrder = new QueryOrder(opts);
-				let url: string = '/v3/order';
-				let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
-				let privateCall: IQueryOrderResponse = await this.privateCall(url, callOpts, query);
-				let result: Order;
+
+				query = new QueryOrder(opts);
+				callOpts = new CallOptions(EMethod.GET, true, false, false);
+				privateCall = await this.privateCall(url, callOpts, query);
+
 				if (privateCall && privateCall.hasOwnProperty("symbol")) {
 					let nOrder: IOrder = <IOrder>{};
 					nOrder.symbol = opts.symbol;
@@ -440,8 +452,10 @@ export class Rest extends BotHttp {
 					nOrder.transactTime = privateCall.time;
 					nOrder.isWorking = privateCall.isWorking;
 					result = new Order(nOrder);
+					resolve(result);
+				}else{
+					resolve();
 				}
-				resolve(result);
 			} catch (err) {
 				reject(err);
 			}
@@ -534,6 +548,7 @@ export class Rest extends BotHttp {
 				nOrder.icebergQty =options.iceburgQty;
 				nOrder.newClientOrderId = options.newClientOrderId;
 				nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+
 				order = new NewOrder(nOrder);
 				orderRes = await this._newOrder(order);
 				resolve(orderRes);
@@ -561,6 +576,7 @@ export class Rest extends BotHttp {
 				nOrder.icebergQty =options.iceburgQty;
 				nOrder.newClientOrderId = options.newClientOrderId;
 				nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+
 				order = new NewOrder(nOrder);
 				orderRes = await this._newOrder(order);
 				resolve(orderRes);
@@ -576,9 +592,11 @@ export class Rest extends BotHttp {
 				let order: NewOrder;
 				let orderRes:  Order | {};
 				let nOrder: INewOrder = <INewOrder>{};
+
 				const TYPE: EOrderType = EOrderType.MARKET;
 				const SIDE: EOrderSide = EOrderSide.BUY;
 				const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
+
 				nOrder.recvWindow = options.recvWindow;
 				nOrder.type = EOrderType[TYPE];
 				nOrder.side = EOrderSide[SIDE];
@@ -586,6 +604,7 @@ export class Rest extends BotHttp {
 				nOrder.icebergQty = options.iceburgQty;
 				nOrder.newClientOrderId = options.newClientOrderId;
 				nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+
 				order = new NewOrder(nOrder);
 				orderRes = await this._newOrder(order);
 				resolve(orderRes);
@@ -601,6 +620,7 @@ export class Rest extends BotHttp {
 				let order: NewOrder;
 				let orderRes:  Order | {};
 				let nOrder: INewOrder = <INewOrder>{};
+
 				const TYPE: EOrderType = EOrderType.MARKET;
 				const SIDE: EOrderSide = EOrderSide.SELL;
 				const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
@@ -612,6 +632,7 @@ export class Rest extends BotHttp {
 				nOrder.icebergQty = options.iceburgQty;
 				nOrder.newClientOrderId = options.newClientOrderId;
 				nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+
 				order = new NewOrder(nOrder);
 				orderRes = await this._newOrder(order);
 				resolve(orderRes);

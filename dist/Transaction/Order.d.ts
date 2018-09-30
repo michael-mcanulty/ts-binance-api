@@ -1,5 +1,6 @@
-import { BaseOrder } from "./BaseOrder";
 import { IOrder } from "./Interfaces/IOrder";
+import { BaseOrder } from "./BaseOrder";
+import { Fill } from "./Fill";
 export declare class Order extends BaseOrder {
     clientOrderId: string;
     executedQty: number;
@@ -7,6 +8,12 @@ export declare class Order extends BaseOrder {
     origQty: number;
     status: string;
     transactTime: number;
+    price: number;
+    side: string;
+    symbol: string;
+    timeInForce: string;
+    type: string;
+    fills?: Fill[];
     static toBinance(order: Order): IOrder;
-    constructor(symbol: string, price: string, side: string, executedQty: string, orderId: number, origQty: string, status: string, timeInForce: string, type: string, clientOrderId: string, transactTime: number);
+    constructor(order: IOrder);
 }

@@ -1,1 +1,0 @@
-{"version":3,"file":"FullOrder.js","sourceRoot":"","sources":["../../src/Transaction/FullOrder.ts"],"names":[],"mappings":";;AAAA,2DAAsD;AAEtD,eAAuB,SAAQ,qCAAiB;CAE/C;AAFD,8BAEC","sourcesContent":["import {FullOrderResponse} from \"./FullOrderResponse\";\n\nexport class FullOrder extends FullOrderResponse{\n\n}"]}

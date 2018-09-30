@@ -4,5 +4,6 @@ export interface IBaseOrder extends Signed {
     side: string;
     symbol: string;
     timeInForce: string;
+    cummulativeQuoteQty: string;
     type: string;
 }

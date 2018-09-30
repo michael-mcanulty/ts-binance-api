@@ -1,9 +1,9 @@
 import { IBaseOrder } from "./IBaseOrder";
 export interface INewOrder extends IBaseOrder {
-    icebergQty?: string;
+    icebergQty?: number;
     newClientOrderId?: string;
     newOrderRespType?: string;
-    quantity: string;
+    quantity: number;
     recvWindow?: number;
-    stopPrice?: string;
+    stopPrice?: number;
 }

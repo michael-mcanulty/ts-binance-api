@@ -360,22 +360,29 @@ class Rest extends BotHttp_1.BotHttp {
     getOpenOrders(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                let url = "/v3/openOrders";
                 let opts = {};
+                let url = "/v3/openOrders";
+                let query;
+                let callOpts;
+                let privateCall;
+                let openOrders;
                 opts.symbol = options.symbol;
                 opts.recvWindow = options.recvWindow;
                 opts.orderId = options.orderId;
                 opts.origClientOrderId = options.origClientOrderId;
-                let query = new QueryOrder_1.QueryOrder(opts);
-                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let privateCall = await this.privateCall(url, callOpts, query);
-                let openOrders = [];
+                query = new QueryOrder_1.QueryOrder(opts);
+                callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                privateCall = await this.privateCall(url, callOpts, query);
+                openOrders = [];
                 if (Array.isArray(privateCall) && privateCall.length > 0) {
                     openOrders = privateCall.map((o) => {
                         return new OpenOrder_1.OpenOrder(o);
                     });
+                    resolve(openOrders);
                 }
-                resolve(openOrders);
+                else {
+                    resolve();
+                }
             }
             catch (err) {
                 reject(err);
@@ -385,16 +392,19 @@ class Rest extends BotHttp_1.BotHttp {
     getOrder(options) {
         return new Promise(async (resolve, reject) => {
             try {
+                let query;
+                let url = '/v3/order';
+                let callOpts;
+                let privateCall;
+                let result;
                 let opts = {};
                 opts.symbol = options.symbol;
                 opts.recvWindow = options.recvWindow;
                 opts.orderId = options.orderId;
                 opts.origClientOrderId = options.origClientOrderId;
-                let query = new QueryOrder_1.QueryOrder(opts);
-                let url = '/v3/order';
-                let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let privateCall = await this.privateCall(url, callOpts, query);
-                let result;
+                query = new QueryOrder_1.QueryOrder(opts);
+                callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
+                privateCall = await this.privateCall(url, callOpts, query);
                 if (privateCall && privateCall.hasOwnProperty("symbol")) {
                     let nOrder = {};
                     nOrder.symbol = opts.symbol;
@@ -414,8 +424,11 @@ class Rest extends BotHttp_1.BotHttp {
                     nOrder.transactTime = privateCall.time;
                     nOrder.isWorking = privateCall.isWorking;
                     result = new Order_1.Order(nOrder);
+                    resolve(result);
                 }
-                resolve(result);
+                else {
+                    resolve();
+                }
             }
             catch (err) {
                 reject(err);
