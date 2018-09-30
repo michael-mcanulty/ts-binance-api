@@ -1,4 +1,3 @@
-import * as Html5WebSocket from 'html5-websocket'
 import {default as ReconnectingWebSocket, IReconOptions} from "./ReconnectingWebSocket/ReconnectingWebSocket";
 import {IStreamTickerRaw} from "../ExchangeInfo/Interfaces/IStreamTickerRaw";
 import {Price} from "../Transaction/Price";
@@ -207,7 +206,7 @@ export class BotWebsocket extends Rest{
 		this.heartbeat();
 		this._reconOptions = <IReconOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
-		this._reconOptions.constructor = typeof window !== 'undefined' ? BotWebsocket : Html5WebSocket;
+		this._reconOptions.constructor = BotWebsocket;
 		this._reconOptions.debug = false;
 		this._reconOptions.maxReconnectionDelay = 10E3;
 		this._reconOptions.maxRetries = Infinity;
