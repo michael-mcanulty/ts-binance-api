@@ -9,5 +9,5 @@ export interface IBinanceOptions {
     emailMsgOpts: IMessageOptions;
     test: boolean;
     useServerTime: boolean;
-    txtMsgOpts: ITextMsgOptions;
+    textMsgOpts: ITextMsgOptions;
 }
