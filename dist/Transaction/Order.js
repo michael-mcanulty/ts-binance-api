@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseOrder_1 = require("./BaseOrder");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
+const BaseOrder_1 = require("./BaseOrder");
 class Order extends BaseOrder_1.BaseOrder {
     static toBinance(order) {
         let binance = {};
@@ -17,14 +17,14 @@ class Order extends BaseOrder_1.BaseOrder {
         binance.type = EOrderEnums_1.EOrderType[order.type];
         return binance;
     }
-    constructor(symbol, price, side, executedQty, orderId, origQty, status, timeInForce, type, clientOrderId, transactTime) {
-        super(parseFloat(price), side, symbol, type, timeInForce);
-        this.executedQty = parseFloat(executedQty);
-        this.orderId = orderId;
-        this.origQty = parseFloat(origQty);
-        this.status = EOrderEnums_1.EOrderStatus[status];
-        this.clientOrderId = clientOrderId;
-        this.transactTime = transactTime;
+    constructor(order) {
+        super(order.side, order.symbol, order.type, parseFloat(order.price), order.timeInForce);
+        this.executedQty = parseFloat(order.executedQty);
+        this.orderId = order.orderId;
+        this.origQty = parseFloat(order.origQty);
+        this.status = EOrderEnums_1.EOrderStatus[order.status];
+        this.clientOrderId = order.clientOrderId;
+        this.transactTime = order.transactTime;
     }
 }
 exports.Order = Order;

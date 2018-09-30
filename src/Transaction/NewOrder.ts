@@ -1,4 +1,4 @@
-import {ENewOrderRespType, EOrderSide, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {ENewOrderRespType} from "./Interfaces/EOrderEnums";
 import {BaseOrder} from "./BaseOrder";
 import {INewOrder} from "./Interfaces/INewOrder";
 
@@ -24,14 +24,13 @@ export class NewOrder extends BaseOrder {
 		return binance;
 	}
 
-	constructor(symbol: string, quantity: number, side: EOrderSide, type: EOrderType, price?: number,
-							icebergQty?: number, timeInForce?: ETimeInForce, stopPrice?: number, recvWindow?: number, newClientOrderId?: string, newOrderRespType?: ENewOrderRespType) {
-		super(price, EOrderSide[side], symbol, EOrderType[type], ETimeInForce[timeInForce]);
-		this.quantity = quantity;
-		this.icebergQty = icebergQty;
-		this.newOrderRespType = ENewOrderRespType[newOrderRespType] || ENewOrderRespType[ENewOrderRespType.RESULT];
-		this.newClientOrderId = newClientOrderId;
-		this.stopPrice = stopPrice;
-		this.recvWindow = recvWindow || 5000;
+	constructor(newOrder: INewOrder){
+		super(newOrder.side, newOrder.symbol, newOrder.type, parseFloat(newOrder.price), newOrder.timeInForce)
+		this.quantity = parseFloat(newOrder.quantity);
+		this.icebergQty = parseFloat(newOrder.icebergQty);
+		this.newOrderRespType = ENewOrderRespType[newOrder.newOrderRespType] || ENewOrderRespType[ENewOrderRespType.FULL];
+		this.newClientOrderId = newOrder.newClientOrderId;
+		this.stopPrice = parseFloat(newOrder.stopPrice);
+		this.recvWindow = newOrder.recvWindow || 5000;
 	}
 }

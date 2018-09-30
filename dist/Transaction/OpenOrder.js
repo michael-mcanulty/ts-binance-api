@@ -21,17 +21,17 @@ class OpenOrder extends BaseOrder_1.BaseOrder {
         binance.type = EOrderEnums_1.EOrderType[openOrder.type];
         return binance;
     }
-    constructor(clientOrderId, executedQty, orderId, origQty, price, side, status, symbol, type, timeInForce, icebergQty, isWorking, stopPrice, time) {
-        super(parseFloat(price), side, symbol, type, timeInForce);
-        this.clientOrderId = clientOrderId;
-        this.executedQty = parseFloat(executedQty);
-        this.orderId = orderId;
+    constructor(openOrder) {
+        super(openOrder.side, openOrder.symbol, openOrder.type, parseFloat(openOrder.price), openOrder.timeInForce);
+        this.clientOrderId = openOrder.clientOrderId;
+        this.executedQty = parseFloat(openOrder.executedQty);
+        this.orderId = openOrder.orderId;
         this.status = status;
-        this.icebergQty = parseFloat(icebergQty);
-        this.isWorking = isWorking;
-        this.stopPrice = parseFloat(stopPrice);
-        this.symbol = symbol;
-        this.time = time;
+        this.icebergQty = parseFloat(openOrder.icebergQty);
+        this.isWorking = openOrder.isWorking;
+        this.stopPrice = parseFloat(openOrder.stopPrice);
+        this.symbol = openOrder.symbol;
+        this.time = openOrder.time;
     }
 }
 exports.OpenOrder = OpenOrder;

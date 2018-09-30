@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Signed_1 = require("../Rest/Signed");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class BaseOrder extends Signed_1.Signed {
-    constructor(price, side, symbol, type, timeInForce) {
+    constructor(side, symbol, type, price, timeInForce) {
         super();
         this.price = price;
         this.side = side;
         this.symbol = symbol;
         this.type = type;
+        this.price = price;
         let tForce;
         this.timeInForce = timeInForce;
         if (!timeInForce) {

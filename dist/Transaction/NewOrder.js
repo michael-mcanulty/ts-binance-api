@@ -15,14 +15,14 @@ class NewOrder extends BaseOrder_1.BaseOrder {
         binance.type = newOrder.type;
         return binance;
     }
-    constructor(symbol, quantity, side, type, price, icebergQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType) {
-        super(price, EOrderEnums_1.EOrderSide[side], symbol, EOrderEnums_1.EOrderType[type], EOrderEnums_1.ETimeInForce[timeInForce]);
-        this.quantity = quantity;
-        this.icebergQty = icebergQty;
-        this.newOrderRespType = EOrderEnums_1.ENewOrderRespType[newOrderRespType] || EOrderEnums_1.ENewOrderRespType[EOrderEnums_1.ENewOrderRespType.RESULT];
-        this.newClientOrderId = newClientOrderId;
-        this.stopPrice = stopPrice;
-        this.recvWindow = recvWindow || 5000;
+    constructor(newOrder) {
+        super(newOrder.side, newOrder.symbol, newOrder.type, parseFloat(newOrder.price), newOrder.timeInForce);
+        this.quantity = parseFloat(newOrder.quantity);
+        this.icebergQty = parseFloat(newOrder.icebergQty);
+        this.newOrderRespType = EOrderEnums_1.ENewOrderRespType[newOrder.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[EOrderEnums_1.ENewOrderRespType.FULL];
+        this.newClientOrderId = newOrder.newClientOrderId;
+        this.stopPrice = parseFloat(newOrder.stopPrice);
+        this.recvWindow = newOrder.recvWindow || 5000;
     }
 }
 exports.NewOrder = NewOrder;

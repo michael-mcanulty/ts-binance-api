@@ -1,6 +1,7 @@
-import {BaseOrder} from "./BaseOrder";
 import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 import {IOrder} from "./Interfaces/IOrder";
+import {BaseOrder} from "./BaseOrder";
+import {Fill} from "./Fill";
 
 export class Order extends BaseOrder {
 	clientOrderId: string;
@@ -9,6 +10,12 @@ export class Order extends BaseOrder {
 	origQty: number;
 	status: string;
 	transactTime: number;
+	price: number;
+	side: string;
+	symbol: string;
+	timeInForce: string;
+	type: string;
+	fills?: Fill[];
 
 	static toBinance(order: Order): IOrder {
 		let binance: IOrder = <IOrder>{};
@@ -25,14 +32,13 @@ export class Order extends BaseOrder {
 		return binance;
 	}
 
-	constructor(symbol: string, price: string, side: string, executedQty: string, orderId: number,
-							origQty: string, status: string, timeInForce: string, type: string, clientOrderId: string, transactTime: number) {
-		super(parseFloat(price), side, symbol, type, timeInForce);
-		this.executedQty = parseFloat(executedQty);
-		this.orderId = orderId;
-		this.origQty = parseFloat(origQty);
-		this.status = EOrderStatus[status];
-		this.clientOrderId = clientOrderId;
-		this.transactTime = transactTime;
+	constructor(order: IOrder) {
+		super(order.side, order.symbol, order.type, parseFloat(order.price), order.timeInForce);
+		this.executedQty = parseFloat(order.executedQty);
+		this.orderId = order.orderId;
+		this.origQty = parseFloat(order.origQty);
+		this.status = EOrderStatus[order.status];
+		this.clientOrderId = order.clientOrderId;
+		this.transactTime = order.transactTime;
 	}
 }

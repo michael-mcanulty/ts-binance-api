@@ -1,4 +1,5 @@
 import {IBaseOrder} from "./IBaseOrder";
+import {IFill} from "./IFill";
 
 export interface IOrder extends IBaseOrder {
 	clientOrderId: string;
@@ -8,4 +9,5 @@ export interface IOrder extends IBaseOrder {
 	origQty: string;
 	status: string;
 	transactTime: number;
+	fills: IFill[];
 }

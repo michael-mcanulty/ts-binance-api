@@ -3,18 +3,19 @@ import {EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 
 export class BaseOrder extends Signed {
 
-	price: number;
+	price?: number;
 	side: string;
 	symbol: string;
-	timeInForce: string;
+	timeInForce?: string;
 	type: string;
 
-	constructor(price: number, side: string, symbol: string, type: string, timeInForce: string) {
+	constructor(side: string, symbol: string, type: string, price?: number, timeInForce?: string) {
 		super();
 		this.price = price;
 		this.side = side;
 		this.symbol = symbol;
 		this.type = type;
+		this.price = price;
 		let tForce: ETimeInForce;
 		this.timeInForce = timeInForce;
 		if (!timeInForce) {
