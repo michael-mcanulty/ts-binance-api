@@ -2,6 +2,3 @@ node_modules/*
 .idea/*
 backups/*
 *.txt
-
-*
-.example/*
