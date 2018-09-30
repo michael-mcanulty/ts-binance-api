@@ -462,7 +462,9 @@ class Rest extends BotHttp_1.BotHttp {
             try {
                 let type = EOrderEnums_1.EOrderType.LIMIT;
                 let side = EOrderEnums_1.EOrderSide.SELL;
-                let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
+                let nOrder = {};
+                nOrder.quantity = quantity;
+                let order = new NewOrder_1.NewOrder();
                 let orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }

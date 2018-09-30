@@ -488,7 +488,9 @@ export class Rest extends BotHttp {
 			try {
 				let type: EOrderType = EOrderType.LIMIT;
 				let side: EOrderSide = EOrderSide.SELL;
-				let order: NewOrder = new NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
+				let nOrder: INewOrder = <INewOrder>{};
+				nOrder.quantity = quantity;
+				let order: NewOrder = new NewOrder();
 				let orderRes: Order | {} = await this._newOrder(order);
 				resolve(orderRes);
 			} catch (err) {
