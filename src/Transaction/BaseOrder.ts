@@ -1,5 +1,6 @@
 import {Signed} from "../Rest/Signed";
 import {EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {IBaseOrder} from "./Interfaces/IBaseOrder";
 
 export class BaseOrder extends Signed {
 
@@ -9,18 +10,18 @@ export class BaseOrder extends Signed {
 	timeInForce?: string;
 	type: string;
 
-	constructor(side: string, symbol: string, type: string, price?: number, timeInForce?: string) {
+	constructor(base: IBaseOrder) {
 		super();
-		this.price = price;
-		this.side = side;
-		this.symbol = symbol;
-		this.type = type;
-		this.price = price;
+		this.price = parseFloat(base.price);
+		this.side = base.side;
+		this.symbol = base.symbol;
+		this.type = EOrderType[base.type];
+		this.price = parseFloat(base.price);
 		let tForce: ETimeInForce;
-		this.timeInForce = timeInForce;
-		if (!timeInForce) {
+		this.timeInForce = base.timeInForce;
+		if (!base.timeInForce) {
 			let goodTilCancelList: string[] = [EOrderType[EOrderType.LIMIT], EOrderType[EOrderType.STOP_LOSS_LIMIT], EOrderType[EOrderType.TAKE_PROFIT_LIMIT]];
-			let isGoodTilCancelled: boolean = goodTilCancelList.includes(type);
+			let isGoodTilCancelled: boolean = goodTilCancelList.includes(base.type);
 			if (isGoodTilCancelled || !this.type) {
 				this.timeInForce = ETimeInForce[ETimeInForce.GTC];
 			}

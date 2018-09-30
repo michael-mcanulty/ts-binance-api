@@ -84,7 +84,7 @@ class Rest extends BotHttp_1.BotHttp {
                     }
                     else {
                         let order = privateOrder;
-                        orderRes = new Order_1.Order(order.symbol, order.price, order.side, order.executedQty, order.orderId, order.origQty, order.status, order.timeInForce, order.type, order.clientOrderId, order.transactTime);
+                        orderRes = new Order_1.Order(order);
                         resolve(orderRes);
                     }
                 }
@@ -108,12 +108,14 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    cancelOrdersBySymbol(symbol) {
+    cancelOrdersBySymbol(options) {
         return new Promise(async (resolve, reject) => {
             try {
                 let results = [];
-                let openOrders = await this.getOpenOrders(symbol);
-                let symbolOrders = openOrders.filter(order => order.symbol === symbol);
+                let config = {};
+                config.symbol = options.symbol;
+                let openOrders = await this.getOpenOrders(config);
+                let symbolOrders = openOrders.filter(order => order.symbol === config.symbol);
                 for (let order of symbolOrders) {
                     let cancelResp = await this.cancelOrder(order.symbol, order.orderId);
                     results.push(cancelResp);
@@ -163,8 +165,23 @@ class Rest extends BotHttp_1.BotHttp {
                 let privateCall = await this.privateCall(url, callOpts, query);
                 let results = [];
                 if (Array.isArray(privateCall) && privateCall.length > 0) {
-                    results = privateCall.map(pCall => {
-                        return new Order_1.Order(pCall.symbol, pCall.price, pCall.side, pCall.executedQty, pCall.orderId, pCall.origQty, pCall.status, pCall.timeInForce, pCall.type, pCall.clientOrderId, pCall.time);
+                    results = privateCall.map((qCall) => {
+                        let opts = {};
+                        opts.cummulativeQuoteQty = qCall.cummulativeQuoteQty;
+                        opts.symbol = qCall.symbol;
+                        opts.side = qCall.side;
+                        opts.type = qCall.type;
+                        opts.price = qCall.price;
+                        opts.clientOrderId = qCall.clientOrderId;
+                        opts.orderId = qCall.orderId;
+                        opts.executedQty = qCall.executedQty;
+                        opts.origQty = qCall.origQty;
+                        opts.transactTime = qCall.time;
+                        opts.status = qCall.status;
+                        opts.signature = qCall.signature;
+                        opts.timeInForce = qCall.timeInForce;
+                        opts.isWorking = qCall.isWorking;
+                        return new Order_1.Order(opts);
                     });
                 }
                 resolve(results);
@@ -340,17 +357,22 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    getOpenOrders(symbol, orderId, recvWindow, origClientOrderId) {
+    getOpenOrders(options) {
         return new Promise(async (resolve, reject) => {
             try {
                 let url = "/v3/openOrders";
-                let nOpen = new QueryOrder_1.QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
+                let opts = {};
+                opts.symbol = options.symbol;
+                opts.recvWindow = options.recvWindow;
+                opts.orderId = options.orderId;
+                opts.origClientOrderId = options.origClientOrderId;
+                let query = new QueryOrder_1.QueryOrder(opts);
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
-                let privateCall = await this.privateCall(url, callOpts, nOpen);
+                let privateCall = await this.privateCall(url, callOpts, query);
                 let openOrders = [];
                 if (Array.isArray(privateCall) && privateCall.length > 0) {
-                    openOrders = privateCall.map(o => {
-                        return new OpenOrder_1.OpenOrder(o.clientOrderId, o.executedQty, o.orderId, o.origQty, o.price, o.side, o.status, o.symbol, o.timeInForce, o.type, o.icebergQty, o.isWorking, o.stopPrice, o.time);
+                    openOrders = privateCall.map((o) => {
+                        return new OpenOrder_1.OpenOrder(o);
                     });
                 }
                 resolve(openOrders);
@@ -360,16 +382,38 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    getOrder(symbol, orderId, recvWindow, origClientOrderId) {
+    getOrder(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                let query = new QueryOrder_1.QueryOrder(symbol, orderId, recvWindow, origClientOrderId);
+                let opts = {};
+                opts.symbol = options.symbol;
+                opts.recvWindow = options.recvWindow;
+                opts.orderId = options.orderId;
+                opts.origClientOrderId = options.origClientOrderId;
+                let query = new QueryOrder_1.QueryOrder(opts);
                 let url = '/v3/order';
                 let callOpts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, false, false);
                 let privateCall = await this.privateCall(url, callOpts, query);
                 let result;
                 if (privateCall && privateCall.hasOwnProperty("symbol")) {
-                    result = new Order_1.Order(privateCall.symbol, privateCall.price, privateCall.side, privateCall.executedQty, privateCall.orderId, privateCall.origQty, privateCall.status, privateCall.timeInForce, privateCall.type, privateCall.clientOrderId, privateCall.time);
+                    let nOrder = {};
+                    nOrder.symbol = opts.symbol;
+                    nOrder.side = privateCall.side;
+                    nOrder.price = privateCall.price;
+                    nOrder.type = privateCall.type;
+                    nOrder.timeInForce = privateCall.timeInForce;
+                    nOrder.origQty = privateCall.origQty;
+                    nOrder.executedQty = privateCall.executedQty;
+                    nOrder.timestamp = privateCall.time;
+                    nOrder.status = privateCall.status;
+                    nOrder.orderId = opts.orderId;
+                    nOrder.clientOrderId = privateCall.clientOrderId;
+                    nOrder.cummulativeQuoteQty = privateCall.cummulativeQuoteQty;
+                    nOrder.status = privateCall.status;
+                    nOrder.signature = privateCall.signature;
+                    nOrder.transactTime = privateCall.time;
+                    nOrder.isWorking = privateCall.isWorking;
+                    result = new Order_1.Order(nOrder);
                 }
                 resolve(result);
             }
@@ -443,29 +487,25 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    limitBuy(symbol, quantity, price, recvWindow, iceburgQty, timeInForce, stopPrice, newClientOrderId, newOrderRespType) {
+    limitBuy(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                let type = EOrderEnums_1.EOrderType.LIMIT;
-                let side = EOrderEnums_1.EOrderSide.BUY;
-                let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, price, iceburgQty, timeInForce, stopPrice, recvWindow, newClientOrderId, newOrderRespType);
-                let orderRes = await this._newOrder(order);
-                resolve(orderRes);
-            }
-            catch (err) {
-                reject(err);
-            }
-        });
-    }
-    limitSell(symbol, quantity, price, recvWindow, iceburgQty, timeInForce, stopPrice, newClientOrderId, newOrderRespType) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                let type = EOrderEnums_1.EOrderType.LIMIT;
-                let side = EOrderEnums_1.EOrderSide.SELL;
+                let order;
+                let orderRes;
                 let nOrder = {};
-                nOrder.quantity = quantity;
-                let order = new NewOrder_1.NewOrder();
-                let orderRes = await this._newOrder(order);
+                const TYPE = EOrderEnums_1.EOrderType.LIMIT;
+                const SIDE = EOrderEnums_1.EOrderSide.BUY;
+                const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = EOrderEnums_1.EOrderType[TYPE];
+                nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
+                nOrder.quantity = options.quantity;
+                nOrder.stopPrice = options.stopPrice;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
+                order = new NewOrder_1.NewOrder(nOrder);
+                orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {
@@ -473,13 +513,25 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    marketBuy(symbol, quantity, recvWindow) {
+    limitSell(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                let type = EOrderEnums_1.EOrderType.MARKET;
-                let side = EOrderEnums_1.EOrderSide.BUY;
-                let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
-                let orderRes = await this._newOrder(order);
+                let order;
+                let orderRes;
+                let nOrder = {};
+                const TYPE = EOrderEnums_1.EOrderType.LIMIT;
+                const SIDE = EOrderEnums_1.EOrderSide.SELL;
+                const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = EOrderEnums_1.EOrderType[TYPE];
+                nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
+                nOrder.quantity = options.quantity;
+                nOrder.stopPrice = options.stopPrice;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
+                order = new NewOrder_1.NewOrder(nOrder);
+                orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {
@@ -487,13 +539,49 @@ class Rest extends BotHttp_1.BotHttp {
             }
         });
     }
-    marketSell(symbol, quantity, recvWindow) {
+    marketBuy(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                let type = EOrderEnums_1.EOrderType.MARKET;
-                let side = EOrderEnums_1.EOrderSide.SELL;
-                let order = new NewOrder_1.NewOrder(symbol, quantity, side, type, null, null, null, null, recvWindow, null, null);
-                let orderRes = await this._newOrder(order);
+                let order;
+                let orderRes;
+                let nOrder = {};
+                const TYPE = EOrderEnums_1.EOrderType.MARKET;
+                const SIDE = EOrderEnums_1.EOrderSide.BUY;
+                const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = EOrderEnums_1.EOrderType[TYPE];
+                nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
+                nOrder.quantity = options.quantity;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
+                order = new NewOrder_1.NewOrder(nOrder);
+                orderRes = await this._newOrder(order);
+                resolve(orderRes);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    }
+    marketSell(options) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let order;
+                let orderRes;
+                let nOrder = {};
+                const TYPE = EOrderEnums_1.EOrderType.MARKET;
+                const SIDE = EOrderEnums_1.EOrderSide.SELL;
+                const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = EOrderEnums_1.EOrderType[TYPE];
+                nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
+                nOrder.quantity = options.quantity;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
+                order = new NewOrder_1.NewOrder(nOrder);
+                orderRes = await this._newOrder(order);
                 resolve(orderRes);
             }
             catch (err) {

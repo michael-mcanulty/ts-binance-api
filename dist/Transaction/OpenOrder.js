@@ -22,7 +22,14 @@ class OpenOrder extends BaseOrder_1.BaseOrder {
         return binance;
     }
     constructor(openOrder) {
-        super(openOrder.side, openOrder.symbol, openOrder.type, parseFloat(openOrder.price), openOrder.timeInForce);
+        let base = {};
+        base.cummulativeQuoteQty = openOrder.cummulativeQuoteQty;
+        base.type = openOrder.type;
+        base.price = openOrder.price;
+        base.side = openOrder.side;
+        base.symbol = openOrder.symbol;
+        base.timeInForce = openOrder.timeInForce;
+        super(base);
         this.clientOrderId = openOrder.clientOrderId;
         this.executedQty = parseFloat(openOrder.executedQty);
         this.orderId = openOrder.orderId;

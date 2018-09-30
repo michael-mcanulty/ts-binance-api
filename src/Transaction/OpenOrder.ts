@@ -1,6 +1,7 @@
 import {BaseOrder} from "./BaseOrder";
 import {IOpenOrder} from "./Interfaces/IOpenOrder";
 import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
+import {IBaseOrder} from "../Transaction/Interfaces/IBaseOrder";
 
 export class OpenOrder extends BaseOrder {
 	clientOrderId: string;
@@ -33,7 +34,14 @@ export class OpenOrder extends BaseOrder {
 	}
 
 	constructor(openOrder: IOpenOrder) {
-		super(openOrder.side, openOrder.symbol, openOrder.type, parseFloat(openOrder.price), openOrder.timeInForce);
+		let base: IBaseOrder = <IBaseOrder>{};
+		base.cummulativeQuoteQty = openOrder.cummulativeQuoteQty;
+		base.type = openOrder.type;
+		base.price = openOrder.price;
+		base.side = openOrder.side;
+		base.symbol = openOrder.symbol;
+		base.timeInForce = openOrder.timeInForce;
+		super(base);
 		this.clientOrderId = openOrder.clientOrderId;
 		this.executedQty = parseFloat(openOrder.executedQty);
 		this.orderId = openOrder.orderId;

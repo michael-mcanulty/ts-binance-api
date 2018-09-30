@@ -3,18 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Signed_1 = require("../Rest/Signed");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class BaseOrder extends Signed_1.Signed {
-    constructor(side, symbol, type, price, timeInForce) {
+    constructor(base) {
         super();
-        this.price = price;
-        this.side = side;
-        this.symbol = symbol;
-        this.type = type;
-        this.price = price;
+        this.price = parseFloat(base.price);
+        this.side = base.side;
+        this.symbol = base.symbol;
+        this.type = EOrderEnums_1.EOrderType[base.type];
+        this.price = parseFloat(base.price);
         let tForce;
-        this.timeInForce = timeInForce;
-        if (!timeInForce) {
+        this.timeInForce = base.timeInForce;
+        if (!base.timeInForce) {
             let goodTilCancelList = [EOrderEnums_1.EOrderType[EOrderEnums_1.EOrderType.LIMIT], EOrderEnums_1.EOrderType[EOrderEnums_1.EOrderType.STOP_LOSS_LIMIT], EOrderEnums_1.EOrderType[EOrderEnums_1.EOrderType.TAKE_PROFIT_LIMIT]];
-            let isGoodTilCancelled = goodTilCancelList.includes(type);
+            let isGoodTilCancelled = goodTilCancelList.includes(base.type);
             if (isGoodTilCancelled || !this.type) {
                 this.timeInForce = EOrderEnums_1.ETimeInForce[EOrderEnums_1.ETimeInForce.GTC];
             }
