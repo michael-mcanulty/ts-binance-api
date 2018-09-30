@@ -1,7 +1,7 @@
 import { Signed } from "../Rest/Signed";
 import { IBaseOrder } from "./Interfaces/IBaseOrder";
 export declare class BaseOrder extends Signed {
-    price?: number;
+    price?: string;
     side: string;
     symbol: string;
     timeInForce?: string;

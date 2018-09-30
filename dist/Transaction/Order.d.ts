@@ -8,7 +8,7 @@ export declare class Order extends BaseOrder {
     origQty: number;
     status: string;
     transactTime: number;
-    price: number;
+    price: string;
     side: string;
     symbol: string;
     timeInForce: string;
