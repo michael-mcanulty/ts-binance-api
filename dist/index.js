@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Fill_1 = require("./Transaction/Fill");
+exports.Fill = Fill_1.Fill;
 var TextMessage_1 = require("./TextMessage/TextMessage");
 exports.TextMessage = TextMessage_1.TextMessage;
 var AccountInfoOptions_1 = require("./Account/AccountInfoOptions");
