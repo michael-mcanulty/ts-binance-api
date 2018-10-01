@@ -29,57 +29,52 @@ export class BotHttp {
 		return `${BotHttp.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BotHttp.makeQueryString(data)}`;
 	}
 
-	public call(path: string, callOptions: CallOptions, payload?: any): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			let result: any;
-			try {
-				result = await this.fetch(path, callOptions, payload);
-				resolve(result);
-			} catch (err) {
-				reject(err);
-			}
-		});
+	public async call(path: string, callOptions: CallOptions, payload?: any): Promise<any> {
+		let result: any;
+		try {
+			result = await this.fetch(path, callOptions, payload);
+			return result;
+		} catch (err) {
+			throw err;
+		}
 	}
 
-	public fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let url: string = BotHttp.buildUrl(path, callOptions.noData, payload);
-				let res: Response = await BotHttp.fetch(url, callOptions);
-				let json = await res.json();
+	public async fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError> {
+		try {
+			let url: string = BotHttp.buildUrl(path, callOptions.noData, payload);
+			let res: Response = await BotHttp.fetch(url, callOptions);
+			let json = await res.json();
 
-				if (res.ok === false) {
-					let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
-					reject(error);
-				} else {
-					resolve(<Response>json);
-				}
-			} catch (err) {
-				reject(err);
+			if (res.ok === false) {
+				let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
+				return Promise.reject(error);
+			} else {
+				return <Response>json;
 			}
-		});
+		} catch (err) {
+			throw err;
+		}
 	}
 
 	private getSignature(payload: any, timestamp: ITimestamp): string {
-		let signature: string = crypto.createHmac('sha256', this.options.auth.secret).update(BotHttp.makeQueryString(Object.assign(payload, timestamp)).substr(1)).digest('hex');
+		let signature: string;
+		signature = crypto.createHmac('sha256', this.options.auth.secret).update(BotHttp.makeQueryString(Object.assign(payload, timestamp)).substr(1)).digest('hex');
 		return signature;
 	}
 
-	private getTimestamp(): Promise<ITimestamp> {
-		return new Promise(async (resolve, reject) => {
-			let time: ITimestamp = <ITimestamp>{};
-			if (this.options.useServerTime) {
-				try {
-					time.timestamp = await this.timestamp();
-					resolve(time);
-				} catch (err) {
-					reject(err);
-				}
-			} else {
-				time.timestamp = Date.now();
-				resolve(time);
+	private async getTimestamp(): Promise<ITimestamp> {
+		let time: ITimestamp = <ITimestamp>{};
+		if (this.options.useServerTime) {
+			try {
+				time.timestamp = await this.timestamp();
+				return time;
+			} catch (err) {
+				throw err;
 			}
-		});
+		} else {
+			time.timestamp = Date.now();
+			return time;
+		}
 	}
 
 	public static makeQueryString(params: any): string {
@@ -94,65 +89,58 @@ export class BotHttp {
 		return result;
 	}
 
-	public ping(): Promise<boolean> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
-				await this.call('/v1/ping', opts);
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
+	public async ping(): Promise<boolean> {
+		try {
+			let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			await this.call('/v1/ping', opts);
+			return true;
+		} catch (err) {
+			throw err;
+		}
 	}
 
-	public privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			let result: any;
-			let signature: string;
-			if (!payload) {
-				payload = new Signed();
-			}
-			try {
-				let tStamp: ITimestamp = await this.getTimestamp();
-				callOptions.headers = new ApiHeader(this.options.auth.key);
-				signature = await this.getSignature(payload, tStamp);
+	public async privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
+		let result: any;
+		let signature: string;
+		if (!payload) {
+			payload = new Signed();
+		}
+		try {
+			let tStamp: ITimestamp = await this.getTimestamp();
+			callOptions.headers = new ApiHeader(this.options.auth.key);
+			signature = await this.getSignature(payload, tStamp);
 
-				if (!callOptions.noExtra) {
-					payload.timestamp = tStamp.timestamp;
-					payload.signature = signature;
-				} else {
-					delete payload.timestamp;
-				}
-				result = await this.fetch(path, callOptions, payload);
-				resolve(result);
-			} catch (err) {
-				reject(err);
+			if (!callOptions.noExtra) {
+				payload.timestamp = tStamp.timestamp;
+				payload.signature = signature;
+			} else {
+				delete payload.timestamp;
 			}
-		});
+			result = await this.fetch(path, callOptions, payload);
+			return result;
+		} catch (err) {
+			throw err;
+		}
 	}
 
-	private time(): Promise<IServerTime> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
-				let server: IServerTime = await this.call('/v1/time', opts);
-				resolve(server);
-			} catch (err) {
-				reject(`Error in server time sync. Message: ${err}`);
-			}
-		});
+	private async time(): Promise<IServerTime> {
+		try {
+			let server: IServerTime;
+			let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			server = await this.call('/v1/time', opts);
+			return server;
+		} catch (err) {
+			throw new Error(`Error in server time sync. Message: ${err}`);
+		}
 	}
 
-	public timestamp(): Promise<number> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let time: IServerTime = await this.time();
-				resolve(time.serverTime);
-			} catch (err) {
-				reject(`Error in server time sync. Message: ${err}`);
-			}
-		});
+	public async timestamp(): Promise<number> {
+		try {
+			let time: IServerTime = await this.time();
+			return time.serverTime;
+		} catch (err) {
+			throw new Error(`Error in server time sync. Message: ${err}`);
+		}
 	}
 
 	constructor(options: IBinanceOptions) {

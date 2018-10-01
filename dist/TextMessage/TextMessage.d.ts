@@ -11,8 +11,8 @@ export declare class TextMessage {
     domain: string;
     static mailService: NodeMailer;
     msgOptions?: IMessageOptions;
-    static txtMsgOpts: ITextMsgOptions;
     smtpOptions?: ISmtpOptions;
+    static txtMsgOpts: ITextMsgOptions;
     getEmailAddress(phoneNumber?: number): string;
     send(error: HttpError | Error, srcUrl?: string): Promise<void>;
     constructor(carrierName?: TCarrier, msgOptions?: IMessageOptions, smtpOptions?: ISmtpOptions);

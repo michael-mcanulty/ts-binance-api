@@ -49,43 +49,41 @@ export class TextMessage {
 	domain: string;
 	public static mailService: NodeMailer;
 	msgOptions?: IMessageOptions;
-	public static txtMsgOpts: ITextMsgOptions;
 	smtpOptions?: ISmtpOptions;
+	public static txtMsgOpts: ITextMsgOptions;
 
 	public getEmailAddress(phoneNumber?: number): string {
 		return `${phoneNumber}@${this.domain}`;
 	}
 
-	public send(error: HttpError | Error, srcUrl?: string): Promise<void> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let isKnownErr: boolean = false;
-				let isFatal: boolean = false;
-				let msg: string;
+	public async send(error: HttpError | Error, srcUrl?: string): Promise<void> {
+		try {
+			let isKnownErr: boolean = false;
+			let isFatal: boolean = false;
+			let msg: string;
 
-				if (typeof TextMessage.txtMsgOpts !== "object") {
-					return reject(new Error("Static Options are missing from TextMessage class"));
-				}
-
-				msg = error.message;
-
-				if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
-					isFatal = error['isFatal'];
-					isKnownErr = !!(error['handler'].type);
-				}
-				if (!TextMessage.txtMsgOpts.phoneNum) {
-					return reject(new Error("A recipient's phone number is required phoneNum send a text message."));
-				}
-
-				this.msgOptions.to = this.getEmailAddress(TextMessage.txtMsgOpts.phoneNum);
-				this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType[error['handler'].type] : "Unknown"} Error Received`;
-				this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
-				await HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
-				resolve();
-			} catch (err) {
-				reject(err);
+			if (typeof TextMessage.txtMsgOpts !== "object") {
+				return Promise.reject(new Error("Static Options are missing from TextMessage class"));
 			}
-		});
+
+			msg = error.message;
+
+			if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
+				isFatal = error['isFatal'];
+				isKnownErr = !!(error['handler'].type);
+			}
+			if (!TextMessage.txtMsgOpts.phoneNum) {
+				return Promise.reject(new Error("A recipient's phone number is required phoneNum send a text message."));
+			}
+
+			this.msgOptions.to = this.getEmailAddress(TextMessage.txtMsgOpts.phoneNum);
+			this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType[error['handler'].type] : "Unknown"} Error Received`;
+			this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
+			await HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
+			return;
+		} catch (err) {
+			throw err;
+		}
 	}
 
 	constructor(carrierName?: TCarrier, msgOptions?: IMessageOptions, smtpOptions?: ISmtpOptions) {

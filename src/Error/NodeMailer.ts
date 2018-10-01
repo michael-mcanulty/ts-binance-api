@@ -6,21 +6,20 @@ import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 export class NodeMailer {
 	public static Service: NodeMailerService = nodeMailer;
 
-	public sendEmail(msgOpts: IMessageOptions, serviceOptions: ISmtpOptions): Promise<any> {
-		return new Promise((resolve, reject) => {
-			if (!serviceOptions || !msgOpts) {
-				reject("Service Options must be provided");
-			} else {
-				NodeMailer.Service.createTransport(serviceOptions).sendMail(msgOpts, (error, info: { response: string }) => {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(`Email Sent: ${info.response}`);
-					}
-				});
-			}
-		});
+	public async sendEmail(msgOpts: IMessageOptions, serviceOptions: ISmtpOptions): Promise<any> {
+		if (!serviceOptions || !msgOpts) {
+			return Promise.reject(new Error("Service Options must be provided"));
+		} else {
+			NodeMailer.Service.createTransport(serviceOptions).sendMail(msgOpts, (error, info: { response: string }) => {
+				if (error) {
+					return Promise.reject(error);
+				} else {
+					return `Email Sent: ${info.response}`;
+				}
+			});
+		}
 	}
 
-	constructor() {}
+	constructor() {
+	}
 }
