@@ -9,8 +9,6 @@
     "outDir": "dist",
     "baseUrl": "src",
     "module": "commonjs",
-    //"declaration": true,
-    //"declarationDir": "dist",
     "target": "es2017",
     "suppressImplicitAnyIndexErrors": true,
     "noImplicitAny": false,

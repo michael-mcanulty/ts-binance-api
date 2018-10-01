@@ -4,9 +4,7 @@ import {HttpErrorHandler} from "./HttpErrorHandler";
 import {EMethod} from "../Rest/EMethod";
 import {IHttpError} from "./Interfaces/IHttpError";
 import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
-import {IMessageOptions} from "./Interfaces/IMessageOptions";
-import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
-import {IBinanceOptions} from "..";
+import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 
 export class HttpError extends Error {
 	public static fromObjLiteral(err: IHttpError){
@@ -421,7 +419,7 @@ export class HttpError extends Error {
 	public static init(options: IBinanceOptions, _jsonErrs?: IHttpError[]) {
 		HttpErrorHandler.emailServiceOptions = options.emailServiceOpts;
 		HttpErrorHandler.emailMsgOptions = options.emailMsgOpts;
-		HttpErrorHandler.textMsgOptions = options.txtMsgOpts;
+		HttpErrorHandler.textMsgOptions = options.textMsgOpts;
 
 		if(_jsonErrs && _jsonErrs.length > 0){
 			// This is if you want to set the errors from a DB or somewhere else
@@ -430,7 +428,7 @@ export class HttpError extends Error {
 		HttpError.allErrors = HttpError._objErrors.map(err => {
 			err.handler.emailMsgOpts = options.emailMsgOpts;
 			err.handler.emailServiceOpts = options.emailServiceOpts;
-			err.handler.textMsgOpts = options.txtMsgOpts;
+			err.handler.textMsgOpts = options.textMsgOpts;
 			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler))
 		});
 		return HttpError.allErrors;
