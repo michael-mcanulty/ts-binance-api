@@ -1,0 +1,1 @@
+{"version":3,"file":"IPrice.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/IPrice.ts"],"names":[],"mappings":"","sourcesContent":["export interface IPrice {\r\n\tprice: string;\r\n\tsymbol: string;\r\n}"]}
