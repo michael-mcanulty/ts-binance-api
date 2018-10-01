@@ -1,0 +1,1 @@
+{"version":3,"file":"IExchangeInfo.js","sourceRoot":"","sources":["../../../src/ExchangeInfo/Interfaces/IExchangeInfo.ts"],"names":[],"mappings":"","sourcesContent":["import {ISymbol} from \"./ISymbol\";\r\n\r\nexport interface IExchangeInfo {\r\n\texchangeFilters?: (null)[] | null;\r\n\tserverTime: number;\r\n\tsymbols: ISymbol[]\r\n\ttimezone: string;\r\n}\r\n"]}

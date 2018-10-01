@@ -1,0 +1,1 @@
+{"version":3,"file":"IHttpError.js","sourceRoot":"","sources":["../../../src/Error/Interfaces/IHttpError.ts"],"names":[],"mappings":"","sourcesContent":["import {IHttpErrorHandler} from \"./IHttpErrorHandler\";\r\n\r\nexport interface IHttpError{\r\n\tcode: number;\r\n\tmessage: string;\r\n\thandler?: IHttpErrorHandler;\r\n\tisFatal?: boolean;\r\n}"]}
