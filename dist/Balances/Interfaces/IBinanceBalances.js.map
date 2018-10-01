@@ -1,0 +1,1 @@
+{"version":3,"file":"IBinanceBalances.js","sourceRoot":"","sources":["../../../src/Balances/Interfaces/IBinanceBalances.ts"],"names":[],"mappings":"","sourcesContent":["export interface IBinanceBalances {\r\n\t[key: string]: {\r\n\t\tavailable: string;\r\n\t\tlocked: string;\r\n\t};\r\n}"]}
