@@ -6,6 +6,7 @@ const HttpError_1 = require("../Error/HttpError");
 const Signed_1 = require("./Signed");
 const ApiHeader_1 = require("./ApiHeader");
 const CallOptions_1 = require("./CallOptions");
+const request = require("request-promise");
 class BotHttp {
     constructor(options) {
         this.options = options;
@@ -23,10 +24,13 @@ class BotHttp {
             throw err;
         }
     }
+    async _fetch(url, callOptions, payload) {
+        let method = callOptions.method;
+        let res = request[method.toLowerCase()]();
+    }
     async fetch(path, callOptions, payload) {
         try {
-            let url = BotHttp.buildUrl(path, callOptions.noData, payload);
-            let res = await BotHttp.fetch(url, callOptions);
+            let res = request.post();
             let json = await res.json();
             if (res.ok === false) {
                 let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);

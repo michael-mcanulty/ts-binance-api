@@ -18,6 +18,9 @@ import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
 import {IDepositHistoryReq} from '../Deposit/Interfaces/IDepositHistoryReq';
 import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
+import request = require('request-promise');
+import {Response} from "request";
+import {TMethod} from "./TMethod";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -38,11 +41,16 @@ export class BotHttp {
 			throw err;
 		}
 	}
-
+	private async _fetch(url: string, callOptions: ICallOpts, payload: any):Promise<Response>{
+		let method: TMethod = callOptions.method;
+		let res: Promise<Response> = request[method.toLowerCase()]();
+	}
 	public async fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError> {
 		try {
-			let url: string = BotHttp.buildUrl(path, callOptions.noData, payload);
-			let res: Response = await BotHttp.fetch(url, callOptions);
+
+		 let res: Response =request.post();
+
+
 			let json = await res.json();
 
 			if (res.ok === false) {
