@@ -11,6 +11,17 @@ export class NewOrder extends BaseOrder {
 	recvWindow?: number;
 	stopPrice?: number;
 
+	public toObjLiteral(): INewOrder{
+		let self: NewOrder = this;
+		let order: INewOrder = <INewOrder>{};
+		for (let prop in self){
+			if (self[prop] && typeof self[prop] !== "function") {
+				order[prop] = self[prop];
+			}
+		}
+		return order;
+	}
+
 	static toBinance(newOrder: NewOrder): INewOrder {
 		let binance: INewOrder = <INewOrder>{};
 		binance.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;

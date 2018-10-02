@@ -1,4 +1,4 @@
-export interface ICandlesOptions {
+export interface ICandleRequest {
 	endTime?: number;
 	interval: string;
 	limit?: number;

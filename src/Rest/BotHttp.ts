@@ -5,22 +5,13 @@ import {IServerTime} from "./Interfaces/IServerTime";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ITimestamp} from "./Interfaces/ITimestamp";
 import {Signed} from "./Signed";
-import {NewOrder} from "../Transaction/NewOrder";
-import {CancelOrder} from "../Transaction/CancelOrder";
-import {OpenOrder} from "../Transaction/OpenOrder";
-import {DataStream} from "./DataStream";
 import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
-import {QueryOrder} from "../Transaction/QueryOrder";
-import {AccountInfoOptions} from "../Account/AccountInfoOptions";
 import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
-import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
-import {IDepositHistoryReq} from '../Deposit/Interfaces/IDepositHistoryReq';
-import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
-import request = require('request-promise');
-import {Response} from "request";
+import {RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
 import {TMethod} from "./TMethod";
+import * as requestPromise from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -28,39 +19,41 @@ export class BotHttp {
 	public static fetch: Function = Fetch;
 	public options: IBinanceOptions;
 
-	static buildUrl(path: string, noData: boolean, data: object): string {
-		return `${BotHttp.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BotHttp.makeQueryString(data)}`;
+	static buildUrl(options: CallOptions): string {
+		return `${BotHttp.BASE}${options.uri.includes('/wapi') ? '' : '/api'}${options.uri}${(options.qs instanceof Object) ? '' : BotHttp.makeQueryString(options.qs)}`;
 	}
 
-	public async call(path: string, callOptions: CallOptions, payload?: any): Promise<any> {
+	public async call(callOptions: CallOptions): Promise<any> {
 		let result: any;
 		try {
-			result = await this.fetch(path, callOptions, payload);
+			result = await this.requestAsync(callOptions);
 			return result;
 		} catch (err) {
 			throw err;
 		}
 	}
-	private async _fetch(url: string, callOptions: ICallOpts, payload: any):Promise<Response>{
-		let method: TMethod = callOptions.method;
-		let res: Promise<Response> = request[method.toLowerCase()]();
-	}
-	public async fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError> {
-		try {
+	//TODO: CallOpts rename to something like requestOpts. Extend request or add properties to callOpts like 'form'.
+	public async requestAsync(callOptions: CallOptions):Promise<ResponseAsJSON | HttpError>{
+		let json: ResponseAsJSON;
+		let error: HttpError;
+		let newHeaders: object;
+		let requestApi: RequestAPI<requestPromise.RequestPromise, requestPromise.RequestPromiseOptions, RequiredUriUrl>;
+		let method: TMethod = <TMethod> callOptions.method;
 
-		 let res: Response =request.post();
+		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
+		requestOpts.uri = callOptions.uri;
+		requestOpts.method = callOptions.method;
+		requestOpts.headers = callOptions.headers;
+		requestOpts.json = callOptions.json;
 
-
-			let json = await res.json();
-
-			if (res.ok === false) {
-				let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
-				return Promise.reject(error);
-			} else {
-				return <Response>json;
-			}
-		} catch (err) {
-			throw err;
+		requestApi = requestPromise[method.toLowerCase()];
+		let res: Response = await requestApi(requestOpts);
+		json = await res.toJSON();
+		if (res.statusCode !== 200) {
+			error = new HttpError(res.statusCode, res.statusMessage);
+			return Promise.reject(error);
+		}else {
+			return <ResponseAsJSON>json;
 		}
 	}
 
@@ -98,39 +91,43 @@ export class BotHttp {
 	}
 
 	public async ping(): Promise<boolean> {
-		try {
-			let options: ICallOpts = <ICallOpts>{};
-			options.method = "GET";
-			options.json = true;
-			options.noExtra = false;
-			options.noData = true;
+		let config: CallOptions;
+		let options: ICallOpts = <ICallOpts>{};
+		options.method = "GET";
+		options.json = true;
+		options.isSigned = true;
+		options.uri = '/v1/ping';
+		options.apiKey = this.options.auth.key;
 
-			let config: CallOptions = new CallOptions(options, this.options.auth.key);
-			await this.call('/v1/ping', config);
+		try {
+			config = new CallOptions(options);
+			await this.call(config);
 			return true;
 		} catch (err) {
 			throw err;
 		}
 	}
 
-	public async privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any> {
+	public async privateCall(options: CallOptions): Promise<any> {
+		let tStamp: ITimestamp;
 		let result: any;
 		let signature: string;
-		if (!payload) {
-			payload = new Signed();
-		}
-		try {
-			let tStamp: ITimestamp = await this.getTimestamp();
-			callOptions.headers = new ApiHeader(this.options.auth.key);
-			signature = await this.getSignature(payload, tStamp);
 
-			if (!callOptions.noExtra) {
-				payload.timestamp = tStamp.timestamp;
-				payload.signature = signature;
+		try {
+			tStamp = await this.getTimestamp();
+			options.headers = new ApiHeader(this.options.auth.key);
+			signature = await this.getSignature(options.qs, tStamp);
+
+			if (options.isSigned) {
+				if(typeof options.qs == undefined){
+					options.qs = new Signed();
+				}
+				options.qs['timestamp'] = tStamp.timestamp;
+				options.qs['signature'] = signature;
 			} else {
-				delete payload.timestamp;
+				delete options.qs['timestamp'];
 			}
-			result = await this.fetch(path, callOptions, payload);
+			result = await this.requestAsync(options);
 			return result;
 		} catch (err) {
 			throw err;
@@ -138,18 +135,20 @@ export class BotHttp {
 	}
 
 	private async time(): Promise<IServerTime> {
+		let opts: CallOptions;
+		let options: ICallOpts = <ICallOpts>{};
+
 		try {
-			let server: IServerTime;
-			let options: ICallOpts = <ICallOpts>{};
 			options.method = "GET";
 			options.json = true;
-			options.noExtra = false;
-			options.noData = true;
-			let opts: CallOptions = new CallOptions(options, this.options.auth.key);
-			server = await this.call('/v1/time', opts);
-			return server;
+			options.isSigned = true;
+			options.apiKey = this.options.auth.key;
+			options.uri = '/v1/time';
+
+			opts = new CallOptions(options);
+			return <IServerTime> await this.call(opts);
 		} catch (err) {
-			throw new Error(`Error in server time sync. Message: ${err}`);
+			throw err;
 		}
 	}
 
@@ -158,7 +157,7 @@ export class BotHttp {
 			let time: IServerTime = await this.time();
 			return time.serverTime;
 		} catch (err) {
-			throw new Error(`Error in server time sync. Message: ${err}`);
+			throw err;
 		}
 	}
 

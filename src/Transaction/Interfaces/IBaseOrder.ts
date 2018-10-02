@@ -1,6 +1,6 @@
-import {Signed} from "../../Rest/Signed";
+import {ISigned} from "../../Rest/Interfaces/ISigned";
 
-export interface IBaseOrder extends Signed {
+export interface IBaseOrder extends ISigned {
 	price: string;
 	side: string;
 	symbol: string;

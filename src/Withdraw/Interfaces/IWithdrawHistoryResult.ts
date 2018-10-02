@@ -1,4 +1,4 @@
-import {EWithdrawStatus} from "../EWithdrawStatus";
+import {TWithdrawStatus} from "../TWithdrawStatus";
 
 export interface WithdrawList {
 	address: string;
@@ -7,7 +7,7 @@ export interface WithdrawList {
 	applyTime: any;
 	asset: string;
 	id: string;
-	status: EWithdrawStatus;
+	status: TWithdrawStatus;
 	txId: string;
 }
 

@@ -1,14 +1,17 @@
+import {IBaseQueryOrder} from "../Transaction/Interfaces/IBaseQueryOrder";
 import {Signed} from "../Rest/Signed";
 
-export class BaseQueryOrder extends Signed {
+export class BaseQueryOrder extends Signed{
 	orderId: number;
 	recvWindow: number;
 	symbol: string;
 
-	constructor(symbol: string, orderId: number, recvWindow?: number) {
+	constructor(baseQuery: IBaseQueryOrder) {
 		super();
-		this.symbol = symbol;
-		this.orderId = orderId;
-		this.recvWindow = recvWindow;
+		this.symbol = baseQuery.symbol;
+		this.orderId = baseQuery.orderId;
+		this.recvWindow = baseQuery.recvWindow;
+		this.signature = baseQuery.signature || undefined;
+		this.timestamp = baseQuery.timestamp || undefined;
 	}
 }

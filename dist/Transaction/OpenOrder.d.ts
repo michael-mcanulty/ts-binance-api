@@ -10,6 +10,7 @@ export declare class OpenOrder extends BaseOrder {
     status: string;
     stopPrice: number;
     time: number;
-    static toBinance(openOrder: OpenOrder): IOpenOrder;
+    toObjLiteral(): IOpenOrder;
+    toBinance(): IOpenOrder;
     constructor(openOrder: IOpenOrder);
 }

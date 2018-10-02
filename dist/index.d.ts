@@ -1,3 +1,4 @@
+export { ISigned } from "./Rest/Interfaces/ISigned";
 export { IGetAllOrdersOpts } from "./Transaction/Interfaces/IGetAllOrdersOpts";
 export { ICancelOrderOpts } from "./Transaction/Interfaces/ICancelOrderOpts";
 export { IQueryOrderOpts } from "./Transaction/Interfaces/IQueryOrderOpts";
@@ -46,7 +47,7 @@ export { IMinNotional } from "./ExchangeInfo/Interfaces/IMinNotional";
 export { ILotSize } from "./ExchangeInfo/Interfaces/ILotSize";
 export { ILimitsBinance } from "./ExchangeInfo/Interfaces/ILimitsBinance";
 export { IExchangeInfo } from "./ExchangeInfo/Interfaces/IExchangeInfo";
-export { ICandlesOptions } from "./ExchangeInfo/Interfaces/ICandleOptions";
+export { ICandleRequest } from "./ExchangeInfo/Interfaces/ICandleRequest";
 export { ITicker } from "./ExchangeInfo/Interfaces/ITicker";
 export { IStreamTicker, IStreamTickerRaw } from "./ExchangeInfo/Interfaces/IStreamTickerRaw";
 export { ISymbol } from "./ExchangeInfo/Interfaces/ISymbol";

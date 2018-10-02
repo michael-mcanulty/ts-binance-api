@@ -7,6 +7,7 @@ export declare class NewOrder extends BaseOrder {
     quantity: number;
     recvWindow?: number;
     stopPrice?: number;
+    toObjLiteral(): INewOrder;
     static toBinance(newOrder: NewOrder): INewOrder;
     constructor(newOrder: INewOrder);
 }

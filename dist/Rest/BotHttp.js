@@ -6,42 +6,44 @@ const HttpError_1 = require("../Error/HttpError");
 const Signed_1 = require("./Signed");
 const ApiHeader_1 = require("./ApiHeader");
 const CallOptions_1 = require("./CallOptions");
-const request = require("request-promise");
+const requestPromise = require("request-promise-native");
 class BotHttp {
     constructor(options) {
         this.options = options;
     }
-    static buildUrl(path, noData, data) {
-        return `${BotHttp.BASE}${path.includes('/wapi') ? '' : '/api'}${path}${noData ? '' : BotHttp.makeQueryString(data)}`;
+    static buildUrl(options) {
+        return `${BotHttp.BASE}${options.uri.includes('/wapi') ? '' : '/api'}${options.uri}${(options.qs instanceof Object) ? '' : BotHttp.makeQueryString(options.qs)}`;
     }
-    async call(path, callOptions, payload) {
+    async call(callOptions) {
         let result;
         try {
-            result = await this.fetch(path, callOptions, payload);
+            result = await this.requestAsync(callOptions);
             return result;
         }
         catch (err) {
             throw err;
         }
     }
-    async _fetch(url, callOptions, payload) {
+    async requestAsync(callOptions) {
+        let json;
+        let error;
+        let newHeaders;
+        let requestApi;
         let method = callOptions.method;
-        let res = request[method.toLowerCase()]();
-    }
-    async fetch(path, callOptions, payload) {
-        try {
-            let res = request.post();
-            let json = await res.json();
-            if (res.ok === false) {
-                let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
-                return Promise.reject(error);
-            }
-            else {
-                return json;
-            }
+        let requestOpts = {};
+        requestOpts.uri = callOptions.uri;
+        requestOpts.method = callOptions.method;
+        requestOpts.headers = callOptions.headers;
+        requestOpts.json = callOptions.json;
+        requestApi = requestPromise[method.toLowerCase()];
+        let res = await requestApi(requestOpts);
+        json = await res.toJSON();
+        if (res.statusCode !== 200) {
+            error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
+            return Promise.reject(error);
         }
-        catch (err) {
-            throw err;
+        else {
+            return json;
         }
     }
     getSignature(payload, timestamp) {
@@ -78,38 +80,41 @@ class BotHttp {
         return result;
     }
     async ping() {
+        let config;
+        let options = {};
+        options.method = "GET";
+        options.json = true;
+        options.isSigned = true;
+        options.uri = '/v1/ping';
+        options.apiKey = this.options.auth.key;
         try {
-            let options = {};
-            options.method = "GET";
-            options.json = true;
-            options.noExtra = false;
-            options.noData = true;
-            let config = new CallOptions_1.CallOptions(options, this.options.auth.key);
-            await this.call('/v1/ping', config);
+            config = new CallOptions_1.CallOptions(options);
+            await this.call(config);
             return true;
         }
         catch (err) {
             throw err;
         }
     }
-    async privateCall(path, callOptions, payload) {
+    async privateCall(options) {
+        let tStamp;
         let result;
         let signature;
-        if (!payload) {
-            payload = new Signed_1.Signed();
-        }
         try {
-            let tStamp = await this.getTimestamp();
-            callOptions.headers = new ApiHeader_1.ApiHeader(this.options.auth.key);
-            signature = await this.getSignature(payload, tStamp);
-            if (!callOptions.noExtra) {
-                payload.timestamp = tStamp.timestamp;
-                payload.signature = signature;
+            tStamp = await this.getTimestamp();
+            options.headers = new ApiHeader_1.ApiHeader(this.options.auth.key);
+            signature = await this.getSignature(options.qs, tStamp);
+            if (options.isSigned) {
+                if (typeof options.qs == undefined) {
+                    options.qs = new Signed_1.Signed();
+                }
+                options.qs['timestamp'] = tStamp.timestamp;
+                options.qs['signature'] = signature;
             }
             else {
-                delete payload.timestamp;
+                delete options.qs['timestamp'];
             }
-            result = await this.fetch(path, callOptions, payload);
+            result = await this.requestAsync(options);
             return result;
         }
         catch (err) {
@@ -117,19 +122,19 @@ class BotHttp {
         }
     }
     async time() {
+        let opts;
+        let options = {};
         try {
-            let server;
-            let options = {};
             options.method = "GET";
             options.json = true;
-            options.noExtra = false;
-            options.noData = true;
-            let opts = new CallOptions_1.CallOptions(options, this.options.auth.key);
-            server = await this.call('/v1/time', opts);
-            return server;
+            options.isSigned = true;
+            options.apiKey = this.options.auth.key;
+            options.uri = '/v1/time';
+            opts = new CallOptions_1.CallOptions(options);
+            return await this.call(opts);
         }
         catch (err) {
-            throw new Error(`Error in server time sync. Message: ${err}`);
+            throw err;
         }
     }
     async timestamp() {
@@ -138,7 +143,7 @@ class BotHttp {
             return time.serverTime;
         }
         catch (err) {
-            throw new Error(`Error in server time sync. Message: ${err}`);
+            throw err;
         }
     }
 }

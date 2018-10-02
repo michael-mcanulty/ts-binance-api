@@ -3,6 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 const BaseOrder_1 = require("./BaseOrder");
 class NewOrder extends BaseOrder_1.BaseOrder {
+    toObjLiteral() {
+        let self = this;
+        let order = {};
+        for (let prop in self) {
+            if (self[prop] && typeof self[prop] !== "function") {
+                order[prop] = self[prop];
+            }
+        }
+        return order;
+    }
     static toBinance(newOrder) {
         let binance = {};
         binance.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;

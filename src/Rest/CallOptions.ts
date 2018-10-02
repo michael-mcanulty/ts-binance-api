@@ -1,30 +1,50 @@
 import {ICallOpts} from "./Interfaces/ICallOpts";
 import {ApiHeader} from "./ApiHeader";
 import {TMethod} from "./TMethod";
+import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
+import {IDepositHistoryReq} from "../Deposit/Interfaces/IDepositHistoryReq";
+import {AccountInfoOptions} from "../Account/AccountInfoOptions";
+import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
+import {Signed} from "./Signed";
+import {DataStream} from "./DataStream";
+import {QueryOrder} from "../Transaction/QueryOrder";
+import {NewOrder} from "../Transaction/NewOrder";
+import {CancelOrder} from "../Transaction/CancelOrder";
+import {OpenOrder} from "../Transaction/OpenOrder";
+import {Headers} from "request";
+import * as requestPromise from "request-promise-native";
+import {ICandleRequest} from "../ExchangeInfo/Interfaces/ICandleRequest";
+import {IGetAllOrdersOpts} from "../Transaction/Interfaces/IGetAllOrdersOpts";
 
 export class CallOptions{
-	headers?: ApiHeader | any;
+	headers?: Headers;
+	uri: string;
 	json?: boolean;
-	method: string;
-	noData?: boolean;
-	noExtra?: boolean;
+	method: TMethod;
+	isSigned?: boolean;
+	apiKey?: string;
+	qs?: IGetAllOrdersOpts | IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions | ICandleRequest;
 
-	public toDBFormat(): ICallOpts{
-			let dbFormat: ICallOpts = <ICallOpts>{};
-			dbFormat.method = <TMethod>this.method;
-			dbFormat.noExtra = this.noExtra;
-			dbFormat.json = this.json;
-			dbFormat.headers = this.headers;
-			return dbFormat;
+	public toRequestOptions(): requestPromise.OptionsWithUri{
+		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
+		requestOpts.uri = this.uri;
+		requestOpts.method = <string> this.method;
+		requestOpts.headers = this.headers;
+		requestOpts.json = this.json;
+		requestOpts.qs = this.qs;
+		return requestOpts;
 	}
 
-	constructor(options: ICallOpts, apiKey?: string) {
-		this.method = <string> options.method;
+	constructor(options: ICallOpts) {
+		this.uri = options.uri;
+		this.headers = <Headers> options.headers;
+		this.method = <TMethod> options.method;
 		this.json = options.json || true;
-		this.noData = options.noData || false;
-		this.noExtra = options.noExtra || false;
-		if (apiKey || options.headers) {
-			this.headers = options.headers || new ApiHeader(apiKey);
+		this.isSigned = options.isSigned || false;
+		this.apiKey = options.apiKey || null;
+		this.qs = options.qs || null;
+		if (this.apiKey || options.headers) {
+			this.headers = options.headers || new ApiHeader(this.apiKey);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { Signed } from "../../Rest/Signed";
-export interface IAccountInfoOptions extends Signed {
+import { ISigned } from "../../Rest/Interfaces/ISigned";
+export interface IAccountInfoOptions extends ISigned {
     recvWindow?: number;
 }

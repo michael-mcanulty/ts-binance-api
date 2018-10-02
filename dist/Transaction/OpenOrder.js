@@ -3,22 +3,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BaseOrder_1 = require("./BaseOrder");
 const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class OpenOrder extends BaseOrder_1.BaseOrder {
-    static toBinance(openOrder) {
+    toObjLiteral() {
+        let self = this;
+        let order = {};
+        for (let prop in self) {
+            if (self[prop] && typeof self[prop] !== "function") {
+                order[prop] = self[prop];
+            }
+        }
+        return order;
+    }
+    toBinance() {
+        let self = this;
         let binance = {};
-        binance.clientOrderId = openOrder.clientOrderId;
-        binance.executedQty = (openOrder.executedQty) ? openOrder.executedQty.toString() : undefined;
-        binance.icebergQty = (openOrder.icebergQty) ? openOrder.icebergQty.toString() : undefined;
-        binance.isWorking = openOrder.isWorking;
-        binance.orderId = openOrder.orderId;
-        binance.origQty = (openOrder.origQty) ? openOrder.origQty.toString() : undefined;
-        binance.price = (openOrder.price) ? openOrder.price.toString() : undefined;
-        binance.side = EOrderEnums_1.EOrderSide[openOrder.side];
-        binance.status = EOrderEnums_1.EOrderStatus[openOrder.status];
-        binance.stopPrice = (openOrder.stopPrice) ? openOrder.stopPrice.toString() : undefined;
-        binance.symbol = openOrder.symbol;
-        binance.timeInForce = EOrderEnums_1.ETimeInForce[openOrder.timeInForce];
-        binance.time = openOrder.time;
-        binance.type = EOrderEnums_1.EOrderType[openOrder.type];
+        binance.clientOrderId = self.clientOrderId;
+        binance.executedQty = (self.executedQty) ? self.executedQty.toString() : undefined;
+        binance.icebergQty = (self.icebergQty) ? self.icebergQty.toString() : undefined;
+        binance.isWorking = self.isWorking;
+        binance.orderId = self.orderId;
+        binance.origQty = (self.origQty) ? self.origQty.toString() : undefined;
+        binance.price = (self.price) ? self.price.toString() : undefined;
+        binance.side = EOrderEnums_1.EOrderSide[self.side];
+        binance.status = EOrderEnums_1.EOrderStatus[self.status];
+        binance.stopPrice = (self.stopPrice) ? self.stopPrice.toString() : undefined;
+        binance.symbol = self.symbol;
+        binance.timeInForce = EOrderEnums_1.ETimeInForce[self.timeInForce];
+        binance.time = self.time;
+        binance.type = EOrderEnums_1.EOrderType[self.type];
         return binance;
     }
     constructor(openOrder) {

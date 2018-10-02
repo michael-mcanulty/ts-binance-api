@@ -1,6 +1,5 @@
-import { Signed } from "./Signed";
 import { IListenKey } from "./Interfaces/IListenKey";
-export declare class DataStream extends Signed {
+export declare class DataStream {
     listenKey: string;
     constructor(listenKey: IListenKey);
 }

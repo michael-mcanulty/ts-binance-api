@@ -10,7 +10,6 @@ import { Balance } from "../Balances/Balance";
 import { CancelOrderResponse } from "../Transaction/CancelOrderResponse";
 import { TestOrder } from "../Transaction/TestOrder";
 import { IExchangeInfo } from "../ExchangeInfo/Interfaces/IExchangeInfo";
-import { ICancelOrderOpts, ITotalBalance, Price } from "..";
 import { IDepositAddressResult } from "../Deposit/Interfaces/IDepositAddressResult";
 import { IDepositAddressReq } from "../Deposit/Interfaces/IDepositAddressReq";
 import { IDepositHistoryResult } from "../Deposit/Interfaces/IDepositHistoryResult";
@@ -22,6 +21,9 @@ import { ILimitOrderOpts } from "../Transaction/Interfaces/ILimitOrderOpts";
 import { IGetOrderOpts } from "../Transaction/Interfaces/IGetOrderOpts";
 import { IMarketOrderOpts } from "../Transaction/Interfaces/IMarketOrderOpts";
 import { IGetAllOrdersOpts } from "../Transaction/Interfaces/IGetAllOrdersOpts";
+import { ICancelOrderOpts } from "../Transaction/Interfaces/ICancelOrderOpts";
+import { ITotalBalance } from "../Balances/Interfaces/ITotalBalance";
+import { Price } from "../Transaction/Price";
 export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
     private _cancelOrder;

@@ -1,11 +1,11 @@
-import {EWithdrawStatus} from "../EWithdrawStatus";
-import {Signed} from "../..";
+import {TWithdrawStatus} from "../TWithdrawStatus";
+import {ISigned} from "../../Rest/Interfaces/ISigned";
 
-export interface IWithdrawHistoryReq extends Signed {
+export interface IWithdrawHistoryReq extends ISigned {
 	asset: string;
 	endTime: number;
 	recvWindow: number;
 	startTime: number;
-	status: EWithdrawStatus;
+	status: TWithdrawStatus;
 	timestamp: number;
 }
