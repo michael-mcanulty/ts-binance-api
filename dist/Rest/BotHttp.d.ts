@@ -1,0 +1,31 @@
+import { HttpError } from "../Error/HttpError";
+import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
+import { Signed } from "./Signed";
+import { NewOrder } from "../Transaction/NewOrder";
+import { CancelOrder } from "../Transaction/CancelOrder";
+import { OpenOrder } from "../Transaction/OpenOrder";
+import { DataStream } from "./DataStream";
+import { CallOptions } from "./CallOptions";
+import { QueryOrder } from "../Transaction/QueryOrder";
+import { AccountInfoOptions } from "../Account/AccountInfoOptions";
+import { IBinanceApiAuth } from "../Account/Interfaces/IBinanceApiAuth";
+import { IDepositAddressReq } from "../Deposit/Interfaces/IDepositAddressReq";
+import { IDepositHistoryReq } from '../Deposit/Interfaces/IDepositHistoryReq';
+import { IWithdrawHistoryReq } from "../Withdraw/Interfaces/IWithdrawHistoryReq";
+export declare class BotHttp {
+    static BASE: string;
+    auth: IBinanceApiAuth;
+    static fetch: Function;
+    options: IBinanceOptions;
+    static buildUrl(path: string, noData: boolean, data: object): string;
+    call(path: string, callOptions: CallOptions, payload?: any): Promise<any>;
+    fetch(path: string, callOptions: CallOptions, payload: any): Promise<Response | HttpError>;
+    private getSignature;
+    private getTimestamp;
+    static makeQueryString(params: any): string;
+    ping(): Promise<boolean>;
+    privateCall(path: string, callOptions: CallOptions, payload?: IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions): Promise<any>;
+    private time;
+    timestamp(): Promise<number>;
+    constructor(options: IBinanceOptions);
+}

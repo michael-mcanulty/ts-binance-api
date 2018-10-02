@@ -1,0 +1,1 @@
+{"version":3,"file":"BinanceError.js","sourceRoot":"","sources":["../../src/Error/BinanceError.ts"],"names":[],"mappings":";;AAAA,MAAa,YAAY;CAGxB;AAHD,oCAGC","sourcesContent":["export class BinanceError {\r\n\tcode: number;\r\n\tmsg: string;\r\n}"]}
