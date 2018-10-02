@@ -64,7 +64,7 @@ export {ApiHeader} from "./Rest/ApiHeader";
 export {BotHttp} from "./Rest/BotHttp";
 export {CallOptions} from "./Rest/CallOptions";
 export {DataStream} from "./Rest/DataStream";
-export {EMethod} from "./Rest/EMethod";
+export {TMethod} from "./Rest/TMethod";
 export {IListenKey} from "./Rest/Interfaces/IListenKey";
 export {Rest} from "./Rest/Rest";
 export {Signed} from "./Rest/Signed";

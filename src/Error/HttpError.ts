@@ -1,7 +1,7 @@
 import {EErrorType} from "./Enums/EErrorType";
 import {BinanceError} from "./BinanceError";
 import {HttpErrorHandler} from "./HttpErrorHandler";
-import {EMethod} from "../Rest/EMethod";
+import {TMethod} from "../Rest/TMethod";
 import {IHttpError} from "./Interfaces/IHttpError";
 import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
@@ -21,7 +21,7 @@ export class HttpError extends Error {
 		error.handler.emailServiceOpts = err.handler.emailServiceOpts;
 		error.handler.emailMsgOpts = err.handler.emailMsgOpts;
 		error.handler.endpoint = err.handler.endpoint;
-		error.handler.method = EMethod[err.handler.method];
+		error.handler.method = TMethod[err.handler.method];
 		error.handler.type = EErrorType[err.handler.type];
 		error.handler.payload = err.handler.payload;
 		error.handler.restartSingleWorker = err.handler.restartSingleWorker;
@@ -55,7 +55,7 @@ export class HttpError extends Error {
 				sendEmail: true,
 				sendText: true,
 				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
-				method: EMethod.POST
+				method: TMethod.POST
 			}
 		},
 		{
@@ -82,7 +82,7 @@ export class HttpError extends Error {
 				sendEmail: true,
 				sendText: true,
 				endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
-				method: EMethod.POST
+				method: TMethod.POST
 			}
 		},
 		{
@@ -135,7 +135,7 @@ export class HttpError extends Error {
 				sendText: true,
 				restartSingleWorker: true,
 				endpoint: ["http://localhost:3001/kill", "http://localhost:3002/kill"],
-				method: EMethod.POST
+				method: TMethod.POST
 			}
 		},
 		{
@@ -145,7 +145,7 @@ export class HttpError extends Error {
 				sendEmail: true,
 				sendText: true,
 				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
-				method: EMethod.POST
+				method: TMethod.POST
 			}
 		},
 		{

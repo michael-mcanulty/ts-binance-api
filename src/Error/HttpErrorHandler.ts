@@ -1,4 +1,3 @@
-import {EMethod} from "../Rest/EMethod";
 import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./NodeMailer";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
@@ -140,7 +139,7 @@ export class HttpErrorHandler {
 			if (config.endpoint) {
 				this.endpoint = (Array.isArray(config.endpoint)) ? <string[]>config.endpoint : <string[]>new Array(config.endpoint);
 			}
-			this.method = EMethod[config.method];
+			this.method = config.method;
 			this.type = EErrorType[config.type] || EErrorType[EErrorType.Binance];
 			this.sendEmail = config.sendEmail;
 			this.sendText = config.sendText;

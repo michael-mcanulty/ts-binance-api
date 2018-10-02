@@ -2,7 +2,6 @@ import * as Fetch from 'isomorphic-fetch'
 import * as crypto from 'crypto'
 import {HttpError} from "../Error/HttpError";
 import {IServerTime} from "./Interfaces/IServerTime";
-import {EMethod} from "./EMethod";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ITimestamp} from "./Interfaces/ITimestamp";
 import {Signed} from "./Signed";
@@ -18,6 +17,7 @@ import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {IDepositAddressReq} from "../Deposit/Interfaces/IDepositAddressReq";
 import {IDepositHistoryReq} from '../Deposit/Interfaces/IDepositHistoryReq';
 import {IWithdrawHistoryReq} from "../Withdraw/Interfaces/IWithdrawHistoryReq";
+import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -91,8 +91,14 @@ export class BotHttp {
 
 	public async ping(): Promise<boolean> {
 		try {
-			let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
-			await this.call('/v1/ping', opts);
+			let options: ICallOpts = <ICallOpts>{};
+			options.method = "GET";
+			options.json = true;
+			options.noExtra = false;
+			options.noData = true;
+
+			let config: CallOptions = new CallOptions(options, this.options.auth.key);
+			await this.call('/v1/ping', config);
 			return true;
 		} catch (err) {
 			throw err;
@@ -126,7 +132,12 @@ export class BotHttp {
 	private async time(): Promise<IServerTime> {
 		try {
 			let server: IServerTime;
-			let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			let options: ICallOpts = <ICallOpts>{};
+			options.method = "GET";
+			options.json = true;
+			options.noExtra = false;
+			options.noData = true;
+			let opts: CallOptions = new CallOptions(options, this.options.auth.key);
 			server = await this.call('/v1/time', opts);
 			return server;
 		} catch (err) {

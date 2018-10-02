@@ -1,15 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EMethod_1 = require("./EMethod");
 const ApiHeader_1 = require("./ApiHeader");
 class CallOptions {
-    constructor(method, json, noData, noExtra, apiKey, headers) {
-        this.method = EMethod_1.EMethod[method];
-        this.json = json || true;
-        this.noData = noData || false;
-        this.noExtra = noExtra || false;
-        if (apiKey || headers) {
-            this.headers = headers || new ApiHeader_1.ApiHeader(apiKey);
+    toDBFormat() {
+        let dbFormat = {};
+        dbFormat.method = this.method;
+        dbFormat.noExtra = this.noExtra;
+        dbFormat.json = this.json;
+        dbFormat.headers = this.headers;
+        return dbFormat;
+    }
+    constructor(options, apiKey) {
+        this.method = options.method;
+        this.json = options.json || true;
+        this.noData = options.noData || false;
+        this.noExtra = options.noExtra || false;
+        if (apiKey || options.headers) {
+            this.headers = options.headers || new ApiHeader_1.ApiHeader(apiKey);
         }
     }
 }

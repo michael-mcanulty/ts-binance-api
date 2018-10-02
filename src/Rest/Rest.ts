@@ -1,5 +1,5 @@
 import {BotHttp} from "./BotHttp";
-import {EMethod} from "./EMethod";
+import {TMethod} from "./TMethod";
 import {IListenKey} from "./Interfaces/IListenKey";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ICandlesOptions} from "../ExchangeInfo/Interfaces/ICandleOptions";
@@ -45,6 +45,7 @@ import {IGetOrderOpts} from "../Transaction/Interfaces/IGetOrderOpts";
 import {IQueryOrderOpts} from "../Transaction/Interfaces/IQueryOrderOpts";
 import {IMarketOrderOpts} from "../Transaction/Interfaces/IMarketOrderOpts";
 import {IGetAllOrdersOpts} from "../Transaction/Interfaces/IGetAllOrdersOpts";
+import {ICallOpts} from "../Rest/Interfaces/ICallOpts";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -55,7 +56,14 @@ export class Rest extends BotHttp {
 			let response: CancelOrderResponse;
 			let privateOrder: IQueryCancelOrder | HttpError | {};
 			let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
-			let callOpts: CallOptions = new CallOptions(EMethod.DELETE, true, false, false);
+			let callOpts: CallOptions;
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'DELETE';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+			callOpts = new CallOptions(callConfig);
+
 			privateOrder = await this.privateCall(url, callOpts, cancelOrder);
 			if (privateOrder instanceof HttpError) {
 				return Promise.reject(privateOrder);
@@ -75,8 +83,10 @@ export class Rest extends BotHttp {
 			candleOpts.symbol = symbol;
 			candleOpts.interval = interval;
 			candleOpts.limit = limit;
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
 
-			let callOpts: CallOptions = new CallOptions(EMethod.GET);
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			let raw: any[][] = await this.call('/v1/klines', callOpts, candleOpts);
 			let candles: Candle[] = Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
 			candles.forEach((candle) => {
@@ -93,7 +103,14 @@ export class Rest extends BotHttp {
 			let orderRes: Order;
 			let privateOrder: IOrder | HttpError | TestOrder;
 			let url: string = (Binance.options.test) ? "/v3/order/test" : "/v3/order";
-			let callOpts: CallOptions = new CallOptions(EMethod.POST, true, false, false);
+
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'POST';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			privateOrder = await this.privateCall(url, callOpts, NewOrder.toBinance(order));
 			if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
 				return Promise.reject(new TestOrder());
@@ -157,7 +174,14 @@ export class Rest extends BotHttp {
 	public async closeDataStream(): Promise<{}> {
 		try {
 			let result: object;
-			let callOpts: CallOptions = new CallOptions(EMethod.DELETE, true, false, true);
+
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'DELETE';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = true;
+
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			let dStream: DataStream = new DataStream(Rest.listenKey);
 			result = await this.privateCall('/v1/userDataStream', callOpts, dStream);
 			return result;
@@ -170,7 +194,12 @@ export class Rest extends BotHttp {
 		try {
 			let url: string = "/v3/account";
 			let opts: AccountInfoOptions = new AccountInfoOptions(recvWindow);
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			let accountInfoRest: IOutboundAccountInfoRest = await this.privateCall(url, callOpts, opts);
 			let info: OutboundAccountInfo = OutboundAccountInfo.fromBinanceRest(accountInfoRest);
 			return info;
@@ -183,7 +212,15 @@ export class Rest extends BotHttp {
 		try {
 			let query: AllOrders = new AllOrders(options);
 			let url: string = '/v3/allOrders';
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+			let callOpts: CallOptions;
+
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+			callOpts = new CallOptions(callConfig);
+
 			let privateCall: IQueryOrderResponse[] = await this.privateCall(url, callOpts, query);
 			let results: Order[] = [];
 
@@ -311,7 +348,12 @@ export class Rest extends BotHttp {
 
 	public async getDataStream(): Promise<IListenKey> {
 		try {
-			let callOpts: CallOptions = new CallOptions(EMethod.POST, true, true, false);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'POST';
+			callConfig.json = true;
+			callConfig.noData = true;
+			callConfig.noExtra = false;
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			let signed = new Signed();
 			Rest.listenKey = <IListenKey> await this.privateCall('/v1/userDataStream', callOpts, signed);
 			return Rest.listenKey;
@@ -323,7 +365,13 @@ export class Rest extends BotHttp {
 	public async getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult> {
 		try {
 			let url: string = '/wapi/v3/depositAddress.html';
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			return <IDepositAddressResult> await this.privateCall(url, callOpts, request);
 		} catch (err) {
 			throw err;
@@ -333,7 +381,13 @@ export class Rest extends BotHttp {
 	public async getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult> {
 		try {
 			let url: string = '/wapi/v3/depositHistory.html';
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			return <IDepositHistoryResult> await this.privateCall(url, callOpts, request);
 		} catch (err) {
 			throw err;
@@ -342,7 +396,13 @@ export class Rest extends BotHttp {
 
 	public async getExchangeInfo(): Promise<IExchangeInfo> {
 		try {
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = true;
+			callConfig.noExtra = false;
+
+			let callOpts: CallOptions = new CallOptions(callConfig, this.options.auth.key);
 			return <IExchangeInfo> await this.call('/v1/exchangeInfo', callOpts);
 		} catch (err) {
 			throw err;
@@ -370,13 +430,18 @@ export class Rest extends BotHttp {
 			let query: QueryOrder;
 			let callOpts: CallOptions;
 			let privateCall: IOpenOrder[];
+			let callConfig: ICallOpts = <ICallOpts>{}
 
 			opts.symbol = options.symbol;
 			opts.recvWindow = options.recvWindow;
 			opts.orderId = options.orderId;
 			opts.origClientOrderId = options.origClientOrderId;
 			query = new QueryOrder(opts);
-			callOpts = new CallOptions(EMethod.GET, true, false, false);
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+			callOpts = new CallOptions(callConfig);
 			privateCall = await this.privateCall(url, callOpts, query);
 			if (Array.isArray(privateCall) && privateCall.length > 0) {
 				return <OpenOrder[]> privateCall.map((o: IOpenOrder) => {
@@ -404,7 +469,13 @@ export class Rest extends BotHttp {
 			opts.origClientOrderId = options.origClientOrderId;
 
 			query = new QueryOrder(opts);
-			callOpts = new CallOptions(EMethod.GET, true, false, false);
+
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+			callOpts = new CallOptions(callConfig);
 			privateCall = await this.privateCall(url, callOpts, query);
 
 			if (privateCall && privateCall.hasOwnProperty("symbol")) {
@@ -437,7 +508,12 @@ export class Rest extends BotHttp {
 
 	public async getPrices(): Promise<Price[]> {
 		try {
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = true;
+			callConfig.noExtra = false;
+			let callOpts: CallOptions = new CallOptions(callConfig, this.options.auth.key);
 			let url: string = '/v1/ticker/allPrices';
 			let rawPrices: IPrice[] = await this.call(url, callOpts);
 			if (Array.isArray(rawPrices) && rawPrices.length > 0) {
@@ -461,7 +537,13 @@ export class Rest extends BotHttp {
 
 	public async getStatus(): Promise<ISystemStatus> {
 		try {
-			let opts: CallOptions = new CallOptions(EMethod.GET, true, true, false, this.options.auth.key);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = true;
+			callConfig.noExtra = false;
+
+			let opts: CallOptions = new CallOptions(callConfig, this.options.auth.key);
 			return <ISystemStatus> await this.call('/wapi/v3/systemStatus.html', opts);
 		} catch (err) {
 			return Promise.reject(new Error(`Error retrieving the system status. Message: ${err}`));
@@ -471,7 +553,13 @@ export class Rest extends BotHttp {
 	public async getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
 		try {
 			let url: string = '/wapi/v3/withdrawHistory.html';
-			let callOpts: CallOptions = new CallOptions(EMethod.GET, true, false, false);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'GET';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = false;
+
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			let withdrawHistory: IWithdrawHistoryResult = await this.privateCall(url, callOpts, request);
 			return withdrawHistory;
 		} catch (err) {
@@ -481,7 +569,13 @@ export class Rest extends BotHttp {
 
 	public async keepDataStream(): Promise<{}> {
 		try {
-			let callOpts: CallOptions = new CallOptions(EMethod.PUT, true, false, true);
+			let callConfig: ICallOpts = <ICallOpts>{};
+			callConfig.method = 'PUT';
+			callConfig.json = true;
+			callConfig.noData = false;
+			callConfig.noExtra = true;
+
+			let callOpts: CallOptions = new CallOptions(callConfig);
 			let dStream: DataStream = new DataStream(Rest.listenKey);
 			return <{}> await this.privateCall('/v1/userDataStream', callOpts, dStream);
 		} catch (err) {

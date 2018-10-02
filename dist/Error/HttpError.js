@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const EErrorType_1 = require("./Enums/EErrorType");
 const HttpErrorHandler_1 = require("./HttpErrorHandler");
-const EMethod_1 = require("../Rest/EMethod");
 class HttpError extends Error {
     constructor(code, message, handler, isFatal) {
         super();
@@ -35,7 +34,7 @@ class HttpError extends Error {
         error.handler.emailServiceOpts = err.handler.emailServiceOpts;
         error.handler.emailMsgOpts = err.handler.emailMsgOpts;
         error.handler.endpoint = err.handler.endpoint;
-        error.handler.method = EMethod_1.EMethod[err.handler.method];
+        error.handler.method = TMethod[err.handler.method];
         error.handler.type = EErrorType_1.EErrorType[err.handler.type];
         error.handler.payload = err.handler.payload;
         error.handler.restartSingleWorker = err.handler.restartSingleWorker;
@@ -167,7 +166,7 @@ HttpError._objErrors = [
             sendEmail: true,
             sendText: true,
             endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
-            method: EMethod_1.EMethod.POST
+            method: TMethod.POST
         }
     },
     {
@@ -194,7 +193,7 @@ HttpError._objErrors = [
             sendEmail: true,
             sendText: true,
             endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
-            method: EMethod_1.EMethod.POST
+            method: TMethod.POST
         }
     },
     {
@@ -246,7 +245,7 @@ HttpError._objErrors = [
             sendText: true,
             restartSingleWorker: true,
             endpoint: ["http://localhost:3001/kill", "http://localhost:3002/kill"],
-            method: EMethod_1.EMethod.POST
+            method: TMethod.POST
         }
     },
     {
@@ -256,7 +255,7 @@ HttpError._objErrors = [
             sendEmail: true,
             sendText: true,
             endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
-            method: EMethod_1.EMethod.POST
+            method: TMethod.POST
         }
     },
     {

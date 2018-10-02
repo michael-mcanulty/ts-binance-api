@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Fetch = require("isomorphic-fetch");
 const crypto = require("crypto");
 const HttpError_1 = require("../Error/HttpError");
-const EMethod_1 = require("./EMethod");
 const Signed_1 = require("./Signed");
 const ApiHeader_1 = require("./ApiHeader");
 const CallOptions_1 = require("./CallOptions");
@@ -76,8 +75,13 @@ class BotHttp {
     }
     async ping() {
         try {
-            let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
-            await this.call('/v1/ping', opts);
+            let options = {};
+            options.method = "GET";
+            options.json = true;
+            options.noExtra = false;
+            options.noData = true;
+            let config = new CallOptions_1.CallOptions(options, this.options.auth.key);
+            await this.call('/v1/ping', config);
             return true;
         }
         catch (err) {
@@ -111,7 +115,12 @@ class BotHttp {
     async time() {
         try {
             let server;
-            let opts = new CallOptions_1.CallOptions(EMethod_1.EMethod.GET, true, true, false, this.options.auth.key);
+            let options = {};
+            options.method = "GET";
+            options.json = true;
+            options.noExtra = false;
+            options.noData = true;
+            let opts = new CallOptions_1.CallOptions(options, this.options.auth.key);
             server = await this.call('/v1/time', opts);
             return server;
         }

@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EMethod_1 = require("../Rest/EMethod");
 const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./NodeMailer");
 const BBLogger_1 = require("../Logger/BBLogger");
@@ -19,7 +18,7 @@ class HttpErrorHandler {
             if (config.endpoint) {
                 this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
             }
-            this.method = EMethod_1.EMethod[config.method];
+            this.method = config.method;
             this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
             this.sendEmail = config.sendEmail;
             this.sendText = config.sendText;
