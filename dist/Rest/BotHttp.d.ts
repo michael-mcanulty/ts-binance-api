@@ -7,7 +7,6 @@ export declare class BotHttp {
     static BASE: string;
     auth: IBinanceApiAuth;
     options: IBinanceOptions;
-    static buildUrl(options: CallOptions): string;
     call(callOptions: CallOptions): Promise<any>;
     binanceRequest(callOptions: CallOptions): Promise<ResponseAsJSON | HttpError>;
     static requestApi(coreOptions: OptionsWithUri): Promise<ResponseAsJSON>;

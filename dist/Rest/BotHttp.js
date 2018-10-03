@@ -10,9 +10,6 @@ class BotHttp {
     constructor(options) {
         this.options = options;
     }
-    static buildUrl(options) {
-        return `${BotHttp.BASE}${options.uri.includes('/wapi') ? '' : '/api'}${options.uri}${(options.qs instanceof Object) ? '' : BotHttp.makeQueryString(options.qs)}`;
-    }
     async call(callOptions) {
         let result;
         try {
@@ -26,7 +23,7 @@ class BotHttp {
     async binanceRequest(callOptions) {
         let res;
         let requestOpts = {};
-        requestOpts.uri = callOptions.uri;
+        requestOpts.uri = BotHttp.BASE + callOptions.uri;
         requestOpts.method = callOptions.method;
         requestOpts.headers = callOptions.headers;
         requestOpts.json = callOptions.json;

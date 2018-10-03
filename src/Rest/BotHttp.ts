@@ -8,19 +8,13 @@ import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
-import {CoreOptions, OptionsWithUri, RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
-import {TMethod} from "./TMethod";
+import {OptionsWithUri, RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
 import * as requestPromise from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
 	public auth: IBinanceApiAuth;
-
 	public options: IBinanceOptions;
-
-	static buildUrl(options: CallOptions): string {
-		return `${BotHttp.BASE}${options.uri.includes('/wapi') ? '' : '/api'}${options.uri}${(options.qs instanceof Object) ? '' : BotHttp.makeQueryString(options.qs)}`;
-	}
 
 	public async call(callOptions: CallOptions): Promise<any> {
 		let result: any;
@@ -35,7 +29,7 @@ export class BotHttp {
 	public async binanceRequest(callOptions: CallOptions):Promise<ResponseAsJSON | HttpError>{
 		let res: ResponseAsJSON;
 		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
-		requestOpts.uri = callOptions.uri;
+		requestOpts.uri = BotHttp.BASE + callOptions.uri;
 		requestOpts.method = callOptions.method;
 		requestOpts.headers = callOptions.headers;
 		requestOpts.json = callOptions.json;

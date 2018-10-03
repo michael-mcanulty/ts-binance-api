@@ -501,7 +501,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.json = true;
         callConfig.isSigned = true;
         callConfig.apiKey = this.options.auth.key;
-        callConfig.uri = '/v1/ticker/allPrices';
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/v1/ticker/allPrices`;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
             rawPrices = await this.call(callOpts);
