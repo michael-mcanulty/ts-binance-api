@@ -45,17 +45,18 @@ export class BotHttp {
 		let json: any;
 		let error: HttpError;
 		let res: Response;
-		if(uriOptions.method === "GET"){
-			res = await requestPromise.get(uriOptions);
-		}else if(uriOptions.method === "POST"){
-			res = await requestPromise.post(uriOptions);
-		}
-		json = await res.toJSON();
-		if (res.statusCode !== 200) {
-			error = new HttpError(res.statusCode, res.statusMessage);
-			return Promise.reject(error);
-		}else {
-			return <ResponseAsJSON>json;
+		try{
+			if(!uriOptions.uri)return;
+			res = await requestPromise[uriOptions.uri.toString()](uriOptions);
+			json = await res.toJSON();
+			if (res.statusCode !== 200) {
+				error = new HttpError(res.statusCode, res.statusMessage);
+				return Promise.reject(error);
+			}else {
+				return <ResponseAsJSON>json;
+			}
+		}catch(err){
+			throw err;
 		}
 	}
 

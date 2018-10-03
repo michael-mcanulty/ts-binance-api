@@ -39,19 +39,21 @@ class BotHttp {
         let json;
         let error;
         let res;
-        if (uriOptions.method === "GET") {
-            res = await requestPromise.get(uriOptions);
+        try {
+            if (!uriOptions.uri)
+                return;
+            res = await requestPromise[uriOptions.uri.toString()](uriOptions);
+            json = await res.toJSON();
+            if (res.statusCode !== 200) {
+                error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
+                return Promise.reject(error);
+            }
+            else {
+                return json;
+            }
         }
-        else if (uriOptions.method === "POST") {
-            res = await requestPromise.post(uriOptions);
-        }
-        json = await res.toJSON();
-        if (res.statusCode !== 200) {
-            error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
-            return Promise.reject(error);
-        }
-        else {
-            return json;
+        catch (err) {
+            throw err;
         }
     }
     getSignature(payload, timestamp) {
