@@ -499,8 +499,7 @@ class Rest extends BotHttp_1.BotHttp {
         let callConfig = {};
         callConfig.method = 'GET';
         callConfig.json = true;
-        callConfig.isSigned = true;
-        callConfig.apiKey = this.options.auth.key;
+        callConfig.isSigned = false;
         callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/ticker/price`;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
