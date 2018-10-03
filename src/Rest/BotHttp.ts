@@ -46,7 +46,7 @@ export class BotHttp {
 		let json: any;
 		let error: HttpError;
 		let res: Response;
-		res = await requestPromise[uriOptions.method](uriOptions);
+		res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
 		json = await res.toJSON();
 		if (res.statusCode !== 200) {
 			error = new HttpError(res.statusCode, res.statusMessage);
