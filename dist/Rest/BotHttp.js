@@ -23,7 +23,7 @@ class BotHttp {
     async binanceRequest(callOptions) {
         let res;
         let requestOpts = {};
-        requestOpts.uri = BotHttp.BASE + callOptions.uri;
+        requestOpts.uri = callOptions.uri;
         requestOpts.method = callOptions.method;
         requestOpts.headers = callOptions.headers;
         requestOpts.json = callOptions.json;

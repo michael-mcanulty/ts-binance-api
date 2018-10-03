@@ -8,9 +8,8 @@ import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
-import {OptionsWithUri, RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
+import {OptionsWithUri, Response, ResponseAsJSON} from "request";
 import * as requestPromise from "request-promise-native";
-import {RequestPromiseOptions} from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -30,7 +29,7 @@ export class BotHttp {
 	public async binanceRequest(callOptions: CallOptions):Promise<ResponseAsJSON | HttpError>{
 		let res: ResponseAsJSON;
 		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
-		requestOpts.uri = BotHttp.BASE + callOptions.uri;
+		requestOpts.uri = callOptions.uri;
 		requestOpts.method = callOptions.method;
 		requestOpts.headers = callOptions.headers;
 		requestOpts.json = callOptions.json;
