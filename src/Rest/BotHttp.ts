@@ -6,14 +6,12 @@ import {ITimestamp} from "./Interfaces/ITimestamp";
 import {Signed} from "./Signed";
 import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
-import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
 import {OptionsWithUri, Response, ResponseAsJSON} from "request";
 import * as requestPromise from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
-	public auth: IBinanceApiAuth;
 	public options: IBinanceOptions;
 
 	public async call(callOptions: CallOptions): Promise<any> {
@@ -25,8 +23,9 @@ export class BotHttp {
 			throw err;
 		}
 	}
+
 	//TODO: CallOpts rename to something like requestOpts. Extend request or add properties to callOpts like 'form'.
-	public async binanceRequest(callOptions: CallOptions):Promise<ResponseAsJSON | HttpError>{
+	public async binanceRequest(callOptions: CallOptions):Promise<ResponseAsJSON|HttpError>{
 		let res: ResponseAsJSON;
 		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
 		requestOpts.uri = callOptions.uri;
@@ -45,9 +44,9 @@ export class BotHttp {
 		let json: any;
 		let error: HttpError;
 		let res: Response;
+		let method: string = uriOptions.method.toLowerCase();
 		try{
-			if(!uriOptions.uri)return;
-			res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
+			res = await requestPromise[method](uriOptions);
 			json = await res.toJSON();
 			if (res.statusCode !== 200) {
 				error = new HttpError(res.statusCode, res.statusMessage);
