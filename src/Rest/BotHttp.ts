@@ -7,7 +7,7 @@ import {Signed} from "./Signed";
 import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
-import {OptionsWithUri, Response, ResponseAsJSON} from "request";
+import {OptionsWithUri, Response} from "request";
 import * as requestPromise from "request-promise-native";
 
 export class BotHttp {
@@ -25,8 +25,8 @@ export class BotHttp {
 	}
 
 	//TODO: CallOpts rename to something like requestOpts. Extend request or add properties to callOpts like 'form'.
-	public async binanceRequest(callOptions: CallOptions):Promise<ResponseAsJSON|HttpError>{
-		let res: ResponseAsJSON;
+	public async binanceRequest(callOptions: CallOptions):Promise<Response>{
+		let res: Response;
 		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
 		requestOpts.uri = callOptions.uri;
 		requestOpts.method = callOptions.method;
@@ -46,12 +46,11 @@ export class BotHttp {
 		let res: Response;
 		try{
 			res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
-			json = await res.toJSON();
 			if (res.statusCode !== 200) {
 				error = new HttpError(res.statusCode, res.statusMessage);
 				return Promise.reject(error);
 			}else {
-				return <ResponseAsJSON>json;
+				return <Response>json;
 			}
 		}catch(err){
 			throw err;

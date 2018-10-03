@@ -1,13 +1,12 @@
-import { HttpError } from "../Error/HttpError";
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { CallOptions } from "./CallOptions";
-import { OptionsWithUri, ResponseAsJSON } from "request";
+import { OptionsWithUri, Response } from "request";
 export declare class BotHttp {
     static BASE: string;
     options: IBinanceOptions;
     call(callOptions: CallOptions): Promise<any>;
-    binanceRequest(callOptions: CallOptions): Promise<ResponseAsJSON | HttpError>;
-    static requestApi(uriOptions: OptionsWithUri): Promise<ResponseAsJSON>;
+    binanceRequest(callOptions: CallOptions): Promise<Response>;
+    static requestApi(uriOptions: OptionsWithUri): Promise<Response>;
     private getSignature;
     private getTimestamp;
     static makeQueryString(params: any): string;

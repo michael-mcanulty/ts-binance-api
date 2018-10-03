@@ -41,7 +41,6 @@ class BotHttp {
         let res;
         try {
             res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
-            json = await res.toJSON();
             if (res.statusCode !== 200) {
                 error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
                 return Promise.reject(error);
