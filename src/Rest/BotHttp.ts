@@ -43,14 +43,11 @@ export class BotHttp {
 		}
 	}
   public static async requestApi(uriOptions: OptionsWithUri){
+		let json: any;
 		let error: HttpError;
-		let requestApi: RequestAPI<requestPromise.RequestPromise, requestPromise.RequestPromiseOptions, RequiredUriUrl>;
 		let res: Response;
-		if(uriOptions.method === "GET"){
-			res = await requestApi.get(uriOptions);
-		}
-
-		let json = await res.toJSON();
+		res = await requestPromise[uriOptions.method](uriOptions);
+		json = await res.toJSON();
 		if (res.statusCode !== 200) {
 			error = new HttpError(res.statusCode, res.statusMessage);
 			return Promise.reject(error);
