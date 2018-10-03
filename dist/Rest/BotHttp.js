@@ -40,7 +40,7 @@ class BotHttp {
         let error;
         let res;
         try {
-            res = await requestPromise.get(uriOptions);
+            res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
             json = await res.toJSON();
             if (res.statusCode !== 200) {
                 error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
@@ -93,7 +93,7 @@ class BotHttp {
         options.method = "GET";
         options.json = true;
         options.isSigned = true;
-        options.uri = '/v1/ping';
+        options.uri = `${BotHttp.BASE}/v1/ping`;
         options.apiKey = this.options.auth.key;
         try {
             config = new CallOptions_1.CallOptions(options);
@@ -137,7 +137,7 @@ class BotHttp {
             options.json = true;
             options.isSigned = true;
             options.apiKey = this.options.auth.key;
-            options.uri = '/v1/time';
+            options.uri = `${BotHttp.BASE}/v1/time`;
             opts = new CallOptions_1.CallOptions(options);
             return await this.call(opts);
         }

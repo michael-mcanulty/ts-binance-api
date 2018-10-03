@@ -45,7 +45,7 @@ export class BotHttp {
 		let error: HttpError;
 		let res: Response;
 		try{
-			res = await requestPromise.get(uriOptions);
+			res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
 			json = await res.toJSON();
 			if (res.statusCode !== 200) {
 				error = new HttpError(res.statusCode, res.statusMessage);
@@ -97,7 +97,7 @@ export class BotHttp {
 		options.method = "GET";
 		options.json = true;
 		options.isSigned = true;
-		options.uri = '/v1/ping';
+		options.uri = `${BotHttp.BASE}/v1/ping`;
 		options.apiKey = this.options.auth.key;
 
 		try {
@@ -144,7 +144,7 @@ export class BotHttp {
 			options.json = true;
 			options.isSigned = true;
 			options.apiKey = this.options.auth.key;
-			options.uri = '/v1/time';
+			options.uri = `${BotHttp.BASE}/v1/time`;
 
 			opts = new CallOptions(options);
 			return <IServerTime> await this.call(opts);
