@@ -10,6 +10,7 @@ import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
 import {OptionsWithUri, RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
 import * as requestPromise from "request-promise-native";
+import {RequestPromiseOptions} from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -41,11 +42,14 @@ export class BotHttp {
 			throw err;
 		}
 	}
-  public static async requestApi(coreOptions: OptionsWithUri){
+  public static async requestApi(uriOptions: OptionsWithUri){
 		let error: HttpError;
 		let requestApi: RequestAPI<requestPromise.RequestPromise, requestPromise.RequestPromiseOptions, RequiredUriUrl>;
-		requestApi = requestPromise[coreOptions.method.toLowerCase()];
-		let res: Response = await requestApi(coreOptions);
+		let res: Response;
+		if(uriOptions.method === "GET"){
+			res = await requestApi.get(uriOptions);
+		}
+
 		let json = await res.toJSON();
 		if (res.statusCode !== 200) {
 			error = new HttpError(res.statusCode, res.statusMessage);

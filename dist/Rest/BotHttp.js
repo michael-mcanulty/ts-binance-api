@@ -5,7 +5,6 @@ const HttpError_1 = require("../Error/HttpError");
 const Signed_1 = require("./Signed");
 const ApiHeader_1 = require("./ApiHeader");
 const CallOptions_1 = require("./CallOptions");
-const requestPromise = require("request-promise-native");
 class BotHttp {
     constructor(options) {
         this.options = options;
@@ -35,11 +34,13 @@ class BotHttp {
             throw err;
         }
     }
-    static async requestApi(coreOptions) {
+    static async requestApi(uriOptions) {
         let error;
         let requestApi;
-        requestApi = requestPromise[coreOptions.method.toLowerCase()];
-        let res = await requestApi(coreOptions);
+        let res;
+        if (uriOptions.method === "GET") {
+            res = await requestApi.get(uriOptions);
+        }
         let json = await res.toJSON();
         if (res.statusCode !== 200) {
             error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
