@@ -11,6 +11,7 @@ import {IHttpError} from "./Interfaces/IHttpError";
 import {worker} from "cluster";
 import {ITextMsgOptions} from "../TextMessage/ITextMsgOptions";
 import {TextMessage} from "../TextMessage/TextMessage";
+import {OptionsWithUri} from "request";
 
 export class HttpErrorHandler {
 	public static emailMsgOptions: IMessageOptions;
@@ -28,25 +29,8 @@ export class HttpErrorHandler {
 	textMsgOpts?: ITextMsgOptions;
 	type: string;
 
-	private async _postToEndpoint(endpoint: string, reqOpts: RequestInit) {
-		try {
-			let res = await BotHttp.fetch(endpoint, reqOpts);
-
-			if (res.ok === false) {
-				let error: HttpError = new HttpError(parseInt(res.status.toString()), res.statusText);
-				return Promise.reject(error);
-			}
-		} catch (err) {
-			if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
-				BBLogger.error(err.message);
-				throw err;
-			} else {
-				BBLogger.warning("Tried to kill a dead server.");
-			}
-		}
-	}
-
 	async execute(err: HttpError, srcUrl: URL): Promise<any> {
+		let reqOpts: OptionsWithUri;
 		try {
 			//"http://localhost:3001"
 			let origin = srcUrl.origin;
@@ -82,10 +66,12 @@ export class HttpErrorHandler {
 					}
 				}
 
-				let reqOpts: RequestInit = <RequestInit>{};
+				reqOpts = <OptionsWithUri>{};
 				reqOpts.method = err.handler.method;
 				reqOpts.headers = new Headers();
 				reqOpts.headers.set("Content-Type", "application/json");
+				reqOpts.json = true;
+
 				if (this.payload) {
 					reqOpts.body = JSON.stringify(this.payload);
 				}
@@ -107,14 +93,16 @@ export class HttpErrorHandler {
 
 				//Kamikaze style. Destroy endpoints with suicide on last post.
 				for (let ePoint of remoteEndpoints) {
-					await  this._postToEndpoint(ePoint, reqOpts);
+					reqOpts.uri = ePoint;
+					await BotHttp.requestApi(reqOpts);
 				}
 
 				//Suicidal final post.
 				if (origin && _endpoint.length > remoteEndpoints.length) {
 					let lastPoint: string[] = _endpoint.filter(e => new URL(e).origin === origin);
 					if (lastPoint && lastPoint.length > 0) {
-						await this._postToEndpoint(lastPoint[0], reqOpts);
+						reqOpts.uri = lastPoint[0];
+						await BotHttp.requestApi(reqOpts);
 					}
 				}
 

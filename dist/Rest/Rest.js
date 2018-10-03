@@ -80,7 +80,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.method = 'POST';
         callConfig.json = true;
         callConfig.isSigned = true;
-        callConfig.qs = NewOrder_1.NewOrder.toBinance(order);
+        callConfig.qs = order.toObjLiteral();
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
             privateOrder = await this.privateCall(callOpts);
@@ -199,7 +199,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.json = true;
         callConfig.isSigned = true;
         callConfig.uri = '/v3/allOrders';
-        callConfig.qs = query;
+        callConfig.qs = query.toObjLiteral();
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
             privateCall = await this.privateCall(callOpts);
@@ -398,8 +398,15 @@ class Rest extends BotHttp_1.BotHttp {
             let markets = symbols.map(symbol => {
                 return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
             });
-            Binance_1.Binance.markets = markets;
-            return markets;
+            if (quoteAsset) {
+                let _markets = markets.filter(m => m.quoteAsset === quoteAsset);
+                Binance_1.Binance.markets = _markets;
+                return _markets;
+            }
+            else {
+                Binance_1.Binance.markets = markets;
+                return markets;
+            }
         }
         catch (err) {
             throw err;

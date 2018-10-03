@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Fetch = require("isomorphic-fetch");
 const crypto = require("crypto");
 const HttpError_1 = require("../Error/HttpError");
 const Signed_1 = require("./Signed");
@@ -17,27 +16,34 @@ class BotHttp {
     async call(callOptions) {
         let result;
         try {
-            result = await this.requestAsync(callOptions);
+            result = await this.binanceRequest(callOptions);
             return result;
         }
         catch (err) {
             throw err;
         }
     }
-    async requestAsync(callOptions) {
-        let json;
-        let error;
-        let newHeaders;
-        let requestApi;
-        let method = callOptions.method;
+    async binanceRequest(callOptions) {
+        let res;
         let requestOpts = {};
         requestOpts.uri = callOptions.uri;
         requestOpts.method = callOptions.method;
         requestOpts.headers = callOptions.headers;
         requestOpts.json = callOptions.json;
-        requestApi = requestPromise[method.toLowerCase()];
-        let res = await requestApi(requestOpts);
-        json = await res.toJSON();
+        try {
+            res = await BotHttp.requestApi(requestOpts);
+            return res;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    static async requestApi(coreOptions) {
+        let error;
+        let requestApi;
+        requestApi = requestPromise[coreOptions.method.toLowerCase()];
+        let res = await requestApi(coreOptions);
+        let json = await res.toJSON();
         if (res.statusCode !== 200) {
             error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
             return Promise.reject(error);
@@ -114,7 +120,7 @@ class BotHttp {
             else {
                 delete options.qs['timestamp'];
             }
-            result = await this.requestAsync(options);
+            result = await this.binanceRequest(options);
             return result;
         }
         catch (err) {
@@ -148,6 +154,5 @@ class BotHttp {
     }
 }
 BotHttp.BASE = 'https://api.binance.com';
-BotHttp.fetch = Fetch;
 exports.BotHttp = BotHttp;
 //# sourceMappingURL=BotHttp.js.map

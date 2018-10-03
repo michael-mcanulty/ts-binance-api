@@ -31,25 +31,8 @@ class HttpErrorHandler {
         }
         HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
     }
-    async _postToEndpoint(endpoint, reqOpts) {
-        try {
-            let res = await BotHttp_1.BotHttp.fetch(endpoint, reqOpts);
-            if (res.ok === false) {
-                let error = new HttpError_1.HttpError(parseInt(res.status.toString()), res.statusText);
-                return Promise.reject(error);
-            }
-        }
-        catch (err) {
-            if (err && typeof err.errno === "string" && err.errno !== "ECONNREFUSED") {
-                BBLogger_1.BBLogger.error(err.message);
-                throw err;
-            }
-            else {
-                BBLogger_1.BBLogger.warning("Tried to kill a dead server.");
-            }
-        }
-    }
     async execute(err, srcUrl) {
+        let reqOpts;
         try {
             let origin = srcUrl.origin;
             let srcServer = (srcUrl.port.charAt(-1) == "1") ? "Data Server" : "Analysis Server";
@@ -76,10 +59,11 @@ class HttpErrorHandler {
                         remoteEndpoints = _endpoint.filter(e => new url_1.URL(e).origin !== origin);
                     }
                 }
-                let reqOpts = {};
+                reqOpts = {};
                 reqOpts.method = err.handler.method;
                 reqOpts.headers = new Headers();
                 reqOpts.headers.set("Content-Type", "application/json");
+                reqOpts.json = true;
                 if (this.payload) {
                     reqOpts.body = JSON.stringify(this.payload);
                 }
@@ -94,12 +78,14 @@ class HttpErrorHandler {
                     await textMsg.send(err, srcServer);
                 }
                 for (let ePoint of remoteEndpoints) {
-                    await this._postToEndpoint(ePoint, reqOpts);
+                    reqOpts.uri = ePoint;
+                    await BotHttp_1.BotHttp.requestApi(reqOpts);
                 }
                 if (origin && _endpoint.length > remoteEndpoints.length) {
                     let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
                     if (lastPoint && lastPoint.length > 0) {
-                        await this._postToEndpoint(lastPoint[0], reqOpts);
+                        reqOpts.uri = lastPoint[0];
+                        await BotHttp_1.BotHttp.requestApi(reqOpts);
                     }
                 }
             }

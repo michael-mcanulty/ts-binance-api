@@ -21,7 +21,6 @@ export declare class HttpErrorHandler {
     static textMsgOptions: ITextMsgOptions;
     textMsgOpts?: ITextMsgOptions;
     type: string;
-    private _postToEndpoint;
     execute(err: HttpError, srcUrl: URL): Promise<any>;
     static hasHandler(err: HttpError): boolean;
     constructor(config: IHttpErrorHandler);

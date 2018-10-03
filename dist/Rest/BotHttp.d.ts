@@ -2,15 +2,15 @@ import { HttpError } from "../Error/HttpError";
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { CallOptions } from "./CallOptions";
 import { IBinanceApiAuth } from "../Account/Interfaces/IBinanceApiAuth";
-import { ResponseAsJSON } from "request";
+import { OptionsWithUri, ResponseAsJSON } from "request";
 export declare class BotHttp {
     static BASE: string;
     auth: IBinanceApiAuth;
-    static fetch: Function;
     options: IBinanceOptions;
     static buildUrl(options: CallOptions): string;
     call(callOptions: CallOptions): Promise<any>;
-    requestAsync(callOptions: CallOptions): Promise<ResponseAsJSON | HttpError>;
+    binanceRequest(callOptions: CallOptions): Promise<ResponseAsJSON | HttpError>;
+    static requestApi(coreOptions: OptionsWithUri): Promise<ResponseAsJSON>;
     private getSignature;
     private getTimestamp;
     static makeQueryString(params: any): string;

@@ -1,4 +1,3 @@
-import * as Fetch from 'isomorphic-fetch'
 import * as crypto from 'crypto'
 import {HttpError} from "../Error/HttpError";
 import {IServerTime} from "./Interfaces/IServerTime";
@@ -9,14 +8,14 @@ import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {IBinanceApiAuth} from "../Account/Interfaces/IBinanceApiAuth";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
-import {RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
+import {CoreOptions, OptionsWithUri, RequestAPI, RequiredUriUrl, Response, ResponseAsJSON} from "request";
 import {TMethod} from "./TMethod";
 import * as requestPromise from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
 	public auth: IBinanceApiAuth;
-	public static fetch: Function = Fetch;
+
 	public options: IBinanceOptions;
 
 	static buildUrl(options: CallOptions): string {
@@ -26,29 +25,34 @@ export class BotHttp {
 	public async call(callOptions: CallOptions): Promise<any> {
 		let result: any;
 		try {
-			result = await this.requestAsync(callOptions);
+			result = await this.binanceRequest(callOptions);
 			return result;
 		} catch (err) {
 			throw err;
 		}
 	}
 	//TODO: CallOpts rename to something like requestOpts. Extend request or add properties to callOpts like 'form'.
-	public async requestAsync(callOptions: CallOptions):Promise<ResponseAsJSON | HttpError>{
-		let json: ResponseAsJSON;
-		let error: HttpError;
-		let newHeaders: object;
-		let requestApi: RequestAPI<requestPromise.RequestPromise, requestPromise.RequestPromiseOptions, RequiredUriUrl>;
-		let method: TMethod = <TMethod> callOptions.method;
-
+	public async binanceRequest(callOptions: CallOptions):Promise<ResponseAsJSON | HttpError>{
+		let res: ResponseAsJSON;
 		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
 		requestOpts.uri = callOptions.uri;
 		requestOpts.method = callOptions.method;
 		requestOpts.headers = callOptions.headers;
 		requestOpts.json = callOptions.json;
 
-		requestApi = requestPromise[method.toLowerCase()];
-		let res: Response = await requestApi(requestOpts);
-		json = await res.toJSON();
+		try {
+			res = await BotHttp.requestApi(requestOpts);
+			return res;
+		}catch(err){
+			throw err;
+		}
+	}
+  public static async requestApi(coreOptions: OptionsWithUri){
+		let error: HttpError;
+		let requestApi: RequestAPI<requestPromise.RequestPromise, requestPromise.RequestPromiseOptions, RequiredUriUrl>;
+		requestApi = requestPromise[coreOptions.method.toLowerCase()];
+		let res: Response = await requestApi(coreOptions);
+		let json = await res.toJSON();
 		if (res.statusCode !== 200) {
 			error = new HttpError(res.statusCode, res.statusMessage);
 			return Promise.reject(error);
@@ -127,7 +131,7 @@ export class BotHttp {
 			} else {
 				delete options.qs['timestamp'];
 			}
-			result = await this.requestAsync(options);
+			result = await this.binanceRequest(options);
 			return result;
 		} catch (err) {
 			throw err;
