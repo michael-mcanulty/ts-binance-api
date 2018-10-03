@@ -541,7 +541,7 @@ export class Rest extends BotHttp {
 		callConfig.json = true;
 		callConfig.isSigned = true;
 		callConfig.apiKey = this.options.auth.key;
-		callConfig.uri = `${BotHttp.BASE}/v1/ticker/allPrices`;
+		callConfig.uri = `/v1/ticker/allPrices`;
 
 		try {
 			callOpts = new CallOptions(callConfig);
