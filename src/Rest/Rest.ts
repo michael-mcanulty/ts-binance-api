@@ -535,14 +535,13 @@ export class Rest extends BotHttp {
 
 	public async getPrices(): Promise<Price[]> {
 		let rawPrices: IPrice[];
-		let url: string;
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};
 		callConfig.method = 'GET';
 		callConfig.json = true;
 		callConfig.isSigned = true;
 		callConfig.apiKey = this.options.auth.key;
-		url = '/v1/ticker/allPrices';
+		callConfig.uri = '/v1/ticker/allPrices';
 
 		try {
 			callOpts = new CallOptions(callConfig);

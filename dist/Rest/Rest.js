@@ -495,14 +495,13 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async getPrices() {
         let rawPrices;
-        let url;
         let callOpts;
         let callConfig = {};
         callConfig.method = 'GET';
         callConfig.json = true;
         callConfig.isSigned = true;
         callConfig.apiKey = this.options.auth.key;
-        url = '/v1/ticker/allPrices';
+        callConfig.uri = '/v1/ticker/allPrices';
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
             rawPrices = await this.call(callOpts);
