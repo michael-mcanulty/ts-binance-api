@@ -23,6 +23,7 @@ export class CallOptions{
 	method: TMethod;
 	isSigned?: boolean;
 	apiKey?: string;
+	resolveWithFullResponse?: boolean;
 	qs?: IGetAllOrdersOpts | IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions | ICandleRequest;
 
 	public toRequestOptions(): requestPromise.OptionsWithUri{
@@ -32,6 +33,7 @@ export class CallOptions{
 		requestOpts.headers = this.headers;
 		requestOpts.json = this.json;
 		requestOpts.qs = this.qs;
+		requestOpts.resolveWithFullResponse = this.resolveWithFullResponse;
 		return requestOpts;
 	}
 
@@ -43,6 +45,7 @@ export class CallOptions{
 		this.isSigned = options.isSigned || false;
 		this.apiKey = options.apiKey || null;
 		this.qs = options.qs || null;
+		this.resolveWithFullResponse = options.resolveWithFullResponse || true;
 		if (this.apiKey || options.headers) {
 			this.headers = options.headers || new ApiHeader(this.apiKey);
 		}

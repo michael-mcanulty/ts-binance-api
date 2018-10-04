@@ -21,5 +21,6 @@ export interface ICallOpts {
 	method: TMethod;
 	isSigned?: boolean;
 	apiKey?: string;
+	resolveWithFullResponse?: boolean;
 	qs?: IGetAllOrdersOpts | IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions | ICandleRequest;
 }

@@ -22,11 +22,7 @@ class BotHttp {
     }
     async binanceRequest(callOptions) {
         let res;
-        let requestOpts = {};
-        requestOpts.uri = callOptions.uri;
-        requestOpts.method = callOptions.method;
-        requestOpts.headers = callOptions.headers;
-        requestOpts.json = callOptions.json;
+        let requestOpts = callOptions.toRequestOptions();
         try {
             res = await BotHttp.requestApi(requestOpts);
             return res;

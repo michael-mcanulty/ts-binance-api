@@ -9,6 +9,7 @@ class CallOptions {
         requestOpts.headers = this.headers;
         requestOpts.json = this.json;
         requestOpts.qs = this.qs;
+        requestOpts.resolveWithFullResponse = this.resolveWithFullResponse;
         return requestOpts;
     }
     constructor(options) {
@@ -19,6 +20,7 @@ class CallOptions {
         this.isSigned = options.isSigned || false;
         this.apiKey = options.apiKey || null;
         this.qs = options.qs || null;
+        this.resolveWithFullResponse = options.resolveWithFullResponse || true;
         if (this.apiKey || options.headers) {
             this.headers = options.headers || new ApiHeader_1.ApiHeader(this.apiKey);
         }

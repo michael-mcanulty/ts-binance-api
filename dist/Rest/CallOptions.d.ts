@@ -21,6 +21,7 @@ export declare class CallOptions {
     method: TMethod;
     isSigned?: boolean;
     apiKey?: string;
+    resolveWithFullResponse?: boolean;
     qs?: IGetAllOrdersOpts | IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions | ICandleRequest;
     toRequestOptions(): requestPromise.OptionsWithUri;
     constructor(options: ICallOpts);
