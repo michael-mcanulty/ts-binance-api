@@ -32,7 +32,6 @@ class BotHttp {
         }
     }
     static async requestApi(uriOptions) {
-        let json;
         let error;
         let res;
         try {
@@ -42,7 +41,7 @@ class BotHttp {
                 return Promise.reject(error);
             }
             else {
-                return json;
+                return res.body;
             }
         }
         catch (err) {

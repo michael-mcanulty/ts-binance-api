@@ -36,8 +36,7 @@ export class BotHttp {
 			throw err;
 		}
 	}
-  public static async requestApi(uriOptions: OptionsWithUri): Promise<Response>{
-		let json: any;
+  public static async requestApi(uriOptions: OptionsWithUri): Promise<any>{
 		let error: HttpError;
 		let res: Response;
 		try{
@@ -46,7 +45,7 @@ export class BotHttp {
 				error = new HttpError(res.statusCode, res.statusMessage);
 				return Promise.reject(error);
 			}else {
-				return <Response>json;
+				return <Response>res.body;
 			}
 		}catch(err){
 			throw err;

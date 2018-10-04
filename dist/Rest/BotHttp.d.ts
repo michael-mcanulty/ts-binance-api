@@ -6,7 +6,7 @@ export declare class BotHttp {
     options: IBinanceOptions;
     call(callOptions: CallOptions): Promise<any>;
     binanceRequest(callOptions: CallOptions): Promise<Response>;
-    static requestApi(uriOptions: OptionsWithUri): Promise<Response>;
+    static requestApi(uriOptions: OptionsWithUri): Promise<any>;
     private getSignature;
     private getTimestamp;
     static makeQueryString(params: any): string;
