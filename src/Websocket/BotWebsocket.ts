@@ -17,8 +17,6 @@ export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private _ws: ReconnectingWebSocket;
-	private isAlive: boolean = false;
-	private missedHeartbeats: number = 0;
 
 	private _url: string;
 
@@ -101,28 +99,6 @@ export class BotWebsocket extends Rest{
 		return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
 	}
 
-	private heartbeat(): void {
-		const self = this;
-		let error: HttpError;
-		let interval: Timer = setInterval(async () => {
-			try {
-				this.isAlive = await self.ping();
-				if(this.isAlive && this.missedHeartbeats > 0){
-					this.missedHeartbeats--;
-				}
-			} catch (err) {
-				this.missedHeartbeats++;
-				if(this.missedHeartbeats > 3){
-					error = new HttpError(-1001, 'DISCONNECTED');
-					if(typeof this._ws.close === "function"){
-						this._ws.close(error.code, error.message);
-						clearInterval(interval);
-					}
-				}
-			}
-		}, 5000);
-	}
-
 	public openWebSocket(url): ReconnectingWebSocket {
 		if (url) {
 			this.url = url;
@@ -146,6 +122,7 @@ export class BotWebsocket extends Rest{
 					callback(executionReport);
 				}
 			};
+
 
 			const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);
 			keepStreamAlive(self.keepDataStream, listenKey)();
@@ -203,7 +180,6 @@ export class BotWebsocket extends Rest{
 
 	constructor(options: IBinanceOptions) {
 		super(options);
-		this.heartbeat();
 		this._reconOptions = <IReconOptions>{};
 		this._reconOptions.connectionTimeout = 4E3;
 		this._reconOptions.constructor = BotWebsocket;

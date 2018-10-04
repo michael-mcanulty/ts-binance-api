@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ReconnectingWebSocket_1 = require("./ReconnectingWebSocket/ReconnectingWebSocket");
 const ticker_1 = require("../ExchangeInfo/ticker");
 const Rest_1 = require("../Rest/Rest");
-const HttpError_1 = require("../Error/HttpError");
 const Candle_1 = require("../ExchangeInfo/Candle");
 const ExecutionReport_1 = require("../Account/ExecutionReport");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
@@ -11,9 +10,6 @@ class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
         this._reconOptions = {};
-        this.isAlive = false;
-        this.missedHeartbeats = 0;
-        this.heartbeat();
         this._reconOptions = {};
         this._reconOptions.connectionTimeout = 4E3;
         this._reconOptions.constructor = BotWebsocket;
@@ -91,28 +87,6 @@ class BotWebsocket extends Rest_1.Rest {
             });
         });
         return (options) => symbolCache.forEach(cache => cache.forEach(w => w.close(1000, 'Close handle was called')));
-    }
-    heartbeat() {
-        const self = this;
-        let error;
-        let interval = setInterval(async () => {
-            try {
-                this.isAlive = await self.ping();
-                if (this.isAlive && this.missedHeartbeats > 0) {
-                    this.missedHeartbeats--;
-                }
-            }
-            catch (err) {
-                this.missedHeartbeats++;
-                if (this.missedHeartbeats > 3) {
-                    error = new HttpError_1.HttpError(-1001, 'DISCONNECTED');
-                    if (typeof this._ws.close === "function") {
-                        this._ws.close(error.code, error.message);
-                        clearInterval(interval);
-                    }
-                }
-            }
-        }, 5000);
     }
     openWebSocket(url) {
         if (url) {
