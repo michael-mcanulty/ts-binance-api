@@ -91,7 +91,7 @@ export class BotHttp {
 		options.method = "GET";
 		options.json = true;
 		options.isSigned = true;
-		options.uri = `${BotHttp.BASE}/v1/ping`;
+		options.uri = `${BotHttp.BASE}/api/v1/ping`;
 		options.apiKey = this.options.auth.key;
 
 		try {
@@ -138,7 +138,7 @@ export class BotHttp {
 			options.json = true;
 			options.isSigned = true;
 			options.apiKey = this.options.auth.key;
-			options.uri = `${BotHttp.BASE}/v1/time`;
+			options.uri = `${BotHttp.BASE}/api/v1/time`;
 
 			opts = new CallOptions(options);
 			return <IServerTime> await this.call(opts);

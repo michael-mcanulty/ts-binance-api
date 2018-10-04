@@ -58,7 +58,7 @@ export class Rest extends BotHttp {
 			let response: CancelOrderResponse;
 			let privateOrder: IQueryCancelOrder | HttpError | {};
 			let callOpts: CallOptions;
-			callConfig.uri = (Binance.options.test) ? `${BotHttp.BASE}/v3/order/test` : `${BotHttp.BASE}/v3/order`;
+			callConfig.uri = (Binance.options.test) ? `${BotHttp.BASE}/api/v3/order/test` : `${BotHttp.BASE}/api/v3/order`;
 			callConfig.method = 'DELETE';
 			callConfig.json = true;
 			callConfig.isSigned = true;
@@ -84,7 +84,7 @@ export class Rest extends BotHttp {
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};
 		callConfig.method = 'GET';
-		callConfig.uri = `${BotHttp.BASE}/v1/klines`;
+		callConfig.uri = `${BotHttp.BASE}/api/v1/klines`;
 		callConfig.qs = candleOpts;
 		callConfig.isSigned = false;
 		callOpts = new CallOptions(callConfig);
@@ -106,7 +106,7 @@ export class Rest extends BotHttp {
 		let callConfig: ICallOpts = <ICallOpts>{};
 		let orderRes: Order;
 		let privateOrder: IOrder | HttpError | TestOrder;
-		callConfig.uri = (Binance.options.test) ? `${BotHttp.BASE}/v3/order/test` : `${BotHttp.BASE}/v3/order`;
+		callConfig.uri = (Binance.options.test) ? `${BotHttp.BASE}/api/v3/order/test` : `${BotHttp.BASE}/api/v3/order`;
 		callConfig.method = 'POST';
 		callConfig.json = true;
 		callConfig.isSigned = true;
@@ -186,7 +186,7 @@ export class Rest extends BotHttp {
 		callConfig.method = 'DELETE';
 		callConfig.json = true;
 		callConfig.isSigned = false;
-		callConfig.uri = `${BotHttp.BASE}/v1/userDataStream`;
+		callConfig.uri = `${BotHttp.BASE}/api/v1/userDataStream`;
 		callConfig.qs = new DataStream(Rest.listenKey);
 
 		try {
@@ -208,7 +208,7 @@ export class Rest extends BotHttp {
 			callConfig.method = 'GET';
 			callConfig.json = true;
 			callConfig.isSigned = true;
-			callConfig.uri = `${BotHttp.BASE}/v3/account`;
+			callConfig.uri = `${BotHttp.BASE}/api/v3/account`;
 			callConfig.qs = opts;
 			callOpts = new CallOptions(callConfig);
 			accountInfoRest = await this.privateCall(callOpts);
@@ -230,7 +230,7 @@ export class Rest extends BotHttp {
 		callConfig.method = 'GET';
 		callConfig.json = true;
 		callConfig.isSigned = true;
-		callConfig.uri = `${BotHttp.BASE}/v3/allOrders`;
+		callConfig.uri = `${BotHttp.BASE}/api/v3/allOrders`;
 		callConfig.qs = query.toObjLiteral();
 		try {
 			callOpts = new CallOptions(callConfig);
@@ -369,7 +369,7 @@ export class Rest extends BotHttp {
 		callConfig.method = 'POST';
 		callConfig.json = true;
 		callConfig.isSigned = true;
-		callConfig.uri = `${BotHttp.BASE}/v1/userDataStream`;
+		callConfig.uri = `${BotHttp.BASE}/api/v1/userDataStream`;
 
 		try {
 			callOpts = new CallOptions(callConfig);
@@ -418,9 +418,7 @@ export class Rest extends BotHttp {
 		let callConfig: ICallOpts = <ICallOpts>{};
 		callConfig.method = 'GET';
 		callConfig.json = true;
-		callConfig.isSigned = true;
-		callConfig.uri = `${BotHttp.BASE}/v1/exchangeInfo`;
-		callConfig.apiKey = this.options.auth.key;
+		callConfig.uri = `${BotHttp.BASE}/api/v1/exchangeInfo`;
 
 		try {
 			callOpts = new CallOptions(callConfig);
@@ -466,7 +464,7 @@ export class Rest extends BotHttp {
 			callConfig.method = 'GET';
 			callConfig.json = true;
 			callConfig.isSigned = true;
-			callConfig.uri = `${BotHttp.BASE}/v3/openOrders`;
+			callConfig.uri = `${BotHttp.BASE}/api/v3/openOrders`;
 			callConfig.qs = query.toObjLiteral();
 			callOpts = new CallOptions(callConfig);
 			privateCall = await this.privateCall(callOpts);
@@ -500,7 +498,7 @@ export class Rest extends BotHttp {
 			callConfig.method = 'GET';
 			callConfig.json = true;
 			callConfig.isSigned = true;
-			callConfig.uri = `${BotHttp.BASE}/v3/order`;
+			callConfig.uri = `${BotHttp.BASE}/api/v3/order`;
 			callConfig.qs = query.toObjLiteral();
 			callOpts = new CallOptions(callConfig);
 			privateCall = await this.privateCall(callOpts);
@@ -607,7 +605,7 @@ export class Rest extends BotHttp {
 		callConfig.method = 'PUT';
 		callConfig.json = true;
 		callConfig.isSigned = false;
-		callConfig.uri = `${BotHttp.BASE}/v1/userDataStream`;
+		callConfig.uri = `${BotHttp.BASE}/api/v1/userDataStream`;
 		callConfig.qs = dStream;
 		try {
 			callOpts = new CallOptions(callConfig);
