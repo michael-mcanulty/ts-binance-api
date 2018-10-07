@@ -43,7 +43,7 @@ class OpenOrder extends BaseOrder_1.BaseOrder {
         this.clientOrderId = openOrder.clientOrderId;
         this.executedQty = parseFloat(openOrder.executedQty);
         this.orderId = openOrder.orderId;
-        this.status = status;
+        this.status = openOrder.status;
         this.icebergQty = parseFloat(openOrder.icebergQty);
         this.isWorking = openOrder.isWorking;
         this.stopPrice = parseFloat(openOrder.stopPrice);

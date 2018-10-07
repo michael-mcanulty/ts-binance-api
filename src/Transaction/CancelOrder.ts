@@ -2,8 +2,6 @@ import {IQueryCancelOrder} from "./Interfaces/IQueryCancelOrder";
 import {QueryOrder} from "./QueryOrder";
 import {IQueryOrderOpts} from "./Interfaces/IQueryOrderOpts";
 import {ICancelOrderOpts} from "./Interfaces/ICancelOrderOpts";
-import {INewOrder} from "./Interfaces/INewOrder";
-import {NewOrder} from "./NewOrder";
 
 export class CancelOrder extends QueryOrder implements IQueryCancelOrder {
 	newClientOrderId?: string;

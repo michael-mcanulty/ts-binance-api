@@ -1,5 +1,4 @@
 import {Signed} from "../Rest/Signed";
-import {EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 import {IBaseOrder} from "./Interfaces/IBaseOrder";
 
 export class BaseOrder extends Signed {
@@ -17,10 +16,10 @@ export class BaseOrder extends Signed {
 		this.type = base.type;
 		this.timeInForce = base.timeInForce;
 		if (!base.timeInForce) {
-			let goodTilCancelList: string[] = [EOrderType[EOrderType.LIMIT], EOrderType[EOrderType.STOP_LOSS_LIMIT], EOrderType[EOrderType.TAKE_PROFIT_LIMIT]];
+			let goodTilCancelList: string[] = ['LIMIT', 'STOP_LOSS_LIMIT', 'TAKE_PROFIT_LIMIT'];
 			let isGoodTilCancelled: boolean = goodTilCancelList.includes(base.type);
 			if (isGoodTilCancelled || !this.type) {
-				this.timeInForce = ETimeInForce[ETimeInForce.GTC];
+				this.timeInForce = 'GTC';
 			}
 		}
 	}

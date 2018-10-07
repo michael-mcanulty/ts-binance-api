@@ -1,6 +1,5 @@
 import {BaseOrder} from "./BaseOrder";
 import {IOpenOrder} from "./Interfaces/IOpenOrder";
-import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 import {IBaseOrder} from "../Transaction/Interfaces/IBaseOrder";
 
 export class OpenOrder extends BaseOrder {
@@ -57,7 +56,7 @@ export class OpenOrder extends BaseOrder {
 		this.clientOrderId = openOrder.clientOrderId;
 		this.executedQty = parseFloat(openOrder.executedQty);
 		this.orderId = openOrder.orderId;
-		this.status = status;
+		this.status = openOrder.status;
 		this.icebergQty = parseFloat(openOrder.icebergQty);
 		this.isWorking = openOrder.isWorking;
 		this.stopPrice = parseFloat(openOrder.stopPrice);

@@ -1,7 +1,6 @@
 import {BaseQueryOrder} from "./BaseQueryOrder";
 import {IAllOrders} from "./Interfaces/IAllOrders";
 import {IGetAllOrdersOpts} from "./Interfaces/IGetAllOrdersOpts";
-import {IQueryCancelOrder} from "./Interfaces/IQueryCancelOrder";
 
 export class AllOrders extends BaseQueryOrder implements IAllOrders {
 	limit: number;
