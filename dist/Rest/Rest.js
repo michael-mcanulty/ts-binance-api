@@ -84,7 +84,7 @@ class Rest extends BotHttp_1.BotHttp {
             callOpts = new CallOptions_1.CallOptions(callConfig);
             privateOrder = await this.privateCall(callOpts);
             if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
-                return Promise.reject(new TestOrder_1.TestOrder());
+                return new TestOrder_1.TestOrder();
             }
             else {
                 if (privateOrder instanceof HttpError_1.HttpError) {
