@@ -583,8 +583,8 @@ class Rest extends BotHttp_1.BotHttp {
             const TYPE = EOrderEnums_1.EOrderType.LIMIT;
             const SIDE = EOrderEnums_1.EOrderSide.BUY;
             const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
-            nOrder.timeInForce = options.timeInForce.toString();
-            nOrder.price = options.price.toString();
+            nOrder.timeInForce = (options.timeInForce) ? options.timeInForce.toString() : undefined;
+            nOrder.price = (options.price) ? options.price.toString() : undefined;
             nOrder.symbol = options.symbol;
             nOrder.recvWindow = options.recvWindow;
             nOrder.type = EOrderEnums_1.EOrderType[TYPE];
@@ -608,8 +608,8 @@ class Rest extends BotHttp_1.BotHttp {
             const TYPE = EOrderEnums_1.EOrderType.LIMIT;
             const SIDE = EOrderEnums_1.EOrderSide.SELL;
             const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
-            nOrder.timeInForce = options.timeInForce.toString();
-            nOrder.price = options.price.toString();
+            nOrder.timeInForce = (options.timeInForce) ? options.timeInForce.toString() : undefined;
+            nOrder.price = (options.price) ? options.price.toString() : undefined;
             nOrder.symbol = options.symbol;
             nOrder.recvWindow = options.recvWindow;
             nOrder.type = EOrderEnums_1.EOrderType[TYPE];
