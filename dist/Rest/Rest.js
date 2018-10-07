@@ -294,7 +294,7 @@ class Rest extends BotHttp_1.BotHttp {
             let balances;
             let accountInfo = await this.getAccountInfo(recvWindow);
             balances = accountInfo.balances;
-            if (gtZeroOnly) {
+            if (gtZeroOnly && accountInfo.b) {
                 balances = accountInfo.balances.filter(bal => bal.available > 0);
             }
             else {
