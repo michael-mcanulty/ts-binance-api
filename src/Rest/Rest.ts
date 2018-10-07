@@ -335,7 +335,7 @@ export class Rest extends BotHttp {
 			let accountInfo: OutboundAccountInfo = await this.getAccountInfo(recvWindow);
 			balances = accountInfo.balances;
 
-			if (gtZeroOnly) {
+			if (gtZeroOnly && accountInfo.balances.length > 0) {
 				balances = accountInfo.balances.filter(bal => bal.available > 0);
 			} else {
 				balances = accountInfo.balances;
@@ -439,7 +439,7 @@ export class Rest extends BotHttp {
 			let markets: Market[] = symbols.map(symbol => {
 				return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
 			});
-			if(quoteAsset){
+			if(quoteAsset && markets.length > 0){
 				let _markets: Market[] = markets.filter(m=>m.quoteAsset===quoteAsset);
 				Binance.markets = _markets;
 				return _markets;
@@ -557,6 +557,9 @@ export class Rest extends BotHttp {
 
 	public static getQuoteAssetName(symbol: string): string {
 		let qa: string;
+		if(!Binance.markets || Binance.markets.length === 0){
+			throw new Error("Markets must be a populated list to obtain the QA name.");
+		}
 		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
 		let market: Market;
 		if (marketFilter && marketFilter.length > 0) {
@@ -621,14 +624,16 @@ export class Rest extends BotHttp {
 
 	public async limitBuy(options: ILimitOrderOpts): Promise<Order | TestOrder> {
 		try {
-			let order: NewOrder;
-			let orderRes: Order | {};
+			let orderObj: NewOrder;
 			let nOrder: INewOrder = <INewOrder>{};
 
 			const TYPE: EOrderType = EOrderType.LIMIT;
 			const SIDE: EOrderSide = EOrderSide.BUY;
 			const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
 
+			nOrder.timeInForce = options.timeInForce.toString();
+			nOrder.price = options.price.toString();
+			nOrder.symbol = options.symbol;
 			nOrder.recvWindow = options.recvWindow;
 			nOrder.type = EOrderType[TYPE];
 			nOrder.side = EOrderSide[SIDE];
@@ -638,8 +643,8 @@ export class Rest extends BotHttp {
 			nOrder.newClientOrderId = options.newClientOrderId;
 			nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
 
-			order = new NewOrder(nOrder);
-			return await this._newOrder(order);
+			orderObj = new NewOrder(nOrder);
+			return await this._newOrder(orderObj);
 		} catch (err) {
 			throw err;
 		}
@@ -653,6 +658,9 @@ export class Rest extends BotHttp {
 			const SIDE: EOrderSide = EOrderSide.SELL;
 			const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
 
+			nOrder.timeInForce = options.timeInForce.toString();
+			nOrder.price = options.price.toString();
+			nOrder.symbol = options.symbol;
 			nOrder.recvWindow = options.recvWindow;
 			nOrder.type = EOrderType[TYPE];
 			nOrder.side = EOrderSide[SIDE];

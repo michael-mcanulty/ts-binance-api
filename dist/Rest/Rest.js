@@ -294,7 +294,7 @@ class Rest extends BotHttp_1.BotHttp {
             let balances;
             let accountInfo = await this.getAccountInfo(recvWindow);
             balances = accountInfo.balances;
-            if (gtZeroOnly && accountInfo.b) {
+            if (gtZeroOnly && accountInfo.balances.length > 0) {
                 balances = accountInfo.balances.filter(bal => bal.available > 0);
             }
             else {
@@ -398,7 +398,7 @@ class Rest extends BotHttp_1.BotHttp {
             let markets = symbols.map(symbol => {
                 return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
             });
-            if (quoteAsset) {
+            if (quoteAsset && markets.length > 0) {
                 let _markets = markets.filter(m => m.quoteAsset === quoteAsset);
                 Binance_1.Binance.markets = _markets;
                 return _markets;
@@ -514,6 +514,9 @@ class Rest extends BotHttp_1.BotHttp {
     }
     static getQuoteAssetName(symbol) {
         let qa;
+        if (!Binance_1.Binance.markets || Binance_1.Binance.markets.length === 0) {
+            throw new Error("Markets must be a populated list to obtain the QA name.");
+        }
         let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
         let market;
         if (marketFilter && marketFilter.length > 0) {
@@ -575,12 +578,14 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async limitBuy(options) {
         try {
-            let order;
-            let orderRes;
+            let orderObj;
             let nOrder = {};
             const TYPE = EOrderEnums_1.EOrderType.LIMIT;
             const SIDE = EOrderEnums_1.EOrderSide.BUY;
             const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
+            nOrder.timeInForce = options.timeInForce.toString();
+            nOrder.price = options.price.toString();
+            nOrder.symbol = options.symbol;
             nOrder.recvWindow = options.recvWindow;
             nOrder.type = EOrderEnums_1.EOrderType[TYPE];
             nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
@@ -589,8 +594,8 @@ class Rest extends BotHttp_1.BotHttp {
             nOrder.icebergQty = options.iceburgQty;
             nOrder.newClientOrderId = options.newClientOrderId;
             nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
-            order = new NewOrder_1.NewOrder(nOrder);
-            return await this._newOrder(order);
+            orderObj = new NewOrder_1.NewOrder(nOrder);
+            return await this._newOrder(orderObj);
         }
         catch (err) {
             throw err;
@@ -603,6 +608,9 @@ class Rest extends BotHttp_1.BotHttp {
             const TYPE = EOrderEnums_1.EOrderType.LIMIT;
             const SIDE = EOrderEnums_1.EOrderSide.SELL;
             const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
+            nOrder.timeInForce = options.timeInForce.toString();
+            nOrder.price = options.price.toString();
+            nOrder.symbol = options.symbol;
             nOrder.recvWindow = options.recvWindow;
             nOrder.type = EOrderEnums_1.EOrderType[TYPE];
             nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
