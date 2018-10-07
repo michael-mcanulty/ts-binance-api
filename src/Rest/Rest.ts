@@ -153,13 +153,16 @@ export class Rest extends BotHttp {
 		let cancelResp: CancelOrderResponse;
 		let results: CancelOrderResponse[] = [];
 		let config: IGetOrderOpts = <IGetOrderOpts>{};
+		config.symbol = options.symbol;
+		config.origClientOrderId = options.origClientOrderId;
+		config.orderId = options.orderId;
+		config.recvWindow = options.recvWindow;
 
 		try {
-			config.symbol = options.symbol;
-			config.origClientOrderId = options.origClientOrderId;
-			config.orderId = options.orderId;
-			config.recvWindow = options.recvWindow;
 			openOrders = await this.getOpenOrders(config);
+			if(!openOrders || openOrders.length === 0){
+				return [];
+			}
 			symbolOrders = openOrders.filter(order => order.symbol === config.symbol);
 
 			for (let order of symbolOrders) {
@@ -178,9 +181,8 @@ export class Rest extends BotHttp {
 		}
 	}
 
-	public async closeDataStream(): Promise<{}> {
+	public async closeDataStream(): Promise<object> {
 		let callOpts: CallOptions;
-		let dStream: DataStream;
 		let result: object;
 		let callConfig: ICallOpts = <ICallOpts>{};
 		callConfig.method = 'DELETE';
@@ -204,12 +206,13 @@ export class Rest extends BotHttp {
 		let info: OutboundAccountInfo;
 		let opts: AccountInfoOptions = new AccountInfoOptions(recvWindow);
 		let callConfig: ICallOpts = <ICallOpts>{};
+		callConfig.method = 'GET';
+		callConfig.json = true;
+		callConfig.isSigned = true;
+		callConfig.uri = `${BotHttp.BASE}/api/v3/account`;
+		callConfig.qs = opts;
+
 		try {
-			callConfig.method = 'GET';
-			callConfig.json = true;
-			callConfig.isSigned = true;
-			callConfig.uri = `${BotHttp.BASE}/api/v3/account`;
-			callConfig.qs = opts;
 			callOpts = new CallOptions(callConfig);
 			accountInfoRest = await this.privateCall(callOpts);
 			info = OutboundAccountInfo.fromBinanceRest(accountInfoRest);
@@ -232,6 +235,7 @@ export class Rest extends BotHttp {
 		callConfig.isSigned = true;
 		callConfig.uri = `${BotHttp.BASE}/api/v3/allOrders`;
 		callConfig.qs = query.toObjLiteral();
+
 		try {
 			callOpts = new CallOptions(callConfig);
 			privateCall = await this.privateCall(callOpts);
@@ -325,7 +329,7 @@ export class Rest extends BotHttp {
 		}
 	}
 
-	public async getBalances(recvWindow?: number, gtZeroOnly: boolean = false): Promise<Balance[]> {
+	public async getBalances(recvWindow?: number, gtZeroOnly: boolean = true): Promise<Balance[]> {
 		try {
 			let balances: Balance[];
 			let accountInfo: OutboundAccountInfo = await this.getAccountInfo(recvWindow);
@@ -561,7 +565,7 @@ export class Rest extends BotHttp {
 		}
 		return qa;
 	}
-
+	//TODO: Check Signed on binance api docs  and match to callOptions of each method.
 	public async getStatus(): Promise<ISystemStatus> {
 		let callConfig: ICallOpts = <ICallOpts>{};
 		callConfig.method = 'GET';

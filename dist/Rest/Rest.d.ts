@@ -31,7 +31,7 @@ export declare class Rest extends BotHttp {
     private _newOrder;
     cancelOrder(options: ICancelOrderOpts): Promise<CancelOrderResponse>;
     cancelOrdersBySymbol(options: ICancelOrderOpts): Promise<CancelOrderResponse[]>;
-    closeDataStream(): Promise<{}>;
+    closeDataStream(): Promise<object>;
     getAccountInfo(recvWindow?: number): Promise<OutboundAccountInfo>;
     getAllOrders(options: IGetAllOrdersOpts): Promise<Order[]>;
     getAvailableTotalBalance(quoteAsset: string, dollarBaseAsset?: string, primaryBaseAsset?: string): Promise<ITotalBalance>;

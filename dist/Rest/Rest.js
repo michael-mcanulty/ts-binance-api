@@ -124,12 +124,15 @@ class Rest extends BotHttp_1.BotHttp {
         let cancelResp;
         let results = [];
         let config = {};
+        config.symbol = options.symbol;
+        config.origClientOrderId = options.origClientOrderId;
+        config.orderId = options.orderId;
+        config.recvWindow = options.recvWindow;
         try {
-            config.symbol = options.symbol;
-            config.origClientOrderId = options.origClientOrderId;
-            config.orderId = options.orderId;
-            config.recvWindow = options.recvWindow;
             openOrders = await this.getOpenOrders(config);
+            if (!openOrders || openOrders.length === 0) {
+                return [];
+            }
             symbolOrders = openOrders.filter(order => order.symbol === config.symbol);
             for (let order of symbolOrders) {
                 cOpts = {};
@@ -149,7 +152,6 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async closeDataStream() {
         let callOpts;
-        let dStream;
         let result;
         let callConfig = {};
         callConfig.method = 'DELETE';
@@ -172,12 +174,12 @@ class Rest extends BotHttp_1.BotHttp {
         let info;
         let opts = new AccountInfoOptions_1.AccountInfoOptions(recvWindow);
         let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/account`;
+        callConfig.qs = opts;
         try {
-            callConfig.method = 'GET';
-            callConfig.json = true;
-            callConfig.isSigned = true;
-            callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/account`;
-            callConfig.qs = opts;
             callOpts = new CallOptions_1.CallOptions(callConfig);
             accountInfoRest = await this.privateCall(callOpts);
             info = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceRest(accountInfoRest);
@@ -287,7 +289,7 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
-    async getBalances(recvWindow, gtZeroOnly = false) {
+    async getBalances(recvWindow, gtZeroOnly = true) {
         try {
             let balances;
             let accountInfo = await this.getAccountInfo(recvWindow);
