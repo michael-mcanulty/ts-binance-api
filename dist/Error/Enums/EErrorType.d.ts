@@ -3,3 +3,4 @@ export declare enum EErrorType {
     Node = 1,
     MongoDB = 2
 }
+export declare type TErrorType = 'Binance' | 'Node' | 'MongoDB';

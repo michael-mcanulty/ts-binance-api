@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 const BaseOrder_1 = require("./BaseOrder");
 class NewOrder extends BaseOrder_1.BaseOrder {
     toObjLiteral() {
@@ -29,7 +28,7 @@ class NewOrder extends BaseOrder_1.BaseOrder {
         super(newOrder);
         this.quantity = newOrder.quantity;
         this.icebergQty = newOrder.icebergQty;
-        this.newOrderRespType = EOrderEnums_1.ENewOrderRespType[newOrder.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[EOrderEnums_1.ENewOrderRespType.FULL];
+        this.newOrderRespType = newOrder.newOrderRespType || 'FULL';
         this.newClientOrderId = newOrder.newClientOrderId;
         this.stopPrice = newOrder.stopPrice;
         this.recvWindow = newOrder.recvWindow || 5000;

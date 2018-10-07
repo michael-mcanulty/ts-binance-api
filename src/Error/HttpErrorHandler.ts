@@ -2,7 +2,6 @@ import {BotHttp} from "../Rest/BotHttp";
 import {NodeMailer} from "./NodeMailer";
 import {IMessageOptions} from "./Interfaces/IMessageOptions";
 import {BBLogger} from "../Logger/BBLogger";
-import {EErrorType} from "./Enums/EErrorType";
 import {HttpError} from "./HttpError";
 import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 import {URL} from "url";
@@ -128,7 +127,7 @@ export class HttpErrorHandler {
 				this.endpoint = (Array.isArray(config.endpoint)) ? <string[]>config.endpoint : <string[]>new Array(config.endpoint);
 			}
 			this.method = config.method;
-			this.type = EErrorType[config.type] || EErrorType[EErrorType.Binance];
+			this.type = config.type || 'Binance';
 			this.sendEmail = config.sendEmail;
 			this.sendText = config.sendText;
 			this.payload = config.payload;

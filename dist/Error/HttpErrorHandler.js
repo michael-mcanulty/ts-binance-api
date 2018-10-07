@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./NodeMailer");
 const BBLogger_1 = require("../Logger/BBLogger");
-const EErrorType_1 = require("./Enums/EErrorType");
 const HttpError_1 = require("./HttpError");
 const url_1 = require("url");
 const cluster_1 = require("cluster");
@@ -19,7 +18,7 @@ class HttpErrorHandler {
                 this.endpoint = (Array.isArray(config.endpoint)) ? config.endpoint : new Array(config.endpoint);
             }
             this.method = config.method;
-            this.type = EErrorType_1.EErrorType[config.type] || EErrorType_1.EErrorType[EErrorType_1.EErrorType.Binance];
+            this.type = config.type || 'Binance';
             this.sendEmail = config.sendEmail;
             this.sendText = config.sendText;
             this.payload = config.payload;

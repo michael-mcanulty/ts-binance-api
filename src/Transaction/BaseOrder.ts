@@ -14,7 +14,7 @@ export class BaseOrder extends Signed {
 		this.price = base.price;
 		this.side = base.side;
 		this.symbol = base.symbol;
-		this.type = EOrderType[base.type];
+		this.type = base.type;
 		this.timeInForce = base.timeInForce;
 		if (!base.timeInForce) {
 			let goodTilCancelList: string[] = [EOrderType[EOrderType.LIMIT], EOrderType[EOrderType.STOP_LOSS_LIMIT], EOrderType[EOrderType.TAKE_PROFIT_LIMIT]];

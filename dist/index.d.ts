@@ -1,3 +1,6 @@
+export { TServiceProviders } from "./Error/Enums/EServiceProviders";
+export { TErrorType } from "./Error/Enums/EErrorType";
+export { TNewOrderRespType, TOrderSide, TOrderStatus, TOrderType } from "./Transaction/Interfaces/EOrderEnums";
 export { ISigned } from "./Rest/Interfaces/ISigned";
 export { IGetAllOrdersOpts } from "./Transaction/Interfaces/IGetAllOrdersOpts";
 export { ICancelOrderOpts } from "./Transaction/Interfaces/ICancelOrderOpts";
@@ -83,5 +86,5 @@ export { Price } from "./Transaction/Price";
 export { Order } from "./Transaction/Order";
 export { OpenOrder } from "./Transaction/OpenOrder";
 export { BotWebsocket } from "./Websocket/BotWebsocket";
-export { EExecutionType, ENewOrderRespType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce } from "./Transaction/Interfaces/EOrderEnums";
+export { EExecutionType, ENewOrderRespType, EOrderSide, EOrderStatus, EOrderType, ETimeInForce, TExecutionType, TTimeInForce } from "./Transaction/Interfaces/EOrderEnums";
 export { CloseEvent, ErrorEvent, EventListener, WebSocketEventMap } from "./Websocket/ReconnectingWebSocket/Events";

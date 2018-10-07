@@ -39,7 +39,7 @@ export class NewOrder extends BaseOrder {
 		super(newOrder);
 		this.quantity = newOrder.quantity;
 		this.icebergQty = newOrder.icebergQty;
-		this.newOrderRespType = ENewOrderRespType[newOrder.newOrderRespType] || ENewOrderRespType[ENewOrderRespType.FULL];
+		this.newOrderRespType = newOrder.newOrderRespType || 'FULL';
 		this.newClientOrderId = newOrder.newClientOrderId;
 		this.stopPrice = newOrder.stopPrice;
 		this.recvWindow = newOrder.recvWindow || 5000;

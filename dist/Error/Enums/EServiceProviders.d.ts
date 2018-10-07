@@ -38,3 +38,4 @@ export declare enum EServiceProviders {
     "Zoho" = 36,
     "qiye.aliyun" = 37
 }
+export declare type TServiceProviders = "AOL" | "DebugMail" | "DynectEmail" | "FastMail" | "GandiMail" | "Gmail" | "Godaddy" | "GodaddyAsia" | "GodaddyEurope" | "hot.ee" | "Hotmail" | "iCloud" | "mail.ee" | "Mail.ru" | "Maildev" | "Mailgun" | "Mailjet" | "Mailosaur" | "Mandrill" | "Naver" | "OpenMailBox" | "Outlook365" | "Postmark" | "QQ" | "QQex" | "SendCloud" | "SendGrid" | "SendinBlue" | "SendPulse" | "SES" | "SES-US-EAST-1" | "SES-US-WEST-2" | "SES-EU-WEST-1" | "Sparkpost" | "Yahoo" | "Yandex" | "Zoho" | "qiye.aliyun";

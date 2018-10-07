@@ -2,8 +2,6 @@ import {BaseOrder} from "./BaseOrder";
 import {IOpenOrder} from "./Interfaces/IOpenOrder";
 import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 import {IBaseOrder} from "../Transaction/Interfaces/IBaseOrder";
-import {INewOrder} from "./Interfaces/INewOrder";
-import {NewOrder} from "./NewOrder";
 
 export class OpenOrder extends BaseOrder {
 	clientOrderId: string;
@@ -37,13 +35,13 @@ export class OpenOrder extends BaseOrder {
 		binance.orderId = self.orderId;
 		binance.origQty = (self.origQty) ? self.origQty.toString() : undefined;
 		binance.price = (self.price) ? self.price.toString() : undefined;
-		binance.side = EOrderSide[self.side];
-		binance.status = EOrderStatus[self.status];
+		binance.side = self.side;
+		binance.status = self.status;
 		binance.stopPrice = (self.stopPrice) ? self.stopPrice.toString() : undefined;
 		binance.symbol = self.symbol;
-		binance.timeInForce = ETimeInForce[self.timeInForce];
+		binance.timeInForce = self.timeInForce;
 		binance.time = self.time;
-		binance.type = EOrderType[self.type];
+		binance.type = self.type;
 		return binance;
 	}
 

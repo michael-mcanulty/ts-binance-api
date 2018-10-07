@@ -3,3 +3,8 @@ export enum EErrorType {
 	Node,
 	MongoDB
 }
+
+export type TErrorType =
+	'Binance'|
+	'Node'|
+	'MongoDB'

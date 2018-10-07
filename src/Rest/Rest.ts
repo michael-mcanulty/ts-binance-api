@@ -7,7 +7,14 @@ import {Candle} from "../ExchangeInfo/Candle";
 import {Market} from "../Market/Market";
 import {Binance} from "../Binance/Binance";
 import {NewOrder} from "../Transaction/NewOrder";
-import {ENewOrderRespType, EOrderSide, EOrderType} from "../Transaction/Interfaces/EOrderEnums";
+import {
+	ENewOrderRespType,
+	EOrderSide,
+	EOrderType,
+	TNewOrderRespType,
+	TOrderSide,
+	TOrderType
+} from "../Transaction/Interfaces/EOrderEnums";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {Order} from "../Transaction/Order";
 import {HttpError} from "../Error/HttpError";
@@ -627,24 +634,24 @@ export class Rest extends BotHttp {
 			let orderObj: NewOrder;
 			let nOrder: INewOrder = <INewOrder>{};
 
-			const TYPE: EOrderType = EOrderType.LIMIT;
-			const SIDE: EOrderSide = EOrderSide.BUY;
-			const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
-
-			nOrder.timeInForce = (options.timeInForce)?options.timeInForce.toString(): undefined;
-			nOrder.price = (options.price)?options.price.toString(): undefined;
-			nOrder.symbol = options.symbol;
-			nOrder.recvWindow = options.recvWindow;
-			nOrder.type = EOrderType[TYPE];
-			nOrder.side = EOrderSide[SIDE];
-			nOrder.quantity = options.quantity;
-			nOrder.stopPrice = options.stopPrice;
-			nOrder.icebergQty = options.iceburgQty;
-			nOrder.newClientOrderId = options.newClientOrderId;
-			nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
-
-			orderObj = new NewOrder(nOrder);
-			return await this._newOrder(orderObj);
+			const TYPE: TOrderType = 'LIMIT';
+			const SIDE: TOrderSide = 'BUY';
+			const RESPONSE_TYPE: TNewOrderRespType = 'FULL';
+			if(options && options.price) {
+				nOrder.timeInForce = options.timeInForce;
+				nOrder.price = options.price.toString();
+				nOrder.symbol = options.symbol;
+				nOrder.recvWindow = options.recvWindow;
+				nOrder.type = TYPE;
+				nOrder.side = SIDE;
+				nOrder.quantity = options.quantity;
+				nOrder.stopPrice = options.stopPrice;
+				nOrder.icebergQty = options.iceburgQty;
+				nOrder.newClientOrderId = options.newClientOrderId;
+				nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
+				orderObj = new NewOrder(nOrder);
+				return await this._newOrder(orderObj);
+			}
 		} catch (err) {
 			throw err;
 		}
@@ -654,24 +661,26 @@ export class Rest extends BotHttp {
 		try {
 			let order: NewOrder;
 			let nOrder: INewOrder = <INewOrder>{};
-			const TYPE: EOrderType = EOrderType.LIMIT;
-			const SIDE: EOrderSide = EOrderSide.SELL;
-			const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
+			const TYPE: TOrderType = 'LIMIT';
+			const SIDE: TOrderSide = 'SELL';
+			const RESPONSE_TYPE: TNewOrderRespType = 'FULL';
 
-			nOrder.timeInForce = (options.timeInForce)?options.timeInForce.toString(): undefined;
-			nOrder.price = (options.price)?options.price.toString(): undefined;
-			nOrder.symbol = options.symbol;
-			nOrder.recvWindow = options.recvWindow;
-			nOrder.type = EOrderType[TYPE];
-			nOrder.side = EOrderSide[SIDE];
-			nOrder.quantity = options.quantity;
-			nOrder.stopPrice = options.stopPrice;
-			nOrder.icebergQty = options.iceburgQty;
-			nOrder.newClientOrderId = options.newClientOrderId;
-			nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+			if(options && options.price){
+				nOrder.timeInForce = options.timeInForce;
+				nOrder.price = options.price.toString();
+				nOrder.symbol = options.symbol;
+				nOrder.recvWindow = options.recvWindow;
+				nOrder.type = TYPE;
+				nOrder.side = SIDE;
+				nOrder.quantity = options.quantity;
+				nOrder.stopPrice = options.stopPrice;
+				nOrder.icebergQty = options.iceburgQty;
+				nOrder.newClientOrderId = options.newClientOrderId;
+				nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
 
-			order = new NewOrder(nOrder);
-			return await this._newOrder(order);
+				order = new NewOrder(nOrder);
+				return await this._newOrder(order);
+			}
 		} catch (err) {
 			throw err;
 		}
@@ -682,17 +691,13 @@ export class Rest extends BotHttp {
 			let order: NewOrder;
 			let nOrder: INewOrder = <INewOrder>{};
 
-			const TYPE: EOrderType = EOrderType.MARKET;
-			const SIDE: EOrderSide = EOrderSide.BUY;
-			const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
-
 			nOrder.recvWindow = options.recvWindow;
-			nOrder.type = EOrderType[TYPE];
-			nOrder.side = EOrderSide[SIDE];
+			nOrder.type = 'MARKET';
+			nOrder.side = 'BUY';
 			nOrder.quantity = options.quantity;
 			nOrder.icebergQty = options.iceburgQty;
 			nOrder.newClientOrderId = options.newClientOrderId;
-			nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+			nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
 
 			order = new NewOrder(nOrder);
 			return await this._newOrder(order);
@@ -705,18 +710,13 @@ export class Rest extends BotHttp {
 		try {
 			let order: NewOrder;
 			let nOrder: INewOrder = <INewOrder>{};
-
-			const TYPE: EOrderType = EOrderType.MARKET;
-			const SIDE: EOrderSide = EOrderSide.SELL;
-			const RESPONSE_TYPE: ENewOrderRespType = ENewOrderRespType.FULL;
-
 			nOrder.recvWindow = options.recvWindow;
-			nOrder.type = EOrderType[TYPE];
-			nOrder.side = EOrderSide[SIDE];
+			nOrder.type = 'MARKET';
+			nOrder.side = 'SELL';
 			nOrder.quantity = options.quantity;
 			nOrder.icebergQty = options.iceburgQty;
 			nOrder.newClientOrderId = options.newClientOrderId;
-			nOrder.newOrderRespType = ENewOrderRespType[options.newOrderRespType] || ENewOrderRespType[RESPONSE_TYPE];
+			nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
 
 			order = new NewOrder(nOrder);
 			return await this._newOrder(order);

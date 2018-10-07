@@ -24,11 +24,11 @@ export class Order extends BaseOrder {
 		binance.orderId = order.orderId;
 		binance.origQty = (order.origQty) ? order.origQty.toString() : undefined;
 		binance.price = (order.price) ? order.price.toString() : undefined;
-		binance.side = EOrderSide[order.side];
-		binance.status = EOrderStatus[order.status];
+		binance.side = order.side;
+		binance.status = order.status;
 		binance.symbol = order.symbol;
-		binance.timeInForce = ETimeInForce[order.timeInForce];
-		binance.type = EOrderType[order.type];
+		binance.timeInForce = order.timeInForce;
+		binance.type = order.type;
 		return binance;
 	}
 
@@ -37,7 +37,7 @@ export class Order extends BaseOrder {
 		this.executedQty = parseFloat(order.executedQty);
 		this.orderId = order.orderId;
 		this.origQty = parseFloat(order.origQty);
-		this.status = EOrderStatus[order.status];
+		this.status = order.status;
 		this.clientOrderId = order.clientOrderId;
 		this.transactTime = order.transactTime;
 	}

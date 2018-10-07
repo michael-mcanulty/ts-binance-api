@@ -1,4 +1,4 @@
-import {ENewOrderRespType, ETimeInForce} from "./EOrderEnums";
+import {TNewOrderRespType, TTimeInForce} from "./EOrderEnums";
 
 export interface ILimitOrderOpts{
 	symbol: string;
@@ -6,8 +6,8 @@ export interface ILimitOrderOpts{
 	price: number;
 	recvWindow?: number;
 	iceburgQty?: number;
-	timeInForce?: ETimeInForce;
+	timeInForce?: TTimeInForce;
 	stopPrice?: number;
 	newClientOrderId?: string;
-	newOrderRespType?: ENewOrderRespType;
+	newOrderRespType?: TNewOrderRespType;
 }

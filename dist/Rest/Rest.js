@@ -6,7 +6,6 @@ const Candle_1 = require("../ExchangeInfo/Candle");
 const Market_1 = require("../Market/Market");
 const Binance_1 = require("../Binance/Binance");
 const NewOrder_1 = require("../Transaction/NewOrder");
-const EOrderEnums_1 = require("../Transaction/Interfaces/EOrderEnums");
 const Order_1 = require("../Transaction/Order");
 const HttpError_1 = require("../Error/HttpError");
 const CancelOrder_1 = require("../Transaction/CancelOrder");
@@ -580,22 +579,24 @@ class Rest extends BotHttp_1.BotHttp {
         try {
             let orderObj;
             let nOrder = {};
-            const TYPE = EOrderEnums_1.EOrderType.LIMIT;
-            const SIDE = EOrderEnums_1.EOrderSide.BUY;
-            const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
-            nOrder.timeInForce = (options.timeInForce) ? options.timeInForce.toString() : undefined;
-            nOrder.price = (options.price) ? options.price.toString() : undefined;
-            nOrder.symbol = options.symbol;
-            nOrder.recvWindow = options.recvWindow;
-            nOrder.type = EOrderEnums_1.EOrderType[TYPE];
-            nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
-            nOrder.quantity = options.quantity;
-            nOrder.stopPrice = options.stopPrice;
-            nOrder.icebergQty = options.iceburgQty;
-            nOrder.newClientOrderId = options.newClientOrderId;
-            nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
-            orderObj = new NewOrder_1.NewOrder(nOrder);
-            return await this._newOrder(orderObj);
+            const TYPE = 'LIMIT';
+            const SIDE = 'BUY';
+            const RESPONSE_TYPE = 'FULL';
+            if (options && options.price) {
+                nOrder.timeInForce = options.timeInForce;
+                nOrder.price = options.price.toString();
+                nOrder.symbol = options.symbol;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = TYPE;
+                nOrder.side = SIDE;
+                nOrder.quantity = options.quantity;
+                nOrder.stopPrice = options.stopPrice;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
+                orderObj = new NewOrder_1.NewOrder(nOrder);
+                return await this._newOrder(orderObj);
+            }
         }
         catch (err) {
             throw err;
@@ -605,22 +606,24 @@ class Rest extends BotHttp_1.BotHttp {
         try {
             let order;
             let nOrder = {};
-            const TYPE = EOrderEnums_1.EOrderType.LIMIT;
-            const SIDE = EOrderEnums_1.EOrderSide.SELL;
-            const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
-            nOrder.timeInForce = (options.timeInForce) ? options.timeInForce.toString() : undefined;
-            nOrder.price = (options.price) ? options.price.toString() : undefined;
-            nOrder.symbol = options.symbol;
-            nOrder.recvWindow = options.recvWindow;
-            nOrder.type = EOrderEnums_1.EOrderType[TYPE];
-            nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
-            nOrder.quantity = options.quantity;
-            nOrder.stopPrice = options.stopPrice;
-            nOrder.icebergQty = options.iceburgQty;
-            nOrder.newClientOrderId = options.newClientOrderId;
-            nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
-            order = new NewOrder_1.NewOrder(nOrder);
-            return await this._newOrder(order);
+            const TYPE = 'LIMIT';
+            const SIDE = 'SELL';
+            const RESPONSE_TYPE = 'FULL';
+            if (options && options.price) {
+                nOrder.timeInForce = options.timeInForce;
+                nOrder.price = options.price.toString();
+                nOrder.symbol = options.symbol;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = TYPE;
+                nOrder.side = SIDE;
+                nOrder.quantity = options.quantity;
+                nOrder.stopPrice = options.stopPrice;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
+                order = new NewOrder_1.NewOrder(nOrder);
+                return await this._newOrder(order);
+            }
         }
         catch (err) {
             throw err;
@@ -630,16 +633,13 @@ class Rest extends BotHttp_1.BotHttp {
         try {
             let order;
             let nOrder = {};
-            const TYPE = EOrderEnums_1.EOrderType.MARKET;
-            const SIDE = EOrderEnums_1.EOrderSide.BUY;
-            const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
             nOrder.recvWindow = options.recvWindow;
-            nOrder.type = EOrderEnums_1.EOrderType[TYPE];
-            nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
+            nOrder.type = 'MARKET';
+            nOrder.side = 'BUY';
             nOrder.quantity = options.quantity;
             nOrder.icebergQty = options.iceburgQty;
             nOrder.newClientOrderId = options.newClientOrderId;
-            nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
+            nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
             order = new NewOrder_1.NewOrder(nOrder);
             return await this._newOrder(order);
         }
@@ -651,16 +651,13 @@ class Rest extends BotHttp_1.BotHttp {
         try {
             let order;
             let nOrder = {};
-            const TYPE = EOrderEnums_1.EOrderType.MARKET;
-            const SIDE = EOrderEnums_1.EOrderSide.SELL;
-            const RESPONSE_TYPE = EOrderEnums_1.ENewOrderRespType.FULL;
             nOrder.recvWindow = options.recvWindow;
-            nOrder.type = EOrderEnums_1.EOrderType[TYPE];
-            nOrder.side = EOrderEnums_1.EOrderSide[SIDE];
+            nOrder.type = 'MARKET';
+            nOrder.side = 'SELL';
             nOrder.quantity = options.quantity;
             nOrder.icebergQty = options.iceburgQty;
             nOrder.newClientOrderId = options.newClientOrderId;
-            nOrder.newOrderRespType = EOrderEnums_1.ENewOrderRespType[options.newOrderRespType] || EOrderEnums_1.ENewOrderRespType[RESPONSE_TYPE];
+            nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
             order = new NewOrder_1.NewOrder(nOrder);
             return await this._newOrder(order);
         }

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseOrder_1 = require("./BaseOrder");
-const EOrderEnums_1 = require("./Interfaces/EOrderEnums");
 class OpenOrder extends BaseOrder_1.BaseOrder {
     toObjLiteral() {
         let self = this;
@@ -23,13 +22,13 @@ class OpenOrder extends BaseOrder_1.BaseOrder {
         binance.orderId = self.orderId;
         binance.origQty = (self.origQty) ? self.origQty.toString() : undefined;
         binance.price = (self.price) ? self.price.toString() : undefined;
-        binance.side = EOrderEnums_1.EOrderSide[self.side];
-        binance.status = EOrderEnums_1.EOrderStatus[self.status];
+        binance.side = self.side;
+        binance.status = self.status;
         binance.stopPrice = (self.stopPrice) ? self.stopPrice.toString() : undefined;
         binance.symbol = self.symbol;
-        binance.timeInForce = EOrderEnums_1.ETimeInForce[self.timeInForce];
+        binance.timeInForce = self.timeInForce;
         binance.time = self.time;
-        binance.type = EOrderEnums_1.EOrderType[self.type];
+        binance.type = self.type;
         return binance;
     }
     constructor(openOrder) {

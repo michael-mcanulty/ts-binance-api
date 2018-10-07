@@ -1,8 +1,8 @@
 import {ISmtpOptions} from "./ISmtpOptions";
 import {IMessageOptions} from "./IMessageOptions";
 import {TMethod} from "../../Rest/TMethod";
-import {EErrorType} from "../Enums/EErrorType";
 import {ITextMsgOptions} from "../../TextMessage/ITextMsgOptions";
+import {TErrorType} from "../Enums/EErrorType";
 
 export interface IHttpErrorHandler {
 	emailMsgOpts?: IMessageOptions;
@@ -14,5 +14,5 @@ export interface IHttpErrorHandler {
 	sendEmail: boolean;
 	sendText: boolean;
 	textMsgOpts?: ITextMsgOptions;
-	type: EErrorType;
+	type: TErrorType;
 }
