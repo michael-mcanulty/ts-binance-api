@@ -287,7 +287,7 @@ export class Rest extends BotHttp {
 				return Promise.reject(new Error("A Quote Asset is required to evaluate total balance"));
 			}
 			let config: GetTotalBalanceOpts = new GetTotalBalanceOpts(opts);
-			let balances: Balance[] = await this.getBalances();
+			let balances: Balance[] = await this.getBalances(config.recvWindow, true);
 			let prices: Price[] = await this.getPrices();
 			if (balances.length === 0) {
 				return Promise.reject(new Error("Error: Balances not working"));

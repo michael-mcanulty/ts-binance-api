@@ -4,5 +4,6 @@ export declare class GetTotalBalanceOpts implements IGetTotalBalanceOpts {
     usdAsset?: string;
     xChangeRatioBA?: string;
     recvWindow?: number;
+    toObjLiteral(): IGetTotalBalanceOpts;
     constructor(opts: IGetTotalBalanceOpts);
 }
