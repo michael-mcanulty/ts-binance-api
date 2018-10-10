@@ -1,4 +1,3 @@
-import {EOrderSide, EOrderStatus, EOrderType, ETimeInForce} from "./Interfaces/EOrderEnums";
 import {IOrder} from "./Interfaces/IOrder";
 import {BaseOrder} from "./BaseOrder";
 import {Fill} from "./Fill";

@@ -24,6 +24,7 @@ import { IGetAllOrdersOpts } from "../Transaction/Interfaces/IGetAllOrdersOpts";
 import { ICancelOrderOpts } from "../Transaction/Interfaces/ICancelOrderOpts";
 import { ITotalBalance } from "../Balances/Interfaces/ITotalBalance";
 import { Price } from "../Transaction/Price";
+import { IGetTotalBalanceOpts } from "../Balances/Interfaces/IGetTotalBalanceOpts";
 export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
     private _cancelOrder;
@@ -34,7 +35,7 @@ export declare class Rest extends BotHttp {
     closeDataStream(): Promise<object>;
     getAccountInfo(recvWindow?: number): Promise<OutboundAccountInfo>;
     getAllOrders(options: IGetAllOrdersOpts): Promise<Order[]>;
-    getAvailableTotalBalance(quoteAsset: string, dollarBaseAsset?: string, primaryBaseAsset?: string): Promise<ITotalBalance>;
+    getAvailableTotalBalance(opts: IGetTotalBalanceOpts): Promise<ITotalBalance>;
     getBalances(recvWindow?: number, gtZeroOnly?: boolean): Promise<Balance[]>;
     getCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]>;
     getDataStream(): Promise<IListenKey>;

@@ -54,6 +54,8 @@ import {ICancelOrderOpts} from "../Transaction/Interfaces/ICancelOrderOpts";
 import {ITotalBalance} from "../Balances/Interfaces/ITotalBalance";
 import {Price} from "../Transaction/Price";
 import {IPrice} from "../Transaction/Interfaces/IPrice";
+import {IGetTotalBalanceOpts} from "../Balances/Interfaces/IGetTotalBalanceOpts";
+import {GetTotalBalanceOpts} from "../Balances/GetTotalBalanceOpts";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -274,52 +276,58 @@ export class Rest extends BotHttp {
 		}
 	}
 
-	public async getAvailableTotalBalance(quoteAsset: string, dollarBaseAsset: string = "USDT", primaryBaseAsset: string = "BTC"): Promise<ITotalBalance> {
+	// The 'xChangeRatioBA' is BTC indefinitely and is the base asset of Binance's "Exchange Ratio".
+	// See:  https://support.binance.com/hc/en-us/articles/115000583311
+	// Here is the formula excerpt: "Exchange ratio of NEO/BNB = NEO/BTC[market price] /(BNB/BTC [market price]).}
+
+	public async getAvailableTotalBalance(opts: IGetTotalBalanceOpts): Promise<ITotalBalance> {
 		try {
 			//get BTC qty first
+			if(!opts || !opts.quoteAsset){
+				return Promise.reject(new Error("A Quote Asset is required to evaluate total balance"));
+			}
+			let config: GetTotalBalanceOpts = new GetTotalBalanceOpts(opts);
 			let balances: Balance[] = await this.getBalances();
 			let prices: Price[] = await this.getPrices();
 			if (balances.length === 0) {
 				return Promise.reject(new Error("Error: Balances not working"));
 			}
 
-			const QA = quoteAsset;
-			const USDT = dollarBaseAsset;
-			const FA = "BNB";
-			const BTC = primaryBaseAsset;
+			const QA = config.quoteAsset;
+			const USDT = config.usdAsset;
+			const BTC = config.xChangeRatioBA;
 
 			let balVals: ITotalBalance[] = [];
 			let result: ITotalBalance = <ITotalBalance>{};
 
 			balances.forEach((bal: Balance) => {
+				let exchangeValue: number;
+				let totalBTCVal: number;
 				let avail: ITotalBalance = <ITotalBalance>{};
 				let BA: string = bal.asset;
 				let available: number = bal.available;
-
 				let symbol: string;
 
 				if (BA !== BTC && BTC !== QA) {
 					symbol = BA + BTC;
-					let exchangeValue: number = Price.GetPriceValue(prices, symbol);
-					avail.quoteAsset = quoteAsset;
-					let totalBTCVal: number = available * exchangeValue;
+					exchangeValue = Price.GetPriceValue(prices, symbol);
+					avail.quoteAsset = QA;
+					totalBTCVal = available * exchangeValue;
 					avail.totalVal = totalBTCVal * Price.GetPriceValue(prices, BTC + USDT);
 					balVals.push(avail);
 				} else {
 					if (BA === BTC && BTC !== QA) {
-						symbol = BA + QA;
-						avail.quoteAsset = quoteAsset;
+						avail.quoteAsset = QA;
 						avail.totalVal = available * Price.GetPriceValue(prices, BTC + USDT);
 						balVals.push(avail);
-					} else if (BTC === QA && BA !== BTC) {
+					} else if (QA === BTC && BA !== BTC) {
 						symbol = BA + QA;
-						let exchangeValue: number = Price.GetPriceValue(prices, symbol);
-						avail.quoteAsset = quoteAsset;
+						exchangeValue = Price.GetPriceValue(prices, symbol);
+						avail.quoteAsset = QA;
 						avail.totalVal = available * exchangeValue;
 						balVals.push(avail);
 					} else if (BTC === QA && BA === BTC) {
-						symbol = BA + QA;
-						avail.quoteAsset = quoteAsset;
+						avail.quoteAsset = QA;
 						avail.totalVal = available;
 						balVals.push(avail);
 					}
@@ -329,7 +337,7 @@ export class Rest extends BotHttp {
 			result.totalVal = balVals.reduce((prev, cur) => {
 				return prev + cur.totalVal;
 			}, 0);
-			result.quoteAsset = quoteAsset;
+			result.quoteAsset = QA;
 			return result;
 		} catch (err) {
 			throw err;
@@ -575,6 +583,7 @@ export class Rest extends BotHttp {
 		}
 		return qa;
 	}
+
 	//TODO: Check Signed on binance api docs  and match to callOptions of each method.
 	public async getStatus(): Promise<ISystemStatus> {
 		let callConfig: ICallOpts = <ICallOpts>{};

@@ -1,3 +1,5 @@
+export {GetTotalBalanceOpts} from "./Balances/GetTotalBalanceOpts";
+export {IGetTotalBalanceOpts} from "./Balances/Interfaces/IGetTotalBalanceOpts";
 export {TServiceProviders} from "./Error/Enums/EServiceProviders";
 export {TErrorType} from "./Error/Enums/EErrorType";
 export {TNewOrderRespType, TOrderSide, TOrderStatus, TOrderType} from "./Transaction/Interfaces/EOrderEnums";

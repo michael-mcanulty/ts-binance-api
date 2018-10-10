@@ -19,6 +19,7 @@ const AccountInfoOptions_1 = require("../Account/AccountInfoOptions");
 const CancelOrderResponse_1 = require("../Transaction/CancelOrderResponse");
 const TestOrder_1 = require("../Transaction/TestOrder");
 const Price_1 = require("../Transaction/Price");
+const GetTotalBalanceOpts_1 = require("../Balances/GetTotalBalanceOpts");
 class Rest extends BotHttp_1.BotHttp {
     async _cancelOrder(cancelOrder) {
         try {
@@ -230,49 +231,52 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
-    async getAvailableTotalBalance(quoteAsset, dollarBaseAsset = "USDT", primaryBaseAsset = "BTC") {
+    async getAvailableTotalBalance(opts) {
         try {
+            if (!opts || !opts.quoteAsset) {
+                return Promise.reject(new Error("A Quote Asset is required to evaluate total balance"));
+            }
+            let config = new GetTotalBalanceOpts_1.GetTotalBalanceOpts(opts);
             let balances = await this.getBalances();
             let prices = await this.getPrices();
             if (balances.length === 0) {
                 return Promise.reject(new Error("Error: Balances not working"));
             }
-            const QA = quoteAsset;
-            const USDT = dollarBaseAsset;
-            const FA = "BNB";
-            const BTC = primaryBaseAsset;
+            const QA = config.quoteAsset;
+            const USDT = config.usdAsset;
+            const BTC = config.xChangeRatioBA;
             let balVals = [];
             let result = {};
             balances.forEach((bal) => {
+                let exchangeValue;
+                let totalBTCVal;
                 let avail = {};
                 let BA = bal.asset;
                 let available = bal.available;
                 let symbol;
                 if (BA !== BTC && BTC !== QA) {
                     symbol = BA + BTC;
-                    let exchangeValue = Price_1.Price.GetPriceValue(prices, symbol);
-                    avail.quoteAsset = quoteAsset;
-                    let totalBTCVal = available * exchangeValue;
+                    exchangeValue = Price_1.Price.GetPriceValue(prices, symbol);
+                    avail.quoteAsset = QA;
+                    totalBTCVal = available * exchangeValue;
                     avail.totalVal = totalBTCVal * Price_1.Price.GetPriceValue(prices, BTC + USDT);
                     balVals.push(avail);
                 }
                 else {
                     if (BA === BTC && BTC !== QA) {
-                        symbol = BA + QA;
-                        avail.quoteAsset = quoteAsset;
+                        avail.quoteAsset = QA;
                         avail.totalVal = available * Price_1.Price.GetPriceValue(prices, BTC + USDT);
                         balVals.push(avail);
                     }
-                    else if (BTC === QA && BA !== BTC) {
+                    else if (QA === BTC && BA !== BTC) {
                         symbol = BA + QA;
-                        let exchangeValue = Price_1.Price.GetPriceValue(prices, symbol);
-                        avail.quoteAsset = quoteAsset;
+                        exchangeValue = Price_1.Price.GetPriceValue(prices, symbol);
+                        avail.quoteAsset = QA;
                         avail.totalVal = available * exchangeValue;
                         balVals.push(avail);
                     }
                     else if (BTC === QA && BA === BTC) {
-                        symbol = BA + QA;
-                        avail.quoteAsset = quoteAsset;
+                        avail.quoteAsset = QA;
                         avail.totalVal = available;
                         balVals.push(avail);
                     }
@@ -281,7 +285,7 @@ class Rest extends BotHttp_1.BotHttp {
             result.totalVal = balVals.reduce((prev, cur) => {
                 return prev + cur.totalVal;
             }, 0);
-            result.quoteAsset = quoteAsset;
+            result.quoteAsset = QA;
             return result;
         }
         catch (err) {
