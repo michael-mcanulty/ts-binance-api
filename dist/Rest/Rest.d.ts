@@ -35,7 +35,7 @@ export declare class Rest extends BotHttp {
     closeDataStream(): Promise<object>;
     getAccountInfo(recvWindow?: number): Promise<OutboundAccountInfo>;
     getAllOrders(options: IGetAllOrdersOpts): Promise<Order[]>;
-    getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance>;
+    getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance[]>;
     getBalances(recvWindow?: number, gtZeroOnly?: boolean): Promise<Balance[]>;
     getCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]>;
     getDataStream(): Promise<IListenKey>;

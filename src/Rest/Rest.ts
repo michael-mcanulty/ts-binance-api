@@ -280,11 +280,18 @@ export class Rest extends BotHttp {
 	// See:  https://support.binance.com/hc/en-us/articles/115000583311
 	// Here is the formula excerpt: "Exchange ratio of NEO/BNB = NEO/BTC[market price] /(BNB/BTC [market price]).}
 
-	public async getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance> {
+	public async getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance[]> {
+		let results: ITotalBalance[] = [];
+		let result = <ITotalBalance>{};
+		let prices: Price[];
+		let balances: Balance[];
+		let config: GetTotalBalanceOpts;
+		let balVals: ITotalBalance[];
+
 		try {
-			let config: GetTotalBalanceOpts = new GetTotalBalanceOpts(opts);
-			let balances: Balance[] = await this.getBalances(config.recvWindow, true);
-			let prices: Price[] = await this.getPrices();
+			config = new GetTotalBalanceOpts(opts);
+			balances = await this.getBalances(config.recvWindow, true);
+			prices = await this.getPrices();
 			if (balances.length === 0) {
 				return Promise.reject(new Error("Error: Balances not working"));
 			}
@@ -293,9 +300,8 @@ export class Rest extends BotHttp {
 			const USDT = config.usdAsset;
 			const BTC = config.xChangeRatioBA;
 
-			let balVals: ITotalBalance[] = [];
-			let result: ITotalBalance = <ITotalBalance>{};
-
+			balVals = [];
+			result = <ITotalBalance>{};
 			balances.forEach((bal: Balance) => {
 				let exchangeValue: number;
 				let totalBTCVal: number;
@@ -334,7 +340,15 @@ export class Rest extends BotHttp {
 				return prev + cur.totalVal;
 			}, 0);
 			result.quoteAsset = QA;
-			return result;
+			results.push(result);
+
+			if(QA !== USDT){
+				let result2: ITotalBalance = <ITotalBalance>{};
+				result2.totalVal = result.totalVal * Price.GetPriceValue(prices, BTC + USDT);
+				result2.quoteAsset = "USDT";
+				results.push(result2);
+			}
+			return results;
 		} catch (err) {
 			throw err;
 		}

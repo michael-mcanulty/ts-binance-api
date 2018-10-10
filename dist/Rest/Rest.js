@@ -232,18 +232,24 @@ class Rest extends BotHttp_1.BotHttp {
         }
     }
     async getAvailableTotalBalance(opts) {
+        let results = [];
+        let result = {};
+        let prices;
+        let balances;
+        let config;
+        let balVals;
         try {
-            let config = new GetTotalBalanceOpts_1.GetTotalBalanceOpts(opts);
-            let balances = await this.getBalances(config.recvWindow, true);
-            let prices = await this.getPrices();
+            config = new GetTotalBalanceOpts_1.GetTotalBalanceOpts(opts);
+            balances = await this.getBalances(config.recvWindow, true);
+            prices = await this.getPrices();
             if (balances.length === 0) {
                 return Promise.reject(new Error("Error: Balances not working"));
             }
             const QA = config.quoteAsset;
             const USDT = config.usdAsset;
             const BTC = config.xChangeRatioBA;
-            let balVals = [];
-            let result = {};
+            balVals = [];
+            result = {};
             balances.forEach((bal) => {
                 let exchangeValue;
                 let totalBTCVal;
@@ -283,7 +289,14 @@ class Rest extends BotHttp_1.BotHttp {
                 return prev + cur.totalVal;
             }, 0);
             result.quoteAsset = QA;
-            return result;
+            results.push(result);
+            if (QA !== USDT) {
+                let result2 = {};
+                result2.totalVal = result.totalVal * Price_1.Price.GetPriceValue(prices, BTC + USDT);
+                result2.quoteAsset = "USDT";
+                results.push(result2);
+            }
+            return results;
         }
         catch (err) {
             throw err;
