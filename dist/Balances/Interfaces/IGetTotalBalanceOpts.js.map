@@ -1,0 +1,1 @@
+{"version":3,"file":"IGetTotalBalanceOpts.js","sourceRoot":"","sources":["../../../src/Balances/Interfaces/IGetTotalBalanceOpts.ts"],"names":[],"mappings":"","sourcesContent":["export interface IGetTotalBalanceOpts{\r\n\tquoteAsset?: string;\r\n\tusdAsset?: string;\r\n\txChangeRatioBA?: string;\r\n\trecvWindow?: number;\r\n}"]}
