@@ -280,7 +280,7 @@ export class Rest extends BotHttp {
 	// See:  https://support.binance.com/hc/en-us/articles/115000583311
 	// Here is the formula excerpt: "Exchange ratio of NEO/BNB = NEO/BTC[market price] /(BNB/BTC [market price]).}
 
-	public async getAvailableTotalBalance(opts: IGetTotalBalanceOpts): Promise<ITotalBalance> {
+	public async getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance> {
 		try {
 			let config: GetTotalBalanceOpts = new GetTotalBalanceOpts(opts);
 			let balances: Balance[] = await this.getBalances(config.recvWindow, true);
