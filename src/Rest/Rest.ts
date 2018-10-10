@@ -169,7 +169,7 @@ export class Rest extends BotHttp {
 
 		try {
 			openOrders = await this.getOpenOrders(config);
-			if(!openOrders || openOrders.length === 0){
+			if (!openOrders || openOrders.length === 0) {
 				return [];
 			}
 			symbolOrders = openOrders.filter(order => order.symbol === config.symbol);
@@ -342,7 +342,7 @@ export class Rest extends BotHttp {
 			result.quoteAsset = QA;
 			results.push(result);
 
-			if(QA !== USDT){
+			if (QA !== USDT) {
 				let result2: ITotalBalance = <ITotalBalance>{};
 				result2.totalVal = result.totalVal * Price.GetPriceValue(prices, BTC + USDT);
 				result2.quoteAsset = "USDT";
@@ -464,11 +464,11 @@ export class Rest extends BotHttp {
 			let markets: Market[] = symbols.map(symbol => {
 				return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
 			});
-			if(quoteAsset && markets.length > 0){
-				let _markets: Market[] = markets.filter(m=>m.quoteAsset===quoteAsset);
+			if (quoteAsset && markets.length > 0) {
+				let _markets: Market[] = markets.filter(m => m.quoteAsset === quoteAsset);
 				Binance.markets = _markets;
 				return _markets;
-			}else{
+			} else {
 				Binance.markets = markets;
 				return markets;
 			}
@@ -582,14 +582,13 @@ export class Rest extends BotHttp {
 
 	public static getQuoteAssetName(symbol: string): string {
 		let qa: string;
-		if(!Binance.markets || Binance.markets.length === 0){
-			throw new Error("Markets must be a populated list to obtain the QA name.");
-		}
-		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
-		let market: Market;
-		if (marketFilter && marketFilter.length > 0) {
-			market = marketFilter[0];
-			qa = market.quoteAsset;
+		if (!Binance.markets || Binance.markets.length === 0) {
+			let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
+			let market: Market;
+			if (marketFilter && marketFilter.length > 0) {
+				market = marketFilter[0];
+				qa = market.quoteAsset;
+			}
 		}
 		return qa;
 	}
@@ -642,7 +641,7 @@ export class Rest extends BotHttp {
 		callConfig.qs = dStream;
 		try {
 			callOpts = new CallOptions(callConfig);
-			return <{}> await this.privateCall( callOpts);
+			return <{}> await this.privateCall(callOpts);
 		} catch (err) {
 			throw err;
 		}
@@ -656,7 +655,7 @@ export class Rest extends BotHttp {
 			const TYPE: TOrderType = 'LIMIT';
 			const SIDE: TOrderSide = 'BUY';
 			const RESPONSE_TYPE: TNewOrderRespType = 'FULL';
-			if(options && options.price) {
+			if (options && options.price) {
 				nOrder.timeInForce = options.timeInForce;
 				nOrder.price = options.price.toString();
 				nOrder.symbol = options.symbol;
@@ -684,7 +683,7 @@ export class Rest extends BotHttp {
 			const SIDE: TOrderSide = 'SELL';
 			const RESPONSE_TYPE: TNewOrderRespType = 'FULL';
 
-			if(options && options.price){
+			if (options && options.price) {
 				nOrder.timeInForce = options.timeInForce;
 				nOrder.price = options.price.toString();
 				nOrder.symbol = options.symbol;

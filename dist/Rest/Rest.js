@@ -528,13 +528,12 @@ class Rest extends BotHttp_1.BotHttp {
     static getQuoteAssetName(symbol) {
         let qa;
         if (!Binance_1.Binance.markets || Binance_1.Binance.markets.length === 0) {
-            throw new Error("Markets must be a populated list to obtain the QA name.");
-        }
-        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
-        let market;
-        if (marketFilter && marketFilter.length > 0) {
-            market = marketFilter[0];
-            qa = market.quoteAsset;
+            let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
+            let market;
+            if (marketFilter && marketFilter.length > 0) {
+                market = marketFilter[0];
+                qa = market.quoteAsset;
+            }
         }
         return qa;
     }
