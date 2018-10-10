@@ -282,10 +282,6 @@ export class Rest extends BotHttp {
 
 	public async getAvailableTotalBalance(opts: IGetTotalBalanceOpts): Promise<ITotalBalance> {
 		try {
-			//get BTC qty first
-			if(!opts || !opts.quoteAsset){
-				return Promise.reject(new Error("A Quote Asset is required to evaluate total balance"));
-			}
 			let config: GetTotalBalanceOpts = new GetTotalBalanceOpts(opts);
 			let balances: Balance[] = await this.getBalances(config.recvWindow, true);
 			let prices: Price[] = await this.getPrices();

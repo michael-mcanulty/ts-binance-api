@@ -233,9 +233,6 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async getAvailableTotalBalance(opts) {
         try {
-            if (!opts || !opts.quoteAsset) {
-                return Promise.reject(new Error("A Quote Asset is required to evaluate total balance"));
-            }
             let config = new GetTotalBalanceOpts_1.GetTotalBalanceOpts(opts);
             let balances = await this.getBalances(config.recvWindow, true);
             let prices = await this.getPrices();
