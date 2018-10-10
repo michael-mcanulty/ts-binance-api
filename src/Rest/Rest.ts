@@ -143,7 +143,7 @@ export class Rest extends BotHttp {
 			let cancelResult: ICancelOrderResponse;
 			let result: CancelOrderResponse;
 			let cancelOrder: CancelOrder = new CancelOrder(options);
-			if (cancelResult) {
+			if (cancelOrder && cancelOrder.orderId) {
 				cancelResult = await this._cancelOrder(cancelOrder);
 				result = new CancelOrderResponse(<ICancelOrderResponse>cancelResult);
 			}

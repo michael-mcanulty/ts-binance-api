@@ -106,7 +106,7 @@ class Rest extends BotHttp_1.BotHttp {
             let cancelResult;
             let result;
             let cancelOrder = new CancelOrder_1.CancelOrder(options);
-            if (cancelResult) {
+            if (cancelOrder && cancelOrder.orderId) {
                 cancelResult = await this._cancelOrder(cancelOrder);
                 result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
             }
