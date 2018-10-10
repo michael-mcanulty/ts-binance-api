@@ -27,7 +27,7 @@ export class BotHttp {
 	//TODO: CallOpts rename to something like requestOpts. Extend request or add properties to callOpts like 'form'.
 	public async binanceRequest(callOptions: CallOptions):Promise<Response>{
 		let res: Response;
-		let requestOpts: requestPromise.OptionsWithUri = callOptions.toRequestOptions();
+		let requestOpts: requestPromise.OptionsWithUri = callOptions.toObjLiteral();
 
 		try {
 			res = await BotHttp.requestApi(requestOpts);

@@ -22,7 +22,7 @@ class BotHttp {
     }
     async binanceRequest(callOptions) {
         let res;
-        let requestOpts = callOptions.toRequestOptions();
+        let requestOpts = callOptions.toObjLiteral();
         try {
             res = await BotHttp.requestApi(requestOpts);
             return res;

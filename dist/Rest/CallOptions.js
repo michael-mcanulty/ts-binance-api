@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ApiHeader_1 = require("./ApiHeader");
 class CallOptions {
-    toRequestOptions() {
+    toObjLiteral() {
         let requestOpts = {};
         requestOpts.uri = this.uri;
         requestOpts.method = this.method;

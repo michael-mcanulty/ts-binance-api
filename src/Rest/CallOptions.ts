@@ -15,9 +15,8 @@ import {Headers} from "request";
 import * as requestPromise from "request-promise-native";
 import {ICandleRequest} from "../ExchangeInfo/Interfaces/ICandleRequest";
 import {IGetAllOrdersOpts} from "../Transaction/Interfaces/IGetAllOrdersOpts";
-import {IGetTotalBalanceOpts} from "../Balances/Interfaces/IGetTotalBalanceOpts";
 
-export class CallOptions{
+export class CallOptions implements ICallOpts{
 	headers?: Headers;
 	uri: string;
 	json?: boolean;
@@ -25,9 +24,9 @@ export class CallOptions{
 	isSigned?: boolean;
 	apiKey?: string;
 	resolveWithFullResponse?: boolean;
-	qs?: IGetTotalBalanceOpts | IGetAllOrdersOpts | IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions | ICandleRequest ;
+	qs?: IGetAllOrdersOpts | IWithdrawHistoryReq | IDepositHistoryReq | IDepositAddressReq | QueryOrder | NewOrder | Signed | CancelOrder | OpenOrder | DataStream | AccountInfoOptions | ICandleRequest ;
 
-	public toRequestOptions(): requestPromise.OptionsWithUri{
+	public toObjLiteral(): requestPromise.OptionsWithUri{
 		let requestOpts: requestPromise.OptionsWithUri = <requestPromise.OptionsWithUri>{};
 		requestOpts.uri = this.uri;
 		requestOpts.method = <string> this.method;
