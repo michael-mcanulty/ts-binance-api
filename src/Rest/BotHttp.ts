@@ -109,17 +109,17 @@ export class BotHttp {
 		let signature: string;
 
 		try {
-			tStamp = await this.getTimestamp();
 			options.headers = new ApiHeader(this.options.auth.key);
-			signature = await this.getSignature(options.qs, tStamp);
 
 			if (options.isSigned) {
 				if(typeof options.qs == undefined){
 					options.qs = new Signed();
 				}
+				tStamp = await this.getTimestamp();
+				signature = await this.getSignature(options.qs, tStamp);
 				options.qs['timestamp'] = tStamp.timestamp;
 				options.qs['signature'] = signature;
-			} else {
+			} else if(options.qs['timestamp']){
 				delete options.qs['timestamp'];
 			}
 			result = await this.binanceRequest(options);

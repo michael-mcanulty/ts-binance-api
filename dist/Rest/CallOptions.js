@@ -18,8 +18,8 @@ class CallOptions {
         this.method = options.method;
         this.json = options.json || true;
         this.isSigned = options.isSigned || false;
-        this.apiKey = options.apiKey || null;
-        this.qs = options.qs || null;
+        this.apiKey = options.apiKey || undefined;
+        this.qs = options.qs || undefined;
         this.resolveWithFullResponse = options.resolveWithFullResponse || true;
         if (this.apiKey || options.headers) {
             this.headers = options.headers || new ApiHeader_1.ApiHeader(this.apiKey);

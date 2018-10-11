@@ -403,7 +403,6 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
-    ;
     async getMarkets(quoteAsset) {
         try {
             let info = await this.getExchangeInfo();

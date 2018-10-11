@@ -103,17 +103,17 @@ class BotHttp {
         let result;
         let signature;
         try {
-            tStamp = await this.getTimestamp();
             options.headers = new ApiHeader_1.ApiHeader(this.options.auth.key);
-            signature = await this.getSignature(options.qs, tStamp);
             if (options.isSigned) {
                 if (typeof options.qs == undefined) {
                     options.qs = new Signed_1.Signed();
                 }
+                tStamp = await this.getTimestamp();
+                signature = await this.getSignature(options.qs, tStamp);
                 options.qs['timestamp'] = tStamp.timestamp;
                 options.qs['signature'] = signature;
             }
-            else {
+            else if (options.qs['timestamp']) {
                 delete options.qs['timestamp'];
             }
             result = await this.binanceRequest(options);

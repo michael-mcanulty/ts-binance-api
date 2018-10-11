@@ -455,7 +455,7 @@ export class Rest extends BotHttp {
 		} catch (err) {
 			throw err;
 		}
-	};
+	}
 
 	public async getMarkets(quoteAsset?: string): Promise<Market[]> {
 		try {
