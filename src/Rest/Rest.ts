@@ -397,7 +397,7 @@ export class Rest extends BotHttp {
 		callConfig = <ICallOpts>{};
 		callConfig.method = 'POST';
 		callConfig.json = true;
-		callConfig.isSigned = true;
+		callConfig.isSigned = false;
 		callConfig.uri = `${BotHttp.BASE}/api/v1/userDataStream`;
 
 		try {

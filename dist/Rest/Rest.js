@@ -346,7 +346,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig = {};
         callConfig.method = 'POST';
         callConfig.json = true;
-        callConfig.isSigned = true;
+        callConfig.isSigned = false;
         callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
