@@ -119,7 +119,7 @@ export class BotHttp {
 				signature = await this.getSignature(options.qs, tStamp);
 				options.qs['timestamp'] = tStamp.timestamp;
 				options.qs['signature'] = signature;
-			} else if(options.qs['timestamp']){
+			} else if(options && typeof options.qs === "object" && options.qs['timestamp']){
 				delete options.qs['timestamp'];
 			}
 			result = await this.binanceRequest(options);
