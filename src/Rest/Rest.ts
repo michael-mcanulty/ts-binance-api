@@ -124,6 +124,7 @@ export class Rest extends BotHttp {
 		try {
 			callOpts = new CallOptions(callConfig);
 			privateOrder = await this.privateCall(callOpts);
+			
 			if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
 				return new TestOrder();
 			} else {
