@@ -583,7 +583,7 @@ export class Rest extends BotHttp {
 
 	public static getQuoteAssetName(symbol: string): string {
 		let qa: string;
-		if (!Binance.markets || Binance.markets.length === 0) {
+		if (Binance.markets && Binance.markets.length > 0) {
 			let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
 			let market: Market;
 			if (marketFilter && marketFilter.length > 0) {
