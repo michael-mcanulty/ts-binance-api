@@ -50,6 +50,7 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async _getCandlesInterval(candleOpts) {
         let candles;
+        let self = this;
         let raw;
         let callOpts;
         let callConfig = {};
@@ -61,8 +62,8 @@ class Rest extends BotHttp_1.BotHttp {
         try {
             raw = await this.call(callOpts);
             candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
-            candles.forEach((candle) => {
-                candle.quoteAsset = Rest.getQuoteAssetName(candleOpts.symbol);
+            candles.forEach(async (candle) => {
+                candle.quoteAsset = await self.getQuoteAssetName(candleOpts.symbol);
             });
             return candles;
         }
@@ -524,15 +525,16 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
-    static getQuoteAssetName(symbol) {
+    async getQuoteAssetName(symbol) {
         let qa;
-        if (Binance_1.Binance.markets && Binance_1.Binance.markets.length > 0) {
-            let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
-            let market;
-            if (marketFilter && marketFilter.length > 0) {
-                market = marketFilter[0];
-                qa = market.quoteAsset;
-            }
+        if (!Binance_1.Binance.markets || Binance_1.Binance.markets.length === 0) {
+            await this.getMarkets();
+        }
+        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
+        let market;
+        if (marketFilter && marketFilter.length > 0) {
+            market = marketFilter[0];
+            qa = market.quoteAsset;
         }
         return qa;
     }

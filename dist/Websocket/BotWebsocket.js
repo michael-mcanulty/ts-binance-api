@@ -6,7 +6,6 @@ const Rest_1 = require("../Rest/Rest");
 const Candle_1 = require("../ExchangeInfo/Candle");
 const ExecutionReport_1 = require("../Account/ExecutionReport");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
-const __1 = require("..");
 class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
@@ -70,18 +69,16 @@ class BotWebsocket extends Rest_1.Rest {
             };
         });
     }
-    async candles(symbols, intervals, callback) {
-        if (!__1.Binance.markets || __1.Binance.markets.length === 0) {
-            await this.getMarkets();
-        }
+    candles(symbols, intervals, callback) {
+        const self = this;
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
                 let w = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
-                w.onmessage = msg => {
+                w.onmessage = async (msg) => {
                     let klineRes;
                     klineRes = JSON.parse(msg.data);
                     let candle;
-                    let qa = Rest_1.Rest.getQuoteAssetName(symbol);
+                    let qa = await self.getQuoteAssetName(symbol);
                     if (qa && klineRes.k.x) {
                         candle = Candle_1.Candle.fromStream(klineRes, qa);
                         callback(candle);

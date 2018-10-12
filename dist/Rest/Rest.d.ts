@@ -46,7 +46,7 @@ export declare class Rest extends BotHttp {
     getOpenOrders(options: IGetOrderOpts): Promise<OpenOrder[]>;
     getOrder(options: IGetOrderOpts): Promise<Order>;
     getPrices(): Promise<Price[]>;
-    static getQuoteAssetName(symbol: string): string;
+    getQuoteAssetName(symbol: string): Promise<string>;
     getStatus(): Promise<ISystemStatus>;
     getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult>;
     keepDataStream(): Promise<{}>;

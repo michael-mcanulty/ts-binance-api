@@ -79,18 +79,16 @@ export class BotWebsocket extends Rest{
 		});
 	}
 
-	public async candles(symbols: string[], intervals: string[], callback: Function): any {
-		if(!Binance.markets || Binance.markets.length === 0){
-			await this.getMarkets();
-		}
+	public candles(symbols: string[], intervals: string[], callback: Function): any {
+		const self = this;
 		const symbolCache = symbols.map(symbol => {
 			return intervals.map(interval => {
 				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
-				w.onmessage = msg => {
+				w.onmessage = async (msg) => {
 					let klineRes: IStreamRawKlineResponse;
 					klineRes = JSON.parse(msg.data);
 					let candle: Candle;
-					let qa: string = Rest.getQuoteAssetName(symbol);
+					let qa: string = await self.getQuoteAssetName(symbol);
 					if (qa && klineRes.k.x) {
 						candle = Candle.fromStream(klineRes, qa);
 						callback(candle);
