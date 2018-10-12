@@ -12,6 +12,7 @@ import {IExecutionReportRaw} from "../Account/Interfaces/IExecutionReportRaw";
 import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import Timer = NodeJS.Timer;
+import {Binance} from "..";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
@@ -78,7 +79,10 @@ export class BotWebsocket extends Rest{
 		});
 	}
 
-	public candles(symbols: string[], intervals: string[], callback: Function): any {
+	public async candles(symbols: string[], intervals: string[], callback: Function): any {
+		if(!Binance.markets || Binance.markets.length === 0){
+			await this.getMarkets();
+		}
 		const symbolCache = symbols.map(symbol => {
 			return intervals.map(interval => {
 				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
