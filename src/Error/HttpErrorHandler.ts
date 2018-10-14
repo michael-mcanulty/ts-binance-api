@@ -9,10 +9,9 @@ import {IHttpErrorHandler} from "./Interfaces/IHttpErrorHandler";
 import {IHttpError} from "./Interfaces/IHttpError";
 import {worker} from "cluster";
 import {ITextMsgOptions} from "../TextMessage/ITextMsgOptions";
-import {TextMessage} from "../TextMessage/TextMessage";
 import {OptionsWithUri} from "request";
 import {ECarrier} from "../TextMessage/ECarrier";
-import {ErrorTextMessage} from "./ErrorTextMessage";
+import {TextMessageError} from "../TextMessage/TextMessageError";
 
 export class HttpErrorHandler {
 	public static emailMsgOptions: IMessageOptions;
@@ -88,7 +87,7 @@ export class HttpErrorHandler {
 
 				//Send text message
 				if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-					let textMsg = new ErrorTextMessage(ECarrier.TMobile, err.handler.textMsgOpts.recipientPhone, err.handler.emailServiceOpts);
+					let textMsg = new TextMessageError(ECarrier.TMobile, err.handler.textMsgOpts.recipientPhone, err.handler.emailServiceOpts);
 					await textMsg.sendError(err, origin);
 				}
 

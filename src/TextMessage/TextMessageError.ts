@@ -4,7 +4,7 @@ import {ECarrier} from "../TextMessage/ECarrier";
 import {ISmtpOptions} from "../Error/Interfaces/ISmtpOptions";
 import {EErrorType} from "../Error/Enums/EErrorType";
 
-export class ErrorTextMessage extends TextMessage{
+export class TextMessageError extends TextMessage{
 	public error: HttpError|Error;
 	public recipientPhone: number;
 	private _hasHandler: boolean;
