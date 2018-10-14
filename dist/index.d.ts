@@ -1,3 +1,4 @@
+export { IEmailOptions } from "./Error/Interfaces/IEmailOptions";
 export { GetTotalBalanceOpts } from "./Balances/GetTotalBalanceOpts";
 export { IGetTotalBalanceOpts } from "./Balances/Interfaces/IGetTotalBalanceOpts";
 export { TServiceProviders } from "./Error/Enums/EServiceProviders";
@@ -12,6 +13,7 @@ export { Fill } from "./Transaction/Fill";
 export { ILimitOrderOpts } from "./Transaction/Interfaces/ILimitOrderOpts";
 export { IMarketOrderOpts } from "./Transaction/Interfaces/IMarketOrderOpts";
 export { TCarrier } from "./TextMessage/TCarrier";
+export { ECarrier } from "./TextMessage/ECarrier";
 export { TextMessage } from "./TextMessage/TextMessage";
 export { ICarrier } from "./TextMessage/ICarrier";
 export { ITextMsgOptions } from "./TextMessage/ITextMsgOptions";

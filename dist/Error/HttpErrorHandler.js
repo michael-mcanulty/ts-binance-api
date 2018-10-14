@@ -6,7 +6,8 @@ const BBLogger_1 = require("../Logger/BBLogger");
 const HttpError_1 = require("./HttpError");
 const url_1 = require("url");
 const cluster_1 = require("cluster");
-const TextMessage_1 = require("../TextMessage/TextMessage");
+const ECarrier_1 = require("../TextMessage/ECarrier");
+const ErrorTextMessage_1 = require("./ErrorTextMessage");
 class HttpErrorHandler {
     constructor(config) {
         this.restartSingleWorker = false;
@@ -73,8 +74,8 @@ class HttpErrorHandler {
                     await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
                 }
                 if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-                    let textMsg = new TextMessage_1.TextMessage();
-                    await textMsg.send(err, srcServer);
+                    let textMsg = new ErrorTextMessage_1.ErrorTextMessage(ECarrier_1.ECarrier.TMobile, err.handler.textMsgOpts.recipientPhone, err.handler.emailServiceOpts);
+                    await textMsg.sendError(err, origin);
                 }
                 for (let ePoint of remoteEndpoints) {
                     reqOpts.uri = ePoint;

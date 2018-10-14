@@ -1,19 +1,17 @@
 import { ICarrier } from "./ICarrier";
 import { NodeMailer } from "../Error/NodeMailer";
-import { ITextMsgOptions } from "./ITextMsgOptions";
 import { IMessageOptions } from "../Error/Interfaces/IMessageOptions";
-import { HttpError } from "../Error/HttpError";
 import { ISmtpOptions } from "../Error/Interfaces/ISmtpOptions";
 import { TCarrier } from "./TCarrier";
+import { ECarrier } from "../TextMessage/ECarrier";
 export declare class TextMessage {
     static USCarriers: ICarrier[];
     carrier: TCarrier;
     domain: string;
     static mailService: NodeMailer;
-    msgOptions?: IMessageOptions;
-    smtpOptions?: ISmtpOptions;
-    static txtMsgOpts: ITextMsgOptions;
-    getEmailAddress(phoneNumber?: number): string;
-    send(error: HttpError | Error, srcUrl?: string): Promise<void>;
-    constructor(carrierName?: TCarrier, msgOptions?: IMessageOptions, smtpOptions?: ISmtpOptions);
+    msgOptions: IMessageOptions;
+    smtpOptions: ISmtpOptions;
+    private _getCarrierEmailAddress;
+    send(subject: string, message: string, recipientPhone: number): Promise<void>;
+    constructor(carrierName: ECarrier, smtpOpts: ISmtpOptions);
 }

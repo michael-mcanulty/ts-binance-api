@@ -1,14 +1,10 @@
 import {ICarrier} from "./ICarrier";
 import {NodeMailer} from "../Error/NodeMailer";
 import {HttpErrorHandler} from "../Error/HttpErrorHandler";
-import {ITextMsgOptions} from "./ITextMsgOptions";
 import {IMessageOptions} from "../Error/Interfaces/IMessageOptions";
-import {EErrorType} from "../Error/Enums/EErrorType";
-import {Binance} from "../Binance/Binance";
-import {HttpError} from "../Error/HttpError";
 import {ISmtpOptions} from "../Error/Interfaces/ISmtpOptions";
 import {TCarrier} from "./TCarrier";
-import {IBinanceOptions} from "..";
+import {ECarrier} from "../TextMessage/ECarrier";
 
 export class TextMessage {
 	public static USCarriers: ICarrier[] = [
@@ -45,56 +41,41 @@ export class TextMessage {
 			"domain": "mymetropcs.com"
 		}
 	];
-
 	carrier: TCarrier;
 	domain: string;
 	public static mailService: NodeMailer;
-	msgOptions?: IMessageOptions;
-	smtpOptions?: ISmtpOptions;
-	public static txtMsgOpts: ITextMsgOptions;
+	msgOptions: IMessageOptions;
+	smtpOptions: ISmtpOptions;
 
-	public getEmailAddress(phoneNumber?: number): string {
+	private _getCarrierEmailAddress(phoneNumber?: number): string {
 		return `${phoneNumber}@${this.domain}`;
 	}
 
-	public async send(error: HttpError | Error, srcUrl?: string): Promise<void> {
+	public async send(subject: string, message: string, recipientPhone: number): Promise<void> {
+		let sentEmail: any;
 		try {
-			let isKnownErr: boolean = false;
-			let isFatal: boolean = false;
-			let msg: string;
-
-			if (typeof TextMessage.txtMsgOpts !== "object") {
-				return Promise.reject(new Error("Static Options are missing from TextMessage class"));
-			}
-
-			msg = error.message;
-
-			if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
-				isFatal = error['isFatal'];
-				isKnownErr = !!(error['handler'].type);
-			}
-			if (!TextMessage.txtMsgOpts.phoneNum) {
-				return Promise.reject(new Error("A recipient's phone number is required phoneNum send a text message."));
-			}
-
-			this.msgOptions.to = this.getEmailAddress(TextMessage.txtMsgOpts.phoneNum);
-			this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType[error['handler'].type] : "Unknown"} Error Received`;
-			this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
-			await HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
-			return;
+			this.msgOptions.to = this._getCarrierEmailAddress(recipientPhone);
+			this.msgOptions.subject = message;
+			this.msgOptions.text = message;
+			sentEmail = await HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
+			return sentEmail;
 		} catch (err) {
 			throw err;
 		}
 	}
 
-	constructor(carrierName?: TCarrier, binanceOpts?: IBinanceOptions) {
-		this.smtpOptions = binanceOpts.emailServiceOpts;
-		this.msgOptions = binanceOpts.emailMsgOpts;
-		let carrier: TCarrier = (carrierName) ? <TCarrier>carrierName.toLowerCase() : <TCarrier>TextMessage.txtMsgOpts.carrier;
+	constructor(carrierName: ECarrier, smtpOpts: ISmtpOptions) {
+		this.msgOptions = <IMessageOptions>{};
+		if(!smtpOpts || !smtpOpts.auth || !smtpOpts.auth.user || !smtpOpts.auth.pass){
+			throw new Error("Creating a new TextMessage requires email options with a username and password.");
+		}
+		this.msgOptions.from = smtpOpts.auth.user;
+		this.smtpOptions = smtpOpts;
+		this.carrier = carrierName;
 		let matchedCarrier: ICarrier[] = TextMessage.USCarriers.filter(d => {
-			return (d.name === carrier);
+			return (d.name === carrierName);
 		});
-		if (matchedCarrier.length > 0 && carrier) {
+		if (matchedCarrier && matchedCarrier.length > 0) {
 			let match: ICarrier = matchedCarrier[0];
 			this.domain = match.domain;
 			this.carrier = match.name;

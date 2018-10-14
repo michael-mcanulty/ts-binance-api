@@ -1,6 +1,7 @@
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { CallOptions } from "./CallOptions";
-import { OptionsWithUri, Response } from "request";
+import { Response } from "request";
+import { OptionsWithUri } from "request-promise-native";
 export declare class BotHttp {
     static BASE: string;
     options: IBinanceOptions;

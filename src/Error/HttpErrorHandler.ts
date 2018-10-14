@@ -11,6 +11,8 @@ import {worker} from "cluster";
 import {ITextMsgOptions} from "../TextMessage/ITextMsgOptions";
 import {TextMessage} from "../TextMessage/TextMessage";
 import {OptionsWithUri} from "request";
+import {ECarrier} from "../TextMessage/ECarrier";
+import {ErrorTextMessage} from "./ErrorTextMessage";
 
 export class HttpErrorHandler {
 	public static emailMsgOptions: IMessageOptions;
@@ -86,8 +88,8 @@ export class HttpErrorHandler {
 
 				//Send text message
 				if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-					let textMsg = new TextMessage();
-					await textMsg.send(err, srcServer);
+					let textMsg = new ErrorTextMessage(ECarrier.TMobile, err.handler.textMsgOpts.recipientPhone, err.handler.emailServiceOpts);
+					await textMsg.sendError(err, origin);
 				}
 
 				//Kamikaze style. Destroy endpoints with suicide on last post.

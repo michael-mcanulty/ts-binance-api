@@ -2,16 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const NodeMailer_1 = require("../Error/NodeMailer");
 const HttpErrorHandler_1 = require("../Error/HttpErrorHandler");
-const EErrorType_1 = require("../Error/Enums/EErrorType");
 class TextMessage {
-    constructor(carrierName, binanceOpts) {
-        this.smtpOptions = binanceOpts.emailServiceOpts;
-        this.msgOptions = binanceOpts.emailMsgOpts;
-        let carrier = (carrierName) ? carrierName.toLowerCase() : TextMessage.txtMsgOpts.carrier;
+    constructor(carrierName, smtpOpts) {
+        this.msgOptions = {};
+        if (!smtpOpts || !smtpOpts.auth || !smtpOpts.auth.user || !smtpOpts.auth.pass) {
+            throw new Error("Creating a new TextMessage requires email options with a username and password.");
+        }
+        this.msgOptions.from = smtpOpts.auth.user;
+        this.smtpOptions = smtpOpts;
+        this.carrier = carrierName;
         let matchedCarrier = TextMessage.USCarriers.filter(d => {
-            return (d.name === carrier);
+            return (d.name === carrierName);
         });
-        if (matchedCarrier.length > 0 && carrier) {
+        if (matchedCarrier && matchedCarrier.length > 0) {
             let match = matchedCarrier[0];
             this.domain = match.domain;
             this.carrier = match.name;
@@ -21,30 +24,17 @@ class TextMessage {
         }
         TextMessage.mailService = new NodeMailer_1.NodeMailer();
     }
-    getEmailAddress(phoneNumber) {
+    _getCarrierEmailAddress(phoneNumber) {
         return `${phoneNumber}@${this.domain}`;
     }
-    async send(error, srcUrl) {
+    async send(subject, message, recipientPhone) {
+        let sentEmail;
         try {
-            let isKnownErr = false;
-            let isFatal = false;
-            let msg;
-            if (typeof TextMessage.txtMsgOpts !== "object") {
-                return Promise.reject(new Error("Static Options are missing from TextMessage class"));
-            }
-            msg = error.message;
-            if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
-                isFatal = error['isFatal'];
-                isKnownErr = !!(error['handler'].type);
-            }
-            if (!TextMessage.txtMsgOpts.phoneNum) {
-                return Promise.reject(new Error("A recipient's phone number is required phoneNum send a text message."));
-            }
-            this.msgOptions.to = this.getEmailAddress(TextMessage.txtMsgOpts.phoneNum);
-            this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(isKnownErr) ? EErrorType_1.EErrorType[error['handler'].type] : "Unknown"} Error Received`;
-            this.msgOptions.text = `${msg}. \nServer: ${srcUrl}`;
-            await HttpErrorHandler_1.HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
-            return;
+            this.msgOptions.to = this._getCarrierEmailAddress(recipientPhone);
+            this.msgOptions.subject = message;
+            this.msgOptions.text = message;
+            sentEmail = await HttpErrorHandler_1.HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
+            return sentEmail;
         }
         catch (err) {
             throw err;
