@@ -1,7 +1,7 @@
 import { TextMessage } from "../TextMessage/TextMessage";
-import { HttpError } from "./HttpError";
+import { HttpError } from "../Error/HttpError";
 import { ECarrier } from "../TextMessage/ECarrier";
-import { ISmtpOptions } from "./Interfaces/ISmtpOptions";
+import { ISmtpOptions } from "../Error/Interfaces/ISmtpOptions";
 export declare class ErrorTextMessage extends TextMessage {
     error: HttpError | Error;
     recipientPhone: number;

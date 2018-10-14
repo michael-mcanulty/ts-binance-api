@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const TextMessage_1 = require("../TextMessage/TextMessage");
-const EErrorType_1 = require("./Enums/EErrorType");
+const EErrorType_1 = require("../Error/Enums/EErrorType");
 class ErrorTextMessage extends TextMessage_1.TextMessage {
     async sendError(error, source) {
         let subject;
