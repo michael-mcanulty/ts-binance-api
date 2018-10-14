@@ -8,6 +8,7 @@ import {Binance} from "../Binance/Binance";
 import {HttpError} from "../Error/HttpError";
 import {ISmtpOptions} from "../Error/Interfaces/ISmtpOptions";
 import {TCarrier} from "./TCarrier";
+import {IBinanceOptions} from "..";
 
 export class TextMessage {
 	public static USCarriers: ICarrier[] = [
@@ -86,9 +87,9 @@ export class TextMessage {
 		}
 	}
 
-	constructor(carrierName?: TCarrier, msgOptions?: IMessageOptions, smtpOptions?: ISmtpOptions) {
-		this.smtpOptions = smtpOptions || Binance.options.emailServiceOpts;
-		this.msgOptions = msgOptions || Binance.options.emailMsgOpts;
+	constructor(carrierName?: TCarrier, binanceOpts?: IBinanceOptions) {
+		this.smtpOptions = binanceOpts.emailServiceOpts;
+		this.msgOptions = binanceOpts.emailMsgOpts;
 		let carrier: TCarrier = (carrierName) ? <TCarrier>carrierName.toLowerCase() : <TCarrier>TextMessage.txtMsgOpts.carrier;
 		let matchedCarrier: ICarrier[] = TextMessage.USCarriers.filter(d => {
 			return (d.name === carrier);

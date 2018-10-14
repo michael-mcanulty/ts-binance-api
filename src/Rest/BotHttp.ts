@@ -7,8 +7,9 @@ import {Signed} from "./Signed";
 import {ApiHeader} from "./ApiHeader";
 import {CallOptions} from "./CallOptions";
 import {ICallOpts} from '../Rest/Interfaces/ICallOpts';
-import {OptionsWithUri, Response} from "request";
+import {Response} from "request";
 import * as requestPromise from "request-promise-native";
+import  {OptionsWithUri} from "request-promise-native";
 
 export class BotHttp {
 	public static BASE: string = 'https://api.binance.com';
@@ -45,7 +46,7 @@ export class BotHttp {
 				error = new HttpError(res.statusCode, res.statusMessage);
 				return Promise.reject(error);
 			}else {
-				return <Response>res.body;
+				return res.body;
 			}
 		}catch(err){
 			throw err;
