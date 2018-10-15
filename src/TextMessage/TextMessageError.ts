@@ -1,16 +1,13 @@
 import {TextMessage} from "../TextMessage/TextMessage";
-import {HttpError} from "../Error/HttpError";
-import {ECarrier} from "../TextMessage/ECarrier";
-import {ISmtpOptions} from "../Error/Interfaces/ISmtpOptions";
-import {EErrorType} from "../Error/Enums/EErrorType";
+import {ECarrier, ISmtpOptions} from "..";
 
 export class TextMessageError extends TextMessage{
-	public error: HttpError|Error;
+	public error: Error;
 	public recipientPhone: number;
 	private _hasHandler: boolean;
 	private _isFatal: boolean;
 
-	public async sendError(error: HttpError|Error, source?: string){
+	public async sendError(error: Error, source?: string){
 		let subject: string;
 		let srcMsg: string;
 
@@ -19,7 +16,7 @@ export class TextMessageError extends TextMessage{
 		}
 
 		this.msgOptions.text = error.message;
-		this.msgOptions.subject = `${(this._isFatal) ? "Fatal" : ""}${(this._hasHandler) ? EErrorType[this.error['handler'].type] : "Unknown"} Error Received`;
+		this.msgOptions.subject = `${(this._isFatal) ? "Fatal" : ""}${(this._hasHandler) ? this.error['handler'].type : "Unknown"} Error Received`;
 		this.error = error;
 
 		if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {

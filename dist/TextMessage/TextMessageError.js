@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const TextMessage_1 = require("../TextMessage/TextMessage");
-const EErrorType_1 = require("../Error/Enums/EErrorType");
 class TextMessageError extends TextMessage_1.TextMessage {
     async sendError(error, source) {
         let subject;
@@ -10,7 +9,7 @@ class TextMessageError extends TextMessage_1.TextMessage {
             return;
         }
         this.msgOptions.text = error.message;
-        this.msgOptions.subject = `${(this._isFatal) ? "Fatal" : ""}${(this._hasHandler) ? EErrorType_1.EErrorType[this.error['handler'].type] : "Unknown"} Error Received`;
+        this.msgOptions.subject = `${(this._isFatal) ? "Fatal" : ""}${(this._hasHandler) ? this.error['handler'].type : "Unknown"} Error Received`;
         this.error = error;
         if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
             this._isFatal = error['isFatal'];
