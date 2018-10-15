@@ -61,11 +61,9 @@ class HttpErrorHandler {
                 }
                 reqOpts = {};
                 reqOpts.method = err.handler.method;
-                reqOpts.headers = new Headers();
-                reqOpts.headers.set("Content-Type", "application/json");
                 reqOpts.json = true;
                 if (this.payload) {
-                    reqOpts.body = JSON.stringify(this.payload);
+                    reqOpts.body = this.payload;
                 }
                 if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
                     err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;

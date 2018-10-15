@@ -68,12 +68,10 @@ export class HttpErrorHandler {
 
 				reqOpts = <OptionsWithUri>{};
 				reqOpts.method = err.handler.method;
-				reqOpts.headers = new Headers();
-				reqOpts.headers.set("Content-Type", "application/json");
 				reqOpts.json = true;
 
 				if (this.payload) {
-					reqOpts.body = JSON.stringify(this.payload);
+					reqOpts.body = this.payload;
 				}
 
 				//Send an email
