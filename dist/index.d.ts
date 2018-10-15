@@ -1,6 +1,5 @@
 export { IMessageOptions } from "./Error/Interfaces/IMessageOptions";
 export { TextMessage } from "./TextMessage/TextMessage";
-export { TextMessageError } from "./TextMessage/TextMessageError";
 export { IEmailOptions } from "./Error/Interfaces/IEmailOptions";
 export { GetTotalBalanceOpts } from "./Balances/GetTotalBalanceOpts";
 export { IGetTotalBalanceOpts } from "./Balances/Interfaces/IGetTotalBalanceOpts";

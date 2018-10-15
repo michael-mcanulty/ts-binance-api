@@ -13,5 +13,6 @@ export declare class TextMessage {
     smtpOptions: ISmtpOptions;
     private _getCarrierEmailAddress;
     send(subject: string, message: string, recipientPhone: number): Promise<void>;
+    sendError(error: Error, recipientPhone: number, source?: string): Promise<void>;
     constructor(carrierName: ECarrier, smtpOpts: ISmtpOptions);
 }

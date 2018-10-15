@@ -64,6 +64,30 @@ export class TextMessage {
 		}
 	}
 
+	public async sendError(error: Error, recipientPhone: number, source?: string){
+		let subject: string;
+		let srcMsg: string;
+		let isFatal: boolean;
+		let hasHandler: boolean;
+
+		if(!error){
+			return;
+		}
+
+		this.msgOptions.text = error.message;
+		this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(hasHandler) ? error['handler'].type : "Unknown"} Error Received`;
+
+		if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
+			isFatal = error['isFatal'];
+			hasHandler = !!(error['handler'].type);
+		}
+		if(source){
+			srcMsg = `\nSource: ${source}`;
+			this.msgOptions.text += srcMsg;
+		}
+		await this.send(this.msgOptions.subject, this.msgOptions.text, recipientPhone);
+	}
+
 	constructor(carrierName: ECarrier, smtpOpts: ISmtpOptions) {
 		this.msgOptions = <IMessageOptions>{};
 		if(!smtpOpts || !smtpOpts.auth || !smtpOpts.auth.user || !smtpOpts.auth.pass){

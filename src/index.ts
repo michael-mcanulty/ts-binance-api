@@ -1,7 +1,6 @@
 export {IMessageOptions} from "./Error/Interfaces/IMessageOptions";
 export {TextMessage} from "./TextMessage/TextMessage";
 import {ECarrier} from "./TextMessage/ECarrier";
-export {TextMessageError} from "./TextMessage/TextMessageError";
 export {IEmailOptions} from "./Error/Interfaces/IEmailOptions";
 export {GetTotalBalanceOpts} from "./Balances/GetTotalBalanceOpts";
 export {IGetTotalBalanceOpts} from "./Balances/Interfaces/IGetTotalBalanceOpts";

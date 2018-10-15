@@ -2,8 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var TextMessage_1 = require("./TextMessage/TextMessage");
 exports.TextMessage = TextMessage_1.TextMessage;
-var TextMessageError_1 = require("./TextMessage/TextMessageError");
-exports.TextMessageError = TextMessageError_1.TextMessageError;
 var GetTotalBalanceOpts_1 = require("./Balances/GetTotalBalanceOpts");
 exports.GetTotalBalanceOpts = GetTotalBalanceOpts_1.GetTotalBalanceOpts;
 var Fill_1 = require("./Transaction/Fill");

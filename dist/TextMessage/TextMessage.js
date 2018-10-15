@@ -40,6 +40,26 @@ class TextMessage {
             throw err;
         }
     }
+    async sendError(error, recipientPhone, source) {
+        let subject;
+        let srcMsg;
+        let isFatal;
+        let hasHandler;
+        if (!error) {
+            return;
+        }
+        this.msgOptions.text = error.message;
+        this.msgOptions.subject = `${(isFatal) ? "Fatal" : ""}${(hasHandler) ? error['handler'].type : "Unknown"} Error Received`;
+        if (typeof error['isFatal'] === "boolean" || (typeof error['handler'] === "function")) {
+            isFatal = error['isFatal'];
+            hasHandler = !!(error['handler'].type);
+        }
+        if (source) {
+            srcMsg = `\nSource: ${source}`;
+            this.msgOptions.text += srcMsg;
+        }
+        await this.send(this.msgOptions.subject, this.msgOptions.text, recipientPhone);
+    }
 }
 TextMessage.USCarriers = [
     {
