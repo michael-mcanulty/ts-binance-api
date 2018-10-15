@@ -1,3 +1,4 @@
+export { IMessageOptions } from "./Error/Interfaces/IMessageOptions";
 export { TextMessage } from "./TextMessage/TextMessage";
 export { TextMessageError } from "./TextMessage/TextMessageError";
 export { IEmailOptions } from "./Error/Interfaces/IEmailOptions";

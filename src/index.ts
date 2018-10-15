@@ -1,3 +1,4 @@
+export {IMessageOptions} from "./Error/Interfaces/IMessageOptions";
 export {TextMessage} from "./TextMessage/TextMessage";
 import {ECarrier} from "./TextMessage/ECarrier";
 export {TextMessageError} from "./TextMessage/TextMessageError";
