@@ -123,7 +123,7 @@ export class Rest extends BotHttp {
 		try {
 			callOpts = new CallOptions(callConfig);
 			privateOrder = await self.privateCall(callOpts);
-			
+
 			if (self.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
 				return new TestOrder();
 			} else {
@@ -232,6 +232,30 @@ export class Rest extends BotHttp {
 		}
 	}
 
+	public async getAllCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]> {
+		try {
+			let candleIntervals: CandleInterval[] = [];
+			for (let symbol of symbols) {
+				for (let interval of intervals) {
+					let req: ICandleRequest = <ICandleRequest>{};
+					req.symbol = symbol;
+					req.interval = interval;
+					req.limit = limit;
+					let candles: Candle[] = await this._getCandlesInterval(req);
+					let ci = new CandleInterval(candles);
+					candleIntervals.push(ci);
+				}
+			}
+			return candleIntervals;
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	// The 'xChangeRatioBA' is BTC indefinitely and is the base asset of Binance's "Exchange Ratio".
+	// See:  https://support.binance.com/hc/en-us/articles/115000583311
+	// Here is the formula excerpt: "Exchange ratio of NEO/BNB = NEO/BTC[market price] /(BNB/BTC [market price]).}
+
 	public async getAllOrders(options: IGetAllOrdersOpts): Promise<Order[]> {
 		let results: Order[];
 		let privateCall: IQueryOrderResponse[];
@@ -276,10 +300,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
-	// The 'xChangeRatioBA' is BTC indefinitely and is the base asset of Binance's "Exchange Ratio".
-	// See:  https://support.binance.com/hc/en-us/articles/115000583311
-	// Here is the formula excerpt: "Exchange ratio of NEO/BNB = NEO/BTC[market price] /(BNB/BTC [market price]).}
 
 	public async getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance[]> {
 		let results: ITotalBalance[] = [];
@@ -372,9 +392,9 @@ export class Rest extends BotHttp {
 		}
 	}
 
-	public async getCandles(symbol: string, intervals: string[], limit?: number): Promise<CandleInterval[]> {
+	public async getCandlesBySymbol(symbol: string, intervals: string[], limit?: number): Promise<CandleInterval[]> {
+		let candleIntervals: CandleInterval[] = [];
 		try {
-			let candleIntervals: CandleInterval[] = [];
 			for (let interval of intervals) {
 				let req: ICandleRequest = <ICandleRequest>{};
 				req.symbol = symbol;
@@ -584,9 +604,6 @@ export class Rest extends BotHttp {
 
 	public async getQuoteAssetName(symbol: string): Promise<string> {
 		let qa: string;
-		if (!Binance.markets || Binance.markets.length === 0) {
-			await this.getMarkets();
-		}
 		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
 		let market: Market;
 		if (marketFilter && marketFilter.length > 0) {

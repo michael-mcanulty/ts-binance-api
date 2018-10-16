@@ -192,6 +192,27 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
+    async getAllCandles(symbols, intervals, limit) {
+        try {
+            let candleIntervals = [];
+            for (let symbol of symbols) {
+                for (let interval of intervals) {
+                    let req = {};
+                    req.symbol = symbol;
+                    req.interval = interval;
+                    req.limit = limit;
+                    let candles = await this._getCandlesInterval(req);
+                    let ci = new CandleInterval_1.CandleInterval(candles);
+                    candleIntervals.push(ci);
+                }
+            }
+            return candleIntervals;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    ;
     async getAllOrders(options) {
         let results;
         let privateCall;
@@ -322,9 +343,9 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
-    async getCandles(symbol, intervals, limit) {
+    async getCandlesBySymbol(symbol, intervals, limit) {
+        let candleIntervals = [];
         try {
-            let candleIntervals = [];
             for (let interval of intervals) {
                 let req = {};
                 req.symbol = symbol;
@@ -530,9 +551,6 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async getQuoteAssetName(symbol) {
         let qa;
-        if (!Binance_1.Binance.markets || Binance_1.Binance.markets.length === 0) {
-            await this.getMarkets();
-        }
         let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
         let market;
         if (marketFilter && marketFilter.length > 0) {
