@@ -372,19 +372,17 @@ export class Rest extends BotHttp {
 		}
 	}
 
-	public async getCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]> {
+	public async getCandles(symbol: string, intervals: string[], limit?: number): Promise<CandleInterval[]> {
 		try {
 			let candleIntervals: CandleInterval[] = [];
-			for (let symbol of symbols) {
-				for (let interval of intervals) {
-					let req: ICandleRequest = <ICandleRequest>{};
-					req.symbol = symbol;
-					req.interval = interval;
-					req.limit = limit;
-					let candles: Candle[] = await this._getCandlesInterval(req);
-					let ci = new CandleInterval(candles);
-					candleIntervals.push(ci);
-				}
+			for (let interval of intervals) {
+				let req: ICandleRequest = <ICandleRequest>{};
+				req.symbol = symbol;
+				req.interval = interval;
+				req.limit = limit;
+				let candles: Candle[] = await this._getCandlesInterval(req);
+				let ci = new CandleInterval(candles);
+				candleIntervals.push(ci);
 			}
 			return candleIntervals;
 		} catch (err) {

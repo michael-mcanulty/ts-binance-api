@@ -322,19 +322,17 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
-    async getCandles(symbols, intervals, limit) {
+    async getCandles(symbol, intervals, limit) {
         try {
             let candleIntervals = [];
-            for (let symbol of symbols) {
-                for (let interval of intervals) {
-                    let req = {};
-                    req.symbol = symbol;
-                    req.interval = interval;
-                    req.limit = limit;
-                    let candles = await this._getCandlesInterval(req);
-                    let ci = new CandleInterval_1.CandleInterval(candles);
-                    candleIntervals.push(ci);
-                }
+            for (let interval of intervals) {
+                let req = {};
+                req.symbol = symbol;
+                req.interval = interval;
+                req.limit = limit;
+                let candles = await this._getCandlesInterval(req);
+                let ci = new CandleInterval_1.CandleInterval(candles);
+                candleIntervals.push(ci);
             }
             return candleIntervals;
         }
