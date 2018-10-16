@@ -73,6 +73,7 @@ class Rest extends BotHttp_1.BotHttp {
     }
     ;
     async _newOrder(order) {
+        let self = this;
         let callOpts;
         let callConfig = {};
         let orderRes;
@@ -84,8 +85,8 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.qs = order.toObjLiteral();
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
-            privateOrder = await this.privateCall(callOpts);
-            if (this.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
+            privateOrder = await self.privateCall(callOpts);
+            if (self.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
                 return new TestOrder_1.TestOrder();
             }
             else {
@@ -170,6 +171,7 @@ class Rest extends BotHttp_1.BotHttp {
         }
     }
     async getAccountInfo(recvWindow) {
+        let self = this;
         let callOpts;
         let accountInfoRest;
         let info;
@@ -182,7 +184,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.qs = opts;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
-            accountInfoRest = await this.privateCall(callOpts);
+            accountInfoRest = await self.privateCall(callOpts);
             info = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceRest(accountInfoRest);
             return info;
         }
@@ -391,6 +393,7 @@ class Rest extends BotHttp_1.BotHttp {
         }
     }
     async getExchangeInfo() {
+        let self = this;
         let callOpts;
         let callConfig = {};
         callConfig.method = 'GET';
@@ -398,7 +401,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/exchangeInfo`;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
-            return await this.call(callOpts);
+            return await self.call(callOpts);
         }
         catch (err) {
             throw err;
@@ -406,7 +409,8 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async getMarkets(quoteAsset) {
         try {
-            let info = await this.getExchangeInfo();
+            let self = this;
+            let info = await self.getExchangeInfo();
             let symbols = info.symbols;
             let markets = symbols.map(symbol => {
                 return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
@@ -507,6 +511,7 @@ class Rest extends BotHttp_1.BotHttp {
         }
     }
     async getPrices() {
+        let self = this;
         let rawPrices;
         let callOpts;
         let callConfig = {};
@@ -516,7 +521,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/ticker/price`;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
-            rawPrices = await this.call(callOpts);
+            rawPrices = await self.call(callOpts);
             if (Array.isArray(rawPrices) && rawPrices.length > 0) {
                 return Price_1.Price.toPrices(rawPrices);
             }
@@ -539,21 +544,23 @@ class Rest extends BotHttp_1.BotHttp {
         return qa;
     }
     async getStatus() {
+        let self = this;
         let callConfig = {};
         callConfig.method = 'GET';
         callConfig.json = true;
         callConfig.isSigned = true;
-        callConfig.apiKey = this.options.auth.key;
+        callConfig.apiKey = self.options.auth.key;
         callConfig.uri = `${BotHttp_1.BotHttp.BASE}/wapi/v3/systemStatus.html`;
         try {
             let opts = new CallOptions_1.CallOptions(callConfig);
-            return await this.call(opts);
+            return await self.call(opts);
         }
         catch (err) {
             return Promise.reject(new Error(`Error retrieving the system status. Message: ${err}`));
         }
     }
     async getWithdrawHisory(request) {
+        let self = this;
         let withdrawHistory;
         let callOpts;
         let callConfig = {};
@@ -564,7 +571,7 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.qs = request;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
-            withdrawHistory = await this.privateCall(callOpts);
+            withdrawHistory = await self.privateCall(callOpts);
             return withdrawHistory;
         }
         catch (err) {
@@ -572,6 +579,7 @@ class Rest extends BotHttp_1.BotHttp {
         }
     }
     async keepDataStream() {
+        let self = this;
         let dStream;
         let callOpts;
         let callConfig = {};
@@ -583,19 +591,20 @@ class Rest extends BotHttp_1.BotHttp {
         callConfig.qs = dStream;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
-            return await this.privateCall(callOpts);
+            return await self.privateCall(callOpts);
         }
         catch (err) {
             throw err;
         }
     }
     async limitBuy(options) {
+        let self = this;
+        let orderObj;
+        let nOrder = {};
+        const TYPE = 'LIMIT';
+        const SIDE = 'BUY';
+        const RESPONSE_TYPE = 'FULL';
         try {
-            let orderObj;
-            let nOrder = {};
-            const TYPE = 'LIMIT';
-            const SIDE = 'BUY';
-            const RESPONSE_TYPE = 'FULL';
             if (options && options.price) {
                 nOrder.timeInForce = options.timeInForce;
                 nOrder.price = options.price.toString();
@@ -609,7 +618,7 @@ class Rest extends BotHttp_1.BotHttp {
                 nOrder.newClientOrderId = options.newClientOrderId;
                 nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
                 orderObj = new NewOrder_1.NewOrder(nOrder);
-                return await this._newOrder(orderObj);
+                return await self._newOrder(orderObj);
             }
         }
         catch (err) {
@@ -644,36 +653,44 @@ class Rest extends BotHttp_1.BotHttp {
         }
     }
     async marketBuy(options) {
+        let self = this;
+        let order;
+        let nOrder = {};
         try {
-            let order;
-            let nOrder = {};
             nOrder.recvWindow = options.recvWindow;
             nOrder.type = 'MARKET';
             nOrder.side = 'BUY';
+            nOrder.quantity = options.quantity;
+            nOrder.symbol = options.symbol;
+            nOrder.recvWindow = options.recvWindow;
             nOrder.quantity = options.quantity;
             nOrder.icebergQty = options.iceburgQty;
             nOrder.newClientOrderId = options.newClientOrderId;
             nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
             order = new NewOrder_1.NewOrder(nOrder);
-            return await this._newOrder(order);
+            return await self._newOrder(order);
         }
         catch (err) {
             throw err;
         }
     }
     async marketSell(options) {
+        let self = this;
+        let order;
+        let nOrder = {};
         try {
-            let order;
-            let nOrder = {};
             nOrder.recvWindow = options.recvWindow;
             nOrder.type = 'MARKET';
             nOrder.side = 'SELL';
+            nOrder.quantity = options.quantity;
+            nOrder.symbol = options.symbol;
+            nOrder.recvWindow = options.recvWindow;
             nOrder.quantity = options.quantity;
             nOrder.icebergQty = options.iceburgQty;
             nOrder.newClientOrderId = options.newClientOrderId;
             nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
             order = new NewOrder_1.NewOrder(nOrder);
-            return await this._newOrder(order);
+            return await self._newOrder(order);
         }
         catch (err) {
             throw err;
