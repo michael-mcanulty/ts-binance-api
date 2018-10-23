@@ -96,7 +96,7 @@ export class HttpErrorHandler {
 				}
 
 				//Suicidal final post.
-				if (origin && _endpoint.length > remoteEndpoints.length) {
+				if ((_endpoint && remoteEndpoints && origin ) && (_endpoint.length > remoteEndpoints.length)) {
 					let lastPoint: string[] = _endpoint.filter(e => new URL(e).origin === origin);
 					if (lastPoint && lastPoint.length > 0) {
 						reqOpts.uri = lastPoint[0];
@@ -105,7 +105,6 @@ export class HttpErrorHandler {
 				}
 
 			}
-			return;
 
 		} catch (err) {
 			BBLogger.error(err);
