@@ -50,7 +50,7 @@ export class HttpError extends Error {
 			}
 		},
 		{
-			code: 401, message: "UNAUTHORIZED",
+			code: 401, message: "UNAUTHORIZED", isFatal: true,
 			handler: <IHttpErrorHandler> {
 				type: 'Node',
 				sendEmail: true,
@@ -68,7 +68,7 @@ export class HttpError extends Error {
 			}
 		},
 		{
-			code: -1001, message: "DISCONNECTED",
+			code: -1001, message: "DISCONNECTED", isFatal: true,
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: true,
@@ -104,7 +104,7 @@ export class HttpError extends Error {
 			}
 		},
 		{
-			code: -1007, message: "TIMEOUT",
+			code: -1007, message: "TIMEOUT", isFatal: true,
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: true,
@@ -258,7 +258,7 @@ export class HttpError extends Error {
 		},
 		{
 
-			code: -2008, message: "BAD_API_ID",
+			code: -2008, message: "BAD_API_ID", isFatal: true,
 
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',

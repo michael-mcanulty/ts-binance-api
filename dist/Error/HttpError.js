@@ -160,7 +160,7 @@ HttpError._objErrors = [
         }
     },
     {
-        code: 401, message: "UNAUTHORIZED",
+        code: 401, message: "UNAUTHORIZED", isFatal: true,
         handler: {
             type: 'Node',
             sendEmail: true,
@@ -178,7 +178,7 @@ HttpError._objErrors = [
         }
     },
     {
-        code: -1001, message: "DISCONNECTED",
+        code: -1001, message: "DISCONNECTED", isFatal: true,
         handler: {
             type: 'Binance',
             sendEmail: true,
@@ -213,7 +213,7 @@ HttpError._objErrors = [
         }
     },
     {
-        code: -1007, message: "TIMEOUT",
+        code: -1007, message: "TIMEOUT", isFatal: true,
         handler: {
             type: 'Binance',
             sendEmail: true,
@@ -349,7 +349,7 @@ HttpError._objErrors = [
         }
     },
     {
-        code: -2008, message: "BAD_API_ID",
+        code: -2008, message: "BAD_API_ID", isFatal: true,
         handler: {
             type: 'Binance',
             sendText: true,
