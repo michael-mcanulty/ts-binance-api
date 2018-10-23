@@ -10,12 +10,13 @@ export class HttpError extends Error {
 	public static fromObjLiteral(err: IHttpError){
 		if(!err)return;
 		let handler: HttpErrorHandler = new HttpErrorHandler(err.handler);
-		return new HttpError(err.code, err.message, handler);
+		return new HttpError(err.code, err.message, handler, err.isFatal);
 	}
 	public static toObjLiteral(err: HttpError){
 		if(!err)return;
 		let error: IHttpError = <IHttpError>{};
 		error.code = err.code;
+		error.isFatal = err.isFatal;
 		error.message = err.message;
 		error.handler = <IHttpErrorHandler>{};
 		error.handler.emailServiceOpts = err.handler.emailServiceOpts;
@@ -283,8 +284,8 @@ export class HttpError extends Error {
 
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
-				sendText: true,
-				sendEmail: true
+				sendText: false,
+				sendEmail: false
 			}
 		},
 		{
@@ -371,7 +372,6 @@ export class HttpError extends Error {
 	}
 
 	private static _getErrorType(err: BinanceError | HttpError): TErrorType {
-		//parseInt(code.toString());
 		let code: number = parseInt(err.code.toString());
 		let isBinance: boolean = false;
 		if (typeof err['msg'] === "string" && code < 0) {
@@ -379,7 +379,7 @@ export class HttpError extends Error {
 		} else if (typeof err['message'] === "string") {
 			isBinance = false;
 		}
-		return (isBinance) ? 'Binance' : 'Node';
+		return (isBinance)?'Binance':'Node';
 	}
 
 	public static fromError(err: HttpError | BinanceError): HttpError {
@@ -442,7 +442,7 @@ export class HttpError extends Error {
 		super();
 		this.code = code;
 		this.message = message;
-		this.isFatal = isFatal;
+		this.isFatal = isFatal || false;
 		if (handler) {
 			this.handler = handler;
 		} else {

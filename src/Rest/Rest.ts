@@ -613,7 +613,7 @@ export class Rest extends BotHttp {
 		return qa;
 	}
 
-	//TODO: Check Signed on binance api docs  and match to callOptions of each method.
+	//TODO: Check Signed on binance api docs and match to callOptions of each method.
 	public async getStatus(): Promise<ISystemStatus> {
 		let self = this;
 		let callConfig: ICallOpts = <ICallOpts>{};

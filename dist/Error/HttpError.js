@@ -6,7 +6,7 @@ class HttpError extends Error {
         super();
         this.code = code;
         this.message = message;
-        this.isFatal = isFatal;
+        this.isFatal = isFatal || false;
         if (handler) {
             this.handler = handler;
         }
@@ -21,13 +21,14 @@ class HttpError extends Error {
         if (!err)
             return;
         let handler = new HttpErrorHandler_1.HttpErrorHandler(err.handler);
-        return new HttpError(err.code, err.message, handler);
+        return new HttpError(err.code, err.message, handler, err.isFatal);
     }
     static toObjLiteral(err) {
         if (!err)
             return;
         let error = {};
         error.code = err.code;
+        error.isFatal = err.isFatal;
         error.message = err.message;
         error.handler = {};
         error.handler.emailServiceOpts = err.handler.emailServiceOpts;
@@ -369,8 +370,8 @@ HttpError._objErrors = [
         code: -2010, message: "INSUFFICIENT_BALANCE",
         handler: {
             type: 'Binance',
-            sendText: true,
-            sendEmail: true
+            sendText: false,
+            sendEmail: false
         }
     },
     {
