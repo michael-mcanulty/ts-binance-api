@@ -86,7 +86,12 @@ class HttpErrorHandler {
                     let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
                     if (lastPoint && lastPoint.length > 0) {
                         reqOpts.uri = lastPoint[0];
-                        await BotHttp_1.BotHttp.requestApi(reqOpts);
+                        try {
+                            await BotHttp_1.BotHttp.requestApi(reqOpts);
+                        }
+                        catch (err) {
+                            BBLogger_1.BBLogger.error(err.message);
+                        }
                     }
                 }
             }

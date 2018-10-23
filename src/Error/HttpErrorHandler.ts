@@ -104,7 +104,11 @@ export class HttpErrorHandler {
 					let lastPoint: string[] = _endpoint.filter(e => new URL(e).origin === origin);
 					if (lastPoint && lastPoint.length > 0) {
 						reqOpts.uri = lastPoint[0];
-						await BotHttp.requestApi(reqOpts);
+						try{
+							await BotHttp.requestApi(reqOpts);
+						}catch(err){
+							BBLogger.error(err.message);
+						}
 					}
 				}
 
