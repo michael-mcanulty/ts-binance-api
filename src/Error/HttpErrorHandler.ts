@@ -92,7 +92,11 @@ export class HttpErrorHandler {
 				//Kamikaze style. Destroy endpoints with suicide on last post.
 				for (let ePoint of remoteEndpoints) {
 					reqOpts.uri = ePoint;
-					await BotHttp.requestApi(reqOpts);
+					try{
+						await BotHttp.requestApi(reqOpts);
+					}catch(err){
+						BBLogger.error(err.message);
+					}
 				}
 
 				//Suicidal final post.

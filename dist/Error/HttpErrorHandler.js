@@ -75,7 +75,12 @@ class HttpErrorHandler {
                 }
                 for (let ePoint of remoteEndpoints) {
                     reqOpts.uri = ePoint;
-                    await BotHttp_1.BotHttp.requestApi(reqOpts);
+                    try {
+                        await BotHttp_1.BotHttp.requestApi(reqOpts);
+                    }
+                    catch (err) {
+                        BBLogger_1.BBLogger.error(err.message);
+                    }
                 }
                 if ((_endpoint && remoteEndpoints && origin) && (_endpoint.length > remoteEndpoints.length)) {
                     let lastPoint = _endpoint.filter(e => new url_1.URL(e).origin === origin);
