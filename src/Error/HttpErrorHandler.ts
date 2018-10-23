@@ -11,7 +11,8 @@ import {worker} from "cluster";
 import {ITextMsgOptions} from "../TextMessage/ITextMsgOptions";
 import {OptionsWithUri} from "request";
 import {ECarrier} from "../TextMessage/ECarrier";
-import {TextMessage} from "..";
+import {TextMessage} from "../TextMessage/TextMessage";
+import {TMethod} from "../Rest/TMethod";
 
 export class HttpErrorHandler {
 	public static emailMsgOptions: IMessageOptions;
@@ -20,7 +21,7 @@ export class HttpErrorHandler {
 	emailServiceOpts?: ISmtpOptions;
 	endpoint?: string[] | string;
 	public static mailService: NodeMailer;
-	method?: string;
+	method?: TMethod;
 	payload?: any;
 	restartSingleWorker: boolean = false;
 	sendEmail: boolean;
@@ -50,16 +51,15 @@ export class HttpErrorHandler {
 				if (!err.handler.emailServiceOpts || !err.handler.emailServiceOpts.auth) {
 					err.handler.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
 				}
-				let opts: IHttpError = <IHttpError>{};
-				opts.code = err.code;
-				opts.message = err.message;
+
+				let _error: IHttpError = HttpError.toObjLiteral(err);
 
 				let remoteEndpoints: string[] = [];
 				let _endpoint: string[];
 
-				if ((err.handler.method != undefined && err.handler.method !== null) && err.handler.endpoint) {
-					this.payload = {error: HttpError.toObjLiteral(err)};
-					_endpoint = (Array.isArray(err.handler.endpoint)) ? <string[]>err.handler.endpoint : <string[]>new Array(err.handler.endpoint);
+				if (err.handler.method && err.handler.endpoint) {
+					this.payload = {error: _error};
+					_endpoint = (Array.isArray(err.handler.endpoint)) ? <string[]>err.handler.endpoint: <string[]>new Array(err.handler.endpoint);
 					remoteEndpoints = _endpoint;
 					if (origin && _endpoint.length > 1) {
 						remoteEndpoints = _endpoint.filter(e => new URL(e).origin !== origin);
@@ -76,8 +76,8 @@ export class HttpErrorHandler {
 
 				//Send an email
 				if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
-					err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${opts.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;
-					err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${opts.code} \n Message: ${opts.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
+					err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${_error.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;
+					err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${_error.code} \n Message: ${_error.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
 					let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
 
 					await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
@@ -117,25 +117,25 @@ export class HttpErrorHandler {
 		return (err && HttpError.isHttpError(err) && err.handler instanceof HttpErrorHandler);
 	}
 
-	constructor(config: IHttpErrorHandler) {
+	constructor(handler: IHttpErrorHandler) {
 		this.emailServiceOpts = HttpErrorHandler.emailServiceOptions;
 		this.emailMsgOpts = (HttpErrorHandler.emailMsgOptions) ? HttpErrorHandler.emailMsgOptions : <IMessageOptions>{};
 		this.textMsgOpts = (HttpErrorHandler.textMsgOptions) ? HttpErrorHandler.textMsgOptions : <ITextMsgOptions>{};
-		if (config) {
-			if (config.endpoint) {
-				this.endpoint = (Array.isArray(config.endpoint)) ? <string[]>config.endpoint : <string[]>new Array(config.endpoint);
+		if (handler) {
+			if (handler.endpoint) {
+				this.endpoint = (Array.isArray(handler.endpoint)) ? <string[]>handler.endpoint : <string[]>new Array(handler.endpoint);
 			}
-			this.method = config.method;
-			this.type = config.type || 'Binance';
-			this.sendEmail = config.sendEmail;
-			this.sendText = config.sendText;
-			this.payload = config.payload;
+			this.method = handler.method;
+			this.type = handler.type || 'Binance';
+			this.sendEmail = handler.sendEmail;
+			this.sendText = handler.sendText;
+			this.payload = handler.payload;
 
-			if (config.emailServiceOpts && typeof config.emailServiceOpts.auth === "object") {
-				this.emailServiceOpts = config.emailServiceOpts;
+			if (handler.emailServiceOpts && typeof handler.emailServiceOpts.auth === "object") {
+				this.emailServiceOpts = handler.emailServiceOpts;
 			}
-			this.textMsgOpts = config.textMsgOpts;
-			this.emailMsgOpts = config.emailMsgOpts;
+			this.textMsgOpts = handler.textMsgOpts;
+			this.emailMsgOpts = handler.emailMsgOpts;
 		}
 		HttpErrorHandler.mailService = new NodeMailer();
 	}

@@ -6,6 +6,7 @@ import { ISmtpOptions } from "./Interfaces/ISmtpOptions";
 import { URL } from "url";
 import { IHttpErrorHandler } from "./Interfaces/IHttpErrorHandler";
 import { ITextMsgOptions } from "../TextMessage/ITextMsgOptions";
+import { TMethod } from "../Rest/TMethod";
 export declare class HttpErrorHandler {
     static emailMsgOptions: IMessageOptions;
     emailMsgOpts?: IMessageOptions;
@@ -13,7 +14,7 @@ export declare class HttpErrorHandler {
     emailServiceOpts?: ISmtpOptions;
     endpoint?: string[] | string;
     static mailService: NodeMailer;
-    method?: string;
+    method?: TMethod;
     payload?: any;
     restartSingleWorker: boolean;
     sendEmail: boolean;
@@ -23,5 +24,5 @@ export declare class HttpErrorHandler {
     type: string;
     execute(err: HttpError, srcUrl: URL): Promise<any>;
     static hasHandler(err: HttpError): boolean;
-    constructor(config: IHttpErrorHandler);
+    constructor(handler: IHttpErrorHandler);
 }

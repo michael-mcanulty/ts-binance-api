@@ -16,8 +16,8 @@ export class HttpError extends Error {
 		if(!err)return;
 		let error: IHttpError = <IHttpError>{};
 		error.code = err.code;
-		error.isFatal = err.isFatal;
 		error.message = err.message;
+		error.isFatal = err.isFatal || false;
 		error.handler = <IHttpErrorHandler>{};
 		error.handler.emailServiceOpts = err.handler.emailServiceOpts;
 		error.handler.emailMsgOpts = err.handler.emailMsgOpts;
@@ -27,6 +27,7 @@ export class HttpError extends Error {
 		error.handler.payload = err.handler.payload;
 		error.handler.restartSingleWorker = err.handler.restartSingleWorker;
 		error.handler.sendEmail = err.handler.sendEmail;
+		error.handler.sendText = err.handler.sendText;
 		return error;
 	}
 	public static allErrors: HttpError[];
@@ -39,6 +40,7 @@ export class HttpError extends Error {
 				sendText: true,
 				//Only kill the worker. The DB is accessed using a worker and only on the data server.
 				endpoint: ["http://localhost:3001/kill"],
+				method: 'POST'
 			}
 		},
 		{
@@ -68,12 +70,13 @@ export class HttpError extends Error {
 			}
 		},
 		{
-			code: -1001, message: "DISCONNECTED", isFatal: true,
+			code: -1001, message: "DISCONNECTED", isFatal: false,
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: true,
 				sendText: true,
-				endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
+				endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"],
+				method: 'POST'
 			}
 		},
 		{
@@ -104,12 +107,13 @@ export class HttpError extends Error {
 			}
 		},
 		{
-			code: -1007, message: "TIMEOUT", isFatal: true,
+			code: -1007, message: "TIMEOUT", isFatal: false,
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: true,
 				sendText: true,
-				endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
+				endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"],
+				method: 'POST'
 			}
 		},
 		{
@@ -117,7 +121,8 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: false,
-				sendText: false
+				sendText: false,
+				method: 'POST'
 			}
 		},
 		{
@@ -125,11 +130,12 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: false,
-				sendText: false
+				sendText: false,
+				method: 'POST'
 			}
 		},
 		{
-			code: -1015, message: "TOO_MANY_ORDERS",
+			code: -1015, message: "TOO_MANY_ORDERS", isFatal: false,
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendEmail: true,
@@ -191,8 +197,7 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendText: true,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -202,8 +207,7 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendText: true,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -238,8 +242,7 @@ export class HttpError extends Error {
 		},
 		{
 
-			code: -1106, message: "PARAM_NOT_REQUIRED"
-			,
+			code: -1106, message: "PARAM_NOT_REQUIRED",
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendText: true,
@@ -249,7 +252,6 @@ export class HttpError extends Error {
 		{
 
 			code: -1130, message: "INVALID_PARAMETER",
-
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendText: true,
@@ -264,7 +266,8 @@ export class HttpError extends Error {
 				type: 'Binance',
 				sendText: true,
 				sendEmail: true,
-				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+				method: 'POST'
 			}
 		},
 		{
@@ -275,7 +278,8 @@ export class HttpError extends Error {
 				type: 'Binance',
 				sendText: true,
 				sendEmail: true,
-				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+				method: 'POST'
 			}
 		},
 		{
@@ -293,8 +297,7 @@ export class HttpError extends Error {
 			handler: <IHttpErrorHandler> {
 				type: 'Binance',
 				sendText: true,
-				sendEmail: true,
-				endpoint: []
+				sendEmail: true
 			}
 		},
 		{
@@ -314,7 +317,8 @@ export class HttpError extends Error {
 				type: 'Binance',
 				sendText: true,
 				sendEmail: true,
-				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+				endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+				method: 'POST'
 			}
 		},
 		{
@@ -333,7 +337,7 @@ export class HttpError extends Error {
 	isFatal?: boolean;
 	message: string;
 
-	public static GetTimeoutFromIPBannedMsg(err: BinanceError): number {
+	/*public static GetTimeoutFromIPBannedMsg(err: BinanceError): number {
 		let strFloat: string;
 		let result: number = 0;
 		if (err && err.msg) {
@@ -346,7 +350,7 @@ export class HttpError extends Error {
 			}
 		}
 		return result;
-	}
+	}*/
 
 	private static _getErrorHandler(error: HttpError): HttpErrorHandler | null {
 		if(!HttpError.allErrors || HttpError.allErrors.length === 0){
@@ -429,7 +433,7 @@ export class HttpError extends Error {
 			err.handler.emailMsgOpts = options.emailMsgOpts;
 			err.handler.emailServiceOpts = options.emailServiceOpts;
 			err.handler.textMsgOpts = options.textMsgOpts;
-			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler))
+			return new HttpError(err.code, err.message, new HttpErrorHandler(err.handler), err.isFatal)
 		});
 		return HttpError.allErrors;
 	}

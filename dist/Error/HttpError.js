@@ -28,8 +28,8 @@ class HttpError extends Error {
             return;
         let error = {};
         error.code = err.code;
-        error.isFatal = err.isFatal;
         error.message = err.message;
+        error.isFatal = err.isFatal || false;
         error.handler = {};
         error.handler.emailServiceOpts = err.handler.emailServiceOpts;
         error.handler.emailMsgOpts = err.handler.emailMsgOpts;
@@ -39,21 +39,8 @@ class HttpError extends Error {
         error.handler.payload = err.handler.payload;
         error.handler.restartSingleWorker = err.handler.restartSingleWorker;
         error.handler.sendEmail = err.handler.sendEmail;
+        error.handler.sendText = err.handler.sendText;
         return error;
-    }
-    static GetTimeoutFromIPBannedMsg(err) {
-        let strFloat;
-        let result = 0;
-        if (err && err.msg) {
-            let msg = "IP banned until ";
-            let startIdx = err.msg.indexOf(msg) + msg.length;
-            let float = parseFloat(err.msg.slice(startIdx, startIdx + 13));
-            strFloat = float.toString();
-            if (strFloat.length === 13) {
-                result = float - new Date().getTime();
-            }
-        }
-        return result;
     }
     static _getErrorHandler(error) {
         if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
@@ -133,7 +120,7 @@ class HttpError extends Error {
             err.handler.emailMsgOpts = options.emailMsgOpts;
             err.handler.emailServiceOpts = options.emailServiceOpts;
             err.handler.textMsgOpts = options.textMsgOpts;
-            return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler));
+            return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler), err.isFatal);
         });
         return HttpError.allErrors;
     }
@@ -149,6 +136,7 @@ HttpError._objErrors = [
             sendEmail: true,
             sendText: true,
             endpoint: ["http://localhost:3001/kill"],
+            method: 'POST'
         }
     },
     {
@@ -178,12 +166,13 @@ HttpError._objErrors = [
         }
     },
     {
-        code: -1001, message: "DISCONNECTED", isFatal: true,
+        code: -1001, message: "DISCONNECTED", isFatal: false,
         handler: {
             type: 'Binance',
             sendEmail: true,
             sendText: true,
-            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
+            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"],
+            method: 'POST'
         }
     },
     {
@@ -213,12 +202,13 @@ HttpError._objErrors = [
         }
     },
     {
-        code: -1007, message: "TIMEOUT", isFatal: true,
+        code: -1007, message: "TIMEOUT", isFatal: false,
         handler: {
             type: 'Binance',
             sendEmail: true,
             sendText: true,
-            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"]
+            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"],
+            method: 'POST'
         }
     },
     {
@@ -226,7 +216,8 @@ HttpError._objErrors = [
         handler: {
             type: 'Binance',
             sendEmail: false,
-            sendText: false
+            sendText: false,
+            method: 'POST'
         }
     },
     {
@@ -234,11 +225,12 @@ HttpError._objErrors = [
         handler: {
             type: 'Binance',
             sendEmail: false,
-            sendText: false
+            sendText: false,
+            method: 'POST'
         }
     },
     {
-        code: -1015, message: "TOO_MANY_ORDERS",
+        code: -1015, message: "TOO_MANY_ORDERS", isFatal: false,
         handler: {
             type: 'Binance',
             sendEmail: true,
@@ -295,8 +287,7 @@ HttpError._objErrors = [
         handler: {
             type: 'Binance',
             sendText: true,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -304,8 +295,7 @@ HttpError._objErrors = [
         handler: {
             type: 'Binance',
             sendText: true,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -354,7 +344,8 @@ HttpError._objErrors = [
             type: 'Binance',
             sendText: true,
             sendEmail: true,
-            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
         }
     },
     {
@@ -363,7 +354,8 @@ HttpError._objErrors = [
             type: 'Binance',
             sendText: true,
             sendEmail: true,
-            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
         }
     },
     {
@@ -379,8 +371,7 @@ HttpError._objErrors = [
         handler: {
             type: 'Binance',
             sendText: true,
-            sendEmail: true,
-            endpoint: []
+            sendEmail: true
         }
     },
     {
@@ -397,7 +388,8 @@ HttpError._objErrors = [
             type: 'Binance',
             sendText: true,
             sendEmail: true,
-            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"]
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
         }
     },
     {

@@ -11,7 +11,6 @@ export declare class HttpError extends Error {
     handler?: HttpErrorHandler;
     isFatal?: boolean;
     message: string;
-    static GetTimeoutFromIPBannedMsg(err: BinanceError): number;
     private static _getErrorHandler;
     private static _getErrorParameters;
     private static _getErrorType;
