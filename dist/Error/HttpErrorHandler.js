@@ -6,7 +6,6 @@ const BBLogger_1 = require("../Logger/BBLogger");
 const HttpError_1 = require("./HttpError");
 const url_1 = require("url");
 const cluster_1 = require("cluster");
-const ECarrier_1 = require("../TextMessage/ECarrier");
 const TextMessage_1 = require("../TextMessage/TextMessage");
 class HttpErrorHandler {
     constructor(handler) {
@@ -32,7 +31,7 @@ class HttpErrorHandler {
         if (!HttpErrorHandler.mailService && this.emailServiceOpts) {
             HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer(this.emailServiceOpts);
             if (!HttpErrorHandler.textMsgService && this.textMsgOpts.carrier) {
-                HttpErrorHandler.textMsgService = new TextMessage_1.TextMessage(ECarrier_1.ECarrier[this.textMsgOpts.carrier], this.emailServiceOpts);
+                HttpErrorHandler.textMsgService = new TextMessage_1.TextMessage(this.textMsgOpts.carrier, this.emailServiceOpts);
             }
         }
     }

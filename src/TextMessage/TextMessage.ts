@@ -1,43 +1,41 @@
 import {ICarrier} from "./ICarrier";
 import {NodeMailer} from "../Error/NodeMailer";
-import {HttpErrorHandler} from "../Error/HttpErrorHandler";
 import {IMessageOptions} from "../Error/Interfaces/IMessageOptions";
 import {ISmtpOptions} from "../Error/Interfaces/ISmtpOptions";
 import {TCarrier} from "./TCarrier";
-import {ECarrier} from "../TextMessage/ECarrier";
 
 export class TextMessage {
 	public static USCarriers: ICarrier[] = [
 		{
-			"name": "att",
+			"name": <TCarrier> "att",
 			"domain": "txt.att.net"
 		},
 		{
-			"name": "tmobile",
+			"name": <TCarrier> "tmobile",
 			"domain": "tmomail.net"
 		},
 		{
-			"name": "verizon",
+			"name": <TCarrier> "verizon",
 			"domain": "vtext.com"
 		},
 		{
-			"name": "cricket",
+			"name": <TCarrier> "cricket",
 			"domain": "sms.mycricket.com"
 		},
 		{
-			"name": "uscellular",
+			"name": <TCarrier> "uscellular",
 			"domain": "email.uscc.net"
 		},
 		{
-			"name": "virginmobile",
+			"name": <TCarrier> "virginmobile",
 			"domain": "vmobl.com"
 		},
 		{
-			"name": "boostmobile",
+			"name": <TCarrier> "boostmobile",
 			"domain": "myboostmobile.com"
 		},
 		{
-			"name": "metropcs",
+			"name": <TCarrier> "metropcs",
 			"domain": "mymetropcs.com"
 		}
 	];
@@ -88,7 +86,7 @@ export class TextMessage {
 		await this.send(this.msgOptions.subject, this.msgOptions.text, recipientPhone);
 	}
 
-	constructor(carrierName: ECarrier, smtpOpts: ISmtpOptions) {
+	constructor(carrierName: TCarrier, smtpOpts: ISmtpOptions) {
 		this.msgOptions = <IMessageOptions>{};
 		if(!smtpOpts || !smtpOpts.auth || !smtpOpts.auth.user || !smtpOpts.auth.pass){
 			throw new Error("Creating a new TextMessage requires email options with a username and password.");

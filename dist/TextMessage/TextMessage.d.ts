@@ -2,7 +2,6 @@ import { ICarrier } from "./ICarrier";
 import { IMessageOptions } from "../Error/Interfaces/IMessageOptions";
 import { ISmtpOptions } from "../Error/Interfaces/ISmtpOptions";
 import { TCarrier } from "./TCarrier";
-import { ECarrier } from "../TextMessage/ECarrier";
 export declare class TextMessage {
     static USCarriers: ICarrier[];
     carrier: TCarrier;
@@ -13,5 +12,5 @@ export declare class TextMessage {
     private _getCarrierEmailAddress;
     send(subject: string, message: string, recipientPhone: number): Promise<void>;
     sendError(error: Error, recipientPhone: number, source?: string): Promise<void>;
-    constructor(carrierName: ECarrier, smtpOpts: ISmtpOptions);
+    constructor(carrierName: TCarrier, smtpOpts: ISmtpOptions);
 }

@@ -10,7 +10,6 @@ import {IHttpError} from "./Interfaces/IHttpError";
 import {worker} from "cluster";
 import {ITextMsgOptions} from "../TextMessage/ITextMsgOptions";
 import {OptionsWithUri} from "request";
-import {ECarrier} from "../TextMessage/ECarrier";
 import {TextMessage} from "../TextMessage/TextMessage";
 import {TMethod} from "../Rest/TMethod";
 
@@ -149,7 +148,7 @@ export class HttpErrorHandler {
 			HttpErrorHandler.mailService = new NodeMailer(this.emailServiceOpts);
 
 			if(!HttpErrorHandler.textMsgService && this.textMsgOpts.carrier){
-				HttpErrorHandler.textMsgService = new TextMessage(ECarrier[this.textMsgOpts.carrier], this.emailServiceOpts);
+				HttpErrorHandler.textMsgService = new TextMessage(this.textMsgOpts.carrier, this.emailServiceOpts);
 			}
 		}
 	}
