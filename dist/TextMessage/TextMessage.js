@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const NodeMailer_1 = require("../Error/NodeMailer");
-const HttpErrorHandler_1 = require("../Error/HttpErrorHandler");
 class TextMessage {
     constructor(carrierName, smtpOpts) {
         this.msgOptions = {};
@@ -22,7 +21,7 @@ class TextMessage {
         else {
             throw new Error(`${carrierName} not found`);
         }
-        TextMessage.mailService = new NodeMailer_1.NodeMailer();
+        this.mailService = new NodeMailer_1.NodeMailer(this.smtpOptions);
     }
     _getCarrierEmailAddress(phoneNumber) {
         return `${phoneNumber}@${this.domain}`;
@@ -33,7 +32,7 @@ class TextMessage {
             this.msgOptions.to = this._getCarrierEmailAddress(recipientPhone);
             this.msgOptions.subject = message;
             this.msgOptions.text = message;
-            sentEmail = await HttpErrorHandler_1.HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
+            sentEmail = await this.mailService.sendEmail(this.msgOptions);
             return sentEmail;
         }
         catch (err) {

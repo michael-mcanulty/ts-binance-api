@@ -8,7 +8,7 @@ export declare class TextMessage {
     static USCarriers: ICarrier[];
     carrier: TCarrier;
     domain: string;
-    static mailService: NodeMailer;
+    mailService: NodeMailer;
     msgOptions: IMessageOptions;
     smtpOptions: ISmtpOptions;
     private _getCarrierEmailAddress;

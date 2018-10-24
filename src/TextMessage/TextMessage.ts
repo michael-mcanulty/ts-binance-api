@@ -43,7 +43,7 @@ export class TextMessage {
 	];
 	carrier: TCarrier;
 	domain: string;
-	public static mailService: NodeMailer;
+	public mailService: NodeMailer;
 	msgOptions: IMessageOptions;
 	smtpOptions: ISmtpOptions;
 
@@ -57,7 +57,7 @@ export class TextMessage {
 			this.msgOptions.to = this._getCarrierEmailAddress(recipientPhone);
 			this.msgOptions.subject = message;
 			this.msgOptions.text = message;
-			sentEmail = await HttpErrorHandler.mailService.sendEmail(this.msgOptions, this.smtpOptions);
+			sentEmail = await this.mailService.sendEmail(this.msgOptions);
 			return sentEmail;
 		} catch (err) {
 			throw err;
@@ -106,6 +106,6 @@ export class TextMessage {
 		} else {
 			throw new Error(`${carrierName} not found`);
 		}
-		TextMessage.mailService = new NodeMailer();
+		this.mailService = new NodeMailer(this.smtpOptions);
 	}
 }
