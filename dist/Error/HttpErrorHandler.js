@@ -29,7 +29,12 @@ class HttpErrorHandler {
             this.textMsgOpts = handler.textMsgOpts;
             this.emailMsgOpts = handler.emailMsgOpts;
         }
-        HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer();
+        if (!HttpErrorHandler.mailService && this.emailServiceOpts) {
+            HttpErrorHandler.mailService = new NodeMailer_1.NodeMailer(this.emailServiceOpts);
+            if (!HttpErrorHandler.textMsgService && this.textMsgOpts.carrier) {
+                HttpErrorHandler.textMsgService = new TextMessage_1.TextMessage(ECarrier_1.ECarrier[this.textMsgOpts.carrier], this.emailServiceOpts);
+            }
+        }
     }
     async execute(err, srcUrl) {
         let reqOpts;
@@ -67,11 +72,10 @@ class HttpErrorHandler {
                     err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${_error.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;
                     err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${_error.code} \n Message: ${_error.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
                     let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                    await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+                    await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts);
                 }
                 if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-                    let textMsg = new TextMessage_1.TextMessage(ECarrier_1.ECarrier.TMobile, err.handler.emailServiceOpts);
-                    await textMsg.sendError(err, err.handler.textMsgOpts.recipientPhone, origin);
+                    await HttpErrorHandler.textMsgService.sendError(err, err.handler.textMsgOpts.recipientPhone, origin);
                 }
                 for (let ePoint of remoteEndpoints) {
                     reqOpts.uri = ePoint;

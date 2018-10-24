@@ -6,6 +6,7 @@ import { ISmtpOptions } from "./Interfaces/ISmtpOptions";
 import { URL } from "url";
 import { IHttpErrorHandler } from "./Interfaces/IHttpErrorHandler";
 import { ITextMsgOptions } from "../TextMessage/ITextMsgOptions";
+import { TextMessage } from "../TextMessage/TextMessage";
 import { TMethod } from "../Rest/TMethod";
 export declare class HttpErrorHandler {
     static emailMsgOptions: IMessageOptions;
@@ -14,6 +15,7 @@ export declare class HttpErrorHandler {
     emailServiceOpts?: ISmtpOptions;
     endpoint?: string[] | string;
     static mailService: NodeMailer;
+    static textMsgService: TextMessage;
     method?: TMethod;
     payload?: any;
     restartSingleWorker: boolean;

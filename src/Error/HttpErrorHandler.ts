@@ -21,6 +21,7 @@ export class HttpErrorHandler {
 	emailServiceOpts?: ISmtpOptions;
 	endpoint?: string[] | string;
 	public static mailService: NodeMailer;
+	public static textMsgService: TextMessage;
 	method?: TMethod;
 	payload?: any;
 	restartSingleWorker: boolean = false;
@@ -80,13 +81,13 @@ export class HttpErrorHandler {
 					err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${_error.code} \n Message: ${_error.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
 					let defaultServiceOpts: ISmtpOptions = HttpErrorHandler.emailServiceOptions;
 
-					await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts, err.handler.emailServiceOpts || defaultServiceOpts);
+					await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts);
 				}
 
 				//Send text message
 				if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-					let textMsg = new TextMessage(ECarrier.TMobile, err.handler.emailServiceOpts);
-					await textMsg.sendError(err, err.handler.textMsgOpts.recipientPhone, origin);
+
+					await HttpErrorHandler.textMsgService.sendError(err, err.handler.textMsgOpts.recipientPhone, origin);
 				}
 
 				//Kamikaze style. Destroy endpoints with suicide on last post.
@@ -144,6 +145,12 @@ export class HttpErrorHandler {
 			this.textMsgOpts = handler.textMsgOpts;
 			this.emailMsgOpts = handler.emailMsgOpts;
 		}
-		HttpErrorHandler.mailService = new NodeMailer();
+		if(!HttpErrorHandler.mailService && this.emailServiceOpts){
+			HttpErrorHandler.mailService = new NodeMailer(this.emailServiceOpts);
+
+			if(!HttpErrorHandler.textMsgService && this.textMsgOpts.carrier){
+				HttpErrorHandler.textMsgService = new TextMessage(ECarrier[this.textMsgOpts.carrier], this.emailServiceOpts);
+			}
+		}
 	}
 }

@@ -7,7 +7,7 @@ class NodeMailer {
             if (!msgOpts) {
                 reject(new Error("Service Options must be provided"));
             }
-            this.service.sendMail(msgOpts, (error, info) => {
+            this._service.sendMail(msgOpts, (error, info) => {
                 if (error) {
                     reject(error);
                 }
@@ -18,7 +18,7 @@ class NodeMailer {
         });
     }
     constructor(serviceOptions) {
-        this.service = nodeMailer.createTransport(serviceOptions);
+        this._service = nodeMailer.createTransport(serviceOptions);
     }
 }
 exports.NodeMailer = NodeMailer;

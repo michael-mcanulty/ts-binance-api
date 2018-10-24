@@ -21,7 +21,7 @@ class TextMessage {
         else {
             throw new Error(`${carrierName} not found`);
         }
-        this.mailService = new NodeMailer_1.NodeMailer(this.smtpOptions);
+        this._mailService = new NodeMailer_1.NodeMailer(this.smtpOptions);
     }
     _getCarrierEmailAddress(phoneNumber) {
         return `${phoneNumber}@${this.domain}`;
@@ -32,7 +32,7 @@ class TextMessage {
             this.msgOptions.to = this._getCarrierEmailAddress(recipientPhone);
             this.msgOptions.subject = message;
             this.msgOptions.text = message;
-            sentEmail = await this.mailService.sendEmail(this.msgOptions);
+            sentEmail = await this._mailService.sendEmail(this.msgOptions);
             return sentEmail;
         }
         catch (err) {

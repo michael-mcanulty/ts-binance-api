@@ -1,5 +1,4 @@
 import { ICarrier } from "./ICarrier";
-import { NodeMailer } from "../Error/NodeMailer";
 import { IMessageOptions } from "../Error/Interfaces/IMessageOptions";
 import { ISmtpOptions } from "../Error/Interfaces/ISmtpOptions";
 import { TCarrier } from "./TCarrier";
@@ -8,7 +7,7 @@ export declare class TextMessage {
     static USCarriers: ICarrier[];
     carrier: TCarrier;
     domain: string;
-    mailService: NodeMailer;
+    private _mailService;
     msgOptions: IMessageOptions;
     smtpOptions: ISmtpOptions;
     private _getCarrierEmailAddress;

@@ -4,7 +4,7 @@ import {NodeMailerService} from "./Types/Types";
 import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 
 export class NodeMailer {
-	public service: NodeMailerService;
+	private _service: NodeMailerService;
 
 	public sendEmail(msgOpts: IMessageOptions): Promise<any> {
 		return new Promise((resolve, reject)=>{
@@ -13,7 +13,7 @@ export class NodeMailer {
 				reject(new Error("Service Options must be provided"));
 			}
 
-			this.service.sendMail(msgOpts, (error, info: { response: string }) => {
+			this._service.sendMail(msgOpts, (error, info: { response: string }) => {
 				if (error) {
 					reject(error);
 				} else {
@@ -24,6 +24,6 @@ export class NodeMailer {
 	}
 
 	constructor(serviceOptions: ISmtpOptions) {
-		this.service = nodeMailer.createTransport(serviceOptions);
+		this._service = nodeMailer.createTransport(serviceOptions);
 	}
 }
