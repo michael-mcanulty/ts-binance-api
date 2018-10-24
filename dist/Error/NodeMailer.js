@@ -2,24 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodeMailer = require("nodemailer");
 class NodeMailer {
-    constructor() {
-    }
-    async sendEmail(msgOpts, serviceOptions) {
-        if (!serviceOptions || !msgOpts) {
-            return Promise.reject(new Error("Service Options must be provided"));
-        }
-        else {
-            NodeMailer.Service.createTransport(serviceOptions).sendMail(msgOpts, (error, info) => {
+    sendEmail(msgOpts) {
+        return new Promise((resolve, reject) => {
+            if (!msgOpts) {
+                reject(new Error("Service Options must be provided"));
+            }
+            this.service.sendMail(msgOpts, (error, info) => {
                 if (error) {
-                    return Promise.reject(error);
+                    reject(error);
                 }
                 else {
-                    return `Email Sent: ${info.response}`;
+                    resolve(info.response);
                 }
             });
-        }
+        });
+    }
+    constructor(serviceOptions) {
+        this.service = nodeMailer.createTransport(serviceOptions);
     }
 }
-NodeMailer.Service = nodeMailer;
 exports.NodeMailer = NodeMailer;
 //# sourceMappingURL=NodeMailer.js.map

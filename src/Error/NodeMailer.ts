@@ -4,22 +4,26 @@ import {NodeMailerService} from "./Types/Types";
 import {ISmtpOptions} from "./Interfaces/ISmtpOptions";
 
 export class NodeMailer {
-	public static Service: NodeMailerService = nodeMailer;
+	public service: NodeMailerService;
 
-	public async sendEmail(msgOpts: IMessageOptions, serviceOptions: ISmtpOptions): Promise<any> {
-		if (!serviceOptions || !msgOpts) {
-			return Promise.reject(new Error("Service Options must be provided"));
-		} else {
-			NodeMailer.Service.createTransport(serviceOptions).sendMail(msgOpts, (error, info: { response: string }) => {
+	public sendEmail(msgOpts: IMessageOptions): Promise<any> {
+		return new Promise((resolve, reject)=>{
+
+			if (!msgOpts) {
+				reject(new Error("Service Options must be provided"));
+			}
+
+			this.service.sendMail(msgOpts, (error, info: { response: string }) => {
 				if (error) {
-					return Promise.reject(error);
+					reject(error);
 				} else {
-					return `Email Sent: ${info.response}`;
+					resolve(info.response);
 				}
 			});
-		}
+		})
 	}
 
-	constructor() {
+	constructor(serviceOptions: ISmtpOptions) {
+		this.service = nodeMailer.createTransport(serviceOptions);
 	}
 }
