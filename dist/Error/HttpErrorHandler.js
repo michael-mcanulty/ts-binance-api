@@ -70,11 +70,24 @@ class HttpErrorHandler {
                 if (err.handler.sendEmail && err.handler.emailMsgOpts && (err.handler.emailServiceOpts || HttpErrorHandler.emailServiceOptions)) {
                     err.handler.emailMsgOpts.subject = (!err.handler.emailMsgOpts.subject || err.handler.emailMsgOpts.subject.length === 0) ? `${_error.message} ${err.handler.type || "Unknown"} Error on the ${srcServer}` : err.handler.emailMsgOpts.subject;
                     err.handler.emailMsgOpts.text = (!err.handler.emailMsgOpts.text || err.handler.emailMsgOpts.text.length === 0) ? `Error code: ${_error.code} \n Message: ${_error.message} \n Stack: ${err.stack}` : err.handler.emailMsgOpts.text;
-                    let defaultServiceOpts = HttpErrorHandler.emailServiceOptions;
-                    await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts);
+                    try {
+                        await HttpErrorHandler.mailService.sendEmail(err.handler.emailMsgOpts);
+                    }
+                    catch (err) {
+                        if (err && err.message) {
+                            BBLogger_1.BBLogger.error(err.message);
+                        }
+                    }
                 }
                 if (err.handler.sendText && (err.handler.textMsgOpts || HttpErrorHandler.textMsgOptions)) {
-                    await HttpErrorHandler.textMsgService.sendError(err, err.handler.textMsgOpts.recipientPhone, origin);
+                    try {
+                        await HttpErrorHandler.textMsgService.sendError(err, err.handler.textMsgOpts.recipientPhone, origin);
+                    }
+                    catch (err) {
+                        if (err && err.message) {
+                            BBLogger_1.BBLogger.error(err.message);
+                        }
+                    }
                 }
                 for (let ePoint of remoteEndpoints) {
                     reqOpts.uri = ePoint;

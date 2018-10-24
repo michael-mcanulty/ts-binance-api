@@ -62,9 +62,6 @@ class Rest extends BotHttp_1.BotHttp {
         try {
             raw = await this.call(callOpts);
             candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
-            candles.forEach(async (candle) => {
-                candle.quoteAsset = await self.getQuoteAssetName(candleOpts.symbol);
-            });
             return candles;
         }
         catch (err) {
@@ -548,16 +545,6 @@ class Rest extends BotHttp_1.BotHttp {
         catch (err) {
             throw err;
         }
-    }
-    async getQuoteAssetName(symbol) {
-        let qa;
-        let marketFilter = Binance_1.Binance.markets.filter(market => market.symbol === symbol);
-        let market;
-        if (marketFilter && marketFilter.length > 0) {
-            market = marketFilter[0];
-            qa = market.quoteAsset;
-        }
-        return qa;
     }
     async getStatus() {
         let self = this;

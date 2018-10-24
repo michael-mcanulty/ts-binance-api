@@ -99,9 +99,6 @@ export class Rest extends BotHttp {
 		try {
 			raw = await this.call(callOpts);
 			candles = Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
-			candles.forEach(async (candle) => {
-				candle.quoteAsset = await self.getQuoteAssetName(candleOpts.symbol);
-			});
 			return candles;
 		} catch (err) {
 			throw err;
@@ -600,17 +597,6 @@ export class Rest extends BotHttp {
 		} catch (err) {
 			throw err;
 		}
-	}
-
-	public async getQuoteAssetName(symbol: string): Promise<string> {
-		let qa: string;
-		let marketFilter: Market[] = Binance.markets.filter(market => market.symbol === symbol);
-		let market: Market;
-		if (marketFilter && marketFilter.length > 0) {
-			market = marketFilter[0];
-			qa = market.quoteAsset;
-		}
-		return qa;
 	}
 
 	//TODO: Check Signed on binance api docs and match to callOptions of each method.
