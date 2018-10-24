@@ -86,7 +86,6 @@ export class Rest extends BotHttp {
 
 	private async _getCandlesInterval(candleOpts: ICandleRequest): Promise<Candle[]> {
 		let candles: Candle[];
-		let self = this;
 		let raw: any[][];
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};

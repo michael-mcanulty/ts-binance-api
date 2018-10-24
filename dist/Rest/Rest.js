@@ -50,7 +50,6 @@ class Rest extends BotHttp_1.BotHttp {
     }
     async _getCandlesInterval(candleOpts) {
         let candles;
-        let self = this;
         let raw;
         let callOpts;
         let callConfig = {};
