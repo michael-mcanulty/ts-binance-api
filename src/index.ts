@@ -1,3 +1,4 @@
+export {ICandle} from "./ExchangeInfo/Interfaces/ICandle";
 export {IMessageOptions} from "./Error/Interfaces/IMessageOptions";
 export {TextMessage} from "./TextMessage/TextMessage";
 import {ECarrier} from "./TextMessage/ECarrier";
