@@ -73,6 +73,7 @@ Binance.intervalToMinutes = {
     '1d': 60 * 24,
     '3d': 60 * 24 * 3,
     '1w': 60 * 24 * 7,
+    '1M': 2.628e+9
 };
 Binance.markets = [];
 Binance.minutesToInterval = {
