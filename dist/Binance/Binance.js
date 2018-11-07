@@ -75,6 +75,22 @@ Binance.intervalToMinutes = {
     '1w': 60 * 24 * 7,
     '1M': 2.628e+9
 };
+Binance.millisecondsToInterval = {
+    60000: '1m',
+    180000: '3m',
+    300000: '5m',
+    900000: '15m',
+    1800000: '30m',
+    3600000: '1h',
+    7200000: '2h',
+    14400000: '4h',
+    21600000: '6h',
+    28800000: '8h',
+    43200000: '12h',
+    86400000: '1d',
+    259200000: '3d',
+    604800000: '1w'
+};
 Binance.markets = [];
 Binance.minutesToInterval = {
     1: '1m',
