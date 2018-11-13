@@ -80,7 +80,18 @@ export class BotWebsocket extends Rest{
 	}
 
 	public candles(symbols: string[], intervals: string[], callback: Function): any {
-		const self = this;
+		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
+			let intervalMins: number = Binance.intervalToMinutes[interval];
+			if(intervalMins  < 30){
+				return false;
+			}
+			let pctAllowed: number = 0.95;
+			let minMins: number = 60 - (intervalMins * pctAllowed);
+			let tsAllowed: number = Math.floor(minMins)*60000;
+			let lowestAcceptedTs = klineEventCloseTime - tsAllowed;
+			return (lowestAcceptedTs <= latestEventTime);
+		};
+
 		const symbolCache = symbols.map(symbol => {
 			return intervals.map(interval => {
 				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
@@ -88,11 +99,10 @@ export class BotWebsocket extends Rest{
 					let klineRes: IStreamRawKlineResponse;
 					klineRes = JSON.parse(msg.data);
 					let candle: Candle;
-					if (klineRes.k.x) {
+					//Checks if the candle is partial.
+					if (klineRes.k.x || withinLimits(interval, klineRes.E, klineRes.k.T)) {
 						candle = Candle.fromStream(klineRes);
 						callback(candle);
-					}else{
-						callback();
 					}
 				};
 				return w;

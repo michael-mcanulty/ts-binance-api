@@ -6,6 +6,7 @@ const Rest_1 = require("../Rest/Rest");
 const Candle_1 = require("../ExchangeInfo/Candle");
 const ExecutionReport_1 = require("../Account/ExecutionReport");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
+const __1 = require("..");
 class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
@@ -70,7 +71,17 @@ class BotWebsocket extends Rest_1.Rest {
         });
     }
     candles(symbols, intervals, callback) {
-        const self = this;
+        const withinLimits = (interval, latestEventTime, klineEventCloseTime) => {
+            let intervalMins = __1.Binance.intervalToMinutes[interval];
+            if (intervalMins < 30) {
+                return false;
+            }
+            let pctAllowed = 0.95;
+            let minMins = 60 - (intervalMins * pctAllowed);
+            let tsAllowed = Math.floor(minMins) * 60000;
+            let lowestAcceptedTs = klineEventCloseTime - tsAllowed;
+            return (lowestAcceptedTs <= latestEventTime);
+        };
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
                 let w = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
@@ -78,12 +89,9 @@ class BotWebsocket extends Rest_1.Rest {
                     let klineRes;
                     klineRes = JSON.parse(msg.data);
                     let candle;
-                    if (klineRes.k.x) {
+                    if (klineRes.k.x || withinLimits(interval, klineRes.E, klineRes.k.T)) {
                         candle = Candle_1.Candle.fromStream(klineRes);
                         callback(candle);
-                    }
-                    else {
-                        callback();
                     }
                 };
                 return w;
