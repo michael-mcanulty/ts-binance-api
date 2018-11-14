@@ -85,7 +85,7 @@ export class BotWebsocket extends Rest{
 			if(!options){
 				options = <ICandleWSOptions>{};
 				options.partial_kline_1min_prior = true;
-				options.partial_kline_minimum_interval = "m";
+				options.partial_kline_minimum_interval = "15m";
 			}
 
 			let minPartialIntervalMins: number = Binance.intervalToMinutes[options.partial_kline_minimum_interval];

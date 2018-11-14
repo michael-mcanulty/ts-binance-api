@@ -75,7 +75,7 @@ class BotWebsocket extends Rest_1.Rest {
             if (!options) {
                 options = {};
                 options.partial_kline_1min_prior = true;
-                options.partial_kline_minimum_interval = "m";
+                options.partial_kline_minimum_interval = "15m";
             }
             let minPartialIntervalMins = __1.Binance.intervalToMinutes[options.partial_kline_minimum_interval];
             let intervalMinutes = __1.Binance.intervalToMinutes[interval];
