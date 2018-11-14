@@ -70,20 +70,17 @@ class BotWebsocket extends Rest_1.Rest {
             };
         });
     }
-    candles(symbols, intervals, callback, options) {
+    candles(symbols, intervals, callback) {
         const withinLimits = (interval, latestEventTime, klineEventCloseTime) => {
-            if (!options) {
-                options = {};
-                options.partial_kline_1min_prior = true;
-                options.partial_kline_minimum_interval = "15m";
-            }
-            let minPartialIntervalMins = __1.Binance.intervalToMinutes[options.partial_kline_minimum_interval];
-            let intervalMinutes = __1.Binance.intervalToMinutes[interval];
-            if (options.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins) {
+            let intervalMins = __1.Binance.intervalToMinutes[interval];
+            if (intervalMins < 30) {
                 return false;
             }
-            let minuteBeforeEnd = klineEventCloseTime - 60000;
-            return (latestEventTime === minuteBeforeEnd);
+            let pctAllowed = 0.95;
+            let minMins = 60 - (intervalMins * pctAllowed);
+            let tsAllowed = Math.floor(minMins) * 60000;
+            let lowestAcceptedTs = klineEventCloseTime - tsAllowed;
+            return (lowestAcceptedTs <= latestEventTime);
         };
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
