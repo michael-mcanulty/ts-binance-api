@@ -56,7 +56,7 @@ export class BotWebsocket extends Rest{
 	public balances(callback: Function): void {
 		const self = this;
 		const keepStreamAlive = (method, listenKey) => async () => await method.apply(this, {listenKey});
-			self.getDataStream().then(async lk => {
+		self.getDataStream().then(async lk => {
 			const listenKey = lk.listenKey;
 			const w = this.openWebSocket(`${BotWebsocket.BASE}/${listenKey}`);
 			w.onmessage = (msg) => {
