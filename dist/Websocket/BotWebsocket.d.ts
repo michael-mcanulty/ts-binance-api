@@ -4,6 +4,7 @@ import { Rest } from "../Rest/Rest";
 import { ICandleWSOptions } from "./ICandleWSOptions";
 export declare class BotWebsocket extends Rest {
     static BASE: string;
+    static CandleOpts: ICandleWSOptions;
     private readonly _reconOptions;
     private _ws;
     private _url;
@@ -11,7 +12,7 @@ export declare class BotWebsocket extends Rest {
     _getTickerUrl(symbol?: string | null): string;
     _getTickers(callback: Function): any;
     balances(callback: Function): void;
-    candles(symbols: string[], intervals: string[], options: ICandleWSOptions, callback: Function): any;
+    candles(symbols: string[], intervals: string[], callback: Function): any;
     openWebSocket(url: any): ReconnectingWebSocket;
     orders(callback: Function): void;
     prices(callback: Function): void;

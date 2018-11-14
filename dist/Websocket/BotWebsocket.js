@@ -70,16 +70,11 @@ class BotWebsocket extends Rest_1.Rest {
             };
         });
     }
-    candles(symbols, intervals, options, callback) {
+    candles(symbols, intervals, callback) {
         const withinLimits = (interval, latestEventTime, klineEventCloseTime) => {
-            if (!options) {
-                options = {};
-                options.partial_kline_1min_prior = true;
-                options.partial_kline_minimum_interval = "15m";
-            }
-            let minPartialIntervalMins = __1.Binance.intervalToMinutes[options.partial_kline_minimum_interval];
+            let minPartialIntervalMins = __1.Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
             let intervalMinutes = __1.Binance.intervalToMinutes[interval];
-            if (options.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins) {
+            if (BotWebsocket.CandleOpts.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins) {
                 return false;
             }
             let minuteBeforeEnd = klineEventCloseTime - 60000;
@@ -174,5 +169,6 @@ class BotWebsocket extends Rest_1.Rest {
     }
 }
 BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';
+BotWebsocket.CandleOpts = { "partial_kline_1min_prior": true, "partial_kline_minimum_interval": "15m" };
 exports.BotWebsocket = BotWebsocket;
 //# sourceMappingURL=BotWebsocket.js.map

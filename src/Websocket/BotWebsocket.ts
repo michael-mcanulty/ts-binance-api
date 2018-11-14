@@ -17,6 +17,7 @@ import {ICandleWSOptions} from "./ICandleWSOptions";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
+	public static CandleOpts: ICandleWSOptions = {"partial_kline_1min_prior": true, "partial_kline_minimum_interval": "15m"};
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private _ws: ReconnectingWebSocket;
 
@@ -80,18 +81,13 @@ export class BotWebsocket extends Rest{
 		});
 	}
 
-	public candles(symbols: string[], intervals: string[], options: ICandleWSOptions, callback: Function): any {
+	public candles(symbols: string[], intervals: string[], callback: Function): any {
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-			if(!options){
-				options = <ICandleWSOptions>{};
-				options.partial_kline_1min_prior = true;
-				options.partial_kline_minimum_interval = "15m";
-			}
 
-			let minPartialIntervalMins: number = Binance.intervalToMinutes[options.partial_kline_minimum_interval];
+			let minPartialIntervalMins: number = Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
 
-			if(options.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins){
+			if(BotWebsocket.CandleOpts.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins){
 				return false;
 			}
 
