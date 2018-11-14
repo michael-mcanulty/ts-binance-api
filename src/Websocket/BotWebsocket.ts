@@ -82,16 +82,19 @@ export class BotWebsocket extends Rest{
 
 	public candles(symbols: string[], intervals: string[], callback: Function, options?: ICandleWSOptions): any {
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-			let options: ICandleWSOptions = <ICandleWSOptions>{};
 			if(!options){
+				options = <ICandleWSOptions>{};
 				options.partial_kline_1min_prior = true;
-				options.partial_kline_minimum_interval = "15m";
+				options.partial_kline_minimum_interval = "m";
 			}
+
 			let minPartialIntervalMins: number = Binance.intervalToMinutes[options.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
+
 			if(options.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins){
 				return false;
 			}
+
 			let minuteBeforeEnd: number = klineEventCloseTime - 60000;
 			return (latestEventTime === minuteBeforeEnd);
 		};

@@ -72,10 +72,10 @@ class BotWebsocket extends Rest_1.Rest {
     }
     candles(symbols, intervals, callback, options) {
         const withinLimits = (interval, latestEventTime, klineEventCloseTime) => {
-            let options = {};
             if (!options) {
+                options = {};
                 options.partial_kline_1min_prior = true;
-                options.partial_kline_minimum_interval = "15m";
+                options.partial_kline_minimum_interval = "m";
             }
             let minPartialIntervalMins = __1.Binance.intervalToMinutes[options.partial_kline_minimum_interval];
             let intervalMinutes = __1.Binance.intervalToMinutes[interval];
