@@ -79,17 +79,15 @@ export class BotWebsocket extends Rest{
 		});
 	}
 
-	public candles(symbols: string[], intervals: string[], callback: Function): any {
+	public candles(symbols: string[], intervals: string[], callback: Function, allowPartialOneMinPrior: boolean = true, minPartialInterval: string = "15m"): any {
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-			let intervalMins: number = Binance.intervalToMinutes[interval];
-			if(intervalMins  < 30){
+			let minPartialIntervalMins: number = Binance.intervalToMinutes[minPartialInterval];
+			let intervalMinutes: number = Binance.intervalToMinutes[interval];
+			if(allowPartialOneMinPrior && intervalMinutes >= minPartialIntervalMins){
 				return false;
 			}
-			let pctAllowed: number = 0.95;
-			let minMins: number = 60 - (intervalMins * pctAllowed);
-			let tsAllowed: number = Math.floor(minMins)*60000;
-			let lowestAcceptedTs = klineEventCloseTime - tsAllowed;
-			return (lowestAcceptedTs <= latestEventTime);
+			let minuteBeforeEnd: number = klineEventCloseTime - 60000;
+			return (latestEventTime === minuteBeforeEnd);
 		};
 
 		const symbolCache = symbols.map(symbol => {
