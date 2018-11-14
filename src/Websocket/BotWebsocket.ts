@@ -13,6 +13,7 @@ import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import Timer = NodeJS.Timer;
 import {Binance} from "..";
+import {ICandleWSOptions} from "./ICandleWSOptions";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
@@ -79,17 +80,23 @@ export class BotWebsocket extends Rest{
 		});
 	}
 
-	public candles(symbols: string[], intervals: string[], callback: Function): any {
+	public candles(symbols: string[], intervals: string[], options: ICandleWSOptions, callback: Function): any {
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-			let intervalMins: number = Binance.intervalToMinutes[interval];
-			if(intervalMins  < 30){
+			if(!options){
+				options = <ICandleWSOptions>{};
+				options.partial_kline_1min_prior = true;
+				options.partial_kline_minimum_interval = "15m";
+			}
+
+			let minPartialIntervalMins: number = Binance.intervalToMinutes[options.partial_kline_minimum_interval];
+			let intervalMinutes: number = Binance.intervalToMinutes[interval];
+
+			if(options.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins){
 				return false;
 			}
-			let pctAllowed: number = 0.95;
-			let minMins: number = 60 - (intervalMins * pctAllowed);
-			let tsAllowed: number = Math.floor(minMins)*60000;
-			let lowestAcceptedTs = klineEventCloseTime - tsAllowed;
-			return (lowestAcceptedTs <= latestEventTime);
+
+			let minuteBeforeEnd: number = klineEventCloseTime - 60000;
+			return (latestEventTime === minuteBeforeEnd);
 		};
 
 		const symbolCache = symbols.map(symbol => {

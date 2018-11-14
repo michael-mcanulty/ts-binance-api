@@ -11,7 +11,7 @@ export declare class BotWebsocket extends Rest {
     _getTickerUrl(symbol?: string | null): string;
     _getTickers(callback: Function): any;
     balances(callback: Function): void;
-    candles(symbols: string[], intervals: string[], callback: Function, options?: ICandleWSOptions): any;
+    candles(symbols: string[], intervals: string[], options: ICandleWSOptions, callback: Function): any;
     openWebSocket(url: any): ReconnectingWebSocket;
     orders(callback: Function): void;
     prices(callback: Function): void;
