@@ -1,6 +1,7 @@
 import { default as ReconnectingWebSocket } from "./ReconnectingWebSocket/ReconnectingWebSocket";
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { Rest } from "../Rest/Rest";
+import { ICandleWSOptions } from "./ICandleWSOptions";
 export declare class BotWebsocket extends Rest {
     static BASE: string;
     private readonly _reconOptions;
@@ -10,7 +11,7 @@ export declare class BotWebsocket extends Rest {
     _getTickerUrl(symbol?: string | null): string;
     _getTickers(callback: Function): any;
     balances(callback: Function): void;
-    candles(symbols: string[], intervals: string[], callback: Function, allowPartialOneMinPrior?: boolean, minPartialInterval?: string): any;
+    candles(symbols: string[], intervals: string[], callback: Function, options?: ICandleWSOptions): any;
     openWebSocket(url: any): ReconnectingWebSocket;
     orders(callback: Function): void;
     prices(callback: Function): void;

@@ -13,6 +13,7 @@ import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import Timer = NodeJS.Timer;
 import {Binance} from "..";
+import {ICandleWSOptions} from "./ICandleWSOptions";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
@@ -79,11 +80,16 @@ export class BotWebsocket extends Rest{
 		});
 	}
 
-	public candles(symbols: string[], intervals: string[], callback: Function, allowPartialOneMinPrior: boolean = true, minPartialInterval: string = "15m"): any {
+	public candles(symbols: string[], intervals: string[], callback: Function, options?: ICandleWSOptions): any {
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-			let minPartialIntervalMins: number = Binance.intervalToMinutes[minPartialInterval];
+			let options: ICandleWSOptions = <ICandleWSOptions>{};
+			if(!options){
+				options.partial_kline_1min_prior = true;
+				options.partial_kline_minimum_interval = "15m";
+			}
+			let minPartialIntervalMins: number = Binance.intervalToMinutes[options.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
-			if(allowPartialOneMinPrior && intervalMinutes >= minPartialIntervalMins){
+			if(options.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins){
 				return false;
 			}
 			let minuteBeforeEnd: number = klineEventCloseTime - 60000;
