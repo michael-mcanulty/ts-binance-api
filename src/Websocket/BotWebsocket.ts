@@ -86,14 +86,16 @@ export class BotWebsocket extends Rest{
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
 			let minPartialIntervalMins: number = Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
-
+			//TODO: just save date and check if received later
 			if(!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)){
 				return false;
 			}
 			let rounded: number = Math.round(latestEventTime/1000)*1000;
 			lastRounded = rounded.valueOf();
 			let minuteBeforeEnd: number = klineEventCloseTime - 59999;
-			return (rounded === minuteBeforeEnd) || (rounded+1000 > minuteBeforeEnd);
+			if(rounded <= minuteBeforeEnd+1000 && rounded >= minuteBeforeEnd){
+				return (lastRounded > minuteBeforeEnd+1000);
+			}
 		};
 
 		const symbolCache = symbols.map(symbol =>{
