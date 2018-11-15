@@ -87,7 +87,7 @@ export class BotWebsocket extends Rest{
 			let minPartialIntervalMins: number = Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
 
-			if(BotWebsocket.CandleOpts.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins){
+			if(!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)){
 				return false;
 			}
 

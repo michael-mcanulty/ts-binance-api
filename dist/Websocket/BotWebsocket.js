@@ -74,7 +74,7 @@ class BotWebsocket extends Rest_1.Rest {
         const withinLimits = (interval, latestEventTime, klineEventCloseTime) => {
             let minPartialIntervalMins = __1.Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
             let intervalMinutes = __1.Binance.intervalToMinutes[interval];
-            if (BotWebsocket.CandleOpts.partial_kline_1min_prior && intervalMinutes >= minPartialIntervalMins) {
+            if (!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)) {
                 return false;
             }
             let minuteBeforeEnd = klineEventCloseTime - 60000;
