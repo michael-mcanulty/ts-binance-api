@@ -89,9 +89,9 @@ export class BotWebsocket extends Rest{
 			if(!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)){
 				return false;
 			}
-
+			let rounded: number = Math.round(latestEventTime/1000)*1000;
 			let minuteBeforeEnd: number = klineEventCloseTime - 59999;
-			return ((Math.round(latestEventTime/1000)*1000) === minuteBeforeEnd);
+			return (rounded === minuteBeforeEnd) || (rounded === minuteBeforeEnd+1000);
 		};
 
 		const symbolCache = symbols.map(symbol =>{
