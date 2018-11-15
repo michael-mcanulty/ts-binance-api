@@ -94,13 +94,13 @@ export class BotWebsocket extends Rest{
 			let rounded: number = Math.round(latestEventTime/1000)*1000;
 			let minuteBeforeEnd: number = klineEventCloseTime - 59999;
 
-			if(rounded <= latestEventTime && latestEventTime <= rounded + 1000){
+			if(rounded <= minuteBeforeEnd && minuteBeforeEnd <= rounded + 1000){
 				inRange = true;
 				lastRounded = rounded.valueOf();
 			}else{
 				inRange = false;
 			}
-			return (inRange && rounded > lastRounded+1000);
+			return (inRange && rounded > minuteBeforeEnd);
 		};
 
 		const symbolCache = symbols.map(symbol =>{
