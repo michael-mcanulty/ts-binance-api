@@ -83,7 +83,6 @@ export class BotWebsocket extends Rest{
 
 	public candles(symbols: string[], intervals: string[], callback: Function): any {
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-
 			let minPartialIntervalMins: number = Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
 
@@ -91,11 +90,11 @@ export class BotWebsocket extends Rest{
 				return false;
 			}
 
-			let minuteBeforeEnd: number = klineEventCloseTime - 60000;
-			return (latestEventTime === minuteBeforeEnd);
+			let minuteBeforeEnd: number = klineEventCloseTime - 59999;
+			return ((Math.round(latestEventTime/1000)*1000) === minuteBeforeEnd);
 		};
 
-		const symbolCache = symbols.map(symbol => {
+		const symbolCache = symbols.map(symbol =>{
 			return intervals.map(interval => {
 				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
 				w.onmessage = async (msg) => {

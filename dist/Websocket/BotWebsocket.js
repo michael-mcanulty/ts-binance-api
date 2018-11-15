@@ -77,8 +77,8 @@ class BotWebsocket extends Rest_1.Rest {
             if (!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)) {
                 return false;
             }
-            let minuteBeforeEnd = klineEventCloseTime - 60000;
-            return (latestEventTime === minuteBeforeEnd);
+            let minuteBeforeEnd = klineEventCloseTime - 59999;
+            return ((Math.round(latestEventTime / 1000) * 1000) === minuteBeforeEnd);
         };
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
