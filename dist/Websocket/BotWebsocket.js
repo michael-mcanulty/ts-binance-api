@@ -88,7 +88,7 @@ class BotWebsocket extends Rest_1.Rest {
             else {
                 inRange = false;
             }
-            return (inRange && rounded > minuteBeforeEnd);
+            return (inRange && lastRounded > rounded + 1000);
         };
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {

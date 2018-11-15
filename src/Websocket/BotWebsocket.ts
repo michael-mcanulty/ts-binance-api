@@ -100,7 +100,7 @@ export class BotWebsocket extends Rest{
 			}else{
 				inRange = false;
 			}
-			return (inRange && rounded > minuteBeforeEnd);
+			return (inRange && lastRounded > rounded+1000);
 		};
 
 		const symbolCache = symbols.map(symbol =>{
