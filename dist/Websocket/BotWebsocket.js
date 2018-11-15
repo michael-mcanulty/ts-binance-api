@@ -81,7 +81,7 @@ class BotWebsocket extends Rest_1.Rest {
             let rounded = Math.round(latestEventTime / 1000) * 1000;
             lastRounded = rounded.valueOf();
             let minuteBeforeEnd = klineEventCloseTime - 59999;
-            return (rounded === minuteBeforeEnd) || (rounded - 1000 === minuteBeforeEnd);
+            return (rounded === minuteBeforeEnd) || (rounded + 1000 > minuteBeforeEnd);
         };
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
