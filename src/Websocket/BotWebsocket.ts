@@ -82,19 +82,25 @@ export class BotWebsocket extends Rest{
 	}
 
 	public candles(symbols: string[], intervals: string[], callback: Function): any {
-		let lastRounded: number;
+		let lastTimeRecv: number;
 		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
 			let minPartialIntervalMins: number = Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
 			let intervalMinutes: number = Binance.intervalToMinutes[interval];
-			//TODO: just save date and check if received later
+			//TODO: just save date and check if received later.
 			if(!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)){
 				return false;
 			}
-			let rounded: number = Math.round(latestEventTime/1000)*1000;
-			lastRounded = rounded.valueOf();
 			let minuteBeforeEnd: number = klineEventCloseTime - 59999;
-			if(rounded <= minuteBeforeEnd+1000 && rounded >= minuteBeforeEnd){
-				return (lastRounded > minuteBeforeEnd+1000);
+			if(latestEventTime >= minuteBeforeEnd && latestEventTime < klineEventCloseTime){
+				if(!lastTimeRecv || latestEventTime > klineEventCloseTime){
+					lastTimeRecv = latestEventTime.valueOf();
+					return true;
+				}else{
+					return false
+				}
+			}
+			else{
+				return false;
 			}
 		};
 
