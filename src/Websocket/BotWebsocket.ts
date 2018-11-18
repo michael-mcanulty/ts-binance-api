@@ -80,7 +80,6 @@ export class BotWebsocket extends Rest{
 	}
 
 	public candles(symbols: string[], intervals: string[], callback: Function): any {
-		const self = this;
 		const symbolCache = symbols.map(symbol => {
 			return intervals.map(interval => {
 				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);

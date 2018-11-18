@@ -70,7 +70,6 @@ class BotWebsocket extends Rest_1.Rest {
         });
     }
     candles(symbols, intervals, callback) {
-        const self = this;
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
                 let w = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
