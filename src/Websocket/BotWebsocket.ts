@@ -90,8 +90,6 @@ export class BotWebsocket extends Rest{
 					if (klineRes.k.x) {
 						candle = Candle.fromStream(klineRes);
 						callback(candle);
-					}else{
-						callback();
 					}
 				};
 				return w;

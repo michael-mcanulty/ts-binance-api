@@ -81,9 +81,6 @@ class BotWebsocket extends Rest_1.Rest {
                         candle = Candle_1.Candle.fromStream(klineRes);
                         callback(candle);
                     }
-                    else {
-                        callback();
-                    }
                 };
                 return w;
             });
