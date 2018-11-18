@@ -13,11 +13,9 @@ import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 import Timer = NodeJS.Timer;
 import {Binance} from "..";
-import {ICandleWSOptions} from "./ICandleWSOptions";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
-	public static CandleOpts: ICandleWSOptions = {"partial_kline_1min_prior": true, "partial_kline_minimum_interval": "15m"};
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private _ws: ReconnectingWebSocket;
 
@@ -82,39 +80,19 @@ export class BotWebsocket extends Rest{
 	}
 
 	public candles(symbols: string[], intervals: string[], callback: Function): any {
-		let lastTimeRecv: number;
-		const withinLimits = (interval: string, latestEventTime: number, klineEventCloseTime: number)=>{
-			let minPartialIntervalMins: number = Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
-			let intervalMinutes: number = Binance.intervalToMinutes[interval];
-			//TODO: just save date and check if received later.
-			if(!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)){
-				return false;
-			}
-			let minuteBeforeEnd: number = klineEventCloseTime - 59999;
-			if(latestEventTime >= minuteBeforeEnd && latestEventTime < klineEventCloseTime){
-				if(!lastTimeRecv || latestEventTime > klineEventCloseTime){
-					lastTimeRecv = latestEventTime.valueOf();
-					return true;
-				}else{
-					return false
-				}
-			}
-			else{
-				return false;
-			}
-		};
-
-		const symbolCache = symbols.map(symbol =>{
+		const self = this;
+		const symbolCache = symbols.map(symbol => {
 			return intervals.map(interval => {
 				let w: ReconnectingWebSocket = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
 				w.onmessage = async (msg) => {
 					let klineRes: IStreamRawKlineResponse;
 					klineRes = JSON.parse(msg.data);
 					let candle: Candle;
-					//Checks if the candle is partial.
-					if (klineRes.k.x || withinLimits(interval, klineRes.E, klineRes.k.T)) {
+					if (klineRes.k.x) {
 						candle = Candle.fromStream(klineRes);
 						callback(candle);
+					}else{
+						callback();
 					}
 				};
 				return w;

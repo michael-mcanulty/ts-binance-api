@@ -1,10 +1,8 @@
 import { default as ReconnectingWebSocket } from "./ReconnectingWebSocket/ReconnectingWebSocket";
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { Rest } from "../Rest/Rest";
-import { ICandleWSOptions } from "./ICandleWSOptions";
 export declare class BotWebsocket extends Rest {
     static BASE: string;
-    static CandleOpts: ICandleWSOptions;
     private readonly _reconOptions;
     private _ws;
     private _url;

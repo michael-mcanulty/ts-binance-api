@@ -6,7 +6,6 @@ const Rest_1 = require("../Rest/Rest");
 const Candle_1 = require("../ExchangeInfo/Candle");
 const ExecutionReport_1 = require("../Account/ExecutionReport");
 const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
-const __1 = require("..");
 class BotWebsocket extends Rest_1.Rest {
     constructor(options) {
         super(options);
@@ -71,27 +70,7 @@ class BotWebsocket extends Rest_1.Rest {
         });
     }
     candles(symbols, intervals, callback) {
-        let lastTimeRecv;
-        const withinLimits = (interval, latestEventTime, klineEventCloseTime) => {
-            let minPartialIntervalMins = __1.Binance.intervalToMinutes[BotWebsocket.CandleOpts.partial_kline_minimum_interval];
-            let intervalMinutes = __1.Binance.intervalToMinutes[interval];
-            if (!BotWebsocket.CandleOpts.partial_kline_1min_prior || (intervalMinutes < minPartialIntervalMins)) {
-                return false;
-            }
-            let minuteBeforeEnd = klineEventCloseTime - 59999;
-            if (latestEventTime >= minuteBeforeEnd && latestEventTime < klineEventCloseTime) {
-                if (!lastTimeRecv || latestEventTime > klineEventCloseTime) {
-                    lastTimeRecv = latestEventTime.valueOf();
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
-        };
+        const self = this;
         const symbolCache = symbols.map(symbol => {
             return intervals.map(interval => {
                 let w = this.openWebSocket(`${BotWebsocket.BASE}/${symbol.toLowerCase()}@kline_${interval}`);
@@ -99,9 +78,12 @@ class BotWebsocket extends Rest_1.Rest {
                     let klineRes;
                     klineRes = JSON.parse(msg.data);
                     let candle;
-                    if (klineRes.k.x || withinLimits(interval, klineRes.E, klineRes.k.T)) {
+                    if (klineRes.k.x) {
                         candle = Candle_1.Candle.fromStream(klineRes);
                         callback(candle);
+                    }
+                    else {
+                        callback();
                     }
                 };
                 return w;
@@ -181,6 +163,5 @@ class BotWebsocket extends Rest_1.Rest {
     }
 }
 BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';
-BotWebsocket.CandleOpts = { "partial_kline_1min_prior": true, "partial_kline_minimum_interval": "15m" };
 exports.BotWebsocket = BotWebsocket;
 //# sourceMappingURL=BotWebsocket.js.map
