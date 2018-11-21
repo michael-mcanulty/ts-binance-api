@@ -13,7 +13,8 @@ class OutboundAccountInfo {
         let balances = iOutInfoRaw.B.map((bal) => {
             return new Balance_1.Balance(bal.a, bal.f, bal.l);
         });
-        let outbound = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W, iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
+        let outbound;
+        outbound = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W, iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
         return outbound;
     }
     constructor(balances, buyerCommissionRate, canDeposit, canTrade, canWithdraw, eventTime, lastAccountUpdate, makerCommissionRate, sellerCommissionRate, takerCommissionRate) {

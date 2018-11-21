@@ -32,15 +32,13 @@ export class OutboundAccountInfo {
 		let balances: Balance[] = iOutInfoRaw.B.map((bal: IBalanceStream) => {
 			return new Balance(bal.a, bal.f, bal.l);
 		});
-		let outbound: OutboundAccountInfo = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W,
+		let outbound: OutboundAccountInfo;
+		outbound = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W,
 			iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
 		return outbound;
 	}
 
-	constructor(balances: Balance[], buyerCommissionRate: number, canDeposit: boolean, canTrade: boolean,
-							canWithdraw: boolean, eventTime: number, lastAccountUpdate: number,
-							makerCommissionRate: number, sellerCommissionRate: number, takerCommissionRate: number) {
-
+	constructor(balances: Balance[], buyerCommissionRate: number, canDeposit: boolean, canTrade: boolean, canWithdraw: boolean, eventTime: number, lastAccountUpdate: number, makerCommissionRate: number, sellerCommissionRate: number, takerCommissionRate: number) {
 		this.balances = balances;
 		this.buyerCommissionRate = buyerCommissionRate;
 		this.canDeposit = canDeposit;

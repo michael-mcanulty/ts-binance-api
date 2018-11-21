@@ -57,7 +57,7 @@ class BotWebsocket extends Rest_1.Rest {
                     let infoRaw;
                     infoRaw = json;
                     let accountInfo = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceStream(infoRaw);
-                    callback(accountInfo);
+                    callback(accountInfo.balances);
                 }
             };
             const int = setInterval(keepStreamAlive(self.keepDataStream, listenKey), 50e3);

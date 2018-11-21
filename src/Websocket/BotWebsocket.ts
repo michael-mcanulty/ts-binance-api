@@ -64,7 +64,7 @@ export class BotWebsocket extends Rest{
 					let infoRaw: IOutboundAccountInfoStream;
 					infoRaw = json;
 					let accountInfo: OutboundAccountInfo = OutboundAccountInfo.fromBinanceStream(infoRaw);
-					callback(accountInfo);
+					callback(accountInfo.balances);
 				}
 			};
 
