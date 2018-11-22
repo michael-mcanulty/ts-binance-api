@@ -2,7 +2,6 @@ import {IQueryOrder} from "./Interfaces/IQueryOrder";
 import {BaseQueryOrder} from "./BaseQueryOrder";
 import {IQueryOrderOpts} from "./Interfaces/IQueryOrderOpts";
 import {IBaseQueryOrder} from "./Interfaces/IBaseQueryOrder";
-import {IQueryCancelOrder} from "./Interfaces/IQueryCancelOrder";
 
 export class QueryOrder extends BaseQueryOrder implements IQueryOrder {
 	origClientOrderId: string;
