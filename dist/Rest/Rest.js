@@ -531,7 +531,7 @@ class Rest extends BotHttp_1.BotHttp {
         let callConfig = {};
         callConfig.method = 'GET';
         callConfig.json = true;
-        callConfig.uri = `/api/v1/ticker/24hr`;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/ticker/24hr`;
         try {
             callOpts = new CallOptions_1.CallOptions(callConfig);
             if (symbol && typeof symbol === "string") {

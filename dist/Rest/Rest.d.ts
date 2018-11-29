@@ -47,7 +47,7 @@ export declare class Rest extends BotHttp {
     getMarkets(quoteAsset?: string): Promise<Market[]>;
     getOpenOrders(options: IGetOrderOpts): Promise<OpenOrder[]>;
     getOrder(options: IGetOrderOpts): Promise<Order>;
-    get24hrTicker(symbol: string): Promise<I24hrTicker[]>;
+    get24hrTicker(symbol?: string): Promise<I24hrTicker[]>;
     getPrices(): Promise<Price[]>;
     getStatus(): Promise<ISystemStatus>;
     getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult>;

@@ -578,13 +578,13 @@ export class Rest extends BotHttp {
 		}
 	}
 
-	public async get24hrTicker(symbol: string): Promise<I24hrTicker[]>{
+	public async get24hrTicker(symbol?: string): Promise<I24hrTicker[]>{
 		let self = this;
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};
 		callConfig.method = 'GET';
 		callConfig.json = true;
-		callConfig.uri = `/api/v1/ticker/24hr`;
+		callConfig.uri = `${BotHttp.BASE}/api/v1/ticker/24hr`;
 
 		try {
 			callOpts = new CallOptions(callConfig);
