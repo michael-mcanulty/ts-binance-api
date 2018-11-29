@@ -53,6 +53,7 @@ import {Price} from "../Transaction/Price";
 import {IPrice} from "../Transaction/Interfaces/IPrice";
 import {IGetTotalBalanceOpts} from "../Balances/Interfaces/IGetTotalBalanceOpts";
 import {GetTotalBalanceOpts} from "../Balances/GetTotalBalanceOpts";
+import {I24hrTicker} from "../ExchangeInfo/Interfaces/I24hrTicker";
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
@@ -571,6 +572,26 @@ export class Rest extends BotHttp {
 				return result;
 			} else {
 				return;
+			}
+		} catch (err) {
+			throw err;
+		}
+	}
+
+	public async get24hrTicker(symbol: string): Promise<I24hrTicker[]>{
+		let self = this;
+		let callOpts: CallOptions;
+		let callConfig: ICallOpts = <ICallOpts>{};
+		callConfig.method = 'GET';
+		callConfig.json = true;
+		callConfig.uri = `/api/v1/ticker/24hr`;
+
+		try {
+			callOpts = new CallOptions(callConfig);
+			if(symbol && typeof symbol === "string"){
+				return <I24hrTicker[]> [await self.call(callOpts)];
+			}else{
+				return <I24hrTicker[]> await self.call(callOpts);
 			}
 		} catch (err) {
 			throw err;

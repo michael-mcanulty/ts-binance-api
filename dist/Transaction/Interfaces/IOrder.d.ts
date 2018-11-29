@@ -8,5 +8,5 @@ export interface IOrder extends IBaseOrder {
     origQty: string;
     status: string;
     transactTime: number;
-    fills: IFill[];
+    fills?: IFill[];
 }

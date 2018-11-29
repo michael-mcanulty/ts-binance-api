@@ -525,6 +525,26 @@ class Rest extends BotHttp_1.BotHttp {
             throw err;
         }
     }
+    async get24hrTicker(symbol) {
+        let self = this;
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.uri = `/api/v1/ticker/24hr`;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            if (symbol && typeof symbol === "string") {
+                return [await self.call(callOpts)];
+            }
+            else {
+                return await self.call(callOpts);
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
     async getPrices() {
         let self = this;
         let rawPrices;

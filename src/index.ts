@@ -1,3 +1,4 @@
+export {I24hrTicker} from "./ExchangeInfo/Interfaces/I24hrTicker";
 export {ICandleWSOptions} from "./Websocket/ICandleWSOptions";
 export {ICandle} from "./ExchangeInfo/Interfaces/ICandle";
 export {IMessageOptions} from "./Error/Interfaces/IMessageOptions";

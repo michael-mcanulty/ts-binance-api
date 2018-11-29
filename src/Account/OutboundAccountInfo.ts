@@ -33,8 +33,7 @@ export class OutboundAccountInfo {
 			return new Balance(bal.a, bal.f, bal.l);
 		});
 		let outbound: OutboundAccountInfo;
-		outbound = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W,
-			iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
+		outbound = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W, iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
 		return outbound;
 	}
 
