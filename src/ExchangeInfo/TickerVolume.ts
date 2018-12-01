@@ -4,7 +4,7 @@ export class TickerVolume {
 	symbol: string;
 	volume: number;
 
-	public static toTickerVolume(tickers: I24hrTickerResponse[]):TickerVolume[]{
+	public static toTickerVolumeList(tickers: I24hrTickerResponse[]):TickerVolume[]{
 		return tickers.map(ticker=>new TickerVolume(ticker));
 	}
 	constructor(ticker: I24hrTickerResponse) {

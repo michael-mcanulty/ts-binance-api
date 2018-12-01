@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class TickerVolume {
-    static toTickerVolume(tickers) {
+    static toTickerVolumeList(tickers) {
         return tickers.map(ticker => new TickerVolume(ticker));
     }
     constructor(ticker) {
