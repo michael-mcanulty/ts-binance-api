@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var TickerVolume_1 = require("./ExchangeInfo/TickerVolume");
+exports.TickerVolume = TickerVolume_1.TickerVolume;
 var TextMessage_1 = require("./TextMessage/TextMessage");
 exports.TextMessage = TextMessage_1.TextMessage;
+var Ticker24hr_1 = require("./ExchangeInfo/Ticker24hr");
+exports.Ticker24hr = Ticker24hr_1.Ticker24hr;
 var GetTotalBalanceOpts_1 = require("./Balances/GetTotalBalanceOpts");
 exports.GetTotalBalanceOpts = GetTotalBalanceOpts_1.GetTotalBalanceOpts;
 var Fill_1 = require("./Transaction/Fill");

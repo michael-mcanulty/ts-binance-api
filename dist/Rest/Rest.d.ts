@@ -25,7 +25,7 @@ import { ICancelOrderOpts } from "../Transaction/Interfaces/ICancelOrderOpts";
 import { ITotalBalance } from "../Balances/Interfaces/ITotalBalance";
 import { Price } from "../Transaction/Price";
 import { IGetTotalBalanceOpts } from "../Balances/Interfaces/IGetTotalBalanceOpts";
-import { I24hrTicker } from "../ExchangeInfo/Interfaces/I24hrTicker";
+import { I24hrTickerResponse } from "../ExchangeInfo/Interfaces/I24hrTickerResponse";
 export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
     private _cancelOrder;
@@ -47,7 +47,7 @@ export declare class Rest extends BotHttp {
     getMarkets(quoteAsset?: string): Promise<Market[]>;
     getOpenOrders(options: IGetOrderOpts): Promise<OpenOrder[]>;
     getOrder(options: IGetOrderOpts): Promise<Order>;
-    get24hrTicker(symbol?: string): Promise<I24hrTicker[]>;
+    get24hrTicker(symbol?: string): Promise<I24hrTickerResponse[]>;
     getPrices(): Promise<Price[]>;
     getStatus(): Promise<ISystemStatus>;
     getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult>;

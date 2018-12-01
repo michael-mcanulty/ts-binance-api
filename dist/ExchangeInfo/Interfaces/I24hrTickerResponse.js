@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=I24hrTicker.js.map
+//# sourceMappingURL=I24hrTickerResponse.js.map

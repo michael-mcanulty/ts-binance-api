@@ -1,4 +1,4 @@
-export interface I24hrTicker {
+export interface I24hrTickerResponse {
 	symbol: string;
 	priceChange: string;
 	priceChangePercent: string;
