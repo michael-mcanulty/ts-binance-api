@@ -1,4 +1,3 @@
-import { RestCandle } from "./RestCandle";
 import { IStreamRawKlineResponse } from "../ExchangeInfo/Interfaces/ICandleBinance";
 export declare class Candle {
     close: number;
@@ -12,5 +11,5 @@ export declare class Candle {
     closeTime: Date;
     static fromRestStream(rawData: any[][], symbol: string, interval: string): Candle[];
     static fromWebsocket(klineStream: IStreamRawKlineResponse): Candle;
-    constructor(restCandle: RestCandle, symbol?: string, interval?: string);
+    constructor(openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number, symbol?: string, interval?: string);
 }

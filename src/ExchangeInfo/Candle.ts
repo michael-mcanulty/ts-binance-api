@@ -23,14 +23,14 @@ export class Candle {
 		return wsCandleResp.candle.toCandle();
 	}
 
-	constructor(restCandle: RestCandle, symbol?: string, interval?: string) {
-		this.openTime = new Date(restCandle.openTime);
-		this.open = parseFloat(restCandle.open);
-		this.high = parseFloat(restCandle.high);
-		this.low = parseFloat(restCandle.low);
-		this.close = parseFloat(restCandle.close);
-		this.volume = parseFloat(restCandle.volume);
-		this.closeTime = new Date(restCandle.closeTime);
+	constructor(openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number, symbol?: string, interval?: string) {
+		this.openTime = new Date(openTime);
+		this.open = parseFloat(open);
+		this.high = parseFloat(high);
+		this.low = parseFloat(low);
+		this.close = parseFloat(close);
+		this.volume = parseFloat(volume);
+		this.closeTime = new Date(closeTime);
 		if (symbol || interval) {
 			this.symbol = symbol;
 			this.interval = interval;
