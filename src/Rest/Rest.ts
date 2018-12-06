@@ -86,6 +86,9 @@ export class Rest extends BotHttp {
 	}
 
 	private async _getCandlesInterval(candleOpts: ICandleRequest): Promise<Candle[]> {
+		let lastCandle: Candle;
+		let lastIdx: number;
+		let now: number;
 		let candles: Candle[];
 		let raw: any[][];
 		let callOpts: CallOptions;
@@ -98,7 +101,13 @@ export class Rest extends BotHttp {
 
 		try {
 			raw = await this.call(callOpts);
+			now = Date.now();
 			candles = Candle.fromRestStream(raw, candleOpts.symbol, candleOpts.interval);
+			lastIdx = candles.length - 1;
+			lastCandle = candles[lastIdx];
+			if(lastCandle.closeTime.getTime() > now){
+				candles.splice(lastIdx, 1);
+			}
 			return candles;
 		} catch (err) {
 			throw err;
