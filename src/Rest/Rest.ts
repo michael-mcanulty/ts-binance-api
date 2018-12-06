@@ -98,7 +98,7 @@ export class Rest extends BotHttp {
 
 		try {
 			raw = await this.call(callOpts);
-			candles = Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
+			candles = Candle.fromRestCandles(raw, candleOpts.symbol, candleOpts.interval);
 			return candles;
 		} catch (err) {
 			throw err;

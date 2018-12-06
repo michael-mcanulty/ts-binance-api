@@ -1,33 +1,36 @@
-import {IStreamRawKline, IStreamRawKlineResponse} from "./Interfaces/ICandleBinance";
+import {RestCandle} from "./RestCandle";
+import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
+import {WSCandleResp} from "./WSCandle";
 
 export class Candle {
 	close: number;
-	date: Date;
+	openTime: Date;
 	high: number;
 	interval?: string;
 	low: number;
 	open: number;
 	symbol?: string;
 	volume: number;
+	closeTime: Date;
 
-	static fromHttpByInterval(rawData: any[][], symbol: string, interval: string): Candle[] {
-		return rawData.map(candle => {
-			return new Candle(candle[0], candle[1], candle[2], candle[3], candle[4], candle[5], symbol, interval);
-		});
+	static fromRestStream(rawData: any[][], symbol: string, interval: string): Candle[] {
+		let restCandles: RestCandle[] = RestCandle.fromRest(rawData);
+		return restCandles.map(r=>r.toCandle(symbol, interval));
 	}
 
-	static fromStream(rawKlineResponse: IStreamRawKlineResponse): Candle {
-		let rawKline: IStreamRawKline = rawKlineResponse.k;
-		return new Candle(rawKline.t, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i);
+	static fromWebsocket(klineStream: IStreamRawKlineResponse): Candle{
+		let wsCandleResp: WSCandleResp = new WSCandleResp(klineStream);
+		return wsCandleResp.candle.toCandle();
 	}
 
-	constructor(date: number, open: string, high: string, low: string, close: string, volume: string, symbol?: string, interval?: string) {
-		this.date = new Date(new Date(date).setSeconds(0, 0));
-		this.open = parseFloat(open);
-		this.high = parseFloat(high);
-		this.low = parseFloat(low);
-		this.close = parseFloat(close);
-		this.volume = parseFloat(volume);
+	constructor(restCandle: RestCandle, symbol?: string, interval?: string) {
+		this.openTime = new Date(restCandle.openTime);
+		this.open = parseFloat(restCandle.open);
+		this.high = parseFloat(restCandle.high);
+		this.low = parseFloat(restCandle.low);
+		this.close = parseFloat(restCandle.close);
+		this.volume = parseFloat(restCandle.volume);
+		this.closeTime = new Date(restCandle.closeTime);
 		if (symbol || interval) {
 			this.symbol = symbol;
 			this.interval = interval;

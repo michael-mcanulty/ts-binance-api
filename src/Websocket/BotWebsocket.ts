@@ -88,7 +88,7 @@ export class BotWebsocket extends Rest{
 					klineRes = JSON.parse(msg.data);
 					let candle: Candle;
 					if (klineRes.k.x) {
-						candle = Candle.fromStream(klineRes);
+						candle = Candle.fromWebSocket(klineRes);
 						callback(candle);
 					}
 				};

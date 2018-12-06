@@ -1,22 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const RestCandle_1 = require("./RestCandle");
+const WSCandle_1 = require("./WSCandle");
 class Candle {
-    static fromHttpByInterval(rawData, symbol, interval) {
-        return rawData.map(candle => {
-            return new Candle(candle[0], candle[1], candle[2], candle[3], candle[4], candle[5], symbol, interval);
-        });
+    static fromRestStream(rawData, symbol, interval) {
+        let restCandles = RestCandle_1.RestCandle.fromRest(rawData);
+        return restCandles.map(r => r.toCandle(symbol, interval));
     }
-    static fromStream(rawKlineResponse) {
-        let rawKline = rawKlineResponse.k;
-        return new Candle(rawKline.t, rawKline.o, rawKline.h, rawKline.l, rawKline.c, rawKline.v, rawKline.s, rawKline.i);
+    static fromWebsocket(klineStream) {
+        let wsCandleResp = new WSCandle_1.WSCandleResp(klineStream);
+        return wsCandleResp.candle.toCandle();
     }
-    constructor(date, open, high, low, close, volume, symbol, interval) {
-        this.date = new Date(new Date(date).setSeconds(0, 0));
-        this.open = parseFloat(open);
-        this.high = parseFloat(high);
-        this.low = parseFloat(low);
-        this.close = parseFloat(close);
-        this.volume = parseFloat(volume);
+    constructor(restCandle, symbol, interval) {
+        this.openTime = new Date(restCandle.openTime);
+        this.open = parseFloat(restCandle.open);
+        this.high = parseFloat(restCandle.high);
+        this.low = parseFloat(restCandle.low);
+        this.close = parseFloat(restCandle.close);
+        this.volume = parseFloat(restCandle.volume);
+        this.closeTime = new Date(restCandle.closeTime);
         if (symbol || interval) {
             this.symbol = symbol;
             this.interval = interval;

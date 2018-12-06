@@ -60,7 +60,7 @@ class Rest extends BotHttp_1.BotHttp {
         callOpts = new CallOptions_1.CallOptions(callConfig);
         try {
             raw = await this.call(callOpts);
-            candles = Candle_1.Candle.fromHttpByInterval(raw, candleOpts.symbol, candleOpts.interval);
+            candles = Candle_1.Candle.fromRestCandles(raw, candleOpts.symbol, candleOpts.interval);
             return candles;
         }
         catch (err) {
