@@ -4,15 +4,13 @@ import {Price} from "../Transaction/Price";
 import {Ticker} from "../ExchangeInfo/ticker";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {Rest} from "../Rest/Rest";
-import {HttpError} from "../Error/HttpError";
+
 import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
 import {Candle} from "../ExchangeInfo/Candle";
 import {IOutboundAccountInfoStream} from "../Account/Interfaces/IOutboundAccountInfoStream";
 import {IExecutionReportRaw} from "../Account/Interfaces/IExecutionReportRaw";
 import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
-import Timer = NodeJS.Timer;
-import {Binance} from "..";
 
 export class BotWebsocket extends Rest{
 	public static BASE: string = 'wss://stream.binance.com:9443/ws';
@@ -88,7 +86,7 @@ export class BotWebsocket extends Rest{
 					klineRes = JSON.parse(msg.data);
 					let candle: Candle;
 					if (klineRes.k.x) {
-						candle = Candle.fromWebSocket(klineRes);
+						candle = Candle.fromWebsocket(klineRes)
 						callback(candle);
 					}
 				};
