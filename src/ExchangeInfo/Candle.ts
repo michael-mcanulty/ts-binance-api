@@ -23,13 +23,31 @@ export class Candle {
 		return wsCandleResp.candle.toCandle();
 	}
 
-	constructor(openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number, symbol?: string, interval?: string) {
+	static fromApiCandle(openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number, symbol?: string, interval?: string){
+		let _symbol: string;
+		let _interval: string;
+		let _openTime: Date = new Date(openTime);
+		let _open: number = parseFloat(open);
+		let _high: number = parseFloat(high);
+		let _low: number = parseFloat(low);
+		let _close: number = parseFloat(close);
+		let _volume: number = parseFloat(volume);
+		let _closeTime: Date = new Date(closeTime);
+		if (symbol || interval) {
+			_symbol = symbol;
+			_interval = interval;
+		}
+
+		return new Candle(_openTime, _open, _high, _low, _close, _volume, _closeTime, _symbol, _interval);
+	}
+
+	constructor(openTime: Date, open: number, high: number, low: number, close: number, volume: number, closeTime: Date, symbol?: string, interval?: string) {
 		this.openTime = new Date(openTime);
-		this.open = parseFloat(open);
-		this.high = parseFloat(high);
-		this.low = parseFloat(low);
-		this.close = parseFloat(close);
-		this.volume = parseFloat(volume);
+		this.open = open;
+		this.high = high;
+		this.low = low;
+		this.close = close;
+		this.volume = volume;
 		this.closeTime = new Date(closeTime);
 		if (symbol || interval) {
 			this.symbol = symbol;

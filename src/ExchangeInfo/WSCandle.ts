@@ -10,7 +10,7 @@ export class WSCandle extends RestCandle{
 	closed: boolean;
 
 	toCandle(): Candle{
-		return new Candle(this.openTime, this.open, this.high, this.low, this.close, this.volume, this.closeTime);
+		return new Candle(new Date(this.openTime), parseFloat(this.open), parseFloat(this.high), parseFloat(this.low), parseFloat(this.close), parseFloat(this.volume), new Date(this.closeTime));
 	}
 
 	constructor(candle: IStreamRawKline){
