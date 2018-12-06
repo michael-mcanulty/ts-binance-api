@@ -1,14 +1,16 @@
-import { IStreamRawKlineResponse } from "./Interfaces/ICandleBinance";
+import { RestCandle } from "./RestCandle";
+import { IStreamRawKlineResponse } from "../ExchangeInfo/Interfaces/ICandleBinance";
 export declare class Candle {
     close: number;
-    date: Date;
+    openTime: Date;
     high: number;
     interval?: string;
     low: number;
     open: number;
     symbol?: string;
     volume: number;
-    static fromHttpByInterval(rawData: any[][], symbol: string, interval: string): Candle[];
-    static fromStream(rawKlineResponse: IStreamRawKlineResponse): Candle;
-    constructor(date: number, open: string, high: string, low: string, close: string, volume: string, symbol?: string, interval?: string);
+    closeTime: Date;
+    static fromRestStream(rawData: any[][], symbol: string, interval: string): Candle[];
+    static fromWebsocket(klineStream: IStreamRawKlineResponse): Candle;
+    constructor(restCandle: RestCandle, symbol?: string, interval?: string);
 }
