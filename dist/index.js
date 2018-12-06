@@ -1,9 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var WSCandle_1 = require("./ExchangeInfo/WSCandle");
+exports.WSCandle = WSCandle_1.WSCandle;
+exports.WSCandleResp = WSCandle_1.WSCandleResp;
 var TickerVolume_1 = require("./ExchangeInfo/TickerVolume");
 exports.TickerVolume = TickerVolume_1.TickerVolume;
 var TextMessage_1 = require("./TextMessage/TextMessage");
 exports.TextMessage = TextMessage_1.TextMessage;
+var RestCandle_1 = require("./ExchangeInfo/RestCandle");
+exports.RestCandle = RestCandle_1.RestCandle;
 var Ticker24hr_1 = require("./ExchangeInfo/Ticker24hr");
 exports.Ticker24hr = Ticker24hr_1.Ticker24hr;
 var GetTotalBalanceOpts_1 = require("./Balances/GetTotalBalanceOpts");

@@ -1,10 +1,11 @@
+export {WSCandle, WSCandleResp} from "./ExchangeInfo/WSCandle";
 export {TickerVolume} from "./ExchangeInfo/TickerVolume";
 export {I24hrTickerResponse} from "./ExchangeInfo/Interfaces/I24hrTickerResponse";
 export {ICandleWSOptions} from "./Websocket/ICandleWSOptions";
 export {ICandle} from "./ExchangeInfo/Interfaces/ICandle";
 export {IMessageOptions} from "./Error/Interfaces/IMessageOptions";
 export {TextMessage} from "./TextMessage/TextMessage";
-import {ECarrier} from "./TextMessage/ECarrier";
+export {RestCandle} from "./ExchangeInfo/RestCandle";
 export {Ticker24hr} from "./ExchangeInfo/Ticker24hr";
 export {IEmailOptions} from "./Error/Interfaces/IEmailOptions";
 export {GetTotalBalanceOpts} from "./Balances/GetTotalBalanceOpts";
