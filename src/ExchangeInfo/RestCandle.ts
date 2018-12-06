@@ -7,12 +7,12 @@ export class RestCandle {
 	low:string;
 	close: string;
 	volume: string;
-	closeTime: number;
-	qaVolume: string;
-	numTrades: number;
-	takerBuyBAVolume: string;
-	takerBuyQAVolume: string;
-	ignore: string;
+	closeTime?: number;
+	qaVolume?: string;
+	numTrades?: number;
+	takerBuyBAVolume?: string;
+	takerBuyQAVolume?: string;
+	ignore?: string;
 
 	static fromRest(rawData: any[][]): RestCandle[] {
 		return rawData.map(candle => {
@@ -25,8 +25,8 @@ export class RestCandle {
 	}
 
 	constructor(
-		openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number,
-		qaVolume: string, numTrades: number, takerBuyBAVolume: string, takerBuyQAVolume: string, ignore: string) {
+		openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime?: number,
+		qaVolume?: string, numTrades?: number, takerBuyBAVolume?: string, takerBuyQAVolume?: string, ignore?: string) {
 		this.openTime = openTime;
 		this.open = open;
 		this.high = high;
