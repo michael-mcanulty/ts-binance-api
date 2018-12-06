@@ -8,7 +8,7 @@ class RestCandle {
         });
     }
     toCandle(symbol, interval) {
-        return new Candle_1.Candle(this, symbol, interval);
+        return new Candle_1.Candle(this.openTime, this.open, this.high, this.low, this.close, this.volume, this.closeTime, symbol, interval);
     }
     constructor(openTime, open, high, low, close, volume, closeTime, qaVolume, numTrades, takerBuyBAVolume, takerBuyQAVolume, ignore) {
         this.openTime = openTime;

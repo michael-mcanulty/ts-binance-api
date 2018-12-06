@@ -21,7 +21,7 @@ export class RestCandle {
 	}
 
 	toCandle(symbol: string, interval: string): Candle {
-		return new Candle(this, symbol, interval);
+		return new Candle(this.openTime, this.open, this.high, this.low, this.close, this.volume, this.closeTime, symbol, interval);
 	}
 
 	constructor(

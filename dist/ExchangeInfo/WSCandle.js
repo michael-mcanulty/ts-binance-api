@@ -4,7 +4,7 @@ const RestCandle_1 = require("./RestCandle");
 const Candle_1 = require("./Candle");
 class WSCandle extends RestCandle_1.RestCandle {
     toCandle() {
-        return new Candle_1.Candle(new RestCandle_1.RestCandle(this.openTime, this.open, this.high, this.low, this.close, this.volume, this.closeTime, this.qaVolume, this.numTrades, this.takerBuyBAVolume, this.takerBuyQAVolume, this.ignore));
+        return new Candle_1.Candle(this.openTime, this.open, this.high, this.low, this.close, this.volume, this.closeTime);
     }
     constructor(candle) {
         super(candle.t, candle.o, candle.h, candle.l, candle.c, candle.v, candle.T, candle.q, candle.n, candle.V, candle.Q, candle.B);
