@@ -11,5 +11,6 @@ export declare class Candle {
     closeTime: Date;
     static fromRestStream(rawData: any[][], symbol: string, interval: string): Candle[];
     static fromWebsocket(klineStream: IStreamRawKlineResponse): Candle;
-    constructor(openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number, symbol?: string, interval?: string);
+    static fromApiCandle(openTime: number, open: string, high: string, low: string, close: string, volume: string, closeTime: number, symbol?: string, interval?: string): Candle;
+    constructor(openTime: Date, open: number, high: number, low: number, close: number, volume: number, closeTime: Date, symbol?: string, interval?: string);
 }
