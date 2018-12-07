@@ -7,11 +7,7 @@ import {Candle} from "../ExchangeInfo/Candle";
 import {Market} from "../Market/Market";
 import {Binance} from "../Binance/Binance";
 import {NewOrder} from "../Transaction/NewOrder";
-import {
-	TNewOrderRespType,
-	TOrderSide,
-	TOrderType
-} from "../Transaction/Interfaces/EOrderEnums";
+import {TNewOrderRespType, TOrderSide, TOrderType} from "../Transaction/Interfaces/EOrderEnums";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {Order} from "../Transaction/Order";
 import {HttpError} from "../Error/HttpError";
