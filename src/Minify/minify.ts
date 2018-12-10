@@ -5,6 +5,8 @@ import {IOptions} from "./Interfaces/IOptions";
 export class Minify{
 	public baseDir: string;
 	public walk: Walk;
+	public paths: string[];
+	public scriptStr: string;
 
 	public getFilePaths(): string[]{
 		return this.walk.sync();
@@ -27,5 +29,10 @@ export class Minify{
 		opts.ignore = [minifyDir];
 		opts.globs = ['*.ts'];
 		this.walk = new Walk(this.baseDir, opts);
+		this.paths = this.getFilePaths();
+		this.scriptStr = this.getMinifyScript(this.paths);
+		console.log(this.scriptStr);
 	}
 }
+
+const minify = new Minify();

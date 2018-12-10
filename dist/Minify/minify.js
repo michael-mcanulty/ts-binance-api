@@ -21,7 +21,11 @@ class Minify {
         opts.ignore = [minifyDir];
         opts.globs = ['*.ts'];
         this.walk = new Walk_1.Walk(this.baseDir, opts);
+        this.paths = this.getFilePaths();
+        this.scriptStr = this.getMinifyScript(this.paths);
+        console.log(this.scriptStr);
     }
 }
 exports.Minify = Minify;
+const minify = new Minify();
 //# sourceMappingURL=minify.js.map
