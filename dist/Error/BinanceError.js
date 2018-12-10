@@ -1,6 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class BinanceError {
-}
-exports.BinanceError = BinanceError;
-//# sourceMappingURL=BinanceError.js.map
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class BinanceError{}exports.BinanceError=BinanceError;

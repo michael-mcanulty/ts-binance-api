@@ -1,16 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class Entry {
-    isDirectory() {
-        return (this.mode & 61440) === 16384;
-    }
-    constructor(basePath, mode, mtime, relativePath, size) {
-        this.basePath = basePath;
-        this.mode = mode;
-        this.mtime = mtime;
-        this.relativePath = relativePath;
-        this.size = size;
-    }
-}
-exports.Entry = Entry;
-//# sourceMappingURL=Entry.js.map
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Entry{isDirectory(){return 16384==(61440&this.mode)}constructor(t,e,s,r,i){this.basePath=t,this.mode=e,this.mtime=s,this.relativePath=r,this.size=i}}exports.Entry=Entry;

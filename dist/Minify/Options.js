@@ -1,16 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class Options {
-    static toOptions(opts) {
-        return new Options(opts.directories, opts.globs, opts.ignore, opts.includeBasePath);
-    }
-    constructor(directories, globs, ignore, includeBasePath, callback) {
-        this.directories = directories || true;
-        this.globs = globs;
-        this.ignore = ignore;
-        this.includeBasePath = includeBasePath || false;
-        this.callback = callback;
-    }
-}
-exports.Options = Options;
-//# sourceMappingURL=Options.js.map
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Options{static toOptions(t){return new Options(t.directories,t.globs,t.ignore,t.includeBasePath)}constructor(t,s,e,i,o){this.directories=t||!0,this.globs=s,this.ignore=e,this.includeBasePath=i||!1,this.callback=o}}exports.Options=Options;
