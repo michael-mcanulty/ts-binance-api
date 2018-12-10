@@ -1,1 +1,27 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Ticker24hr{constructor(e){this.askPrice=parseFloat(e.askPrice),this.bidPrice=parseFloat(e.bidPrice),this.closeTime=e.closeTime,this.count=e.count,this.firstId=e.firstId,this.highPrice=parseFloat(e.highPrice),this.lastId=e.lastId,this.lastPrice=parseFloat(e.lastPrice),this.lastQty=parseFloat(e.lastQty),this.lowPrice=parseFloat(e.lowPrice),this.openPrice=parseFloat(e.openPrice),this.openTime=e.openTime,this.prevClosePrice=parseFloat(e.prevClosePrice),this.priceChange=parseFloat(e.priceChange),this.priceChangePercent=parseFloat(e.priceChangePercent),this.quoteVolume=parseFloat(e.quoteVolume),this.symbol=e.symbol,this.volume=parseFloat(e.volume),this.weightedAvgPrice=parseFloat(e.weightedAvgPrice)}}exports.Ticker24hr=Ticker24hr;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Ticker24hr {
+    constructor(ticker) {
+        this.askPrice = parseFloat(ticker.askPrice);
+        this.bidPrice = parseFloat(ticker.bidPrice);
+        this.closeTime = ticker.closeTime;
+        this.count = ticker.count;
+        this.firstId = ticker.firstId;
+        this.highPrice = parseFloat(ticker.highPrice);
+        this.lastId = ticker.lastId;
+        this.lastPrice = parseFloat(ticker.lastPrice);
+        this.lastQty = parseFloat(ticker.lastQty);
+        this.lowPrice = parseFloat(ticker.lowPrice);
+        this.openPrice = parseFloat(ticker.openPrice);
+        this.openTime = ticker.openTime;
+        this.prevClosePrice = parseFloat(ticker.prevClosePrice);
+        this.priceChange = parseFloat(ticker.priceChange);
+        this.priceChangePercent = parseFloat(ticker.priceChangePercent);
+        this.quoteVolume = parseFloat(ticker.quoteVolume);
+        this.symbol = ticker.symbol;
+        this.volume = parseFloat(ticker.volume);
+        this.weightedAvgPrice = parseFloat(ticker.weightedAvgPrice);
+    }
+}
+exports.Ticker24hr = Ticker24hr;
+//# sourceMappingURL=Ticker24hr.js.map

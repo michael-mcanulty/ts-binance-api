@@ -1,1 +1,27 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Event{constructor(e,s){this.target=s,this.type=e}}exports.Event=Event;class ErrorEvent extends Event{constructor(e,s){super("error",s),this.message=e.message,this.error=e}}exports.ErrorEvent=ErrorEvent;class CloseEvent extends Event{constructor(e=1e3,s="",t){super("close",t),this.wasClean=!0,this.code=e,this.reason=s}}exports.CloseEvent=CloseEvent;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Event {
+    constructor(type, target) {
+        this.target = target;
+        this.type = type;
+    }
+}
+exports.Event = Event;
+class ErrorEvent extends Event {
+    constructor(error, target) {
+        super('error', target);
+        this.message = error.message;
+        this.error = error;
+    }
+}
+exports.ErrorEvent = ErrorEvent;
+class CloseEvent extends Event {
+    constructor(code = 1000, reason = '', target) {
+        super('close', target);
+        this.wasClean = true;
+        this.code = code;
+        this.reason = reason;
+    }
+}
+exports.CloseEvent = CloseEvent;
+//# sourceMappingURL=Events.js.map

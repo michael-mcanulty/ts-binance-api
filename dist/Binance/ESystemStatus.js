@@ -1,1 +1,8 @@
-"use strict";var ESystemStatus;Object.defineProperty(exports,"__esModule",{value:!0}),function(t){t[t.normal=0]="normal",t[t.maintenance=1]="maintenance"}(ESystemStatus=exports.ESystemStatus||(exports.ESystemStatus={}));
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ESystemStatus;
+(function (ESystemStatus) {
+    ESystemStatus[ESystemStatus["normal"] = 0] = "normal";
+    ESystemStatus[ESystemStatus["maintenance"] = 1] = "maintenance";
+})(ESystemStatus = exports.ESystemStatus || (exports.ESystemStatus = {}));
+//# sourceMappingURL=ESystemStatus.js.map

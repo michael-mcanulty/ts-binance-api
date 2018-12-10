@@ -1,1 +1,154 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const crypto=require("crypto"),HttpError_1=require("../Error/HttpError"),Signed_1=require("./Signed"),ApiHeader_1=require("./ApiHeader"),CallOptions_1=require("./CallOptions"),requestPromise=require("request-promise-native");class BotHttp{constructor(t){this.options=t}async call(t){let e;try{return e=await this.binanceRequest(t)}catch(t){throw t}}async binanceRequest(t){let e,r=t.toObjLiteral();try{return e=await BotHttp.requestApi(r)}catch(t){throw t}}static async requestApi(t){let e,r;try{return 200!==(r=await requestPromise[t.method.toLowerCase()](t)).statusCode?(e=new HttpError_1.HttpError(r.statusCode,r.statusMessage),Promise.reject(e)):r.body}catch(t){throw t}}getSignature(t,e){let r;return r=crypto.createHmac("sha256",this.options.auth.secret).update(BotHttp.makeQueryString(Object.assign(t,e)).substr(1)).digest("hex")}async getTimestamp(){let t={};if(!this.options.useServerTime)return t.timestamp=Date.now(),t;try{return t.timestamp=await this.timestamp(),t}catch(t){throw t}}static makeQueryString(t){let e,r;return r=Object.keys(t).filter(e=>t[e]),e=t?`?${r.map(e=>`${encodeURIComponent(e)}=${encodeURIComponent(t[e])}`).join("&")}`:""}async ping(){let t,e={method:"GET",json:!0,isSigned:!0};e.uri=`${BotHttp.BASE}/api/v1/ping`,e.apiKey=this.options.auth.key;try{return t=new CallOptions_1.CallOptions(e),await this.call(t),!0}catch(t){throw t}}async privateCall(t){let e,r,i;try{return t.headers=new ApiHeader_1.ApiHeader(this.options.auth.key),t.isSigned?(null==typeof t.qs&&(t.qs=new Signed_1.Signed),e=await this.getTimestamp(),i=await this.getSignature(t.qs,e),t.qs.timestamp=e.timestamp,t.qs.signature=i):t&&"object"==typeof t.qs&&t.qs.timestamp&&delete t.qs.timestamp,r=await this.binanceRequest(t)}catch(t){throw t}}async time(){let t,e={};try{return e.method="GET",e.json=!0,e.isSigned=!0,e.apiKey=this.options.auth.key,e.uri=`${BotHttp.BASE}/api/v1/time`,t=new CallOptions_1.CallOptions(e),await this.call(t)}catch(t){throw t}}async timestamp(){try{return(await this.time()).serverTime}catch(t){throw t}}}BotHttp.BASE="https://api.binance.com",exports.BotHttp=BotHttp;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const crypto = require("crypto");
+const HttpError_1 = require("../Error/HttpError");
+const Signed_1 = require("./Signed");
+const ApiHeader_1 = require("./ApiHeader");
+const CallOptions_1 = require("./CallOptions");
+const requestPromise = require("request-promise-native");
+class BotHttp {
+    constructor(options) {
+        this.options = options;
+    }
+    async call(callOptions) {
+        let result;
+        try {
+            result = await this.binanceRequest(callOptions);
+            return result;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async binanceRequest(callOptions) {
+        let res;
+        let requestOpts = callOptions.toObjLiteral();
+        try {
+            res = await BotHttp.requestApi(requestOpts);
+            return res;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    static async requestApi(uriOptions) {
+        let error;
+        let res;
+        try {
+            res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
+            if (res.statusCode !== 200) {
+                error = new HttpError_1.HttpError(res.statusCode, res.statusMessage);
+                return Promise.reject(error);
+            }
+            else {
+                return res.body;
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    getSignature(payload, timestamp) {
+        let signature;
+        signature = crypto.createHmac('sha256', this.options.auth.secret).update(BotHttp.makeQueryString(Object.assign(payload, timestamp)).substr(1)).digest('hex');
+        return signature;
+    }
+    async getTimestamp() {
+        let time = {};
+        if (this.options.useServerTime) {
+            try {
+                time.timestamp = await this.timestamp();
+                return time;
+            }
+            catch (err) {
+                throw err;
+            }
+        }
+        else {
+            time.timestamp = Date.now();
+            return time;
+        }
+    }
+    static makeQueryString(params) {
+        let result;
+        let keys;
+        keys = Object.keys(params).filter(k => params[k]);
+        if (!params) {
+            result = "";
+        }
+        else {
+            result = `?${keys.map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`).join('&')}`;
+        }
+        return result;
+    }
+    async ping() {
+        let config;
+        let options = {};
+        options.method = "GET";
+        options.json = true;
+        options.isSigned = true;
+        options.uri = `${BotHttp.BASE}/api/v1/ping`;
+        options.apiKey = this.options.auth.key;
+        try {
+            config = new CallOptions_1.CallOptions(options);
+            await this.call(config);
+            return true;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async privateCall(options) {
+        let tStamp;
+        let result;
+        let signature;
+        try {
+            options.headers = new ApiHeader_1.ApiHeader(this.options.auth.key);
+            if (options.isSigned) {
+                if (typeof options.qs == undefined) {
+                    options.qs = new Signed_1.Signed();
+                }
+                tStamp = await this.getTimestamp();
+                signature = await this.getSignature(options.qs, tStamp);
+                options.qs['timestamp'] = tStamp.timestamp;
+                options.qs['signature'] = signature;
+            }
+            else if (options && typeof options.qs === "object" && options.qs['timestamp']) {
+                delete options.qs['timestamp'];
+            }
+            result = await this.binanceRequest(options);
+            return result;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async time() {
+        let opts;
+        let options = {};
+        try {
+            options.method = "GET";
+            options.json = true;
+            options.isSigned = true;
+            options.apiKey = this.options.auth.key;
+            options.uri = `${BotHttp.BASE}/api/v1/time`;
+            opts = new CallOptions_1.CallOptions(options);
+            return await this.call(opts);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async timestamp() {
+        try {
+            let time = await this.time();
+            return time.serverTime;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+}
+BotHttp.BASE = 'https://api.binance.com';
+exports.BotHttp = BotHttp;
+//# sourceMappingURL=BotHttp.js.map

@@ -1,1 +1,39 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const Price_1=require("../Transaction/Price");class Ticker{toPrice(){return new Price_1.Price(this.symbol,this.curDayClose)}constructor(e){let t=e,s={eventType:t.e,eventTime:t.E,symbol:t.s,priceChange:t.p,priceChangePercent:t.P,weightedAvg:t.w,prevDayClose:t.x,curDayClose:t.c,closeTradeQuantity:t.Q,bestBid:t.b,bestBidQnt:t.B,bestAsk:t.a,bestAskQnt:t.A,open:t.o,high:t.h,low:t.l,volume:t.v,volumeQuote:t.q,openTime:t.O,closeTime:t.C,firstTradeId:t.F,lastTradeId:t.L,totalTrades:t.n};Object.assign(this,s)}}exports.Ticker=Ticker;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Price_1 = require("../Transaction/Price");
+class Ticker {
+    toPrice() {
+        return new Price_1.Price(this.symbol, this.curDayClose);
+    }
+    constructor(rawStreamTicker) {
+        let m = rawStreamTicker;
+        let ticker = {
+            eventType: m.e,
+            eventTime: m.E,
+            symbol: m.s,
+            priceChange: m.p,
+            priceChangePercent: m.P,
+            weightedAvg: m.w,
+            prevDayClose: m.x,
+            curDayClose: m.c,
+            closeTradeQuantity: m.Q,
+            bestBid: m.b,
+            bestBidQnt: m.B,
+            bestAsk: m.a,
+            bestAskQnt: m.A,
+            open: m.o,
+            high: m.h,
+            low: m.l,
+            volume: m.v,
+            volumeQuote: m.q,
+            openTime: m.O,
+            closeTime: m.C,
+            firstTradeId: m.F,
+            lastTradeId: m.L,
+            totalTrades: m.n,
+        };
+        Object.assign(this, ticker);
+    }
+}
+exports.Ticker = Ticker;
+//# sourceMappingURL=ticker.js.map

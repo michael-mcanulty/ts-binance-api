@@ -1,1 +1,29 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const RestCandle_1=require("./RestCandle"),WSCandle_1=require("./WSCandle");class Candle{static fromRestStream(e,t,s){return RestCandle_1.RestCandle.fromRest(e).map(e=>e.toCandle(t,s))}static fromWebsocket(e){return new WSCandle_1.WSCandleResp(e).candle.toCandle()}constructor(e,t,s,n,a,l,o,r,i){this.openTime=new Date(e),this.open=t,this.high=s,this.low=n,this.close=a,this.volume=l,this.closeTime=new Date(o),(r||i)&&(this.symbol=r,this.interval=i)}}exports.Candle=Candle;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const RestCandle_1 = require("./RestCandle");
+const WSCandle_1 = require("./WSCandle");
+class Candle {
+    static fromRestStream(rawData, symbol, interval) {
+        let restCandles = RestCandle_1.RestCandle.fromRest(rawData);
+        return restCandles.map(r => r.toCandle(symbol, interval));
+    }
+    static fromWebsocket(klineStream) {
+        let wsCandleResp = new WSCandle_1.WSCandleResp(klineStream);
+        return wsCandleResp.candle.toCandle();
+    }
+    constructor(openTime, open, high, low, close, volume, closeTime, symbol, interval) {
+        this.openTime = new Date(openTime);
+        this.open = open;
+        this.high = high;
+        this.low = low;
+        this.close = close;
+        this.volume = volume;
+        this.closeTime = new Date(closeTime);
+        if (symbol || interval) {
+            this.symbol = symbol;
+            this.interval = interval;
+        }
+    }
+}
+exports.Candle = Candle;
+//# sourceMappingURL=Candle.js.map

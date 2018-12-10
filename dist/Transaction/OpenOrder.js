@@ -1,1 +1,55 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const BaseOrder_1=require("./BaseOrder");class OpenOrder extends BaseOrder_1.BaseOrder{toObjLiteral(){let t=this,e={};for(let i in t)t[i]&&"function"!=typeof t[i]&&(e[i]=t[i]);return e}toBinance(){let t={};return t.clientOrderId=this.clientOrderId,t.executedQty=this.executedQty?this.executedQty.toString():void 0,t.icebergQty=this.icebergQty?this.icebergQty.toString():void 0,t.isWorking=this.isWorking,t.orderId=this.orderId,t.origQty=this.origQty?this.origQty.toString():void 0,t.price=this.price?this.price.toString():void 0,t.side=this.side,t.status=this.status,t.stopPrice=this.stopPrice?this.stopPrice.toString():void 0,t.symbol=this.symbol,t.timeInForce=this.timeInForce,t.time=this.time,t.type=this.type,t}constructor(t){let e={};e.cummulativeQuoteQty=t.cummulativeQuoteQty,e.type=t.type,e.price=t.price,e.side=t.side,e.symbol=t.symbol,e.timeInForce=t.timeInForce,super(e),this.clientOrderId=t.clientOrderId,this.executedQty=parseFloat(t.executedQty),this.orderId=t.orderId,this.status=t.status,this.icebergQty=parseFloat(t.icebergQty),this.isWorking=t.isWorking,this.stopPrice=parseFloat(t.stopPrice),this.symbol=t.symbol,this.time=t.time}}exports.OpenOrder=OpenOrder;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const BaseOrder_1 = require("./BaseOrder");
+class OpenOrder extends BaseOrder_1.BaseOrder {
+    toObjLiteral() {
+        let self = this;
+        let order = {};
+        for (let prop in self) {
+            if (self[prop] && typeof self[prop] !== "function") {
+                order[prop] = self[prop];
+            }
+        }
+        return order;
+    }
+    toBinance() {
+        let self = this;
+        let binance = {};
+        binance.clientOrderId = self.clientOrderId;
+        binance.executedQty = (self.executedQty) ? self.executedQty.toString() : undefined;
+        binance.icebergQty = (self.icebergQty) ? self.icebergQty.toString() : undefined;
+        binance.isWorking = self.isWorking;
+        binance.orderId = self.orderId;
+        binance.origQty = (self.origQty) ? self.origQty.toString() : undefined;
+        binance.price = (self.price) ? self.price.toString() : undefined;
+        binance.side = self.side;
+        binance.status = self.status;
+        binance.stopPrice = (self.stopPrice) ? self.stopPrice.toString() : undefined;
+        binance.symbol = self.symbol;
+        binance.timeInForce = self.timeInForce;
+        binance.time = self.time;
+        binance.type = self.type;
+        return binance;
+    }
+    constructor(openOrder) {
+        let base = {};
+        base.cummulativeQuoteQty = openOrder.cummulativeQuoteQty;
+        base.type = openOrder.type;
+        base.price = openOrder.price;
+        base.side = openOrder.side;
+        base.symbol = openOrder.symbol;
+        base.timeInForce = openOrder.timeInForce;
+        super(base);
+        this.clientOrderId = openOrder.clientOrderId;
+        this.executedQty = parseFloat(openOrder.executedQty);
+        this.orderId = openOrder.orderId;
+        this.status = openOrder.status;
+        this.icebergQty = parseFloat(openOrder.icebergQty);
+        this.isWorking = openOrder.isWorking;
+        this.stopPrice = parseFloat(openOrder.stopPrice);
+        this.symbol = openOrder.symbol;
+        this.time = openOrder.time;
+    }
+}
+exports.OpenOrder = OpenOrder;
+//# sourceMappingURL=OpenOrder.js.map
