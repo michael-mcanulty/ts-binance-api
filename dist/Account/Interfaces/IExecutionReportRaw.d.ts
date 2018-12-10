@@ -1,0 +1,30 @@
+export interface IExecutionReportRaw {
+    C: string;
+    E: number;
+    F: string;
+    I: number;
+    L: string;
+    M: boolean;
+    N?: any;
+    P: string;
+    S: string;
+    T: number;
+    X: string;
+    c: string;
+    e: string;
+    f: string;
+    g: number;
+    i: number;
+    l: string;
+    m: boolean;
+    n: string;
+    o: string;
+    p: string;
+    q: string;
+    r: string;
+    s: string;
+    t: number;
+    w: boolean;
+    x: string;
+    z: string;
+}
