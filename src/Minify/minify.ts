@@ -32,7 +32,7 @@ export class Minify{
 		Minify._baseDir = `${base}/dist`;
 		minifyDir = `${Minify._baseDir}/Minify`;
 		opts.ignore = [minifyDir];
-		opts.globs = [`*/**/*.js`];
+		opts.globs = [`*.js`, `*/**/*.js`];
 		Minify._walk = new Walk(Minify._baseDir, opts);
 		Minify._paths = Minify._walk.sync();
 		Minify._paths.forEach(t=>{
