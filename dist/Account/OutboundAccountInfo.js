@@ -1,1 +1,35 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const Balance_1=require("../Balances/Balance");class OutboundAccountInfo{static fromBinanceRest(e){let t=e.balances.map(e=>new Balance_1.Balance(e.asset,e.free,e.locked));return new OutboundAccountInfo(t,e.buyerCommissionRate,e.canDeposit,e.canTrade,e.canWithdraw,e.eventTime,e.lastAccountUpdate,e.makerCommissionRate,e.sellerCommissionRate,e.takerCommissionRate)}static fromBinanceStream(e){let t,n=e.B.map(e=>new Balance_1.Balance(e.a,e.f,e.l));return t=new OutboundAccountInfo(n,e.b,e.D,e.T,e.W,e.E,e.u,e.m,e.s,e.t)}constructor(e,t,n,a,s,o,c,i,r,u){this.balances=e,this.buyerCommissionRate=t,this.canDeposit=n,this.canTrade=a,this.canWithdraw=s,this.eventType="account",this.eventTime=o,this.lastAccountUpdate=c,this.makerCommissionRate=i,this.sellerCommissionRate=r,this.takerCommissionRate=u}}exports.OutboundAccountInfo=OutboundAccountInfo;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Balance_1 = require("../Balances/Balance");
+class OutboundAccountInfo {
+    static fromBinanceRest(account) {
+        let balances = account.balances.map((bal) => {
+            return new Balance_1.Balance(bal.asset, bal.free, bal.locked);
+        });
+        let outbound = new OutboundAccountInfo(balances, account.buyerCommissionRate, account.canDeposit, account.canTrade, account.canWithdraw, account.eventTime, account.lastAccountUpdate, account.makerCommissionRate, account.sellerCommissionRate, account.takerCommissionRate);
+        return outbound;
+    }
+    static fromBinanceStream(iOutInfoRaw) {
+        let balances = iOutInfoRaw.B.map((bal) => {
+            return new Balance_1.Balance(bal.a, bal.f, bal.l);
+        });
+        let outbound;
+        outbound = new OutboundAccountInfo(balances, iOutInfoRaw.b, iOutInfoRaw.D, iOutInfoRaw.T, iOutInfoRaw.W, iOutInfoRaw.E, iOutInfoRaw.u, iOutInfoRaw.m, iOutInfoRaw.s, iOutInfoRaw.t);
+        return outbound;
+    }
+    constructor(balances, buyerCommissionRate, canDeposit, canTrade, canWithdraw, eventTime, lastAccountUpdate, makerCommissionRate, sellerCommissionRate, takerCommissionRate) {
+        this.balances = balances;
+        this.buyerCommissionRate = buyerCommissionRate;
+        this.canDeposit = canDeposit;
+        this.canTrade = canTrade;
+        this.canWithdraw = canWithdraw;
+        this.eventType = "account";
+        this.eventTime = eventTime;
+        this.lastAccountUpdate = lastAccountUpdate;
+        this.makerCommissionRate = makerCommissionRate;
+        this.sellerCommissionRate = sellerCommissionRate;
+        this.takerCommissionRate = takerCommissionRate;
+    }
+}
+exports.OutboundAccountInfo = OutboundAccountInfo;
+//# sourceMappingURL=OutboundAccountInfo.js.map

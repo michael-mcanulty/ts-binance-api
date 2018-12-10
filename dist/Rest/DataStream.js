@@ -1,1 +1,9 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class DataStream{constructor(e){this.listenKey=e.listenKey}}exports.DataStream=DataStream;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class DataStream {
+    constructor(listenKey) {
+        this.listenKey = listenKey.listenKey;
+    }
+}
+exports.DataStream = DataStream;
+//# sourceMappingURL=DataStream.js.map

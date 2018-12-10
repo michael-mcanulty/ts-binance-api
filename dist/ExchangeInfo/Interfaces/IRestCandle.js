@@ -1,0 +1,1 @@
+//# sourceMappingURL=IRestCandle.js.map

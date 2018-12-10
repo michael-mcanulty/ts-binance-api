@@ -1,1 +1,6 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Signed{}exports.Signed=Signed;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Signed {
+}
+exports.Signed = Signed;
+//# sourceMappingURL=Signed.js.map

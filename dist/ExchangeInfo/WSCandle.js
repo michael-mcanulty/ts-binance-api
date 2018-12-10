@@ -1,1 +1,26 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const RestCandle_1=require("./RestCandle"),Candle_1=require("./Candle");class WSCandle extends RestCandle_1.RestCandle{toCandle(){return new Candle_1.Candle(new Date(this.openTime),parseFloat(this.open),parseFloat(this.high),parseFloat(this.low),parseFloat(this.close),parseFloat(this.volume),new Date(this.closeTime),this.symbol,this.interval)}constructor(e){super(e.t,e.o,e.h,e.l,e.c,e.v,e.T,e.q,e.n,e.V,e.Q,e.B),this.symbol=e.s,this.interval=e.i}}exports.WSCandle=WSCandle;class WSCandleResp{constructor(e){let s=e.k;this.eventType=e.e,this.eventTime=e.E,this.symbol=e.s,this.candle=new WSCandle(s)}}exports.WSCandleResp=WSCandleResp;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const RestCandle_1 = require("./RestCandle");
+const Candle_1 = require("./Candle");
+class WSCandle extends RestCandle_1.RestCandle {
+    toCandle() {
+        return new Candle_1.Candle(new Date(this.openTime), parseFloat(this.open), parseFloat(this.high), parseFloat(this.low), parseFloat(this.close), parseFloat(this.volume), new Date(this.closeTime), this.symbol, this.interval);
+    }
+    constructor(candle) {
+        super(candle.t, candle.o, candle.h, candle.l, candle.c, candle.v, candle.T, candle.q, candle.n, candle.V, candle.Q, candle.B);
+        this.symbol = candle.s;
+        this.interval = candle.i;
+    }
+}
+exports.WSCandle = WSCandle;
+class WSCandleResp {
+    constructor(klineWs) {
+        let kline = klineWs.k;
+        this.eventType = klineWs.e;
+        this.eventTime = klineWs.E;
+        this.symbol = klineWs.s;
+        this.candle = new WSCandle(kline);
+    }
+}
+exports.WSCandleResp = WSCandleResp;
+//# sourceMappingURL=WSCandle.js.map

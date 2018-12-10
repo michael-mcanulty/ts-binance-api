@@ -1,1 +1,405 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const HttpErrorHandler_1=require("./HttpErrorHandler");class HttpError extends Error{constructor(e,t,r,a){if(super(),this.code=e,this.message=t,this.isFatal=a||!1,r)this.handler=r;else{let e=HttpError._getErrorHandler(this);null!==e&&(this.handler=e)}}static fromObjLiteral(e){if(!e)return;let t=new HttpErrorHandler_1.HttpErrorHandler(e.handler);return new HttpError(e.code,e.message,t,e.isFatal)}static toObjLiteral(e){if(!e)return;let t={};return t.code=e.code,t.message=e.message,t.isFatal=e.isFatal||!1,t.handler={},t.handler.emailServiceOpts=e.handler.emailServiceOpts,t.handler.emailMsgOpts=e.handler.emailMsgOpts,t.handler.endpoint=e.handler.endpoint,t.handler.method=e.handler.method,t.handler.type=e.handler.type,t.handler.payload=e.handler.payload,t.handler.restartSingleWorker=e.handler.restartSingleWorker,t.handler.sendEmail=e.handler.sendEmail,t.handler.sendText=e.handler.sendText,t}static _getErrorHandler(e){if(HttpError.allErrors&&0!==HttpError.allErrors.length){let t=HttpError.allErrors.filter(t=>t.code===e.code);return Array.isArray(t)&&"object"==typeof t[0]&&"object"==typeof t[0].handler&&t[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler?t[0].handler:null}{let t=HttpError._objErrors.filter(t=>t.code===e.code);if(Array.isArray(t)&&"object"==typeof t[0])return null}}static _getErrorParameters(e){return{code:parseInt(e.code.toString()),message:"Binance"===HttpError._getErrorType(e)?e.msg:e.message}}static _getErrorType(e){let t=parseInt(e.code.toString()),r=!1;return"string"==typeof e.msg&&t<0?r=!0:"string"==typeof e.message&&(r=!1),r?"Binance":"Node"}static fromError(e){let t=parseInt(e.code.toString()),r=HttpError._getErrorType(e),a="Binance"===r?e.msg:e.message,n=new HttpError(t,a);return"Binance"===r&&"object"==typeof e.handler&&(n.handler=e.handler),n}static getErrorByCode(e){if(!e)return null;if(HttpError.allErrors&&0!==HttpError.allErrors.length){let t;if(HttpError.allErrors.length>0){let r=HttpError.allErrors.filter(t=>"number"==typeof e&&t.code===e);r&&r.length>0&&(t=r[0])}return t}{let t=HttpError._objErrors.filter(t=>t.code===e);if(Array.isArray(t)&&"object"==typeof t[0])return HttpError.fromObjLiteral(t[0])}}static init(e,t){return HttpErrorHandler_1.HttpErrorHandler.emailServiceOptions=e.emailServiceOpts,HttpErrorHandler_1.HttpErrorHandler.emailMsgOptions=e.emailMsgOpts,HttpErrorHandler_1.HttpErrorHandler.textMsgOptions=e.textMsgOpts,t&&t.length>0&&(HttpError._objErrors=t),HttpError.allErrors=HttpError._objErrors.map(t=>(t.handler.emailMsgOpts=e.emailMsgOpts,t.handler.emailServiceOpts=e.emailServiceOpts,t.handler.textMsgOpts=e.textMsgOpts,new HttpError(t.code,t.message,new HttpErrorHandler_1.HttpErrorHandler(t.handler),t.isFatal))),HttpError.allErrors}static isHttpError(e){return e&&e instanceof HttpError}}HttpError._objErrors=[{code:88880,message:"MongoNetworkError",handler:{type:"MongoDB",sendEmail:!0,sendText:!0,endpoint:["http://localhost:3001/kill"],method:"POST"}},{code:127,message:"ECONNREFUSED",handler:{type:"Node",sendEmail:!1,sendText:!1}},{code:401,message:"UNAUTHORIZED",isFatal:!0,handler:{type:"Node",sendEmail:!0,sendText:!0,endpoint:["http://localhost:3002/kill/app","http://localhost:3001/kill/app"],method:"POST"}},{code:-1e3,message:"UNKNOWN",handler:{type:"Binance",sendEmail:!0,sendText:!0}},{code:-1001,message:"DISCONNECTED",isFatal:!1,handler:{type:"Binance",sendEmail:!0,sendText:!0,endpoint:["http://localhost:3002/kill/workers","http://localhost:3001/kill/workers"],method:"POST"}},{code:-1002,message:"UNAUTHORIZED",isFatal:!0,handler:{type:"Binance",sendEmail:!0,sendText:!0,endpoint:["http://localhost:3002/kill/app","http://localhost:3001/kill/app"],method:"POST"}},{code:-1003,message:"TOO_MANY_REQUESTS",handler:{type:"Binance",sendEmail:!0,sendText:!0}},{code:-1006,message:"UNEXPECTED_RESP",handler:{type:"Binance",sendEmail:!0,sendText:!0}},{code:-1007,message:"TIMEOUT",isFatal:!1,handler:{type:"Binance",sendEmail:!0,sendText:!0,endpoint:["http://localhost:3002/kill/workers","http://localhost:3001/kill/workers"],method:"POST"}},{code:-1013,message:"INVALID_MESSAGE",handler:{type:"Binance",sendEmail:!1,sendText:!1,method:"POST"}},{code:-1014,message:"UNKNOWN_ORDER_COMPOSITION",handler:{type:"Binance",sendEmail:!1,sendText:!1,method:"POST"}},{code:-1015,message:"TOO_MANY_ORDERS",isFatal:!1,handler:{type:"Binance",sendEmail:!0,sendText:!0,restartSingleWorker:!0,endpoint:["http://localhost:3001/kill","http://localhost:3002/kill"],method:"POST"}},{code:-1016,message:"SERVICE_SHUTTING_DOWN",isFatal:!0,handler:{type:"Binance",sendEmail:!0,sendText:!0,endpoint:["http://localhost:3001/kill/app","http://localhost:3002/kill/app"],method:"POST"}},{code:-1020,message:"UNSUPPORTED_OPERATION",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1021,message:"INVALID_TIMESTAMP",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1022,message:"INVALID_SIGNATURE",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1100,message:"ILLEGAL_CHARS",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1101,message:"TOO_MANY_PARAMETERS",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1102,message:"MANDATORY_PARAM_EMPTY_OR_MALFORMED",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1103,message:"UNKNOWN_PARAM",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1104,message:"UNREAD_PARAMETERS",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1105,message:"PARAM_EMPTY",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1106,message:"PARAM_NOT_REQUIRED",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-1130,message:"INVALID_PARAMETER",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-2008,message:"BAD_API_ID",isFatal:!0,handler:{type:"Binance",sendText:!0,sendEmail:!0,endpoint:["http://localhost:3001/kill/app","http://localhost:3002/kill/app"],method:"POST"}},{code:-2009,message:"DUPLICATE_API_KEY_DESC",isFatal:!0,handler:{type:"Binance",sendText:!0,sendEmail:!0,endpoint:["http://localhost:3001/kill/app","http://localhost:3002/kill/app"],method:"POST"}},{code:-2010,message:"INSUFFICIENT_BALANCE",handler:{type:"Binance",sendText:!1,sendEmail:!1}},{code:-2012,message:"CANCEL_ALL_FAIL",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-2013,message:"NO_SUCH_ORDER",handler:{type:"Binance",sendText:!0,sendEmail:!0}},{code:-2014,message:"BAD_API_KEY_FMT",isFatal:!0,handler:{type:"Binance",sendText:!0,sendEmail:!0,endpoint:["http://localhost:3001/kill/app","http://localhost:3002/kill/app"],method:"POST"}},{code:-2015,message:"REJECTED_MBX_KEY",handler:{type:"Binance",sendText:!0,sendEmail:!0}}],exports.HttpError=HttpError;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const HttpErrorHandler_1 = require("./HttpErrorHandler");
+class HttpError extends Error {
+    constructor(code, message, handler, isFatal) {
+        super();
+        this.code = code;
+        this.message = message;
+        this.isFatal = isFatal || false;
+        if (handler) {
+            this.handler = handler;
+        }
+        else {
+            let errHandler = HttpError._getErrorHandler(this);
+            if (errHandler !== null) {
+                this.handler = errHandler;
+            }
+        }
+    }
+    static fromObjLiteral(err) {
+        if (!err)
+            return;
+        let handler = new HttpErrorHandler_1.HttpErrorHandler(err.handler);
+        return new HttpError(err.code, err.message, handler, err.isFatal);
+    }
+    static toObjLiteral(err) {
+        if (!err)
+            return;
+        let error = {};
+        error.code = err.code;
+        error.message = err.message;
+        error.isFatal = err.isFatal || false;
+        error.handler = {};
+        error.handler.emailServiceOpts = err.handler.emailServiceOpts;
+        error.handler.emailMsgOpts = err.handler.emailMsgOpts;
+        error.handler.endpoint = err.handler.endpoint;
+        error.handler.method = err.handler.method;
+        error.handler.type = err.handler.type;
+        error.handler.payload = err.handler.payload;
+        error.handler.restartSingleWorker = err.handler.restartSingleWorker;
+        error.handler.sendEmail = err.handler.sendEmail;
+        error.handler.sendText = err.handler.sendText;
+        return error;
+    }
+    static _getErrorHandler(error) {
+        if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
+            let match = HttpError._objErrors.filter(err => err.code === error.code);
+            if (Array.isArray(match) && typeof match[0] === "object") {
+                return null;
+            }
+        }
+        else {
+            let match = HttpError.allErrors.filter(err => err.code === error.code);
+            if (Array.isArray(match) && typeof match[0] === "object" && typeof match[0].handler === "object" && match[0].handler instanceof HttpErrorHandler_1.HttpErrorHandler) {
+                return match[0].handler;
+            }
+            else {
+                return null;
+            }
+        }
+    }
+    static _getErrorParameters(err) {
+        let code = parseInt(err.code.toString());
+        let type = HttpError._getErrorType(err);
+        let message = (type === 'Binance') ? err['msg'] : err['message'];
+        return { code: code, message: message };
+    }
+    static _getErrorType(err) {
+        let code = parseInt(err.code.toString());
+        let isBinance = false;
+        if (typeof err['msg'] === "string" && code < 0) {
+            isBinance = true;
+        }
+        else if (typeof err['message'] === "string") {
+            isBinance = false;
+        }
+        return (isBinance) ? 'Binance' : 'Node';
+    }
+    static fromError(err) {
+        let code = parseInt(err.code.toString());
+        let type = HttpError._getErrorType(err);
+        let message = (type === 'Binance') ? err['msg'] : err['message'];
+        let _httpError = new HttpError(code, message);
+        if (type === 'Binance' && typeof err['handler'] === "object") {
+            _httpError.handler = err['handler'];
+        }
+        return _httpError;
+    }
+    static getErrorByCode(code) {
+        if (!code) {
+            return null;
+        }
+        if (!HttpError.allErrors || HttpError.allErrors.length === 0) {
+            let match = HttpError._objErrors.filter(err => err.code === code);
+            if (Array.isArray(match) && typeof match[0] === "object") {
+                return HttpError.fromObjLiteral(match[0]);
+            }
+        }
+        else {
+            let result;
+            if (HttpError.allErrors.length > 0) {
+                let filtered = HttpError.allErrors.filter(handler => {
+                    return (typeof code === "number" && handler.code === code);
+                });
+                if (filtered && filtered.length > 0) {
+                    result = filtered[0];
+                }
+            }
+            return result;
+        }
+    }
+    static init(options, _jsonErrs) {
+        HttpErrorHandler_1.HttpErrorHandler.emailServiceOptions = options.emailServiceOpts;
+        HttpErrorHandler_1.HttpErrorHandler.emailMsgOptions = options.emailMsgOpts;
+        HttpErrorHandler_1.HttpErrorHandler.textMsgOptions = options.textMsgOpts;
+        if (_jsonErrs && _jsonErrs.length > 0) {
+            HttpError._objErrors = _jsonErrs;
+        }
+        HttpError.allErrors = HttpError._objErrors.map(err => {
+            err.handler.emailMsgOpts = options.emailMsgOpts;
+            err.handler.emailServiceOpts = options.emailServiceOpts;
+            err.handler.textMsgOpts = options.textMsgOpts;
+            return new HttpError(err.code, err.message, new HttpErrorHandler_1.HttpErrorHandler(err.handler), err.isFatal);
+        });
+        return HttpError.allErrors;
+    }
+    static isHttpError(err) {
+        return err && err instanceof HttpError;
+    }
+}
+HttpError._objErrors = [
+    {
+        code: 88880, message: "MongoNetworkError",
+        handler: {
+            type: 'MongoDB',
+            sendEmail: true,
+            sendText: true,
+            endpoint: ["http://localhost:3001/kill"],
+            method: 'POST'
+        }
+    },
+    {
+        code: 127, message: "ECONNREFUSED",
+        handler: {
+            type: 'Node',
+            sendEmail: false,
+            sendText: false
+        }
+    },
+    {
+        code: 401, message: "UNAUTHORIZED", isFatal: true,
+        handler: {
+            type: 'Node',
+            sendEmail: true,
+            sendText: true,
+            endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -1000, message: "UNKNOWN",
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true
+        }
+    },
+    {
+        code: -1001, message: "DISCONNECTED", isFatal: false,
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true,
+            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -1002, message: "UNAUTHORIZED", isFatal: true,
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true,
+            endpoint: ["http://localhost:3002/kill/app", "http://localhost:3001/kill/app"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -1003, message: "TOO_MANY_REQUESTS",
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true
+        }
+    },
+    {
+        code: -1006, message: "UNEXPECTED_RESP",
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true
+        }
+    },
+    {
+        code: -1007, message: "TIMEOUT", isFatal: false,
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true,
+            endpoint: ["http://localhost:3002/kill/workers", "http://localhost:3001/kill/workers"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -1013, message: "INVALID_MESSAGE",
+        handler: {
+            type: 'Binance',
+            sendEmail: false,
+            sendText: false,
+            method: 'POST'
+        }
+    },
+    {
+        code: -1014, message: "UNKNOWN_ORDER_COMPOSITION",
+        handler: {
+            type: 'Binance',
+            sendEmail: false,
+            sendText: false,
+            method: 'POST'
+        }
+    },
+    {
+        code: -1015, message: "TOO_MANY_ORDERS", isFatal: false,
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true,
+            restartSingleWorker: true,
+            endpoint: ["http://localhost:3001/kill", "http://localhost:3002/kill"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -1016, message: "SERVICE_SHUTTING_DOWN", isFatal: true,
+        handler: {
+            type: 'Binance',
+            sendEmail: true,
+            sendText: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -1020, message: "UNSUPPORTED_OPERATION",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1021, message: "INVALID_TIMESTAMP",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1022, message: "INVALID_SIGNATURE",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1100, message: "ILLEGAL_CHARS",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1101, message: "TOO_MANY_PARAMETERS",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1102, message: "MANDATORY_PARAM_EMPTY_OR_MALFORMED",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1103, message: "UNKNOWN_PARAM",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1104, message: "UNREAD_PARAMETERS",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1105, message: "PARAM_EMPTY",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1106, message: "PARAM_NOT_REQUIRED",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -1130, message: "INVALID_PARAMETER",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -2008, message: "BAD_API_ID", isFatal: true,
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -2009, message: "DUPLICATE_API_KEY_DESC", isFatal: true,
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -2010, message: "INSUFFICIENT_BALANCE",
+        handler: {
+            type: 'Binance',
+            sendText: false,
+            sendEmail: false
+        }
+    },
+    {
+        code: -2012, message: "CANCEL_ALL_FAIL",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -2013, message: "NO_SUCH_ORDER",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+    {
+        code: -2014, message: "BAD_API_KEY_FMT", isFatal: true,
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true,
+            endpoint: ["http://localhost:3001/kill/app", "http://localhost:3002/kill/app"],
+            method: 'POST'
+        }
+    },
+    {
+        code: -2015, message: "REJECTED_MBX_KEY",
+        handler: {
+            type: 'Binance',
+            sendText: true,
+            sendEmail: true
+        }
+    },
+];
+exports.HttpError = HttpError;
+//# sourceMappingURL=HttpError.js.map
