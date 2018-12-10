@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
-const matcher_collection_1 = require("matcher-collection");
-const ensure_posix_path_1 = require("ensure-posix-path");
+const MatcherCollection = require("matcher-collection");
+const ensurePosix = require("ensure-posix-path");
 const Options_1 = require("./Options");
 const Entry_1 = require("./Entry");
 class Walk {
@@ -46,7 +46,7 @@ class Walk {
     }
     _walkSync(_relativePath, _ensurePosix, callback) {
         if (_ensurePosix) {
-            this.baseDir = ensure_posix_path_1.default(this.baseDir);
+            this.baseDir = ensurePosix(this.baseDir);
         }
         let relativePath = this._handleRelativePath(_relativePath);
         let globs = this.options.globs;
@@ -54,10 +54,10 @@ class Walk {
         let globMatcher, ignoreMatcher;
         let results = [];
         if (ignorePatterns) {
-            ignoreMatcher = new matcher_collection_1.default(ignorePatterns);
+            ignoreMatcher = new MatcherCollection(ignorePatterns);
         }
         if (globs) {
-            globMatcher = new matcher_collection_1.default(globs);
+            globMatcher = new MatcherCollection(globs);
         }
         if (globMatcher && !globMatcher.mayContain(relativePath)) {
             return results;

@@ -2,8 +2,8 @@ import {IOptions} from "./Interfaces/IOptions";
 import * as fs from "fs";
 import {Stats} from "fs";
 import * as path from "path";
-import MatcherCollection from 'matcher-collection';
-import ensurePosix from 'ensure-posix-path';
+import * as MatcherCollection from 'matcher-collection';
+import * as ensurePosix from 'ensure-posix-path';
 import {Options} from "./Options";
 import {Entry} from "./Entry";
 

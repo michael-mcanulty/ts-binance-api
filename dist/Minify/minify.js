@@ -7,23 +7,23 @@ class Minify {
         return this.walk.sync();
     }
     getMinifyScript(files) {
-        let result = `terser `;
+        let cmd = require('child_process').execSync;
         files.forEach(t => {
-            result += `${t} `;
+            let _preRes = t.valueOf().replace('.js', '.min.js');
+            let tmpRes = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output dist/${_preRes}`;
+            cmd(tmpRes);
         });
-        return `${result} --compress --mangle --keep-classnames --keep-fnames`;
     }
     constructor() {
         let opts = {};
-        let base = path.resolve('../../');
+        let base = path.resolve('./');
         this.baseDir = `${base}/dist`;
         let minifyDir = `${this.baseDir}/Minify`;
         opts.ignore = [minifyDir];
-        opts.globs = ['*.ts'];
+        opts.globs = [`*/**/*.js`];
         this.walk = new Walk_1.Walk(this.baseDir, opts);
         this.paths = this.getFilePaths();
-        this.scriptStr = this.getMinifyScript(this.paths);
-        console.log(this.scriptStr);
+        this.getMinifyScript(this.paths);
     }
 }
 exports.Minify = Minify;
