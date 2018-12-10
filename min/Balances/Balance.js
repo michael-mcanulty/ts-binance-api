@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Balance{constructor(e,a,t,s){this.date=s||new Date,this.asset=e,this.available=parseFloat(a),this.onOrder=parseFloat(t)}}exports.Balance=Balance;

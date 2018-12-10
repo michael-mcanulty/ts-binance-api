@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Options{static toOptions(t){return new Options(t.directories,t.globs,t.ignore,t.includeBasePath)}constructor(t,s,e,i,o){this.directories=t||!0,this.globs=s,this.ignore=e,this.includeBasePath=i||!1,this.callback=o}}exports.Options=Options;

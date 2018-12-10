@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class DataStream{constructor(e){this.listenKey=e.listenKey}}exports.DataStream=DataStream;

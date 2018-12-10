@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const nodeMailer=require("nodemailer");class NodeMailer{sendEmail(e){return new Promise((r,s)=>{e||s(new Error("Service Options must be provided")),this._service.sendMail(e,(e,i)=>{e?s(e):r(i.response)})})}constructor(e){this._service=nodeMailer.createTransport(e)}}exports.NodeMailer=NodeMailer;

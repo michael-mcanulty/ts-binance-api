@@ -16,17 +16,8 @@ export class Minify{
 	public getMinifyScript(files: string[]): void{
 		let cmd = require('child_process').execSync;
 		files.forEach(t=>{
-			let dirArr: string[] = t.split('/');
-			let dir: string = `min/${dirArr.slice(0,-1).join('/')}`;
-			if (dir && !fs.existsSync(dir)){
-				try{
-					fs.mkdirSync(dir);
-				}catch(err){
-					console.log(err);
-				}
-			}
-			if(dir){
-				let tmpRes: string = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output min/${t}`;
+			if(t){
+				let tmpRes: string = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output dist/${t}`;
 				cmd(tmpRes);
 			}
 		});

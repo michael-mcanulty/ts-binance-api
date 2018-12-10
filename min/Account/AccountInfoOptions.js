@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const Signed_1=require("../Rest/Signed");class AccountInfoOptions extends Signed_1.Signed{constructor(e){super(),this.recvWindow=e}}exports.AccountInfoOptions=AccountInfoOptions;

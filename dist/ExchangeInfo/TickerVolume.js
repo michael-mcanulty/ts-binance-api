@@ -1,13 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class TickerVolume {
-    static toTickerVolumeList(tickers) {
-        return tickers.map(ticker => new TickerVolume(ticker));
-    }
-    constructor(ticker) {
-        this.symbol = ticker.symbol;
-        this.volume = parseFloat(ticker.volume);
-    }
-}
-exports.TickerVolume = TickerVolume;
-//# sourceMappingURL=TickerVolume.js.map
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class TickerVolume{static toTickerVolumeList(e){return e.map(e=>new TickerVolume(e))}constructor(e){this.symbol=e.symbol,this.volume=parseFloat(e.volume)}}exports.TickerVolume=TickerVolume;
