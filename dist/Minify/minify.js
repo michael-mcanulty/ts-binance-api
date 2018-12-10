@@ -10,13 +10,20 @@ class Minify {
     getMinifyScript(files) {
         let cmd = require('child_process').execSync;
         files.forEach(t => {
-            let dirs = t.split('/');
-            let dir = "min" + "/" + dirs.slice(0, -1).join("/");
-            if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir);
+            let dirArr = t.split('/');
+            let dir = `min/${dirArr.slice(0, -1).join('/')}`;
+            if (dir && !fs.existsSync(dir)) {
+                try {
+                    fs.mkdirSync(dir);
+                }
+                catch (err) {
+                    console.log(err);
+                }
             }
-            let tmpRes = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output min/${t}`;
-            cmd(tmpRes);
+            if (dir) {
+                let tmpRes = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output min/${t}`;
+                cmd(tmpRes);
+            }
         });
     }
     constructor() {
