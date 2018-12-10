@@ -1,5 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Options_1 = require("./Minify/Options");
+exports.Options = Options_1.Options;
+var Walk_1 = require("./Minify/Walk");
+exports.Walk = Walk_1.Walk;
+var Entry_1 = require("./Minify/Entry");
+exports.Entry = Entry_1.Entry;
 var minify_1 = require("./Minify/minify");
 exports.Minify = minify_1.Minify;
 var WSCandle_1 = require("./ExchangeInfo/WSCandle");
