@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const Signed_1=require("../Rest/Signed");class BaseQueryOrder extends Signed_1.Signed{constructor(e){super(),this.symbol=e.symbol,this.orderId=e.orderId,this.recvWindow=e.recvWindow,this.signature=e.signature||void 0,this.timestamp=e.timestamp||void 0}}exports.BaseQueryOrder=BaseQueryOrder;

@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Fill{constructor(s){this.price=parseFloat(s.price),this.qty=parseFloat(s.qty),this.commission=parseFloat(s.commission),this.commissionAsset=s.commissionAsset}}exports.Fill=Fill;

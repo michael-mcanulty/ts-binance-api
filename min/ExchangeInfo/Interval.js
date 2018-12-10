@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const Binance_1=require("../Binance/Binance");class Interval{constructor(e){this.interval=e,this.msInterval=Binance_1.Binance.intervalToMilliseconds[e],this.index=Binance_1.Binance.INTERVALS.indexOf(this.interval)}}exports.Interval=Interval;

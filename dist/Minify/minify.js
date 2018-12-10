@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
+const fs = require("fs");
 const Walk_1 = require("./Walk");
 class Minify {
     getFilePaths() {
@@ -9,8 +10,12 @@ class Minify {
     getMinifyScript(files) {
         let cmd = require('child_process').execSync;
         files.forEach(t => {
-            let _preRes = t.valueOf().replace('.js', '.min.js');
-            let tmpRes = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output dist/${_preRes}`;
+            let dirs = t.split('/');
+            let dir = "min" + "/" + dirs.slice(0, -1).join("/");
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir);
+            }
+            let tmpRes = `terser dist/${t} --compress --mangle --keep-classnames --keep-fnames --output min/${t}`;
             cmd(tmpRes);
         });
     }

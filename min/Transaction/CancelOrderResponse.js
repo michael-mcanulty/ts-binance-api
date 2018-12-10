@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class CancelOrderResponse{constructor(e){Object.assign(this,e)}}exports.CancelOrderResponse=CancelOrderResponse;

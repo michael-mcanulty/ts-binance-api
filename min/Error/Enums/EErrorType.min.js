@@ -1,0 +1,1 @@
+"use strict";var EErrorType;Object.defineProperty(exports,"__esModule",{value:!0}),function(e){e[e.Binance=0]="Binance",e[e.Node=1]="Node",e[e.MongoDB=2]="MongoDB"}(EErrorType=exports.EErrorType||(exports.EErrorType={}));

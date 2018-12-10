@@ -8,7 +8,7 @@
     "start": "tsc -p tsconfig.json && node dist/index.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "debug": "tsc -p tsconfig.json && node --inspect --debug-brk dist/index.js",
-    "minify": "tsc -p tsconfig.json && node ./dist/Minify/minify.js",
+    "minify": "node ./dist/Minify/minify.js",
     "sync": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node dist/Cli.js --repo=ts-binance-api",
     "sync-debug": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node --inspect-brk dist/Cli.js --repo=ts-binance-api"
   },

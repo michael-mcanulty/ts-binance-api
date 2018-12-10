@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Price{static GetPriceValue(e,t){if(!e||0===e.length)return 0;let r=e.filter(e=>e.symbol===t),s=0;return r.length>0&&(s=r[0].value),s}static toPrices(e){return e.map(e=>new Price(e.symbol,e.price))}constructor(e,t){this.symbol=e,t&&(this.value=parseFloat(t.toString()))}}exports.Price=Price;
