@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var minify_1 = require("./Minify/minify");
+exports.Minify = minify_1.Minify;
 var WSCandle_1 = require("./ExchangeInfo/WSCandle");
 exports.WSCandle = WSCandle_1.WSCandle;
 exports.WSCandleResp = WSCandle_1.WSCandleResp;

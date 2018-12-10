@@ -1,3 +1,4 @@
+export {Minify} from "./Minify/minify";
 export {WSCandle, WSCandleResp} from "./ExchangeInfo/WSCandle";
 export {TickerVolume} from "./ExchangeInfo/TickerVolume";
 export {I24hrTickerResponse} from "./ExchangeInfo/Interfaces/I24hrTickerResponse";
