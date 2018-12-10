@@ -1,6 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class TestOrder {
-}
-exports.TestOrder = TestOrder;
-//# sourceMappingURL=TestOrder.js.map
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class TestOrder{}exports.TestOrder=TestOrder;
