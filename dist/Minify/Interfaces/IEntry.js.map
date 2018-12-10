@@ -1,0 +1,1 @@
+{"version":3,"file":"IEntry.js","sourceRoot":"","sources":["../../../src/Minify/Interfaces/IEntry.ts"],"names":[],"mappings":"","sourcesContent":["export interface IEntry {\r\n\tbasePath: string;\r\n\tmode: number\r\n\tmtime: number;\r\n\trelativePath: string;\r\n\tsize: number\r\n}"]}

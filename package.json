@@ -8,6 +8,7 @@
     "start": "tsc -p tsconfig.json && node dist/index.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "debug": "tsc -p tsconfig.json && node --inspect --debug-brk dist/index.js",
+    "minify": "terser dist/index.js -cm > dist/index.min.js",
     "sync": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node dist/Cli.js --repo=ts-binance-api",
     "sync-debug": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node --inspect-brk dist/Cli.js --repo=ts-binance-api"
   },
@@ -23,6 +24,7 @@
     "nodemailer": "^4.6.7",
     "request": "^2.86.0",
     "request-promise-native": "^1.0.5",
+    "terser": "^3.11.0",
     "ws": "^5.2.1"
   },
   "devDependencies": {
@@ -30,6 +32,8 @@
     "@types/request-promise-native": "^1.0.15",
     "@types/node": "^8.10.18",
     "@types/request": "^2.47.0",
-    "ts-node": "^3.3.0"
+    "ts-node": "^3.3.0",
+    "ensure-posix-path": "^1.0.2",
+    "matcher-collection": "^1.0.5"
   }
 }
