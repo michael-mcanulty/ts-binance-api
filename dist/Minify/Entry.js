@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class Entry{isDirectory(){return 16384==(61440&this.mode)}constructor(t,e,s,r,i){this.basePath=t,this.mode=e,this.mtime=s,this.relativePath=r,this.size=i}}exports.Entry=Entry;

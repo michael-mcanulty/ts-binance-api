@@ -1,1 +1,735 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const BotHttp_1=require("./BotHttp"),CandleInterval_1=require("../ExchangeInfo/CandleInterval"),Candle_1=require("../ExchangeInfo/Candle"),Market_1=require("../Market/Market"),Binance_1=require("../Binance/Binance"),NewOrder_1=require("../Transaction/NewOrder"),Order_1=require("../Transaction/Order"),HttpError_1=require("../Error/HttpError"),CancelOrder_1=require("../Transaction/CancelOrder"),DataStream_1=require("./DataStream"),CallOptions_1=require("./CallOptions"),OpenOrder_1=require("../Transaction/OpenOrder"),QueryOrder_1=require("../Transaction/QueryOrder"),AllOrders_1=require("../Transaction/AllOrders"),OutboundAccountInfo_1=require("../Account/OutboundAccountInfo"),AccountInfoOptions_1=require("../Account/AccountInfoOptions"),CancelOrderResponse_1=require("../Transaction/CancelOrderResponse"),TestOrder_1=require("../Transaction/TestOrder"),Price_1=require("../Transaction/Price"),GetTotalBalanceOpts_1=require("../Balances/GetTotalBalanceOpts");class Rest extends BotHttp_1.BotHttp{async _cancelOrder(t){try{let e,r,n,a,i={};return i.uri=Binance_1.Binance.options.test?`${BotHttp_1.BotHttp.BASE}/api/v3/order/test`:`${BotHttp_1.BotHttp.BASE}/api/v3/order`,i.method="DELETE",i.json=!0,i.isSigned=!0,i.qs=t,a=new CallOptions_1.CallOptions(i),(n=await this.privateCall(a))instanceof HttpError_1.HttpError?Promise.reject(n):(e=n,r=new CancelOrderResponse_1.CancelOrderResponse(e))}catch(t){throw t}}async _getCandlesInterval(t){let e,r,n,a,i,o,s={method:"GET"};s.uri=`${BotHttp_1.BotHttp.BASE}/api/v1/klines`,s.qs=t,s.isSigned=!1,o=new CallOptions_1.CallOptions(s);try{return i=await this.call(o),n=Date.now(),(e=(a=Candle_1.Candle.fromRestStream(i,t.symbol,t.interval))[r=a.length-1]).closeTime.getTime()>n&&a.splice(r,1),a}catch(t){throw t}}async _newOrder(t){let e,r,n,a=this,i={};i.uri=Binance_1.Binance.options.test?`${BotHttp_1.BotHttp.BASE}/api/v3/order/test`:`${BotHttp_1.BotHttp.BASE}/api/v3/order`,i.method="POST",i.json=!0,i.isSigned=!0,i.qs=t.toObjLiteral();try{if(e=new CallOptions_1.CallOptions(i),n=await a.privateCall(e),a.options.test&&0===Object.keys(n).length&&n.constructor===Object)return new TestOrder_1.TestOrder;if(n instanceof HttpError_1.HttpError)return Promise.reject(n);{let t=n;return r=new Order_1.Order(t)}}catch(t){throw t}}async cancelOrder(t){try{let e,r,n=new CancelOrder_1.CancelOrder(t);return n&&n.orderId&&(e=await this._cancelOrder(n),r=new CancelOrderResponse_1.CancelOrderResponse(e)),r}catch(t){throw t}}async cancelOrdersBySymbol(t){let e,r,n,a,i=[],o={};o.symbol=t.symbol,o.origClientOrderId=t.origClientOrderId,o.orderId=t.orderId,o.recvWindow=t.recvWindow;try{if(!(n=await this.getOpenOrders(o))||0===n.length)return[];r=n.filter(t=>t.symbol===o.symbol);for(let n of r)(e={}).orderId=n.orderId,e.recvWindow=t.recvWindow,e.origClientOrderId=n.clientOrderId,e.symbol=n.symbol,e.newClientOrderId=t.newClientOrderId,a=await this.cancelOrder(e),i.push(a);return i}catch(t){throw t}}async closeDataStream(){let t,e,r={method:"DELETE",json:!0,isSigned:!1};r.uri=`${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`,r.qs=new DataStream_1.DataStream(Rest.listenKey);try{return t=new CallOptions_1.CallOptions(r),e=await this.privateCall(t)}catch(t){throw t}}async getAccountInfo(t){let e,r,n,a=this,i=new AccountInfoOptions_1.AccountInfoOptions(t),o={method:"GET",json:!0,isSigned:!0};o.uri=`${BotHttp_1.BotHttp.BASE}/api/v3/account`,o.qs=i;try{return e=new CallOptions_1.CallOptions(o),r=await a.privateCall(e),n=OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceRest(r)}catch(t){throw t}}async getAllCandles(t,e,r){try{let n=[];for(let a of t)for(let t of e){let e={};e.symbol=a,e.interval=t,e.limit=r;let i=await this._getCandlesInterval(e),o=new CandleInterval_1.CandleInterval(i);n.push(o)}return n}catch(t){throw t}}async getAllOrders(t){let e,r,n,a,i={};n=new AllOrders_1.AllOrders(t),e=[],i.method="GET",i.json=!0,i.isSigned=!0,i.uri=`${BotHttp_1.BotHttp.BASE}/api/v3/allOrders`,i.qs=n.toObjLiteral();try{return a=new CallOptions_1.CallOptions(i),r=await this.privateCall(a),Array.isArray(r)&&r.length>0&&(e=r.map(t=>{let e={};return e.cummulativeQuoteQty=t.cummulativeQuoteQty,e.symbol=t.symbol,e.side=t.side,e.type=t.type,e.price=t.price,e.clientOrderId=t.clientOrderId,e.orderId=t.orderId,e.executedQty=t.executedQty,e.origQty=t.origQty,e.transactTime=t.time,e.status=t.status,e.signature=t.signature,e.timeInForce=t.timeInForce,e.isWorking=t.isWorking,new Order_1.Order(e)})),e}catch(t){throw t}}async getAvailableTotalBalance(t){let e,r,n,a,i=[],o={};try{if(n=new GetTotalBalanceOpts_1.GetTotalBalanceOpts(t),r=await this.getBalances(n.recvWindow,!0),e=await this.getPrices(),0===r.length)return Promise.reject(new Error("Error: Balances not working"));const s=n.quoteAsset,l=n.usdAsset,c=n.xChangeRatioBA;if(a=[],o={},r.forEach(t=>{let r,n,i,o={},d=t.asset,p=t.available;d!==c&&c!==s?(i=d+c,r=Price_1.Price.GetPriceValue(e,i),o.quoteAsset=s,n=p*r,o.totalVal=n*Price_1.Price.GetPriceValue(e,c+l),a.push(o)):d===c&&c!==s?(o.quoteAsset=s,o.totalVal=p*Price_1.Price.GetPriceValue(e,c+l),a.push(o)):s===c&&d!==c?(i=d+s,r=Price_1.Price.GetPriceValue(e,i),o.quoteAsset=s,o.totalVal=p*r,a.push(o)):c===s&&d===c&&(o.quoteAsset=s,o.totalVal=p,a.push(o))}),o.totalVal=a.reduce((t,e)=>t+e.totalVal,0),o.quoteAsset=s,i.push(o),s!==l){let t={};t.totalVal=o.totalVal*Price_1.Price.GetPriceValue(e,c+l),t.quoteAsset="USDT",i.push(t)}return i}catch(t){throw t}}async getBalances(t,e=!0){try{let r,n=await this.getAccountInfo(t);return r=n.balances,r=e&&n.balances.length>0?n.balances.filter(t=>t.available>0):n.balances}catch(t){throw t}}async getCandlesBySymbol(t,e,r){let n=[];try{for(let a of e){let e={};e.symbol=t,e.interval=a,e.limit=r;let i=await this._getCandlesInterval(e),o=new CandleInterval_1.CandleInterval(i);n.push(o)}return n}catch(t){throw t}}async getDataStream(){let t,e;(e={}).method="POST",e.json=!0,e.isSigned=!1,e.uri=`${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`;try{return t=new CallOptions_1.CallOptions(e),Rest.listenKey=await this.privateCall(t),Rest.listenKey}catch(t){throw t}}async getDepositAddress(t){let e,r={method:"GET",json:!0,isSigned:!0};r.uri=`${BotHttp_1.BotHttp.BASE}/wapi/v3/depositAddress.html`,r.qs=t;try{return e=new CallOptions_1.CallOptions(r),await this.privateCall(e)}catch(t){throw t}}async getDepositHisory(t){let e,r={method:"GET",json:!0,isSigned:!0};r.uri=`${BotHttp_1.BotHttp.BASE}/wapi/v3/depositHistory.html`,r.qs=t;try{return e=new CallOptions_1.CallOptions(r),await this.privateCall(e)}catch(t){throw t}}async getExchangeInfo(){let t,e=this,r={method:"GET",json:!0};r.uri=`${BotHttp_1.BotHttp.BASE}/api/v1/exchangeInfo`;try{return t=new CallOptions_1.CallOptions(r),await e.call(t)}catch(t){throw t}}async getMarkets(t){try{let e=this,r=(await e.getExchangeInfo()).symbols.map(t=>new Market_1.Market(t.symbol,t.baseAsset,t.quoteAsset,Market_1.Market.GetLimitsFromBinanceSymbol(t)));if(t&&r.length>0){let e=r.filter(e=>e.quoteAsset===t);return Binance_1.Binance.markets=e,e}return Binance_1.Binance.markets=r,r}catch(t){throw t}}async getOpenOrders(t){let e,r,n,a={},i={};try{return a.symbol=t.symbol,a.recvWindow=t.recvWindow,a.orderId=t.orderId,a.origClientOrderId=t.origClientOrderId,e=new QueryOrder_1.QueryOrder(a),i.method="GET",i.json=!0,i.isSigned=!0,i.uri=`${BotHttp_1.BotHttp.BASE}/api/v3/openOrders`,i.qs=e.toObjLiteral(),r=new CallOptions_1.CallOptions(i),n=await this.privateCall(r),Array.isArray(n)&&n.length>0?n.map(t=>new OpenOrder_1.OpenOrder(t)):void 0}catch(t){throw t}}async getOrder(t){try{let e,r,n,a,i={};i.symbol=t.symbol,i.recvWindow=t.recvWindow,i.orderId=t.orderId,i.origClientOrderId=t.origClientOrderId,e=new QueryOrder_1.QueryOrder(i);let o={method:"GET",json:!0,isSigned:!0};if(o.uri=`${BotHttp_1.BotHttp.BASE}/api/v3/order`,o.qs=e.toObjLiteral(),r=new CallOptions_1.CallOptions(o),(n=await this.privateCall(r))&&n.hasOwnProperty("symbol")){let t={};return t.symbol=i.symbol,t.side=n.side,t.price=n.price,t.type=n.type,t.timeInForce=n.timeInForce,t.origQty=n.origQty,t.executedQty=n.executedQty,t.timestamp=n.time,t.status=n.status,t.orderId=i.orderId,t.clientOrderId=n.clientOrderId,t.cummulativeQuoteQty=n.cummulativeQuoteQty,t.status=n.status,t.signature=n.signature,t.transactTime=n.time,t.isWorking=n.isWorking,a=new Order_1.Order(t)}return}catch(t){throw t}}async get24hrTicker(t){let e,r=this,n={method:"GET",json:!0};n.uri=`${BotHttp_1.BotHttp.BASE}/api/v1/ticker/24hr`;try{return e=new CallOptions_1.CallOptions(n),t&&"string"==typeof t?[await r.call(e)]:await r.call(e)}catch(t){throw t}}async getPrices(){let t,e,r=this,n={method:"GET",json:!0,isSigned:!1};n.uri=`${BotHttp_1.BotHttp.BASE}/api/v3/ticker/price`;try{if(e=new CallOptions_1.CallOptions(n),t=await r.call(e),Array.isArray(t)&&t.length>0)return Price_1.Price.toPrices(t)}catch(t){throw t}}async getStatus(){let t=this,e={method:"GET",json:!0,isSigned:!0};e.apiKey=t.options.auth.key,e.uri=`${BotHttp_1.BotHttp.BASE}/wapi/v3/systemStatus.html`;try{let r=new CallOptions_1.CallOptions(e);return await t.call(r)}catch(t){return Promise.reject(new Error(`Error retrieving the system status. Message: ${t}`))}}async getWithdrawHisory(t){let e,r,n=this,a={method:"GET",json:!0,isSigned:!0};a.uri=`${BotHttp_1.BotHttp.BASE}/wapi/v3/withdrawHistory.html`,a.qs=t;try{return r=new CallOptions_1.CallOptions(a),e=await n.privateCall(r)}catch(t){throw t}}async keepDataStream(){let t,e,r=this,n={};t=new DataStream_1.DataStream(Rest.listenKey),n.method="PUT",n.json=!0,n.isSigned=!1,n.uri=`${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`,n.qs=t;try{return e=new CallOptions_1.CallOptions(n),await r.privateCall(e)}catch(t){throw t}}async limitBuy(t){let e,r=this,n={};try{if(t&&t.price)return n.timeInForce=t.timeInForce,n.price=t.price.toString(),n.symbol=t.symbol,n.recvWindow=t.recvWindow,n.type="LIMIT",n.side="BUY",n.quantity=t.quantity,n.stopPrice=t.stopPrice,n.icebergQty=t.iceburgQty,n.newClientOrderId=t.newClientOrderId,n.newOrderRespType=t.newOrderRespType||"FULL",e=new NewOrder_1.NewOrder(n),await r._newOrder(e)}catch(t){throw t}}async limitSell(t){try{let e,r={};const n="LIMIT",a="SELL",i="FULL";if(t&&t.price)return r.timeInForce=t.timeInForce,r.price=t.price.toString(),r.symbol=t.symbol,r.recvWindow=t.recvWindow,r.type=n,r.side=a,r.quantity=t.quantity,r.stopPrice=t.stopPrice,r.icebergQty=t.iceburgQty,r.newClientOrderId=t.newClientOrderId,r.newOrderRespType=t.newOrderRespType||i,e=new NewOrder_1.NewOrder(r),await this._newOrder(e)}catch(t){throw t}}async marketBuy(t){let e,r=this,n={};try{return n.recvWindow=t.recvWindow,n.type="MARKET",n.side="BUY",n.quantity=t.quantity,n.symbol=t.symbol,n.recvWindow=t.recvWindow,n.quantity=t.quantity,n.icebergQty=t.iceburgQty,n.newClientOrderId=t.newClientOrderId,n.newOrderRespType=t.newOrderRespType||"FULL",e=new NewOrder_1.NewOrder(n),await r._newOrder(e)}catch(t){throw t}}async marketSell(t){let e,r=this,n={};try{return n.recvWindow=t.recvWindow,n.type="MARKET",n.side="SELL",n.quantity=t.quantity,n.symbol=t.symbol,n.recvWindow=t.recvWindow,n.quantity=t.quantity,n.icebergQty=t.iceburgQty,n.newClientOrderId=t.newClientOrderId,n.newOrderRespType=t.newOrderRespType||"FULL",e=new NewOrder_1.NewOrder(n),await r._newOrder(e)}catch(t){throw t}}constructor(t){super(t)}}exports.Rest=Rest;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const BotHttp_1 = require("./BotHttp");
+const CandleInterval_1 = require("../ExchangeInfo/CandleInterval");
+const Candle_1 = require("../ExchangeInfo/Candle");
+const Market_1 = require("../Market/Market");
+const Binance_1 = require("../Binance/Binance");
+const NewOrder_1 = require("../Transaction/NewOrder");
+const Order_1 = require("../Transaction/Order");
+const HttpError_1 = require("../Error/HttpError");
+const CancelOrder_1 = require("../Transaction/CancelOrder");
+const DataStream_1 = require("./DataStream");
+const CallOptions_1 = require("./CallOptions");
+const OpenOrder_1 = require("../Transaction/OpenOrder");
+const QueryOrder_1 = require("../Transaction/QueryOrder");
+const AllOrders_1 = require("../Transaction/AllOrders");
+const OutboundAccountInfo_1 = require("../Account/OutboundAccountInfo");
+const AccountInfoOptions_1 = require("../Account/AccountInfoOptions");
+const CancelOrderResponse_1 = require("../Transaction/CancelOrderResponse");
+const TestOrder_1 = require("../Transaction/TestOrder");
+const Price_1 = require("../Transaction/Price");
+const GetTotalBalanceOpts_1 = require("../Balances/GetTotalBalanceOpts");
+class Rest extends BotHttp_1.BotHttp {
+    async _cancelOrder(cancelOrder) {
+        try {
+            let callConfig = {};
+            let orderResRaw;
+            let response;
+            let privateOrder;
+            let callOpts;
+            callConfig.uri = (Binance_1.Binance.options.test) ? `${BotHttp_1.BotHttp.BASE}/api/v3/order/test` : `${BotHttp_1.BotHttp.BASE}/api/v3/order`;
+            callConfig.method = 'DELETE';
+            callConfig.json = true;
+            callConfig.isSigned = true;
+            callConfig.qs = cancelOrder;
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            privateOrder = await this.privateCall(callOpts);
+            if (privateOrder instanceof HttpError_1.HttpError) {
+                return Promise.reject(privateOrder);
+            }
+            else {
+                orderResRaw = privateOrder;
+                response = new CancelOrderResponse_1.CancelOrderResponse(orderResRaw);
+                return response;
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async _getCandlesInterval(candleOpts) {
+        let lastCandle;
+        let lastIdx;
+        let now;
+        let candles;
+        let raw;
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/klines`;
+        callConfig.qs = candleOpts;
+        callConfig.isSigned = false;
+        callOpts = new CallOptions_1.CallOptions(callConfig);
+        try {
+            raw = await this.call(callOpts);
+            now = Date.now();
+            candles = Candle_1.Candle.fromRestStream(raw, candleOpts.symbol, candleOpts.interval);
+            lastIdx = candles.length - 1;
+            lastCandle = candles[lastIdx];
+            if (lastCandle.closeTime.getTime() > now) {
+                candles.splice(lastIdx, 1);
+            }
+            return candles;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    ;
+    async _newOrder(order) {
+        let self = this;
+        let callOpts;
+        let callConfig = {};
+        let orderRes;
+        let privateOrder;
+        callConfig.uri = (Binance_1.Binance.options.test) ? `${BotHttp_1.BotHttp.BASE}/api/v3/order/test` : `${BotHttp_1.BotHttp.BASE}/api/v3/order`;
+        callConfig.method = 'POST';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.qs = order.toObjLiteral();
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            privateOrder = await self.privateCall(callOpts);
+            if (self.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
+                return new TestOrder_1.TestOrder();
+            }
+            else {
+                if (privateOrder instanceof HttpError_1.HttpError) {
+                    return Promise.reject(privateOrder);
+                }
+                else {
+                    let order = privateOrder;
+                    orderRes = new Order_1.Order(order);
+                    return orderRes;
+                }
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async cancelOrder(options) {
+        try {
+            let cancelResult;
+            let result;
+            let cancelOrder = new CancelOrder_1.CancelOrder(options);
+            if (cancelOrder && cancelOrder.orderId) {
+                cancelResult = await this._cancelOrder(cancelOrder);
+                result = new CancelOrderResponse_1.CancelOrderResponse(cancelResult);
+            }
+            return result;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async cancelOrdersBySymbol(options) {
+        let cOpts;
+        let symbolOrders;
+        let openOrders;
+        let cancelResp;
+        let results = [];
+        let config = {};
+        config.symbol = options.symbol;
+        config.origClientOrderId = options.origClientOrderId;
+        config.orderId = options.orderId;
+        config.recvWindow = options.recvWindow;
+        try {
+            openOrders = await this.getOpenOrders(config);
+            if (!openOrders || openOrders.length === 0) {
+                return [];
+            }
+            symbolOrders = openOrders.filter(order => order.symbol === config.symbol);
+            for (let order of symbolOrders) {
+                cOpts = {};
+                cOpts.orderId = order.orderId;
+                cOpts.recvWindow = options.recvWindow;
+                cOpts.origClientOrderId = order.clientOrderId;
+                cOpts.symbol = order.symbol;
+                cOpts.newClientOrderId = options.newClientOrderId;
+                cancelResp = await this.cancelOrder(cOpts);
+                results.push(cancelResp);
+            }
+            return results;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async closeDataStream() {
+        let callOpts;
+        let result;
+        let callConfig = {};
+        callConfig.method = 'DELETE';
+        callConfig.json = true;
+        callConfig.isSigned = false;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`;
+        callConfig.qs = new DataStream_1.DataStream(Rest.listenKey);
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            result = await this.privateCall(callOpts);
+            return result;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getAccountInfo(recvWindow) {
+        let self = this;
+        let callOpts;
+        let accountInfoRest;
+        let info;
+        let opts = new AccountInfoOptions_1.AccountInfoOptions(recvWindow);
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/account`;
+        callConfig.qs = opts;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            accountInfoRest = await self.privateCall(callOpts);
+            info = OutboundAccountInfo_1.OutboundAccountInfo.fromBinanceRest(accountInfoRest);
+            return info;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getAllCandles(symbols, intervals, limit) {
+        try {
+            let candleIntervals = [];
+            for (let symbol of symbols) {
+                for (let interval of intervals) {
+                    let req = {};
+                    req.symbol = symbol;
+                    req.interval = interval;
+                    req.limit = limit;
+                    let candles = await this._getCandlesInterval(req);
+                    let ci = new CandleInterval_1.CandleInterval(candles);
+                    candleIntervals.push(ci);
+                }
+            }
+            return candleIntervals;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    ;
+    async getAllOrders(options) {
+        let results;
+        let privateCall;
+        let query;
+        let callOpts;
+        let callConfig = {};
+        query = new AllOrders_1.AllOrders(options);
+        results = [];
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/allOrders`;
+        callConfig.qs = query.toObjLiteral();
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            privateCall = await this.privateCall(callOpts);
+            if (Array.isArray(privateCall) && privateCall.length > 0) {
+                results = privateCall.map((qCall) => {
+                    let opts = {};
+                    opts.cummulativeQuoteQty = qCall.cummulativeQuoteQty;
+                    opts.symbol = qCall.symbol;
+                    opts.side = qCall.side;
+                    opts.type = qCall.type;
+                    opts.price = qCall.price;
+                    opts.clientOrderId = qCall.clientOrderId;
+                    opts.orderId = qCall.orderId;
+                    opts.executedQty = qCall.executedQty;
+                    opts.origQty = qCall.origQty;
+                    opts.transactTime = qCall.time;
+                    opts.status = qCall.status;
+                    opts.signature = qCall.signature;
+                    opts.timeInForce = qCall.timeInForce;
+                    opts.isWorking = qCall.isWorking;
+                    return new Order_1.Order(opts);
+                });
+            }
+            return results;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getAvailableTotalBalance(opts) {
+        let results = [];
+        let result = {};
+        let prices;
+        let balances;
+        let config;
+        let balVals;
+        try {
+            config = new GetTotalBalanceOpts_1.GetTotalBalanceOpts(opts);
+            balances = await this.getBalances(config.recvWindow, true);
+            prices = await this.getPrices();
+            if (balances.length === 0) {
+                return Promise.reject(new Error("Error: Balances not working"));
+            }
+            const QA = config.quoteAsset;
+            const USDT = config.usdAsset;
+            const BTC = config.xChangeRatioBA;
+            balVals = [];
+            result = {};
+            balances.forEach((bal) => {
+                let exchangeValue;
+                let totalBTCVal;
+                let avail = {};
+                let BA = bal.asset;
+                let available = bal.available;
+                let symbol;
+                if (BA !== BTC && BTC !== QA) {
+                    symbol = BA + BTC;
+                    exchangeValue = Price_1.Price.GetPriceValue(prices, symbol);
+                    avail.quoteAsset = QA;
+                    totalBTCVal = available * exchangeValue;
+                    avail.totalVal = totalBTCVal * Price_1.Price.GetPriceValue(prices, BTC + USDT);
+                    balVals.push(avail);
+                }
+                else {
+                    if (BA === BTC && BTC !== QA) {
+                        avail.quoteAsset = QA;
+                        avail.totalVal = available * Price_1.Price.GetPriceValue(prices, BTC + USDT);
+                        balVals.push(avail);
+                    }
+                    else if (QA === BTC && BA !== BTC) {
+                        symbol = BA + QA;
+                        exchangeValue = Price_1.Price.GetPriceValue(prices, symbol);
+                        avail.quoteAsset = QA;
+                        avail.totalVal = available * exchangeValue;
+                        balVals.push(avail);
+                    }
+                    else if (BTC === QA && BA === BTC) {
+                        avail.quoteAsset = QA;
+                        avail.totalVal = available;
+                        balVals.push(avail);
+                    }
+                }
+            });
+            result.totalVal = balVals.reduce((prev, cur) => {
+                return prev + cur.totalVal;
+            }, 0);
+            result.quoteAsset = QA;
+            results.push(result);
+            if (QA !== USDT) {
+                let result2 = {};
+                result2.totalVal = result.totalVal * Price_1.Price.GetPriceValue(prices, BTC + USDT);
+                result2.quoteAsset = "USDT";
+                results.push(result2);
+            }
+            return results;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getBalances(recvWindow, gtZeroOnly = true) {
+        try {
+            let balances;
+            let accountInfo = await this.getAccountInfo(recvWindow);
+            balances = accountInfo.balances;
+            if (gtZeroOnly && accountInfo.balances.length > 0) {
+                balances = accountInfo.balances.filter(bal => bal.available > 0);
+            }
+            else {
+                balances = accountInfo.balances;
+            }
+            return balances;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getCandlesBySymbol(symbol, intervals, limit) {
+        let candleIntervals = [];
+        try {
+            for (let interval of intervals) {
+                let req = {};
+                req.symbol = symbol;
+                req.interval = interval;
+                req.limit = limit;
+                let candles = await this._getCandlesInterval(req);
+                let ci = new CandleInterval_1.CandleInterval(candles);
+                candleIntervals.push(ci);
+            }
+            return candleIntervals;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    ;
+    async getDataStream() {
+        let callOpts;
+        let callConfig;
+        callConfig = {};
+        callConfig.method = 'POST';
+        callConfig.json = true;
+        callConfig.isSigned = false;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            Rest.listenKey = await this.privateCall(callOpts);
+            return Rest.listenKey;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getDepositAddress(request) {
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/wapi/v3/depositAddress.html`;
+        callConfig.qs = request;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            return await this.privateCall(callOpts);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getDepositHisory(request) {
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/wapi/v3/depositHistory.html`;
+        callConfig.qs = request;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            return await this.privateCall(callOpts);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getExchangeInfo() {
+        let self = this;
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/exchangeInfo`;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            return await self.call(callOpts);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getMarkets(quoteAsset) {
+        try {
+            let self = this;
+            let info = await self.getExchangeInfo();
+            let symbols = info.symbols;
+            let markets = symbols.map(symbol => {
+                return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
+            });
+            if (quoteAsset && markets.length > 0) {
+                let _markets = markets.filter(m => m.quoteAsset === quoteAsset);
+                Binance_1.Binance.markets = _markets;
+                return _markets;
+            }
+            else {
+                Binance_1.Binance.markets = markets;
+                return markets;
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getOpenOrders(options) {
+        let opts = {};
+        let query;
+        let callOpts;
+        let privateCall;
+        let callConfig = {};
+        try {
+            opts.symbol = options.symbol;
+            opts.recvWindow = options.recvWindow;
+            opts.orderId = options.orderId;
+            opts.origClientOrderId = options.origClientOrderId;
+            query = new QueryOrder_1.QueryOrder(opts);
+            callConfig.method = 'GET';
+            callConfig.json = true;
+            callConfig.isSigned = true;
+            callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/openOrders`;
+            callConfig.qs = query.toObjLiteral();
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            privateCall = await this.privateCall(callOpts);
+            if (Array.isArray(privateCall) && privateCall.length > 0) {
+                return privateCall.map((o) => {
+                    return new OpenOrder_1.OpenOrder(o);
+                });
+            }
+            else {
+                return;
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getOrder(options) {
+        try {
+            let query;
+            let callOpts;
+            let privateCall;
+            let result;
+            let opts = {};
+            opts.symbol = options.symbol;
+            opts.recvWindow = options.recvWindow;
+            opts.orderId = options.orderId;
+            opts.origClientOrderId = options.origClientOrderId;
+            query = new QueryOrder_1.QueryOrder(opts);
+            let callConfig = {};
+            callConfig.method = 'GET';
+            callConfig.json = true;
+            callConfig.isSigned = true;
+            callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/order`;
+            callConfig.qs = query.toObjLiteral();
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            privateCall = await this.privateCall(callOpts);
+            if (privateCall && privateCall.hasOwnProperty("symbol")) {
+                let nOrder = {};
+                nOrder.symbol = opts.symbol;
+                nOrder.side = privateCall.side;
+                nOrder.price = privateCall.price;
+                nOrder.type = privateCall.type;
+                nOrder.timeInForce = privateCall.timeInForce;
+                nOrder.origQty = privateCall.origQty;
+                nOrder.executedQty = privateCall.executedQty;
+                nOrder.timestamp = privateCall.time;
+                nOrder.status = privateCall.status;
+                nOrder.orderId = opts.orderId;
+                nOrder.clientOrderId = privateCall.clientOrderId;
+                nOrder.cummulativeQuoteQty = privateCall.cummulativeQuoteQty;
+                nOrder.status = privateCall.status;
+                nOrder.signature = privateCall.signature;
+                nOrder.transactTime = privateCall.time;
+                nOrder.isWorking = privateCall.isWorking;
+                result = new Order_1.Order(nOrder);
+                return result;
+            }
+            else {
+                return;
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async get24hrTicker(symbol) {
+        let self = this;
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/ticker/24hr`;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            if (symbol && typeof symbol === "string") {
+                return [await self.call(callOpts)];
+            }
+            else {
+                return await self.call(callOpts);
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getPrices() {
+        let self = this;
+        let rawPrices;
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = false;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v3/ticker/price`;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            rawPrices = await self.call(callOpts);
+            if (Array.isArray(rawPrices) && rawPrices.length > 0) {
+                return Price_1.Price.toPrices(rawPrices);
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async getStatus() {
+        let self = this;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.apiKey = self.options.auth.key;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/wapi/v3/systemStatus.html`;
+        try {
+            let opts = new CallOptions_1.CallOptions(callConfig);
+            return await self.call(opts);
+        }
+        catch (err) {
+            return Promise.reject(new Error(`Error retrieving the system status. Message: ${err}`));
+        }
+    }
+    async getWithdrawHisory(request) {
+        let self = this;
+        let withdrawHistory;
+        let callOpts;
+        let callConfig = {};
+        callConfig.method = 'GET';
+        callConfig.json = true;
+        callConfig.isSigned = true;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/wapi/v3/withdrawHistory.html`;
+        callConfig.qs = request;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            withdrawHistory = await self.privateCall(callOpts);
+            return withdrawHistory;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async keepDataStream() {
+        let self = this;
+        let dStream;
+        let callOpts;
+        let callConfig = {};
+        dStream = new DataStream_1.DataStream(Rest.listenKey);
+        callConfig.method = 'PUT';
+        callConfig.json = true;
+        callConfig.isSigned = false;
+        callConfig.uri = `${BotHttp_1.BotHttp.BASE}/api/v1/userDataStream`;
+        callConfig.qs = dStream;
+        try {
+            callOpts = new CallOptions_1.CallOptions(callConfig);
+            return await self.privateCall(callOpts);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async limitBuy(options) {
+        let self = this;
+        let orderObj;
+        let nOrder = {};
+        const TYPE = 'LIMIT';
+        const SIDE = 'BUY';
+        const RESPONSE_TYPE = 'FULL';
+        try {
+            if (options && options.price) {
+                nOrder.timeInForce = options.timeInForce;
+                nOrder.price = options.price.toString();
+                nOrder.symbol = options.symbol;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = TYPE;
+                nOrder.side = SIDE;
+                nOrder.quantity = options.quantity;
+                nOrder.stopPrice = options.stopPrice;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
+                orderObj = new NewOrder_1.NewOrder(nOrder);
+                return await self._newOrder(orderObj);
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async limitSell(options) {
+        try {
+            let order;
+            let nOrder = {};
+            const TYPE = 'LIMIT';
+            const SIDE = 'SELL';
+            const RESPONSE_TYPE = 'FULL';
+            if (options && options.price) {
+                nOrder.timeInForce = options.timeInForce;
+                nOrder.price = options.price.toString();
+                nOrder.symbol = options.symbol;
+                nOrder.recvWindow = options.recvWindow;
+                nOrder.type = TYPE;
+                nOrder.side = SIDE;
+                nOrder.quantity = options.quantity;
+                nOrder.stopPrice = options.stopPrice;
+                nOrder.icebergQty = options.iceburgQty;
+                nOrder.newClientOrderId = options.newClientOrderId;
+                nOrder.newOrderRespType = options.newOrderRespType || RESPONSE_TYPE;
+                order = new NewOrder_1.NewOrder(nOrder);
+                return await this._newOrder(order);
+            }
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async marketBuy(options) {
+        let self = this;
+        let order;
+        let nOrder = {};
+        try {
+            nOrder.recvWindow = options.recvWindow;
+            nOrder.type = 'MARKET';
+            nOrder.side = 'BUY';
+            nOrder.quantity = options.quantity;
+            nOrder.symbol = options.symbol;
+            nOrder.recvWindow = options.recvWindow;
+            nOrder.quantity = options.quantity;
+            nOrder.icebergQty = options.iceburgQty;
+            nOrder.newClientOrderId = options.newClientOrderId;
+            nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
+            order = new NewOrder_1.NewOrder(nOrder);
+            return await self._newOrder(order);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    async marketSell(options) {
+        let self = this;
+        let order;
+        let nOrder = {};
+        try {
+            nOrder.recvWindow = options.recvWindow;
+            nOrder.type = 'MARKET';
+            nOrder.side = 'SELL';
+            nOrder.quantity = options.quantity;
+            nOrder.symbol = options.symbol;
+            nOrder.recvWindow = options.recvWindow;
+            nOrder.quantity = options.quantity;
+            nOrder.icebergQty = options.iceburgQty;
+            nOrder.newClientOrderId = options.newClientOrderId;
+            nOrder.newOrderRespType = options.newOrderRespType || 'FULL';
+            order = new NewOrder_1.NewOrder(nOrder);
+            return await self._newOrder(order);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    constructor(options) {
+        super(options);
+    }
+}
+exports.Rest = Rest;
+//# sourceMappingURL=Rest.js.map

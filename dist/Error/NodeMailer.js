@@ -1,1 +1,25 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const nodeMailer=require("nodemailer");class NodeMailer{sendEmail(e){return new Promise((r,s)=>{e||s(new Error("Service Options must be provided")),this._service.sendMail(e,(e,i)=>{e?s(e):r(i.response)})})}constructor(e){this._service=nodeMailer.createTransport(e)}}exports.NodeMailer=NodeMailer;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const nodeMailer = require("nodemailer");
+class NodeMailer {
+    sendEmail(msgOpts) {
+        return new Promise((resolve, reject) => {
+            if (!msgOpts) {
+                reject(new Error("Service Options must be provided"));
+            }
+            this._service.sendMail(msgOpts, (error, info) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(info.response);
+                }
+            });
+        });
+    }
+    constructor(serviceOptions) {
+        this._service = nodeMailer.createTransport(serviceOptions);
+    }
+}
+exports.NodeMailer = NodeMailer;
+//# sourceMappingURL=NodeMailer.js.map

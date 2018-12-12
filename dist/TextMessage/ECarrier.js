@@ -1,1 +1,14 @@
-"use strict";var ECarrier;Object.defineProperty(exports,"__esModule",{value:!0}),function(e){e.ATT="att",e.TMobile="tmobile",e.Verizon="verizon",e.Cricket="cricket",e.USCellular="uscellular",e.VirginMobile="virginmobile",e.BoostMobile="boostmobile",e.MetroPCS="metropcs"}(ECarrier=exports.ECarrier||(exports.ECarrier={}));
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ECarrier;
+(function (ECarrier) {
+    ECarrier["ATT"] = "att";
+    ECarrier["TMobile"] = "tmobile";
+    ECarrier["Verizon"] = "verizon";
+    ECarrier["Cricket"] = "cricket";
+    ECarrier["USCellular"] = "uscellular";
+    ECarrier["VirginMobile"] = "virginmobile";
+    ECarrier["BoostMobile"] = "boostmobile";
+    ECarrier["MetroPCS"] = "metropcs";
+})(ECarrier = exports.ECarrier || (exports.ECarrier = {}));
+//# sourceMappingURL=ECarrier.js.map

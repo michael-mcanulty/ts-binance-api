@@ -1,1 +1,0 @@
-{"version":3,"file":"IOptions.js","sourceRoot":"","sources":["../../../src/Minify/Interfaces/IOptions.ts"],"names":[],"mappings":"","sourcesContent":["export interface IOptions {\r\n\tcallback?: Function;\r\n\tdirectories?: boolean;\r\n\tglobs?: string[];\r\n\tignore?: string[];\r\n\tincludeBasePath?: boolean;\r\n}"]}

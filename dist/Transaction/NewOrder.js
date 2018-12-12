@@ -1,1 +1,38 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const BaseOrder_1=require("./BaseOrder");class NewOrder extends BaseOrder_1.BaseOrder{toObjLiteral(){let e=this,r={};for(let t in e)e[t]&&"function"!=typeof e[t]&&(r[t]=e[t]);return r}static toBinance(e){let r={};return r.quantity=e.quantity?e.quantity:void 0,r.icebergQty=e.icebergQty?e.icebergQty:void 0,r.price=e.price?e.price:void 0,r.side=e.side,r.stopPrice=e.stopPrice?e.stopPrice:void 0,r.symbol=e.symbol,r.timeInForce=e.timeInForce,r.type=e.type,r}constructor(e){super(e),this.quantity=e.quantity,this.icebergQty=e.icebergQty,this.newOrderRespType=e.newOrderRespType||"FULL",this.newClientOrderId=e.newClientOrderId,this.stopPrice=e.stopPrice,this.recvWindow=e.recvWindow||5e3}}exports.NewOrder=NewOrder;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const BaseOrder_1 = require("./BaseOrder");
+class NewOrder extends BaseOrder_1.BaseOrder {
+    toObjLiteral() {
+        let self = this;
+        let order = {};
+        for (let prop in self) {
+            if (self[prop] && typeof self[prop] !== "function") {
+                order[prop] = self[prop];
+            }
+        }
+        return order;
+    }
+    static toBinance(newOrder) {
+        let binance = {};
+        binance.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;
+        binance.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty : undefined;
+        binance.price = (newOrder.price) ? newOrder.price : undefined;
+        binance.side = newOrder.side;
+        binance.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice : undefined;
+        binance.symbol = newOrder.symbol;
+        binance.timeInForce = newOrder.timeInForce;
+        binance.type = newOrder.type;
+        return binance;
+    }
+    constructor(newOrder) {
+        super(newOrder);
+        this.quantity = newOrder.quantity;
+        this.icebergQty = newOrder.icebergQty;
+        this.newOrderRespType = newOrder.newOrderRespType || 'FULL';
+        this.newClientOrderId = newOrder.newClientOrderId;
+        this.stopPrice = newOrder.stopPrice;
+        this.recvWindow = newOrder.recvWindow || 5000;
+    }
+}
+exports.NewOrder = NewOrder;
+//# sourceMappingURL=NewOrder.js.map

@@ -8,8 +8,6 @@
     "start": "tsc -p tsconfig.json && node dist/index.js",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
     "debug": "tsc -p tsconfig.json && node --inspect-brk dist/index.js",
-    "minify": "node -e \"require('./dist/Minify/minify.js').Minify.execute()\"",
-    "minify-debug": "node -e \"require('./dist/Minify/minify.js').Minify.execute()\" --inspect-brk",
     "sync": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node dist/Cli.js --repo=ts-binance-api",
     "sync-debug": "cd /d F: && cd F:/BinanceBot/binance-bot-cli && node --inspect-brk dist/Cli.js --repo=ts-binance-api"
   },
@@ -26,9 +24,7 @@
     "request": "^2.86.0",
     "request-promise-native": "^1.0.5",
     "terser": "^3.11.0",
-    "ws": "^5.2.1",
-    "ensure-posix-path": "^1.0.2",
-    "matcher-collection": "^1.0.5"
+    "ws": "^5.2.1"
   },
   "devDependencies": {
     "@types/lodash.zipobject": "^4.1.3",
