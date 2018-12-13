@@ -1,9 +1,3 @@
-export { IOptions } from "./Minify/Interfaces/IOptions";
-export { Options } from "./Minify/Options";
-export { Walk } from "./Minify/Walk";
-export { Entry } from "./Minify/Entry";
-export { IEntry } from "./Minify/Interfaces/IEntry";
-export { Minify } from "./Minify/minify";
 export { WSCandle, WSCandleResp } from "./ExchangeInfo/WSCandle";
 export { TickerVolume } from "./ExchangeInfo/TickerVolume";
 export { I24hrTickerResponse } from "./ExchangeInfo/Interfaces/I24hrTickerResponse";
