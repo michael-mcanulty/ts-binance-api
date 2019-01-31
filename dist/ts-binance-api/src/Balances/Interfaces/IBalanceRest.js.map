@@ -1,0 +1,1 @@
+{"version":3,"file":"IBalanceRest.js","sourceRoot":"","sources":["../../../../../src/Balances/Interfaces/IBalanceRest.ts"],"names":[],"mappings":"","sourcesContent":["export interface IBalanceRest {\r\n\tasset: string;\r\n\tfree: string;\r\n\tlocked: string;\r\n}"]}

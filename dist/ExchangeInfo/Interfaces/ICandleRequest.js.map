@@ -1,1 +1,0 @@
-{"version":3,"file":"ICandleRequest.js","sourceRoot":"","sources":["../../../src/ExchangeInfo/Interfaces/ICandleRequest.ts"],"names":[],"mappings":"","sourcesContent":["export interface ICandleRequest {\r\n\tendTime?: number;\r\n\tinterval: string;\r\n\tlimit?: number;\r\n\tstartTime?: number;\r\n\tsymbol: string;\r\n}"]}

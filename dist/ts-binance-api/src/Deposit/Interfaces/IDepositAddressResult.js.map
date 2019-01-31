@@ -1,0 +1,1 @@
+{"version":3,"file":"IDepositAddressResult.js","sourceRoot":"","sources":["../../../../../src/Deposit/Interfaces/IDepositAddressResult.ts"],"names":[],"mappings":"","sourcesContent":["export interface IDepositAddressResult {\r\n\taddress: string;\r\n\taddressTag: string;\r\n\tasset: string;\r\n\tsuccess: boolean;\r\n}"]}

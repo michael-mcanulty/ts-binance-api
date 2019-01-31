@@ -10,7 +10,7 @@ import {NewOrder} from "../Transaction/NewOrder";
 import {TNewOrderRespType, TOrderSide, TOrderType} from "../Transaction/Interfaces/EOrderEnums";
 import {IOrder} from "../Transaction/Interfaces/IOrder";
 import {Order} from "../Transaction/Order";
-import {HttpError} from "../Error/HttpError";
+import {HttpError} from "../../../bb-models/src/Error/HttpError";
 import {CancelOrder} from "../Transaction/CancelOrder";
 import {DataStream} from "./DataStream";
 import {CallOptions} from "./CallOptions";

@@ -1,1 +1,0 @@
-{"version":3,"file":"IAvailBalance.js","sourceRoot":"","sources":["../../../src/Balances/Interfaces/IAvailBalance.ts"],"names":[],"mappings":"","sourcesContent":["export interface IAvailBalance {\r\n\tavailable: number;\r\n\tquoteAsset: string;\r\n\tsymbol: string;\r\n}"]}

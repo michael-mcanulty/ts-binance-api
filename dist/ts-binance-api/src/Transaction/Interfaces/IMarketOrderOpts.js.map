@@ -1,0 +1,1 @@
+{"version":3,"file":"IMarketOrderOpts.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/IMarketOrderOpts.ts"],"names":[],"mappings":"","sourcesContent":["export interface IMarketOrderOpts {\r\n\tsymbol: string;\r\n\tquantity: number;\r\n\trecvWindow?: number;\r\n\ticeburgQty?: number;\r\n\tnewClientOrderId?: string;\r\n\tnewOrderRespType?: string;\r\n}"]}

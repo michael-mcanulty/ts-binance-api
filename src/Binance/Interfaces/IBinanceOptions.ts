@@ -1,7 +1,7 @@
 import {IBinanceApiAuth} from "../../Account/Interfaces/IBinanceApiAuth";
-import {IMessageOptions} from "../../Error/Interfaces/IMessageOptions";
-import {ISmtpOptions} from "../../Error/Interfaces/ISmtpOptions";
-import {ITextMsgOptions} from "../../TextMessage/ITextMsgOptions";
+import {IMessageOptions} from "../../../../bb-models/src/Error/Interfaces/IMessageOptions";
+import {ISmtpOptions} from "../../../../bb-models/src/Error/Interfaces/ISmtpOptions";
+import {ITextMsgOptions} from "../../../../bb-models/src/TextMessage/ITextMsgOptions";
 
 export interface IBinanceOptions {
 	_id?: string;

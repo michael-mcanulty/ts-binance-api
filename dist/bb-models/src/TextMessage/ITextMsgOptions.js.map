@@ -1,0 +1,1 @@
+{"version":3,"file":"ITextMsgOptions.js","sourceRoot":"","sources":["../../../../../bb-models/src/TextMessage/ITextMsgOptions.ts"],"names":[],"mappings":"","sourcesContent":["import {TCarrier} from \"./TCarrier\";\r\n\r\nexport interface ITextMsgOptions{\r\n\tcarrier: TCarrier;\r\n\trecipientPhone: number;\r\n}"]}

@@ -1,5 +1,5 @@
 import * as crypto from 'crypto'
-import {HttpError} from "../Error/HttpError";
+import {HttpError} from "../../../bb-models/src/Error/HttpError";
 import {IServerTime} from "./Interfaces/IServerTime";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ITimestamp} from "./Interfaces/ITimestamp";

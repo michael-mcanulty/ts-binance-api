@@ -1,1 +1,0 @@
-{"version":3,"file":"ICandleWSOptions.js","sourceRoot":"","sources":["../../src/Websocket/ICandleWSOptions.ts"],"names":[],"mappings":"","sourcesContent":["export interface ICandleWSOptions{\r\n\tpartial_kline_1min_prior: boolean;\r\n\tpartial_kline_minimum_interval: string;\r\n}"]}

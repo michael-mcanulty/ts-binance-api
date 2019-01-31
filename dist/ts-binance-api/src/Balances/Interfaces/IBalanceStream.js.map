@@ -1,0 +1,1 @@
+{"version":3,"file":"IBalanceStream.js","sourceRoot":"","sources":["../../../../../src/Balances/Interfaces/IBalanceStream.ts"],"names":[],"mappings":"","sourcesContent":["export interface IBalanceStream {\r\n\ta: string;\r\n\tf: string;\r\n\tl: string;\r\n}\r\n"]}

@@ -1,0 +1,1 @@
+{"version":3,"file":"IQueryOrderResponse.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/IQueryOrderResponse.ts"],"names":[],"mappings":"","sourcesContent":["import {IOpenOrder} from \"./IOpenOrder\";\r\n\r\nexport interface IQueryOrderResponse extends IOpenOrder {\r\n\tisWorking: boolean;\r\n}"]}

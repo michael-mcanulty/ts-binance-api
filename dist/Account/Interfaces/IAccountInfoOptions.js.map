@@ -1,1 +1,0 @@
-{"version":3,"file":"IAccountInfoOptions.js","sourceRoot":"","sources":["../../../src/Account/Interfaces/IAccountInfoOptions.ts"],"names":[],"mappings":"","sourcesContent":["import {ISigned} from \"../../Rest/Interfaces/ISigned\";\r\n\r\nexport interface IAccountInfoOptions extends ISigned {\r\n\trecvWindow?: number;\r\n}"]}

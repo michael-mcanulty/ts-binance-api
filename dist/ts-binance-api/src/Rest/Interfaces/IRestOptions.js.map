@@ -1,0 +1,1 @@
+{"version":3,"file":"IRestOptions.js","sourceRoot":"","sources":["../../../../../src/Rest/Interfaces/IRestOptions.ts"],"names":[],"mappings":"","sourcesContent":["export interface IRestOpts {\r\n\torderId: number;\r\n\tsymbol: string;\r\n\tuseServerTime?: boolean;\r\n}"]}

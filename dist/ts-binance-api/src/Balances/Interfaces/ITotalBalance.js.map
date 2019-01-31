@@ -1,0 +1,1 @@
+{"version":3,"file":"ITotalBalance.js","sourceRoot":"","sources":["../../../../../src/Balances/Interfaces/ITotalBalance.ts"],"names":[],"mappings":"","sourcesContent":["export interface ITotalBalance {\r\n\tquoteAsset: string;\r\n\ttotalVal: number;\r\n}"]}

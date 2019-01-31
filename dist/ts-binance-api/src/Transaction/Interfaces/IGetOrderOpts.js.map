@@ -1,0 +1,1 @@
+{"version":3,"file":"IGetOrderOpts.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/IGetOrderOpts.ts"],"names":[],"mappings":"","sourcesContent":["export interface IGetOrderOpts{\r\n\tsymbol: string;\r\n\torderId: number;\r\n\trecvWindow?: number;\r\n\torigClientOrderId?: string;\r\n}"]}
