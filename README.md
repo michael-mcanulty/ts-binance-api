@@ -1,5 +1,5 @@
 # ts-binance-api
->A Typescript API for trading cryptocurrency on Binance
+>A Typescript API for trading cryptocurrency on Binance.
 
 ```
 import {
