@@ -2,7 +2,7 @@ import { ISmtpOptions } from "./ISmtpOptions";
 import { IMessageOptions } from "./IMessageOptions";
 import { ITextMsgOptions } from "../../TextMessage/ITextMsgOptions";
 import { TErrorType } from "../Enums/EErrorType";
-import { TMethod } from "@michael-mcanulty/ts-binance-api/dist";
+import { TMethod } from "@michael-mcanulty/ts-binance-api";
 export interface IHttpErrorHandler {
     emailMsgOpts?: IMessageOptions;
     emailServiceOpts?: ISmtpOptions;

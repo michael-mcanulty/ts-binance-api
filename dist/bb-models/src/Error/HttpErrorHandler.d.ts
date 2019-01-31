@@ -7,7 +7,7 @@ import { URL } from "url";
 import { IHttpErrorHandler } from "./Interfaces/IHttpErrorHandler";
 import { ITextMsgOptions } from "../TextMessage/ITextMsgOptions";
 import { TextMessage } from "../TextMessage/TextMessage";
-import { TMethod } from "../Rest/TMethod";
+import { TMethod } from "@michael-mcanulty/ts-binance-api";
 export declare class HttpErrorHandler {
     static emailMsgOptions: IMessageOptions;
     emailMsgOpts?: IMessageOptions;

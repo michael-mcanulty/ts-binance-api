@@ -1,7 +1,7 @@
 import { BinanceError } from "./BinanceError";
 import { HttpErrorHandler } from "./HttpErrorHandler";
 import { IHttpError } from "./Interfaces/IHttpError";
-import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
+import { IBinanceOptions } from "@michael-mcanulty/ts-binance-api";
 export declare class HttpError extends Error {
     static fromObjLiteral(err: IHttpError): HttpError;
     static toObjLiteral(err: HttpError): IHttpError;

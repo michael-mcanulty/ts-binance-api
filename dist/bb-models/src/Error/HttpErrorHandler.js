@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const BotHttp_1 = require("../Rest/BotHttp");
 const NodeMailer_1 = require("./NodeMailer");
-const BBLogger_1 = require("../Logger/BBLogger");
 const HttpError_1 = require("./HttpError");
 const url_1 = require("url");
 const cluster_1 = require("cluster");
 const TextMessage_1 = require("../TextMessage/TextMessage");
+const ts_binance_api_1 = require("@michael-mcanulty/ts-binance-api");
 class HttpErrorHandler {
     constructor(handler) {
         this.restartSingleWorker = false;
@@ -75,7 +74,7 @@ class HttpErrorHandler {
                     }
                     catch (err) {
                         if (err && err.message) {
-                            BBLogger_1.BBLogger.error(err.message);
+                            ts_binance_api_1.BBLogger.error(err.message);
                         }
                     }
                 }
@@ -85,17 +84,17 @@ class HttpErrorHandler {
                     }
                     catch (err) {
                         if (err && err.message) {
-                            BBLogger_1.BBLogger.error(err.message);
+                            ts_binance_api_1.BBLogger.error(err.message);
                         }
                     }
                 }
                 for (let ePoint of remoteEndpoints) {
                     reqOpts.uri = ePoint;
                     try {
-                        await BotHttp_1.BotHttp.requestApi(reqOpts);
+                        await ts_binance_api_1.BotHttp.requestApi(reqOpts);
                     }
                     catch (err) {
-                        BBLogger_1.BBLogger.error(err.message);
+                        ts_binance_api_1.BBLogger.error(err.message);
                     }
                 }
                 if ((_endpoint && remoteEndpoints && origin) && (_endpoint.length > remoteEndpoints.length)) {
@@ -103,17 +102,17 @@ class HttpErrorHandler {
                     if (lastPoint && lastPoint.length > 0) {
                         reqOpts.uri = lastPoint[0];
                         try {
-                            await BotHttp_1.BotHttp.requestApi(reqOpts);
+                            await ts_binance_api_1.BotHttp.requestApi(reqOpts);
                         }
                         catch (err) {
-                            BBLogger_1.BBLogger.error(err.message);
+                            ts_binance_api_1.BBLogger.error(err.message);
                         }
                     }
                 }
             }
         }
         catch (err) {
-            BBLogger_1.BBLogger.error(err);
+            ts_binance_api_1.BBLogger.error(err);
             throw err;
         }
     }
