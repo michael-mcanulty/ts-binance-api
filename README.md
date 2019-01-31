@@ -114,16 +114,7 @@ try {
 			"secret": "dsnflksdfwfdjflksflkjsdlkfjsdjsldjfcwhef0434322jrfoiwfe4wfreferf"
 		},
 		"test": true,
-		"useServerTime": true,
-		"emailServiceOpts": {
-			"auth": {
-				"pass": "FakePass",
-				"user": "michael.mcanulty88@gmail.com"
-			},
-			"host": "smtp.gmail.com",
-			"port": 465,
-			"secure": true
-		}
+		"useServerTime": true
 	};
 	const bot = new Bot(binOpts);
 	bot.marketBuy("BNBUSDT", 1).then(mb => console.log(mb));
