@@ -105,6 +105,8 @@ export class Bot extends Binance {
 	}
 }
 
+```
+```
 try {
 	const binOpts = {
 		"auth": {
