@@ -1,7 +1,7 @@
 # ts-binance-api
 >Typescript API for Binance
 
-
+```
 export class Bot extends Binance {
 	static binanceOptions: IBinanceOptions;
 
@@ -121,3 +121,4 @@ try{
 }catch(err){
 	console.log(err);
 }
+```
