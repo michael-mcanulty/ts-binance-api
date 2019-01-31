@@ -34,7 +34,7 @@ class Rest extends BotHttp_1.BotHttp {
             callConfig.qs = cancelOrder;
             callOpts = new CallOptions_1.CallOptions(callConfig);
             privateOrder = await this.privateCall(callOpts);
-            if (privateOrder instanceof HttpError) {
+            if (privateOrder instanceof Error) {
                 return Promise.reject(privateOrder);
             }
             else {
@@ -94,7 +94,7 @@ class Rest extends BotHttp_1.BotHttp {
                 return new TestOrder_1.TestOrder();
             }
             else {
-                if (privateOrder instanceof HttpError) {
+                if (privateOrder instanceof Error) {
                     return Promise.reject(privateOrder);
                 }
                 else {

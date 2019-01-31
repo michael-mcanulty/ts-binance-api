@@ -58,7 +58,7 @@ export class Rest extends BotHttp {
 			let callConfig: ICallOpts = <ICallOpts>{};
 			let orderResRaw: ICancelOrderResponse;
 			let response: CancelOrderResponse;
-			let privateOrder: IQueryCancelOrder | HttpError | {};
+			let privateOrder: IQueryCancelOrder | Error | {};
 			let callOpts: CallOptions;
 			callConfig.uri = (Binance.options.test) ? `${BotHttp.BASE}/api/v3/order/test` : `${BotHttp.BASE}/api/v3/order`;
 			callConfig.method = 'DELETE';
@@ -68,7 +68,7 @@ export class Rest extends BotHttp {
 			callOpts = new CallOptions(callConfig);
 
 			privateOrder = await this.privateCall(callOpts);
-			if (privateOrder instanceof HttpError) {
+			if (privateOrder instanceof Error) {
 				return Promise.reject(privateOrder);
 			} else {
 				orderResRaw = <ICancelOrderResponse>privateOrder;
@@ -109,12 +109,12 @@ export class Rest extends BotHttp {
 		}
 	};
 
-	private async _newOrder(order: NewOrder): Promise<Order | HttpError | TestOrder> {
+	private async _newOrder(order: NewOrder): Promise<Order | Error | TestOrder> {
 		let self = this;
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};
 		let orderRes: Order;
-		let privateOrder: IOrder | HttpError | TestOrder;
+		let privateOrder: IOrder | Error | TestOrder;
 		callConfig.uri = (Binance.options.test) ? `${BotHttp.BASE}/api/v3/order/test` : `${BotHttp.BASE}/api/v3/order`;
 		callConfig.method = 'POST';
 		callConfig.json = true;
@@ -128,7 +128,7 @@ export class Rest extends BotHttp {
 			if (self.options.test && (Object.keys(privateOrder).length === 0 && privateOrder.constructor === Object)) {
 				return new TestOrder();
 			} else {
-				if (privateOrder instanceof HttpError) {
+				if (privateOrder instanceof Error) {
 					return Promise.reject(privateOrder);
 				} else {
 					let order: IOrder = <IOrder>privateOrder;
