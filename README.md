@@ -12,8 +12,6 @@ import {
 
 ```
 export class Bot extends Binance {
-	static binanceOptions: IBinanceOptions;
-
 	async account(): Promise<OutboundAccountInfo> {
 		return await this.rest.getAccountInfo();
 	}
