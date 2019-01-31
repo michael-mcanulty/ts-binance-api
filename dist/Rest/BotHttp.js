@@ -37,6 +37,7 @@ class BotHttp {
             res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
             if (res.statusCode !== 200) {
                 error = new Error(res.statusMessage);
+                error.name = res.statusCode.toString();
                 return Promise.reject(error);
             }
             else {
