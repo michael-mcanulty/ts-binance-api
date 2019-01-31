@@ -8,7 +8,9 @@ import {
 	IGetAllOrdersOpts, CancelOrderResponse, ITotalBalance, IGetTotalBalanceOpts, I24hrTickerResponse, TickerVolume, Candle,
 	EOrderSide
 } from "@michael-mcanulty/ts-binance-api/dist";
+```
 
+```
 export class Bot extends Binance {
 	static binanceOptions: IBinanceOptions;
 
