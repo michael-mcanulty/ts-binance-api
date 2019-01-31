@@ -7,7 +7,6 @@ const Market_1 = require("../Market/Market");
 const Binance_1 = require("../Binance/Binance");
 const NewOrder_1 = require("../Transaction/NewOrder");
 const Order_1 = require("../Transaction/Order");
-const HttpError_1 = require("../../../bb-models/src/Error/HttpError");
 const CancelOrder_1 = require("../Transaction/CancelOrder");
 const DataStream_1 = require("./DataStream");
 const CallOptions_1 = require("./CallOptions");
@@ -35,7 +34,7 @@ class Rest extends BotHttp_1.BotHttp {
             callConfig.qs = cancelOrder;
             callOpts = new CallOptions_1.CallOptions(callConfig);
             privateOrder = await this.privateCall(callOpts);
-            if (privateOrder instanceof HttpError_1.HttpError) {
+            if (privateOrder instanceof HttpError) {
                 return Promise.reject(privateOrder);
             }
             else {
@@ -95,7 +94,7 @@ class Rest extends BotHttp_1.BotHttp {
                 return new TestOrder_1.TestOrder();
             }
             else {
-                if (privateOrder instanceof HttpError_1.HttpError) {
+                if (privateOrder instanceof HttpError) {
                     return Promise.reject(privateOrder);
                 }
                 else {

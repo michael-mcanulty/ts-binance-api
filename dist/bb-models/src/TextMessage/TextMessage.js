@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const NodeMailer_1 = require("../../../bb-models/src/Error/NodeMailer");
+const NodeMailer_1 = require("../Error/NodeMailer");
 class TextMessage {
     constructor(carrierName, smtpOpts) {
         this.msgOptions = {};
