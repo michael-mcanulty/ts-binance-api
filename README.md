@@ -1,12 +1,12 @@
 # ts-binance-api
->Typescript API for Binance
+>A Typescript API for trading cryptocurrency on Binance
 
 ```
 import {
 	Binance, IBinanceOptions, Order, Price, Market, CandleInterval, IMarketOrderOpts,
 	ILimitOrderOpts, ICancelOrderOpts, ICancelOrderResponse, IGetOrderOpts,
-	IGetAllOrdersOpts, CancelOrderResponse, ITotalBalance, IGetTotalBalanceOpts, I24hrTickerResponse, TickerVolume, Candle,
-	EOrderSide
+	IGetAllOrdersOpts, CancelOrderResponse, ITotalBalance, IGetTotalBalanceOpts, 
+	I24hrTickerResponse, TickerVolume, Candle, EOrderSide
 } from "@michael-mcanulty/ts-binance-api/dist";
 ```
 
