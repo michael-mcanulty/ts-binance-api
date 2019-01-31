@@ -1,1 +1,0 @@
-{"version":3,"file":"ICarrier.js","sourceRoot":"","sources":["../../../../../bb-models/src/TextMessage/ICarrier.ts"],"names":[],"mappings":"","sourcesContent":["import {TCarrier} from \"./TCarrier\";\r\n\r\nexport interface ICarrier{\r\n\tname: TCarrier;\r\n\tdomain: string;\r\n}"]}

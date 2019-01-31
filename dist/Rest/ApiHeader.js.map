@@ -1,0 +1,1 @@
+{"version":3,"file":"ApiHeader.js","sourceRoot":"","sources":["../../src/Rest/ApiHeader.ts"],"names":[],"mappings":";;AAAA,MAAa,SAAS;IAGrB,YAAY,GAAW;QACtB,IAAI,CAAC,cAAc,CAAC,GAAG,GAAG,CAAC;IAC5B,CAAC;CACD;AAND,8BAMC","sourcesContent":["export class ApiHeader {\r\n\t'X-MBX-APIKEY': string;\r\n\r\n\tconstructor(key: string) {\r\n\t\tthis['X-MBX-APIKEY'] = key;\r\n\t}\r\n}"]}

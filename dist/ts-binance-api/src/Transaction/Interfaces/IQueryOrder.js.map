@@ -1,1 +1,0 @@
-{"version":3,"file":"IQueryOrder.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/IQueryOrder.ts"],"names":[],"mappings":"","sourcesContent":["import {IBaseQueryOrder} from \"./IBaseQueryOrder\";\r\n\r\nexport interface IQueryOrder extends IBaseQueryOrder {\r\n\torigClientOrderId?: string;\r\n}"]}

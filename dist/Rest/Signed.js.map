@@ -1,0 +1,1 @@
+{"version":3,"file":"Signed.js","sourceRoot":"","sources":["../../src/Rest/Signed.ts"],"names":[],"mappings":";;AAEA,MAAa,MAAM;CAGlB;AAHD,wBAGC","sourcesContent":["import {ISigned} from \"./Interfaces/ISigned\";\r\n\r\nexport class Signed implements ISigned{\r\n\tsignature: string;\r\n\ttimestamp: number;\r\n}"]}

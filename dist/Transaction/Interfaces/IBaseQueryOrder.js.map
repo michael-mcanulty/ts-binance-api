@@ -1,0 +1,1 @@
+{"version":3,"file":"IBaseQueryOrder.js","sourceRoot":"","sources":["../../../src/Transaction/Interfaces/IBaseQueryOrder.ts"],"names":[],"mappings":"","sourcesContent":["import {ISigned} from \"../../Rest/Interfaces/ISigned\";\r\n\r\nexport interface IBaseQueryOrder extends ISigned{\r\n\torderId: number;\r\n\trecvWindow: number;\r\n\tsymbol: string;\r\n}"]}

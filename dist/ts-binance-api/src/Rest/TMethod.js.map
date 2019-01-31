@@ -1,1 +1,0 @@
-{"version":3,"file":"TMethod.js","sourceRoot":"","sources":["../../../../src/Rest/TMethod.ts"],"names":[],"mappings":"","sourcesContent":["export type TMethod =\r\n\t'GET'|\r\n\t'POST'|\r\n\t'PUT'|\r\n\t'DELETE'"]}

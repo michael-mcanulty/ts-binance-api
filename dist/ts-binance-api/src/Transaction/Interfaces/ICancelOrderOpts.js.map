@@ -1,1 +1,0 @@
-{"version":3,"file":"ICancelOrderOpts.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/ICancelOrderOpts.ts"],"names":[],"mappings":"","sourcesContent":["import {IQueryOrderOpts} from \"./IQueryOrderOpts\";\r\n\r\nexport interface ICancelOrderOpts extends IQueryOrderOpts{\r\n\tnewClientOrderId: string;\r\n}"]}

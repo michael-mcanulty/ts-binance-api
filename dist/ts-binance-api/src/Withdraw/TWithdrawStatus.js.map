@@ -1,1 +1,0 @@
-{"version":3,"file":"TWithdrawStatus.js","sourceRoot":"","sources":["../../../../src/Withdraw/TWithdrawStatus.ts"],"names":[],"mappings":"","sourcesContent":["export type TWithdrawStatus =\r\n\t'emailSent'|\r\n\t'cancelled'|\r\n\t'awaitingApproval'|\r\n\t'rejected'|\r\n\t'processing'|\r\n\t'failure'|\r\n\t'completed';"]}

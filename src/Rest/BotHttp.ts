@@ -1,5 +1,4 @@
 import * as crypto from 'crypto'
-import {HttpError} from "../../../bb-models/src/Error/HttpError";
 import {IServerTime} from "./Interfaces/IServerTime";
 import {IBinanceOptions} from "../Binance/Interfaces/IBinanceOptions";
 import {ITimestamp} from "./Interfaces/ITimestamp";
@@ -38,12 +37,12 @@ export class BotHttp {
 		}
 	}
   public static async requestApi(uriOptions: OptionsWithUri): Promise<any>{
-		let error: HttpError;
+		let error: Error;
 		let res: Response;
 		try{
 			res = await requestPromise[uriOptions.method.toLowerCase()](uriOptions);
 			if (res.statusCode !== 200) {
-				error = new HttpError(res.statusCode, res.statusMessage);
+				error = new Error(res.statusMessage);
 				return Promise.reject(error);
 			}else {
 				return res.body;

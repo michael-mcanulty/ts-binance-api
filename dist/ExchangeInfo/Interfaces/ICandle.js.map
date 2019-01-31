@@ -1,0 +1,1 @@
+{"version":3,"file":"ICandle.js","sourceRoot":"","sources":["../../../src/ExchangeInfo/Interfaces/ICandle.ts"],"names":[],"mappings":"","sourcesContent":["export interface ICandle{\r\n\tclose: number;\r\n\tdate: Date;\r\n\thigh: number;\r\n\tinterval?: string;\r\n\tlow: number;\r\n\topen: number;\r\n\tsymbol?: string;\r\n\tvolume: number;\r\n}"]}

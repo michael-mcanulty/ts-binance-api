@@ -1,1 +1,0 @@
-{"version":3,"file":"IGetAllOrdersOpts.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/IGetAllOrdersOpts.ts"],"names":[],"mappings":"","sourcesContent":["export interface IGetAllOrdersOpts {\r\n\tsymbol: string;\r\n\tlimit?: number;\r\n\torderId?: number;\r\n\trecvWindow?: number;\r\n\tstartTime?: number;\r\n\tendTime?:number;\r\n}"]}

@@ -1,1 +1,0 @@
-{"version":3,"file":"IServerTime.js","sourceRoot":"","sources":["../../../../../src/Rest/Interfaces/IServerTime.ts"],"names":[],"mappings":"","sourcesContent":["export interface IServerTime {\r\n\tserverTime: number;\r\n}"]}

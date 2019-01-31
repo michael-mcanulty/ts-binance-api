@@ -1,1 +1,0 @@
-{"version":3,"file":"ISystemStatus.js","sourceRoot":"","sources":["../../../../../src/Binance/Interfaces/ISystemStatus.ts"],"names":[],"mappings":"","sourcesContent":["import {ESystemStatus} from \"../ESystemStatus\";\r\n\r\nexport interface ISystemStatus {\r\n\tmsg: string;\r\n\tstatus: ESystemStatus;\r\n}\r\n"]}

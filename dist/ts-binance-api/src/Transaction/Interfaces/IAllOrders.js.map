@@ -1,1 +1,0 @@
-{"version":3,"file":"IAllOrders.js","sourceRoot":"","sources":["../../../../../src/Transaction/Interfaces/IAllOrders.ts"],"names":[],"mappings":"","sourcesContent":["import {BaseQueryOrder} from \"../BaseQueryOrder\";\r\n\r\nexport interface IAllOrders extends BaseQueryOrder {\r\n\tlimit: number;\r\n}"]}
