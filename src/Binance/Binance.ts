@@ -4,6 +4,40 @@ import {Market} from "../Market/Market";
 import {Rest} from "../Rest/Rest";
 
 export class Binance {
+	static get rest(): Rest {
+		if(this._rest){
+			return this._rest;
+		}else{
+			this._rest = new Rest(this.options);
+		}
+	}
+	static get websocket(): BotWebsocket {
+		if(this._websocket){
+			return this._websocket;
+		}else{
+			this._websocket = new BotWebsocket(this.options);
+		}
+	}
+	private static _markets: Market[]=[];
+	static set markets(markets: Promise<Market[]>|Market[]){
+		(async ()=>{
+			this._markets = await markets;
+		})();
+	}
+	static get markets(): Promise<Market[]>|Market[] {
+		return new Promise(async (resolve, reject)=>{
+			try{
+				if(this._markets){
+					return resolve(this._markets);
+				}else{
+					let markets: Market[] = await this.rest.getMarkets();
+					resolve(markets);
+				}
+			}catch(err){
+				reject(err);
+			}
+		});
+	}
 	public static INTERVALS: string[] = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
 	public static candleAPILimits = {
 		'1m': 1000,
@@ -86,7 +120,6 @@ export class Binance {
 		259200000: '3d',
 		604800000: '1w'
 	};
-	public static markets: Market[]=[];
 	public static minutesToInterval: any = {
 		1: '1m',
 		3: '3m',
@@ -104,12 +137,10 @@ export class Binance {
 		10080: '1w'
 	};
 	public static options: IBinanceOptions;
-	public rest: Rest;
-	public websocket: BotWebsocket;
+	private static _rest: Rest;
+	private static _websocket: BotWebsocket;
 
 	constructor(options: IBinanceOptions) {
 		Binance.options = options;
-		this.rest = new Rest(options);
-		this.websocket = new BotWebsocket(options);
 	}
 }

@@ -5,10 +5,46 @@ const Rest_1 = require("../Rest/Rest");
 class Binance {
     constructor(options) {
         Binance.options = options;
-        this.rest = new Rest_1.Rest(options);
-        this.websocket = new BotWebsocket_1.BotWebsocket(options);
+    }
+    static get rest() {
+        if (this._rest) {
+            return this._rest;
+        }
+        else {
+            this._rest = new Rest_1.Rest(this.options);
+        }
+    }
+    static get websocket() {
+        if (this._websocket) {
+            return this._websocket;
+        }
+        else {
+            this._websocket = new BotWebsocket_1.BotWebsocket(this.options);
+        }
+    }
+    static set markets(markets) {
+        (async () => {
+            this._markets = await markets;
+        })();
+    }
+    static get markets() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (this._markets) {
+                    return resolve(this._markets);
+                }
+                else {
+                    let markets = await this.rest.getMarkets();
+                    resolve(markets);
+                }
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
     }
 }
+Binance._markets = [];
 Binance.INTERVALS = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
 Binance.candleAPILimits = {
     '1m': 1000,
@@ -91,7 +127,6 @@ Binance.millisecondsToInterval = {
     259200000: '3d',
     604800000: '1w'
 };
-Binance.markets = [];
 Binance.minutesToInterval = {
     1: '1m',
     3: '3m',
