@@ -3,6 +3,7 @@ import { IListenKey } from "./Interfaces/IListenKey";
 import { IBinanceOptions } from "../Binance/Interfaces/IBinanceOptions";
 import { CandleInterval } from "../ExchangeInfo/CandleInterval";
 import { Market } from "../Market/Market";
+import { Binance } from "../Binance/Binance";
 import { Order } from "../Transaction/Order";
 import { OpenOrder } from "../Transaction/OpenOrder";
 import { OutboundAccountInfo } from "../Account/OutboundAccountInfo";
@@ -28,6 +29,9 @@ import { IGetTotalBalanceOpts } from "../Balances/Interfaces/IGetTotalBalanceOpt
 import { I24hrTickerResponse } from "../ExchangeInfo/Interfaces/I24hrTickerResponse";
 export declare class Rest extends BotHttp {
     static listenKey: IListenKey;
+    binance: Binance;
+    private _markets;
+    markets: Promise<Market[]> | Market[];
     private _cancelOrder;
     private _getCandlesInterval;
     private _newOrder;

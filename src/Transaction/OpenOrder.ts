@@ -26,22 +26,22 @@ export class OpenOrder extends BaseOrder {
 
 	public toBinance(): IOpenOrder {
 		let self: OpenOrder = this;
-		let binance: IOpenOrder = <IOpenOrder>{};
-		binance.clientOrderId = self.clientOrderId;
-		binance.executedQty = (self.executedQty) ? self.executedQty.toString() : undefined;
-		binance.icebergQty = (self.icebergQty) ? self.icebergQty.toString() : undefined;
-		binance.isWorking = self.isWorking;
-		binance.orderId = self.orderId;
-		binance.origQty = (self.origQty) ? self.origQty.toString() : undefined;
-		binance.price = (self.price) ? self.price.toString() : undefined;
-		binance.side = self.side;
-		binance.status = self.status;
-		binance.stopPrice = (self.stopPrice) ? self.stopPrice.toString() : undefined;
-		binance.symbol = self.symbol;
-		binance.timeInForce = self.timeInForce;
-		binance.time = self.time;
-		binance.type = self.type;
-		return binance;
+		let oOrder: IOpenOrder = <IOpenOrder>{};
+		oOrder.clientOrderId = self.clientOrderId;
+		oOrder.executedQty = (self.executedQty) ? self.executedQty.toString() : undefined;
+		oOrder.icebergQty = (self.icebergQty) ? self.icebergQty.toString() : undefined;
+		oOrder.isWorking = self.isWorking;
+		oOrder.orderId = self.orderId;
+		oOrder.origQty = (self.origQty) ? self.origQty.toString() : undefined;
+		oOrder.price = (self.price) ? self.price.toString() : undefined;
+		oOrder.side = self.side;
+		oOrder.status = self.status;
+		oOrder.stopPrice = (self.stopPrice) ? self.stopPrice.toString() : undefined;
+		oOrder.symbol = self.symbol;
+		oOrder.timeInForce = self.timeInForce;
+		oOrder.time = self.time;
+		oOrder.type = self.type;
+		return oOrder;
 	}
 
 	constructor(openOrder: IOpenOrder) {

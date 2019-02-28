@@ -3,18 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BaseOrder_1 = require("./BaseOrder");
 class Order extends BaseOrder_1.BaseOrder {
     static toBinance(order) {
-        let binance = {};
-        binance.clientOrderId = order.clientOrderId;
-        binance.executedQty = (order.executedQty) ? order.executedQty.toString() : undefined;
-        binance.orderId = order.orderId;
-        binance.origQty = (order.origQty) ? order.origQty.toString() : undefined;
-        binance.price = (order.price) ? order.price.toString() : undefined;
-        binance.side = order.side;
-        binance.status = order.status;
-        binance.symbol = order.symbol;
-        binance.timeInForce = order.timeInForce;
-        binance.type = order.type;
-        return binance;
+        let nOrder = {};
+        nOrder.clientOrderId = order.clientOrderId;
+        nOrder.executedQty = (order.executedQty) ? order.executedQty.toString() : undefined;
+        nOrder.orderId = order.orderId;
+        nOrder.origQty = (order.origQty) ? order.origQty.toString() : undefined;
+        nOrder.price = (order.price) ? order.price.toString() : undefined;
+        nOrder.side = order.side;
+        nOrder.status = order.status;
+        nOrder.symbol = order.symbol;
+        nOrder.timeInForce = order.timeInForce;
+        nOrder.type = order.type;
+        return nOrder;
     }
     constructor(order) {
         super(order);

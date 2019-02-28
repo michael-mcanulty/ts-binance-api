@@ -6,45 +6,23 @@ class Binance {
     constructor(options) {
         Binance.options = options;
     }
-    static get rest() {
+    get rest() {
         if (this._rest) {
             return this._rest;
         }
         else {
-            this._rest = new Rest_1.Rest(this.options);
+            this._rest = new Rest_1.Rest(Binance.options);
         }
     }
-    static get websocket() {
+    get websocket() {
         if (this._websocket) {
             return this._websocket;
         }
         else {
-            this._websocket = new BotWebsocket_1.BotWebsocket(this.options);
+            this._websocket = new BotWebsocket_1.BotWebsocket(Binance.options);
         }
     }
-    static set markets(markets) {
-        (async () => {
-            this._markets = await markets;
-        })();
-    }
-    static get markets() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (this._markets) {
-                    return resolve(this._markets);
-                }
-                else {
-                    let markets = await this.rest.getMarkets();
-                    resolve(markets);
-                }
-            }
-            catch (err) {
-                reject(err);
-            }
-        });
-    }
 }
-Binance._markets = [];
 Binance.INTERVALS = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];
 Binance.candleAPILimits = {
     '1m': 1000,

@@ -13,16 +13,16 @@ class NewOrder extends BaseOrder_1.BaseOrder {
         return order;
     }
     static toBinance(newOrder) {
-        let binance = {};
-        binance.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;
-        binance.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty : undefined;
-        binance.price = (newOrder.price) ? newOrder.price : undefined;
-        binance.side = newOrder.side;
-        binance.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice : undefined;
-        binance.symbol = newOrder.symbol;
-        binance.timeInForce = newOrder.timeInForce;
-        binance.type = newOrder.type;
-        return binance;
+        let nOrder = {};
+        nOrder.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;
+        nOrder.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty : undefined;
+        nOrder.price = (newOrder.price) ? newOrder.price : undefined;
+        nOrder.side = newOrder.side;
+        nOrder.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice : undefined;
+        nOrder.symbol = newOrder.symbol;
+        nOrder.timeInForce = newOrder.timeInForce;
+        nOrder.type = newOrder.type;
+        return nOrder;
     }
     constructor(newOrder) {
         super(newOrder);

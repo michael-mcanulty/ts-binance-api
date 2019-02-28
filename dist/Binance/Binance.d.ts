@@ -1,12 +1,9 @@
 import { IBinanceOptions } from "./Interfaces/IBinanceOptions";
 import { BotWebsocket } from "../Websocket/BotWebsocket";
-import { Market } from "../Market/Market";
 import { Rest } from "../Rest/Rest";
 export declare class Binance {
-    static readonly rest: Rest;
-    static readonly websocket: BotWebsocket;
-    private static _markets;
-    static markets: Promise<Market[]> | Market[];
+    readonly rest: Rest;
+    readonly websocket: BotWebsocket;
     static INTERVALS: string[];
     static candleAPILimits: {
         '1m': number;
@@ -30,7 +27,7 @@ export declare class Binance {
     static millisecondsToInterval: any;
     static minutesToInterval: any;
     static options: IBinanceOptions;
-    private static _rest;
-    private static _websocket;
+    private _rest;
+    private _websocket;
     constructor(options: IBinanceOptions);
 }

@@ -23,16 +23,16 @@ export class NewOrder extends BaseOrder {
 	}
 
 	static toBinance(newOrder: NewOrder): INewOrder {
-		let binance: INewOrder = <INewOrder>{};
-		binance.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;
-		binance.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty : undefined;
-		binance.price = (newOrder.price) ? newOrder.price : undefined;
-		binance.side = newOrder.side;
-		binance.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice : undefined;
-		binance.symbol = newOrder.symbol;
-		binance.timeInForce = newOrder.timeInForce;
-		binance.type = newOrder.type;
-		return binance;
+		let nOrder: INewOrder = <INewOrder>{};
+		nOrder.quantity = (newOrder.quantity) ? newOrder.quantity : undefined;
+		nOrder.icebergQty = (newOrder.icebergQty) ? newOrder.icebergQty : undefined;
+		nOrder.price = (newOrder.price) ? newOrder.price : undefined;
+		nOrder.side = newOrder.side;
+		nOrder.stopPrice = (newOrder.stopPrice) ? newOrder.stopPrice : undefined;
+		nOrder.symbol = newOrder.symbol;
+		nOrder.timeInForce = newOrder.timeInForce;
+		nOrder.type = newOrder.type;
+		return nOrder;
 	}
 
 	constructor(newOrder: INewOrder){

@@ -52,7 +52,27 @@ import {I24hrTickerResponse} from "../ExchangeInfo/Interfaces/I24hrTickerRespons
 
 export class Rest extends BotHttp {
 	public static listenKey: IListenKey;
-
+	public binance: Binance;
+	private _markets: Market[]=[];
+	set markets(markets: Promise<Market[]>|Market[]){
+		(async ()=>{
+			this._markets = await markets;
+		})();
+	}
+	get markets(): Promise<Market[]>|Market[] {
+		return new Promise(async (resolve, reject)=>{
+			try{
+				if(this._markets){
+					return resolve(this._markets);
+				}else{
+					let markets: Market[] = await this.getMarkets();
+					resolve(markets);
+				}
+			}catch(err){
+				reject(err);
+			}
+		});
+	}
 	private async _cancelOrder(cancelOrder: CancelOrder): Promise<CancelOrderResponse> {
 		try {
 			let callConfig: ICallOpts = <ICallOpts>{};
@@ -79,7 +99,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	private async _getCandlesInterval(candleOpts: ICandleRequest): Promise<Candle[]> {
 		let lastCandle: Candle;
 		let lastIdx: number;
@@ -108,7 +127,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	};
-
 	private async _newOrder(order: NewOrder): Promise<Order | Error | TestOrder> {
 		let self = this;
 		let callOpts: CallOptions;
@@ -140,7 +158,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async cancelOrder(options: ICancelOrderOpts): Promise<CancelOrderResponse> {
 		try {
 			let cancelResult: ICancelOrderResponse;
@@ -155,7 +172,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async cancelOrdersBySymbol(options: ICancelOrderOpts): Promise<CancelOrderResponse[]> {
 		let cOpts: ICancelOrderOpts;
 		let symbolOrders: OpenOrder[];
@@ -190,7 +206,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async closeDataStream(): Promise<object> {
 		let callOpts: CallOptions;
 		let result: object;
@@ -209,7 +224,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getAccountInfo(recvWindow?: number): Promise<OutboundAccountInfo> {
 		let self = this;
 		let callOpts: CallOptions;
@@ -232,7 +246,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getAllCandles(symbols: string[], intervals: string[], limit?: number): Promise<CandleInterval[]> {
 		try {
 			let candleIntervals: CandleInterval[] = [];
@@ -256,7 +269,6 @@ export class Rest extends BotHttp {
 	// The 'xChangeRatioBA' is BTC indefinitely and is the base asset of Binance's "Exchange Ratio".
 	// See:  https://support.binance.com/hc/en-us/articles/115000583311
 	// Here is the formula excerpt: "Exchange ratio of NEO/BNB = NEO/BTC[market price] /(BNB/BTC [market price]).}
-
 	public async getAllOrders(options: IGetAllOrdersOpts): Promise<Order[]> {
 		let results: Order[];
 		let privateCall: IQueryOrderResponse[];
@@ -301,7 +313,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getAvailableTotalBalance(opts?: IGetTotalBalanceOpts): Promise<ITotalBalance[]> {
 		let results: ITotalBalance[] = [];
 		let result = <ITotalBalance>{};
@@ -375,7 +386,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getBalances(recvWindow?: number, gtZeroOnly: boolean = true): Promise<Balance[]> {
 		try {
 			let balances: Balance[];
@@ -392,7 +402,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getCandlesBySymbol(symbol: string, intervals: string[], limit?: number): Promise<CandleInterval[]> {
 		let candleIntervals: CandleInterval[] = [];
 		try {
@@ -410,7 +419,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	};
-
 	public async getDataStream(): Promise<IListenKey> {
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts;
@@ -428,7 +436,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getDepositAddress(request: IDepositAddressReq): Promise<IDepositAddressResult> {
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};
@@ -445,7 +452,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getDepositHisory(request: IDepositHistoryReq): Promise<IDepositHistoryResult> {
 		let callOpts: CallOptions;
 		let callConfig: ICallOpts = <ICallOpts>{};
@@ -461,7 +467,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getExchangeInfo(): Promise<IExchangeInfo> {
 		let self = this;
 		let callOpts: CallOptions;
@@ -477,7 +482,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getMarkets(quoteAsset?: string): Promise<Market[]> {
 		try {
 			let self = this;
@@ -488,17 +492,16 @@ export class Rest extends BotHttp {
 			});
 			if (quoteAsset && markets.length > 0) {
 				let _markets: Market[] = markets.filter(m => m.quoteAsset === quoteAsset);
-				Binance.markets = _markets;
+				this._markets = _markets;
 				return _markets;
 			} else {
-				Binance.markets = markets;
+				this._markets = markets;
 				return markets;
 			}
 		} catch (err) {
 			throw err;
 		}
 	}
-
 	public async getOpenOrders(options: IGetOrderOpts): Promise<OpenOrder[]> {
 		let opts: IQueryOrderOpts = <IQueryOrderOpts>{};
 		let query: QueryOrder;
@@ -530,7 +533,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getOrder(options: IGetOrderOpts): Promise<Order> {
 		try {
 			let query: QueryOrder;
@@ -581,7 +583,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async get24hrTicker(symbol?: string): Promise<I24hrTickerResponse[]>{
 		let self = this;
 		let callOpts: CallOptions;
@@ -601,7 +602,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async getPrices(): Promise<Price[]> {
 		let self = this;
 		let rawPrices: IPrice[];
@@ -640,7 +640,6 @@ export class Rest extends BotHttp {
 			return Promise.reject(new Error(`Error retrieving the system status. Message: ${err}`));
 		}
 	}
-
 	public async getWithdrawHisory(request: IWithdrawHistoryReq): Promise<IWithdrawHistoryResult> {
 		let self = this;
 		let withdrawHistory: IWithdrawHistoryResult;
@@ -660,7 +659,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async keepDataStream(): Promise<{}> {
 		let self = this;
 		let dStream: DataStream;
@@ -679,7 +677,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async limitBuy(options: ILimitOrderOpts): Promise<Order | TestOrder> {
 		let self = this;
 		let orderObj: NewOrder;
@@ -708,7 +705,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async limitSell(options: ILimitOrderOpts): Promise<Order | TestOrder> {
 		try {
 			let order: NewOrder;
@@ -737,7 +733,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async marketBuy(options: IMarketOrderOpts): Promise<Order | TestOrder> {
 		let self = this;
 		let order: NewOrder;
@@ -761,7 +756,6 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-
 	public async marketSell(options: IMarketOrderOpts): Promise<Order | TestOrder> {
 		let self = this;
 		let order: NewOrder;

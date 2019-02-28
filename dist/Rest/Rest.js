@@ -20,6 +20,31 @@ const TestOrder_1 = require("../Transaction/TestOrder");
 const Price_1 = require("../Transaction/Price");
 const GetTotalBalanceOpts_1 = require("../Balances/GetTotalBalanceOpts");
 class Rest extends BotHttp_1.BotHttp {
+    constructor(options) {
+        super(options);
+        this._markets = [];
+    }
+    set markets(markets) {
+        (async () => {
+            this._markets = await markets;
+        })();
+    }
+    get markets() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (this._markets) {
+                    return resolve(this._markets);
+                }
+                else {
+                    let markets = await this.getMarkets();
+                    resolve(markets);
+                }
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    }
     async _cancelOrder(cancelOrder) {
         try {
             let callConfig = {};
@@ -440,11 +465,11 @@ class Rest extends BotHttp_1.BotHttp {
             });
             if (quoteAsset && markets.length > 0) {
                 let _markets = markets.filter(m => m.quoteAsset === quoteAsset);
-                Binance_1.Binance.markets = _markets;
+                this._markets = _markets;
                 return _markets;
             }
             else {
-                Binance_1.Binance.markets = markets;
+                this._markets = markets;
                 return markets;
             }
         }
@@ -725,9 +750,6 @@ class Rest extends BotHttp_1.BotHttp {
         catch (err) {
             throw err;
         }
-    }
-    constructor(options) {
-        super(options);
     }
 }
 exports.Rest = Rest;
