@@ -26,7 +26,9 @@ class Rest extends BotHttp_1.BotHttp {
     }
     set markets(markets) {
         (async () => {
-            this._markets = await markets;
+            if (markets) {
+                this._markets = await markets;
+            }
         })();
     }
     get markets() {
@@ -36,8 +38,8 @@ class Rest extends BotHttp_1.BotHttp {
                     return resolve(this._markets);
                 }
                 else {
-                    let markets = await this.getMarkets();
-                    resolve(markets);
+                    this._markets = await this.getMarkets();
+                    return resolve(this._markets);
                 }
             }
             catch (err) {
@@ -464,9 +466,8 @@ class Rest extends BotHttp_1.BotHttp {
                 return new Market_1.Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market_1.Market.GetLimitsFromBinanceSymbol(symbol));
             });
             if (quoteAsset && markets.length > 0) {
-                let _markets = markets.filter(m => m.quoteAsset === quoteAsset);
-                this._markets = _markets;
-                return _markets;
+                this._markets = markets.filter(m => m.quoteAsset === quoteAsset);
+                return this._markets;
             }
             else {
                 this._markets = markets;

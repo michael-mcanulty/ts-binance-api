@@ -11,6 +11,7 @@ export class Binance {
 			return this._rest;
 		}
 	}
+
 	get websocket(): BotWebsocket {
 		if(this._websocket){
 			return this._websocket;

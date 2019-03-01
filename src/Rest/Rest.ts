@@ -56,7 +56,9 @@ export class Rest extends BotHttp {
 	private _markets: Market[]=[];
 	set markets(markets: Promise<Market[]>|Market[]){
 		(async ()=>{
-			this._markets = await markets;
+			if(markets){
+				this._markets = await markets;
+			}
 		})();
 	}
 	get markets(): Promise<Market[]>|Market[] {
@@ -65,8 +67,8 @@ export class Rest extends BotHttp {
 				if(this._markets){
 					return resolve(this._markets);
 				}else{
-					let markets: Market[] = await this.getMarkets();
-					resolve(markets);
+					this._markets = await this.getMarkets();
+					return resolve(this._markets);
 				}
 			}catch(err){
 				reject(err);
@@ -491,9 +493,8 @@ export class Rest extends BotHttp {
 				return new Market(symbol.symbol, symbol.baseAsset, symbol.quoteAsset, Market.GetLimitsFromBinanceSymbol(symbol));
 			});
 			if (quoteAsset && markets.length > 0) {
-				let _markets: Market[] = markets.filter(m => m.quoteAsset === quoteAsset);
-				this._markets = _markets;
-				return _markets;
+				this._markets = markets.filter(m => m.quoteAsset === quoteAsset);
+				return this._markets;
 			} else {
 				this._markets = markets;
 				return markets;
