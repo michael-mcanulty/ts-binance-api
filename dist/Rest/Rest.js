@@ -34,7 +34,7 @@ class Rest extends BotHttp_1.BotHttp {
     get markets() {
         return new Promise(async (resolve, reject) => {
             try {
-                if (this._markets) {
+                if (this._markets && this._markets.length > 0) {
                     return resolve(this._markets);
                 }
                 else {

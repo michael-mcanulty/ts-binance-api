@@ -64,7 +64,7 @@ export class Rest extends BotHttp {
 	get markets(): Promise<Market[]>|Market[] {
 		return new Promise(async (resolve, reject)=>{
 			try{
-				if(this._markets){
+				if(this._markets && this._markets.length > 0){
 					return resolve(this._markets);
 				}else{
 					this._markets = await this.getMarkets();
