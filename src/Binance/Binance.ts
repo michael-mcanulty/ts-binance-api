@@ -8,6 +8,7 @@ export class Binance {
 			return this._rest;
 		}else{
 			this._rest = new Rest(Binance.options);
+			return this._rest;
 		}
 	}
 	get websocket(): BotWebsocket {
@@ -15,6 +16,7 @@ export class Binance {
 			return this._websocket;
 		}else{
 			this._websocket = new BotWebsocket(Binance.options);
+			return this._websocket;
 		}
 	}
 	public static INTERVALS: string[] = ['1m', '3m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w'];

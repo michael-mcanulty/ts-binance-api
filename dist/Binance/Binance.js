@@ -12,6 +12,7 @@ class Binance {
         }
         else {
             this._rest = new Rest_1.Rest(Binance.options);
+            return this._rest;
         }
     }
     get websocket() {
@@ -20,6 +21,7 @@ class Binance {
         }
         else {
             this._websocket = new BotWebsocket_1.BotWebsocket(Binance.options);
+            return this._websocket;
         }
     }
 }
