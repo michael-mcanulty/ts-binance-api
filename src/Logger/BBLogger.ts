@@ -53,8 +53,7 @@ export class BBLogger {
 			let name: string = BBLogger.error.name;
 			let filename: string = BBLogger._getFilename(name);
 			let message: string = (plain) ? msg : BBLogger._getMsg(msg);
-			BBLogger._writeToFile(filename, message);
-			return;
+			await BBLogger._writeToFile(filename, message);
 		} catch (err) {
 			throw err;
 		}
@@ -74,8 +73,7 @@ export class BBLogger {
 			let name: string = BBLogger.info.name;
 			let filename: string = BBLogger._getFilename(name);
 			let message: string = (plain) ? msg : BBLogger._getMsg(msg);
-			BBLogger._writeToFile(filename, message);
-			return;
+			await BBLogger._writeToFile(filename, message);
 		} catch (err) {
 			throw err;
 		}
@@ -117,8 +115,7 @@ export class BBLogger {
 			let name: string = BBLogger.warning.name;
 			let filename: string = BBLogger._getFilename(name);
 			let message: string = (plain) ? msg : BBLogger._getMsg(msg);
-			BBLogger._writeToFile(filename, message);
-			return;
+			await BBLogger._writeToFile(filename, message);
 		} catch (err) {
 			throw err;
 		}
