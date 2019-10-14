@@ -11,7 +11,7 @@ import * as requestPromise from "request-promise-native";
 import  {OptionsWithUri} from "request-promise-native";
 
 export class BotHttp {
-	public static BASE: string = 'https://api.binance.com';
+	public static BASE: string = 'https://api.binance.us';
 	public options: IBinanceOptions;
 
 	public async call(callOptions: CallOptions): Promise<any> {

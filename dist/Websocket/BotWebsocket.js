@@ -158,6 +158,6 @@ class BotWebsocket extends Rest_1.Rest {
         });
     }
 }
-BotWebsocket.BASE = 'wss://stream.binance.com:9443/ws';
+BotWebsocket.BASE = 'wss://stream.binance.us:9443/ws';
 exports.BotWebsocket = BotWebsocket;
 //# sourceMappingURL=BotWebsocket.js.map

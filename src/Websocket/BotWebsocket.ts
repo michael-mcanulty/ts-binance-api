@@ -13,7 +13,7 @@ import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest{
-	public static BASE: string = 'wss://stream.binance.com:9443/ws';
+	public static BASE: string = 'wss://stream.binance.us:9443/ws';
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private _ws: ReconnectingWebSocket;
 
@@ -86,7 +86,7 @@ export class BotWebsocket extends Rest{
 					klineRes = JSON.parse(msg.data);
 					let candle: Candle;
 					if (klineRes.k.x) {
-						candle = Candle.fromWebsocket(klineRes)
+						candle = Candle.fromWebsocket(klineRes);
 						callback(candle);
 					}
 				};

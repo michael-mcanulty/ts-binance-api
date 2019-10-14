@@ -502,9 +502,6 @@ class Rest extends BotHttp_1.BotHttp {
                     return new OpenOrder_1.OpenOrder(o);
                 });
             }
-            else {
-                return;
-            }
         }
         catch (err) {
             throw err;
@@ -550,9 +547,6 @@ class Rest extends BotHttp_1.BotHttp {
                 nOrder.isWorking = privateCall.isWorking;
                 result = new Order_1.Order(nOrder);
                 return result;
-            }
-            else {
-                return;
             }
         }
         catch (err) {

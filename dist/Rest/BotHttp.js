@@ -149,6 +149,6 @@ class BotHttp {
         }
     }
 }
-BotHttp.BASE = 'https://api.binance.com';
+BotHttp.BASE = 'https://api.binance.us';
 exports.BotHttp = BotHttp;
 //# sourceMappingURL=BotHttp.js.map

@@ -527,8 +527,6 @@ export class Rest extends BotHttp {
 				return <OpenOrder[]> privateCall.map((o: IOpenOrder) => {
 					return new OpenOrder(o);
 				});
-			} else {
-				return;
 			}
 		} catch (err) {
 			throw err;
@@ -577,8 +575,6 @@ export class Rest extends BotHttp {
 				nOrder.isWorking = privateCall.isWorking;
 				result = new Order(nOrder);
 				return result;
-			} else {
-				return;
 			}
 		} catch (err) {
 			throw err;
@@ -706,7 +702,7 @@ export class Rest extends BotHttp {
 			throw err;
 		}
 	}
-	public async limitSell(options: ILimitOrderOpts): Promise<Order | TestOrder> {
+		public async limitSell(options: ILimitOrderOpts): Promise<Order | TestOrder> {
 		try {
 			let order: NewOrder;
 			let nOrder: INewOrder = <INewOrder>{};
