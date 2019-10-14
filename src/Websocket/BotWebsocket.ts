@@ -13,7 +13,7 @@ import {ExecutionReport} from "../Account/ExecutionReport";
 import {OutboundAccountInfo} from "../Account/OutboundAccountInfo";
 
 export class BotWebsocket extends Rest{
-	public static BASE: string = 'wss://stream.binance.com:9443/ws';
+	public static BASE: string = 'wss://stream.binance.us:9443/ws';
 	private readonly _reconOptions: IReconOptions = <IReconOptions>{};
 	private _ws: ReconnectingWebSocket;
 
