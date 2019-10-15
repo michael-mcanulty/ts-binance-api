@@ -4,7 +4,6 @@ export interface ICandle{
 	high: number;
 	interval?: string;
 	low: number;
-	open: number;
 	symbol?: string;
 	volume: number;
 }
