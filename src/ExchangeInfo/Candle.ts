@@ -1,8 +1,9 @@
 import {RestCandle} from "./RestCandle";
 import {IStreamRawKlineResponse} from "../ExchangeInfo/Interfaces/ICandleBinance";
 import {WSCandleResp} from "./WSCandle";
+import {ICandle} from "./Interfaces/ICandle";
 
-export class Candle {
+export class Candle implements ICandle{
 	close: number;
 	openTime: Date;
 	high: number;
