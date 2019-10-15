@@ -1,6 +1,6 @@
 export interface ICandle {
-    close: number;
-    date: Date;
+    closeTime: Date;
+    openTime: Date;
     high: number;
     interval?: string;
     low: number;

@@ -1,5 +1,6 @@
 import { IStreamRawKlineResponse } from "../ExchangeInfo/Interfaces/ICandleBinance";
-export declare class Candle {
+import { ICandle } from "./Interfaces/ICandle";
+export declare class Candle implements ICandle {
     close: number;
     openTime: Date;
     high: number;
