@@ -1,6 +1,7 @@
 # ts-binance-api
 >A Typescript API for trading cryptocurrency on Binance.
 
+This is setup to work on the Binance.us api. Change the URL to binance.com if necessary.
 ```
 import {
 	Binance, IBinanceOptions, Order, Price, Market, CandleInterval, IMarketOrderOpts,
